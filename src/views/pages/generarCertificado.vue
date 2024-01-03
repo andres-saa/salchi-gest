@@ -84,30 +84,30 @@
    
 
     
-    <div class=" col-12 p-0 mt-6" style=";overflow-x: auto;  box-shadow: 0 0 20px " v-if="user?.status?.toLowerCase().split(' ')[0] == 'activo' && !isSmallScreen" ref="contenidoParaPDF" >
+    <div class=" col-12 p-0 mt-6" style=";overflow-x: auto;  box-shadow: 0 0 20px " v-show="user?.status?.toLowerCase().split(' ')[0] == 'activo' && !temporaryScreenSize" ref="contenidoParaPDF" >
 
       <div  class=" a4-size p-8 mi-clase" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.508)">
 
 
         <img class="" src="/images/logo.png" style="width: 10%;" alt="">
 
-        <h6 class="py-4" style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
+        <h6 class="py-4" style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
 
 
 {{convertirFecha(serverDate)}}
 </h6>
-<h6 class="text-center  py-5" style="font-size: 14pt; font-weight: bold;color: black; font-family: Arial, Helvetica, sans-serif;">
+<h6 class="text-center  py-5" style="font-size: 12pt; font-weight: bold;color: black; font-family: Arial, Helvetica, sans-serif;">
   INVERSIONES SALCHIMONSTER SAS
 </h6>  
 
 <!-- [Logo de la Empresa] -->
 
-<h6 style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;" class="text-center">NIT: 901.420.874-0</h6>
+<h6 style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;" class="text-center">NIT: 901.420.874-0</h6>
 
 <h6 class="text-center py-4" style="font-weight: bold;"> CERTIFICA A:   <span style="text-transform: uppercase;">{{ user.name }}</span></h6>
 
-<h5 class="text-md text-justify" style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
-  El(la) señor(a) <b style="text-transform: uppercase;">{{ user.name }}</b> identificado con CC No. <b>{{ user.dni }}</b> labora en nuestra empresa con un contrato <b style="text-transform: uppercase;">{{ user.contract_type }}</b> desde el dia {{ convertirFecha(user.entry_date) }} activa a la fecha desempenando el cargo de <b style="text-transform: uppercase;"> {{ user.position }}. </b> 
+<h5 class="text-md text-justify" style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
+  El(la) señor(a) <b style="text-transform: uppercase;">{{ user.name }}</b> identificado con CC No. <b>{{ user.dni }}</b> labora en nuestra empresa con un contrato <b style="text-transform: uppercase;">{{ user.contract_type }}</b> desde el dia {{ convertirFecha(user.entry_date) }} activo a la fecha desempenando el cargo de <b style="text-transform: uppercase;"> {{ user.position }}. </b> 
   
   
   <!-- Sus ingresos laborales mensuales se componen de la siguiente manera:
@@ -125,7 +125,7 @@
     <div class="col text-right p-0">{{ formatoPesosColombianos(140606)  }} </div>
   </div> -->
 
-  <h5 style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;" class="py-1 mt-0">
+  <h5 style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;" class="py-1 mt-0">
     Para constancia de lo anterior se firma en Yumbo a {{convertirFechaserver(serverDate)}}
 
     <p class="py-6">
@@ -176,6 +176,8 @@ import {formatoPesosColombianos} from '../../service/formatoPesos.js';
 import { useRoute } from 'vue-router';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { nextTick } from 'vue';
+
 import { getUserDni, getUserRole } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
 const screenWidth = ref(window.innerWidth);
@@ -375,17 +377,27 @@ console.log(numeroATexto(1111111)); // "un millón seiscientos mil"
 
 
 
+// Variable temporal para la generación de PDF
+const temporaryScreenSize = ref(isSmallScreen.value);
 
 
 
-const contenidoParaPDF = ref(null);
 const exportarComoPDF = async () => {
-  // Asegúrate de que `elementos` se refiere al elemento del DOM que deseas convertir a PDF.
-  let elementoParaPDF = document.querySelector('.mi-clase'); // Usa querySelector para obtener el primer elemento
+  const originalState = isSmallScreen.value;
+  temporaryScreenSize.value = false;
+
+  // Asegúrate de que el DOM se haya actualizado antes de capturar el contenido
+  await nextTick();
+
+  let elementoParaPDF = document.querySelector('.mi-clase');
   if (elementoParaPDF) {
     try {
-      const canvas = await html2canvas(elementoParaPDF, { scale: 2 });
-      const imgData = canvas.toDataURL('image/png');
+      // Incrementar la escala para mejorar la calidad de la imagen
+      const canvas = await html2canvas(elementoParaPDF, { scale: 2.5 });
+
+      // Usar formato JPEG con una calidad más alta
+      const imgData = canvas.toDataURL('image/jpeg', 0.9); // Aumentar aún más la calidad de la imagen
+
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'px',
@@ -394,17 +406,23 @@ const exportarComoPDF = async () => {
 
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-      pdf.save('certificado.pdf');
+
+      // Agregar la imagen con una calidad alta
+      pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+
+      pdf.save(`certificado laboral - ${user.value.name}.pdf`);
     } catch (error) {
       console.error("Error al exportar PDF: ", error);
-      // Manejar el error adecuadamente aquí
+    } finally {
+      // Restablecer el estado original en un bloque finally para asegurar que se ejecute
+      temporaryScreenSize.value = originalState;
     }
   } else {
     console.error("No se encontró el elemento para convertir a PDF");
-    // Manejar el caso de que el elemento no exista
+    temporaryScreenSize.value = originalState;
   }
 };
+
 
 
 
@@ -420,18 +438,22 @@ const exportarComoPDF = async () => {
 
 .a4-size {
    width: 210mm;
+   min-width: 210mm;
    height: 297mm;
+   min-height: 297mm;
     margin: auto; /* Centrar 
     overn la pantalla */
     background-color: white;
     overflow-x:auto ; /* Opcional: para simular el color de una hoja de papel */
 }
 
-
+.a4-size * {
+   font-optical-sizing:12pt ;
+}
 
 *{
   font-family: Arial, Helvetica, sans-serif;
-  /* font-size: 14pt; */
+  /* font-size: 12pt; */
   color: black;
   max-width:210mm ;
   margin: auto;
