@@ -1,6 +1,6 @@
 <template>
 
-    <div class="col-12" style="height:80vh; display:flex; align-items: center; justify-content: center;">
+    <div class="col-12" style="height:80vh; display:flex; align-items: center; justify-content: center;overflow-x: auto;">
         
         <Button @click="productDialog = true" class="p-button-danger" style="z-index: 99; position: absolute;border: none; ; font-weight: bold"> ACTUALIZAR MIS DATOS</Button>
         <img class=""  style="width: 900px;opacity: 0.5; max-width: 900px;height: 100%;object-fit: cover;" src="/images/actualizar-datos.jpg" alt="">
@@ -308,7 +308,7 @@
 
         <div class="field">
             <label for="salary">Salario</label>
-            <InputNumber id="salary" v-model.number="currentUser.salary" />
+            <InputNumber :disabled="!verificarRol(getUserRole(),roles.adminTienda)" id="salary" v-model.number="currentUser.salary" />
         </div>
 
         <div class="field">
@@ -320,7 +320,7 @@
 
         <div class="field">
             <label for="status">Estado</label>
-            <Dropdown v-model="currentUser.status" :options="statusDropValues" placeholder="" required="true"
+            <Dropdown :disabled="!verificarRol(getUserRole(),roles.adminTienda)" v-model="currentUser.status" :options="statusDropValues" placeholder="" required="true"
                 :class="{ 'p-invalid': submitted && !currentUser.status }" />
             <small class="p-invalid" v-if="submitted && !currentUser.status">Estado es obligatorio.</small>
         </div>
