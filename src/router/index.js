@@ -13,7 +13,7 @@ const router = createRouter({
                 {
                     path: '/',
                     name: 'dashboard',
-                    component: () => import('@/views/pages/tienda/MenuTienda.vue'),
+                    component: () => import('@/views/pages/home.vue'),
                 },
                 {
                     path: '/tienda-menu',

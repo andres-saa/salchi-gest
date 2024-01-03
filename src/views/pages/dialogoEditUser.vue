@@ -407,7 +407,7 @@
 
 <script setup>
 import { FilterMatchMode } from 'primevue/api';
-import { ref, onMounted, onBeforeMount, computed } from 'vue';
+import { ref, onMounted, onBeforeMount, computed, watch } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { departamentos, findByDepartament } from '@/service/CountryService.js'
 import { uploadUserPhotoProfile } from '@/service/sendFileService'
@@ -439,6 +439,10 @@ import { defineProps } from 'vue';
 import { getUserDni } from '../../service/valoresReactivosCompartidos';
 import router from '../../router';
 import { roles,verificarRol } from '../../service/roles';
+
+
+
+
 // import { getUserRole } from '../../service/valoresReactivosCompartidos';
 const toast = useToast();
 const users = ref([]);
@@ -513,10 +517,10 @@ const getUser = async (dni) => {
         .then(data => {
             console.log('Employer data:', data);
             currentUser.value = data
-            SiteDropValue.value = findSiteById(data.site_id)
+            getSites().then(() => { SiteDropValue.value = findSiteById(data.site_id)})
             departamentDropValue.value = findByDepartament(data.birth_department) || []
             cityDropValue.value = data.birth_city
-            statusDropValue.value = data.status 
+            statusDropValue.value = data.status.trim().toLowerCase() 
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
@@ -569,6 +573,10 @@ const asingDataToSave = () => {
 
 }
 
+
+watch(productDialog,() => {
+    productDialog.value == false? router.push('/'): ''
+})
 const saveProduct = async () => {
     let Method = "PUT"
     let queryUrl = ""

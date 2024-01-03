@@ -101,4 +101,13 @@ const cerrar = () => {
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+
+
+* {
+    background-color: transparent;
+    border: none;
+}
+
+</style>

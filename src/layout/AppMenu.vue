@@ -6,6 +6,17 @@ import { getUserRole } from '../service/valoresReactivosCompartidos';
 import { roles } from '../service/roles';
 // import { getUserRole } from '../service/valoresReactivosCompartidos';
 const model = ref([
+
+{
+        label: 'INICIO',
+        roles:roles.todos,
+        items: [
+            {
+                label: 'inicio', icon: 'pi pi-fw pi-home', to: '/',
+
+            }]
+    },
+    
     {
         label: 'PRINCIPAL',
         roles:roles.adminTienda,
@@ -23,6 +34,7 @@ const model = ref([
                 ]
             }]
     },
+
 
     {
         label: 'RECURSOS HUMANOS',

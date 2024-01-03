@@ -1,10 +1,14 @@
 <template>
-    <div>
-      <form @submit.prevent="login">
-        <input v-model="credentials.username" type="text" placeholder="Username" />
-        <input v-model="credentials.password" type="password" placeholder="Password" />
-        <button type="submit">Login</button>
+    <div style="display: flex;height: 100vh;">
+
+      <form class="col-12 md:col-6 lg:col-4 xl:col-3 m-auto p-5 " @submit.prevent="login" style="border-radius: 1rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.389); display: flex;flex-direction: column; background-color: rgb(255, 255, 255);">
+        <p class="text-2xl" style="font-weight: bold;">Iniciar sesion</p>
+        <InputText class="my-3" v-model="credentials.username" type="text" placeholder="identificacion" />
+        <InputText class="my-3" v-model="credentials.password" type="password" placeholder="Clave" />
+        <Button class="my-3" type="submit">Iniciar</Button>
       </form>
+
+
     </div>
   </template>
   
