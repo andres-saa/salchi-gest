@@ -8,8 +8,8 @@
 
 
    <Toast/>
-    <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Registrar un Usuario" :modal="true"
-        class="p-fluid">
+    <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Actualizar mis datos" :modal="true"
+        class="p-fluid m-4">
 
         <!-- <img src="http://localhost:8000/read-site-cover/IMPERIO%20CANEY" :alt="currentUser.id"
                         v-if="currentUser.id" width="150" class="mt-0 mx-auto mb-5 block shadow-2" /> -->
@@ -22,12 +22,12 @@
 
         <!-- <FileUpload /> -->
 
-        <img class="img-profile-add" style="width: 100%; height: 30vh; object-fit: cover;"
+        <img class="img-profile-add" style="width: 100%;; object-fit: contain;border-radius: 1rem;"
             :src="urlPhotoProfile ? urlPhotoProfile : `${URI}/read-product-image/600/employer-${currentUser.dni}`"
             alt="">
-        <div class="field col-12">
+        <div class="field col-12 mt-5 p-0">
             <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" style="display: none;">
-            <Button label="Seleccionar foto de perfil" class="col-12 m0"
+            <Button  label="Seleccionar foto de perfil" class=" m-0"
                 style="width: 100%; background-color: var(--primary-color);" @click="$refs.fileInput.click();" />
 
         </div>
