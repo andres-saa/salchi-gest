@@ -1,9 +1,10 @@
 <template>
 
-<div class="mt-8 pt-8 m-2 m-auto ">
+<div class="  m-2 m-auto ">
   
 <p class="text-2xl lg:text-3xl text-center my-4 mt-8 " style="font-weight: bold;">Generar Certificado Laboral</p>
 <span class=" mb-6 col-12" style="display: flex; height: auto;">
+  
   
   
   <InputNumber v-model="usrDni" :disabled="getUserRole()?.toLowerCase() != 'gerente'"  class="mr-5" style="width: 100%;" placeholder="Cedula del empleado"></InputNumber>
@@ -84,7 +85,7 @@
    
 
     
-    <div class=" col-12 p-0 mt-6" style=";overflow-x: auto;  box-shadow: 0 0 20px " v-show="user?.status?.toLowerCase().split(' ')[0] == 'activo' && !temporaryScreenSize" ref="contenidoParaPDF" >
+    <div class=" col-12 p-0 mt-6" style=";overflow-x: auto;  box-shadow: 0 0 20px rgba(0, 0, 0, 0.308)" v-show="user?.status?.toLowerCase().split(' ')[0] == 'activo' && !temporaryScreenSize" ref="contenidoParaPDF" >
 
       <div  class=" a4-size p-8 mi-clase" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.508)">
 
@@ -107,7 +108,7 @@
 <h6 class="text-center py-4" style="font-weight: bold;"> CERTIFICA A:   <span style="text-transform: uppercase;">{{ user.name }}</span></h6>
 
 <h5 class="text-md text-justify" style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
-  El(la) señor(a) <b style="text-transform: uppercase;">{{ user.name }}</b> identificado con CC No. <b>{{ user.dni }}</b> labora en nuestra empresa con un contrato <b style="text-transform: uppercase;">{{ user.contract_type }}</b> desde el dia {{ convertirFecha(user.entry_date) }} activo a la fecha desempenando el cargo de <b style="text-transform: uppercase;"> {{ user.position }}. </b> 
+  El(la) señor(a) <b style="text-transform: uppercase;">{{ user.name }}</b> identificado con CC No. <b>{{ user.dni }}</b> labora en nuestra empresa con un contrato <b style="text-transform: uppercase;">{{ user.contract_type }}</b> desde el dia {{ convertirFecha(user.entry_date) }} activo a la fecha desempeñando el cargo de <b style="text-transform: uppercase;"> {{ user.position }}. </b> 
   
   
   <!-- Sus ingresos laborales mensuales se componen de la siguiente manera:
@@ -181,7 +182,7 @@ import { nextTick } from 'vue';
 import { getUserDni, getUserRole } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
 const screenWidth = ref(window.innerWidth);
-const isSmallScreen = computed(() => screenWidth.value < 960);
+const isSmallScreen = computed(() => screenWidth.value < 600);
 
 
 
@@ -199,7 +200,7 @@ onBeforeUnmount(() => {
 
 
 const user = ref({})
-const usrDni= ref(getUserDni()  )
+const usrDni= ref(getUserDni())
 const mensaje = ref()
 const serverDate = ref("2029-12-21 16:19")
 const queja = ref()

@@ -9,7 +9,7 @@
 
    <Toast/>
     <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Actualizar mis datos" :modal="true"
-        class="p-fluid m-4">
+        class="p-fluid m-2">
 
         <!-- <img src="http://localhost:8000/read-site-cover/IMPERIO%20CANEY" :alt="currentUser.id"
                         v-if="currentUser.id" width="150" class="mt-0 mx-auto mb-5 block shadow-2" /> -->
@@ -25,7 +25,7 @@
         <img class="img-profile-add" style="width: 100%;; object-fit: contain;border-radius: 1rem;"
             :src="urlPhotoProfile ? urlPhotoProfile : `${URI}/read-product-image/600/employer-${currentUser.dni}`"
             alt="">
-        <div class="field col-12 mt-5 p-0">
+        <div class="field col-12 mt-6 mb-6 p-0">
             <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" style="display: none;">
             <Button  label="Seleccionar foto de perfil" class=" m-0"
                 style="width: 100%; background-color: var(--primary-color);" @click="$refs.fileInput.click();" />
@@ -204,8 +204,8 @@
         </div>
 
         <div class="field">
-            <label for="contract_type">Tipo de Contrato</label>
-            <Dropdown v-model="currentUser.contract_type" :options="employmentContractTypeDropValues" placeholder=""
+            <label for="contract_type" >Tipo de Contrato</label>
+            <Dropdown :disabled="!verificarRol(getUserRole(),roles.adminTienda)" v-model="currentUser.contract_type" :options="employmentContractTypeDropValues" placeholder=""
                 required="true" :class="{ 'p-invalid': submitted && !currentUser.contract_type }" />
             <small class="p-invalid" v-if="submitted && !currentUser.contract_type">Tipo de Contrato es
                 obligatorio.</small>
@@ -234,7 +234,7 @@
                 obligatorio.</small>
         </div>
 
-        <div class="field inputSwith">
+        <div class="field inputSwith" style="display: flex; align-items: center; justify-content: space-between;">
             <label for="has_children">Tiene Hijos</label>
             <InputSwitch id="has_children" v-model="currentUser.has_children" />
         </div>
@@ -248,7 +248,7 @@
         </div>
 
 
-        <div class="field inputSwith">
+        <div class="field inputSwith" style="display: flex; align-items: center; justify-content: space-between;">
             <label for="has_vehicle">Tiene Vehiculo</label>
             <InputSwitch id="has_vehicle" v-model="currentUser.has_vehicle" />
         </div>
@@ -293,9 +293,9 @@
                 obligatoria.</small>
         </div>
 
-        <div class="field inputSwith">
-            <label for="food_handling_certificate">Certificado de Manejo de Alimentos</label>
-            <InputSwitch id="food_handling_certificate" v-model="currentUser.food_handling_certificate" />
+        <div class="field inputSwith p-0" style="display: flex; align-items: center; justify-content: space-between;">
+            <label class="p-0" for="food_handling_certificate">Certificado de Manejo de Alimentos</label>
+            <InputSwitch class="p-0" id="food_handling_certificate" v-model="currentUser.food_handling_certificate" />
         </div>
 
         <div class="field" v-show="currentUser.food_handling_certificate">
@@ -337,7 +337,7 @@
                 requerido.</small>
         </div>
 
-        <div class="field inputSwith">
+        <div class="field inputSwith" style="display: flex; align-items: center; justify-content: space-between;">
             <label for="authorization_data">Autorización de Datos</label>
             <div class="input-with-label">
                 <InputSwitch id="authorization_data" v-model="currentUser.authorization_data" />

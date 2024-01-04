@@ -1,42 +1,91 @@
 <template>
-    <div class="col-12" style="overflow-x: auto;">
-    <div class="col-12 m-auto mt-8" style="position:relative;;width:700px">
-        <img  style="width:100%;opacity:0.4; height:100%;object-fit:cover;overflow-x: auto;" src="/images/home.jpg" alt="">
+    <div class="col-12 m-auto "
+        style="max-width: 600px;display: ;height: 70vh;align-items: center;justify-content: center; flex-direction: column; ">
 
-    
+        <p class="text-2xl lg:text-4xl   col-12 text-center" style="font-weight: bold;width: auto; "> Accesos rápidos</p>
+
+        <div class="col-12 grid  p-3 m-auto  ">
 
 
-        <router-link to="/certificado-laboral">
 
-            <button style="position:absolute;display:flex;justify-content:center; background-color:transparent;border:none;right:30px;top:50px;filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.9))"> 
-            <img style="width:100px; z-index:99" src="/images/boton1.png" alt="">
-            <span class="text-2xl text-white pt-4 px-3 pb-2" style="font-weight:bold; position:absolute;bottom:-80px;border-radius:0.5rem;background-color:red" >Descargar certificado laboral</span>
+            <div class="col-6 m-auto p-3 " p->
+                <div>
+                    <RouterLink to="/certificado-laboral">
+                        <Button class="text-xl"
+                            style="color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; min-height: 100px; background-color: rgb(255, 211, 211);">
+                            Descargar certificado laboral</Button>
+                    </RouterLink>
 
-        </button>
-        </router-link>
+                </div>
+            </div>
 
-        <router-link to="/permiso">
-            <button style="position:absolute;display:flex;justify-content:center; background-color:transparent;border:none;right:288px;top:120px;filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.9))"> 
-            <img style="width:100px; z-index:99" src="/images/boton2.png" alt="">
-            <span class="text-2xl text-white pt-4 px-3 pb-2" style="font-weight:bold; position:absolute;bottom:-60px;border-radius:0.5rem;background-color:red" >Solicitar permiso</span>
 
-        </button>
-        </router-link>
-        
 
-        <router-link to="/actualizar-datos">
+            <div class="col-6 m-auto p-3 " p->
+                <div>
+                    <RouterLink to="/actualizar-datos">
+                        <Button class="text-xl"
+                            style="color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; min-height: 100px; background-color: rgb(185, 255, 183);">
+                            Actualizar mis datos</Button>
+                    </RouterLink>
 
-            <button style="position:absolute;display:flex; justify-content:center; background-color:transparent;border:none;left:44px;top:130px;    filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.9));
-"> 
-            <img style="width:96px; z-index:99" src="/images/boton3.png" alt="">
-            <span class="text-2xl text-white pt-4 px-3 pb-2" style="font-weight:bold; position:absolute;bottom:-60px;border-radius:0.5rem;background-color:red" >Actualizar mis datos</span>
-        </button>
-        </router-link>
+                </div>
+            </div>
 
-        
+
+
+            <div class="col-6 m-auto p-3 " p->
+                <div>
+                    <RouterLink to="#">
+                        <Button :disabled="true" class="text-xl"
+                            style="color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; min-height: 100px; background-color: rgb(183, 193, 255);">
+                            Solicitar permiso general</Button>
+                    </RouterLink>
+
+                </div>
+            </div>
+
+
+
+            <div class="col-6 m-auto p-3 " p->
+                <div>
+                    <RouterLink to="#">
+                        <Button :disabled="true" class="text-xl"
+                            style="color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; min-height: 100px; background-color: rgb(250, 255, 183);">
+                            Solicitar vacaciones</Button>
+                    </RouterLink>
+
+                </div>
+            </div>
+
+            
+            <div class="col-12 m-auto p-3 " p->
+
+
+                <div>
+                    <RouterLink to="#">
+                        <Button :disabled="true" class="text-xl"
+                            style="color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; min-height: 100px; background-color: rgb(255, 183, 254);">
+                            Solicitar permiso por Licencia</Button>
+                    </RouterLink>
+
+
+                </div>
+
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+
+
+
     </div>
-    </div>
-
 </template>
 
 
@@ -49,13 +98,16 @@
 </script>
 
 <style scoped>
-
-
-button{
-    transition:  all .3s ease;
+Button {
+    transition: all .2s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.208);
+    width: 100%;
+    display: flex;
+    justify-content: center;
 
 }
-button:hover{
-    transform: scale(1.1);
-}
-</style>
+
+Button:hover {
+    transform: scale(1.03);
+
+}</style>
