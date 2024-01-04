@@ -1,11 +1,13 @@
 <template>
 
-<p class="text-4xl text-center py-4" style="font-weight: bold;">Generar Certificado Laboral</p>
-<span class="a4-size mb-6" style="display: flex; height: auto;">
+<div class="mt-8 pt-8 m-2 m-auto ">
+  
+<p class="text-2xl lg:text-3xl text-center my-4 mt-8 " style="font-weight: bold;">Generar Certificado Laboral</p>
+<span class=" mb-6 col-12" style="display: flex; height: auto;">
   
   
   <InputNumber v-model="usrDni" :disabled="getUserRole()?.toLowerCase() != 'gerente'"  class="mr-5" style="width: 100%;" placeholder="Cedula del empleado"></InputNumber>
-    <Button @click="getUser(usrDni)">Buscar</Button>
+    <Button style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;" @click="getUser(usrDni)"><span style="color: white;">Buscar</span></Button>
     
 
 
@@ -13,24 +15,25 @@
 <p v-if=" usrDni==null " class="text-1xl m-auto  col-6 p-0" style="color: var(--primary-color);"> Por favor digite el numero de decumento del usuario  y presione Buscar</p>
 
 
-<p v-if="!user.dni && usrDni" class="text-5xl m-auto col-6">
+<p v-if="!user.dni && usrDni" class="text-5xl m-auto col-12">
   {{queja}}
 </p>
 
 
 
-<div class="grid mt-1"  style="min-height: ;">
 
 
-    <div  v-if="user.dni && usrDni" class=" col-12 a4-size p-0 m-auto" style=" height: max-content; background-color: transparent;" >
+
+    <div  v-if="user.dni && usrDni" class=" col-12  p-0 m-auto" style=" height: max-content; background-color: transparent;" >
+
 
         
 
         
-        <h6 class="text-center p-2 m-0 mb-5" style="border-radius: 2rem; font-weight: bold; background-color: var(--gray-200);">INFORMACIÓN DEL EMPLEADO</h6>
+        <h6 class="text-center p-2 m-0 mb-5 col-12" style="border-radius: 2rem; font-weight: bold; background-color: var(--gray-200);">INFORMACIÓN DEL EMPLEADO</h6>
 
 <div class=" px-0 grid" style="display: ;">
-    <h6 class="col-6 m-0  text-left">NOMBRE</h6>
+    <h6 class="col-6 m-0  text-left text-md">NOMBRE</h6>
     <h6 class="col-6 m-0 text-right" style="font-weight: 300;min-width: max-content;">{{ user.name }}</h6>
 </div>
 
@@ -72,36 +75,39 @@
 </div>
 
 
-
+ <Button @click="exportarComoPDF()" style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;" ><span style="color: white;"> 
+      <i :class="PrimeIcons.UPLOAD"> </i> Descargar certificado</span></Button>
         
         
         
     </div>
+   
+
     
-    <div class=" col-12 certificado" v-if="user?.status?.toLowerCase().split(' ')[0] == 'activo'" ref="contenidoParaPDF" >
+    <div class=" col-12 p-0 mt-6" style=";overflow-x: auto;  box-shadow: 0 0 20px " v-show="user?.status?.toLowerCase().split(' ')[0] == 'activo' && !temporaryScreenSize" ref="contenidoParaPDF" >
 
-      <div  class=" a4-size p-8" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.508);">
+      <div  class=" a4-size p-8 mi-clase" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.508)">
 
 
-        <img class="m-auto" src="https://salchimonster.com/images/logo.png" style="width: 10%;" alt="">
+        <img class="" src="/images/logo.png" style="width: 10%;" alt="">
 
-        <h6 style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
+        <h6 class="py-4" style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
 
 
 {{convertirFecha(serverDate)}}
 </h6>
-<h6 class="text-center mi-clase" style="font-size: 14pt; font-weight: bold;color: black; font-family: Arial, Helvetica, sans-serif;">
+<h6 class="text-center  py-5" style="font-size: 12pt; font-weight: bold;color: black; font-family: Arial, Helvetica, sans-serif;">
   INVERSIONES SALCHIMONSTER SAS
 </h6>  
 
 <!-- [Logo de la Empresa] -->
 
-<h6 style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;" class="text-center">NIT: 901.420.874-0</h6>
+<h6 style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;" class="text-center">NIT: 901.420.874-0</h6>
 
-<h6 class="text-center py-4" style="font-weight: bold;"> CERTIFICA A:   <span style="text-transform: capitalize;">{{ user.name }}</span></h6>
+<h6 class="text-center py-4" style="font-weight: bold;"> CERTIFICA A:   <span style="text-transform: uppercase;">{{ user.name }}</span></h6>
 
-<h5 class="text-l text-justify" style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
-  El(la) señor(a) <b style="text-transform: uppercase;">{{ user.name }}</b> identificado con CC No. <b>{{ user.dni }}</b> labora en nuestra empresa con un contrato <b style="text-transform: uppercase;">{{ user.contract_type }}</b> desde el dia {{ convertirFecha(user.entry_date) }} activa a la fecha desempenando el cargo de <b style="text-transform: uppercase;"> {{ user.position }}. </b> 
+<h5 class="text-md text-justify" style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
+  El(la) señor(a) <b style="text-transform: uppercase;">{{ user.name }}</b> identificado con CC No. <b>{{ user.dni }}</b> labora en nuestra empresa con un contrato <b style="text-transform: uppercase;">{{ user.contract_type }}</b> desde el dia {{ convertirFecha(user.entry_date) }} activo a la fecha desempenando el cargo de <b style="text-transform: uppercase;"> {{ user.position }}. </b> 
   
   
   <!-- Sus ingresos laborales mensuales se componen de la siguiente manera:
@@ -119,8 +125,8 @@
     <div class="col text-right p-0">{{ formatoPesosColombianos(140606)  }} </div>
   </div> -->
 
-  <h5 style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;" class="py-1 mt-0">
-    Para constancia de lo anterior se firma en Bogota D.C a {{convertirFechaserver(serverDate)}}
+  <h5 style="font-size: 12pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;" class="py-1 mt-0">
+    Para constancia de lo anterior se firma en Yumbo a {{convertirFechaserver(serverDate)}}
 
     <p class="py-6">
       Cordialmente,
@@ -142,16 +148,17 @@
 
 
 
-</div>
+      </div>
     </div>
 
 
 
 
+
+
+
+
 </div>
-
-
-
 
 
 
@@ -163,15 +170,32 @@
 
 
 
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch,computed, onBeforeUnmount } from 'vue';
 import { URI } from '../../service/conection';
 import {formatoPesosColombianos} from '../../service/formatoPesos.js';
 import { useRoute } from 'vue-router';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { nextTick } from 'vue';
+
 import { getUserDni, getUserRole } from '../../service/valoresReactivosCompartidos';
+import { PrimeIcons } from 'primevue/api';
+const screenWidth = ref(window.innerWidth);
+const isSmallScreen = computed(() => screenWidth.value < 960);
 
 
+
+const updateScreenWidth = () => {
+  screenWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', updateScreenWidth);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateScreenWidth);
+});
 
 
 const user = ref({})
@@ -353,29 +377,54 @@ console.log(numeroATexto(1111111)); // "un millón seiscientos mil"
 
 
 
+// Variable temporal para la generación de PDF
+const temporaryScreenSize = ref(isSmallScreen.value);
 
 
 
-
-const contenidoParaPDF = ref(null);
 const exportarComoPDF = async () => {
-  console.log(contenidoParaPDF)
-  try {
-    const canvas = await html2canvas(elementos, { scale: 2 });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'px',
-      format: 'a4'
-    });
+  const originalState = isSmallScreen.value;
+  temporaryScreenSize.value = false;
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-    pdf.save('documento.pdf');
-  } catch (error) {
-    console.error("Error al exportar PDF: ", error);
-    // Manejar el error adecuadamente
+  // Asegúrate de que el DOM se haya actualizado antes de capturar el contenido
+  await nextTick();
+
+  let elementoParaPDF = document.querySelector('.mi-clase');
+  if (elementoParaPDF) {
+    try {
+      // Incrementar la escala para mejorar la calidad de la imagen
+      const canvas = await html2canvas(elementoParaPDF, { scale: 2.5 });
+
+      // Usar formato JPEG con una calidad más alta
+      const imgData = canvas.toDataURL('image/jpeg', 0.9); // Aumentar aún más la calidad de la imagen
+
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: 'a4'
+      });
+
+      const width = pdf.internal.pageSize.getWidth();
+      const height = pdf.internal.pageSize.getHeight();
+
+      // Agregar la imagen con una calidad alta
+      pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+
+      pdf.save(`certificado laboral - ${user.value.name}.pdf`);
+    } catch (error) {
+      console.error("Error al exportar PDF: ", error);
+    } finally {
+      // Restablecer el estado original en un bloque finally para asegurar que se ejecute
+      temporaryScreenSize.value = originalState;
+    }
+  } else {
+    console.error("No se encontró el elemento para convertir a PDF");
+    temporaryScreenSize.value = originalState;
   }
 };
+
+
+
 
 
 
@@ -388,18 +437,26 @@ const exportarComoPDF = async () => {
 
 
 .a4-size {
-    width: 210mm;
-    height: 297mm;
-    margin: auto; /* Centrar en la pantalla */
-    background-color: white; /* Opcional: para simular el color de una hoja de papel */
+   width: 210mm;
+   min-width: 210mm;
+   height: 297mm;
+   min-height: 297mm;
+    margin: auto; /* Centrar 
+    overn la pantalla */
+    background-color: white;
+    overflow-x:auto ; /* Opcional: para simular el color de una hoja de papel */
 }
 
-
+.a4-size * {
+   font-optical-sizing:12pt ;
+}
 
 *{
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 14pt;
+  /* font-size: 12pt; */
   color: black;
+  max-width:210mm ;
+  margin: auto;
 }
 
 </style>
