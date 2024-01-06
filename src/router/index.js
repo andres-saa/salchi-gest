@@ -107,6 +107,7 @@ const router = createRouter({
                     name: 'actualizar-datos',
                     component: () => import('@/views/pages/dialogoEditUser.vue')
                   },
+                  
   
   
                 // {
@@ -214,6 +215,11 @@ const router = createRouter({
                     meta: { roles: roles.administracion } // Asignación correcta dentro de 'meta'
 
                 },
+                {
+                    path: '/autorizar-permisos',
+                    name: 'autorizar',
+                    component: () => import('@/views/pages/autorizar-permisos.vue')
+                  },
                 // {
                 //     path: '/documentation',
                 //     name: 'documentation',

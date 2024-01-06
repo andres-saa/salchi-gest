@@ -89,12 +89,12 @@ const obtenerDatosFiltrados = () => {
     if (!filters.value.global.value) {
         return users.value;
     }
-    const filtroGlobal = filters.value.global.value.toLowerCase();
+    const filtroGlobal = filters.value.global.value.trim().toLowerCase();
     return users.value.filter(user => {
         // Aquí asumimos que `user` es un objeto y comprobamos cada propiedad
         // Cambia esto según la estructura de tus datos
         return Object.values(user).some(value =>
-            value && value.toString().toLowerCase().includes(filtroGlobal)
+            value && value.toString().trim().toLowerCase().includes(filtroGlobal)
         );
     });
 };
@@ -111,7 +111,7 @@ const onImageError = (gender, event) => {
     if (!gender || gender == '') {
         event.target.src = genders.default
     } else
-        event.target.src = genders[gender.toLowerCase()]
+        event.target.src = genders[gender.trim().toLowerCase()]
 }
 
 
@@ -130,7 +130,7 @@ const processAndSendData = async (data) => {
             dni: employer.Documento ? employer.Documento.toString() : '  ',
             address: employer.Direccion || '',
             position: employer.Cargo || '',
-            site_id: sites.find(item => item.site_name?.toLowerCase().includes(employer.Sede.toLowerCase()))?.site_id || 12,
+            site_id: sites.find(item => item.site_name?.trim().toLowerCase().includes(employer.Sede.trim().toLowerCase()))?.site_id || 12,
             status: employer.Estado || '',
             gender: employer.Género || '',
 
@@ -156,7 +156,7 @@ const processAndSendData = async (data) => {
             email: employer["Correo Electrónico"] || null,
             exit_reason: employer["Motivo de Salida"] || null,
             comments_notes: "",
-            authorization_data: employer["Autorización de Datos"].toLowerCase() == 'sí' || employer["Autorización de Datos"].toLowerCase() == 'si',
+            authorization_data: employer["Autorización de Datos"].trim().toLowerCase() == 'sí' || employer["Autorización de Datos"].trim().toLowerCase() == 'si',
             birth_country: employer["País de Nacimiento"] || null,
             birth_department: employer["Departamento de Nacimiento"] || null,
             birth_city: employer["Ciudad de Nacimiento"] || null,
@@ -167,15 +167,15 @@ const processAndSendData = async (data) => {
             eps: employer.EPS || null,
             pension_fund: employer["Fondo de Pensión"] || null,
             severance_fund: employer["Fondo de Cesantías"] || null,
-            has_children: employer["Tiene Hijos"]?.toLowerCase() == 'sí' || employer["Tiene Hijos"]?.toLowerCase() == 'si',
+            has_children: employer["Tiene Hijos"]?.trim().toLowerCase() == 'sí' || employer["Tiene Hijos"]?.trim().toLowerCase() == 'si',
             housing_type: employer["Tipo de Vivienda"] || null,
-            has_vehicle: employer["Tiene Vehiculo"]?.toLowerCase() == 'sí' || employer["Tiene Vehiculo"]?.toLowerCase() == 'si',
+            has_vehicle: employer["Tiene Vehiculo"]?.trim().toLowerCase() == 'sí' || employer["Tiene Vehiculo"]?.trim().toLowerCase() == 'si',
             vehicle_type: employer["Tipo de Vehiculo"] || null,
             household_size: employer["Tamaño del Hogar"] ? parseInt(employer["Tamaño del Hogar"], 10) : 0,
             emergency_contact: employer["Contacto de Emergencia"] ? employer["Contacto de Emergencia"].toString() : '  ',
             shirt_size: employer["Talla de Camisa"] ? employer["Talla de Camisa"].toString() : '  ',
             jeans_sweater_size: employer["Talla de Pantalón"] ? employer["Talla de Pantalón"].toString() : '  ',
-            food_handling_certificate: employer["Certificado de Manejo de Alimentos"]?.toLowerCase() === 'sí' || employer["Certificado de Manejo de Alimentos"]?.toLowerCase() === 'si',
+            food_handling_certificate: employer["Certificado de Manejo de Alimentos"]?.trim().toLowerCase() === 'sí' || employer["Certificado de Manejo de Alimentos"]?.trim().toLowerCase() === 'si',
             food_handling_certificate_number: employer["Número de Certificado de Manejo de Alimentos"] || "",
             salary: employer.Salario ? parseFloat(employer.Salario) : 0
         };
@@ -310,8 +310,8 @@ const asignDropValueToEdit = (user) => {
     // console.log(statusDropValue.value)
     // GenderDropValue.value = findByName(user.gender, GenderDropValues)
     // PositionDropValue.value = findByName(user.position, PositionDropValues)
-    SiteDropValue.value = findSiteById(user.site_id)
-    departamentDropValue.value = findByDepartament(user.birth_department)
+    SiteDropValue.value = user.site_name
+    departamentDropValue.value = user.birth_department
     cityDropValue.value = user.birth_city
     statusDropValue.value = user.status
 
@@ -391,7 +391,7 @@ const asingDataToSave = () => {
     data.site_id = SiteDropValue.value.site_id
     data.food_handling_certificate_number = switchFoodHandlingCertificate.value ? data.food_handling_certificate_number : null;
     // swithHasVehicle.value? data.vehicle_type = null:data.vehicle_type = vehicleTypeDropValue.value
-    data.birth_department = departamentDropValue.value.departamento
+    data.birth_department = departamentDropValue.value
     data.birth_city = cityDropValue.value
 
     // data.status = currentUser.status
@@ -1336,7 +1336,7 @@ const verIMagen = (dni) => {
                     <!-- Sample input field with validation -->
                     <div class="field">
                         <label for="birth_department">Departamento de Nacimiento</label>
-                        <Dropdown filter v-model="departamentDropValue" :options="departamentos" optionLabel="departamento"
+                        <InputText filter v-model="departamentDropValue"  optionLabel="departamento"
                             placeholder="" required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
                         </small>
@@ -1345,7 +1345,7 @@ const verIMagen = (dni) => {
                     <!-- Sample input field with validation -->
                     <div class="field">
                         <label for="birth_city">Ciudad de Nacimiento</label>
-                        <Dropdown filter v-model="cityDropValue" :options="departamentDropValue.ciudades" placeholder=""
+                        <InputText filter v-model="cityDropValue"  placeholder=""
                             required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
                         </small>
@@ -1554,7 +1554,7 @@ const verIMagen = (dni) => {
                                     <span :class="'product-badge status-' + slotProps.value.value">{{ slotProps.value.label }}</span>
                                 </div>
                                 <div v-else-if="slotProps.value && !slotProps.value.value">
-                                    <span :class="'product-badge status-' + slotProps.value.toLowerCase()">{{ slotProps.value }}</span>
+                                    <span :class="'product-badge status-' + slotProps.value.trim().toLowerCase()">{{ slotProps.value }}</span>
                                 </div>
                                 <span v-else>
                                     {{ slotProps.placeholder }}

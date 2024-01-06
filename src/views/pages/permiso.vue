@@ -1,7 +1,7 @@
 <template>
   <div class="  m-2 m-auto ">
 
-    <p class="text-2xl lg:text-3xl text-center my-4 mt-8 " style="font-weight: bold;">Generar Certificado Laboral</p>
+    <p class="text-2xl lg:text-3xl text-center my-4 mt-8 " style="font-weight: bold;">Solicitar permiso General</p>
     <span class=" mb-6 col-12" style="display: flex; height: auto;">
 
 
@@ -170,7 +170,7 @@
 
           <p class="p-0 m-0" style="width: 100%;">
             <span style="font-weight: bold;">Nombre: </span> <span
-              style="width: 100%; border-bottom: 1px solid ; padding-bottom: 0; padding-right:3rem">{{ convertirFecha(user.user_name) }}</span>
+              style="width: 100%; border-bottom: 1px solid ; padding-bottom: 0; padding-right:3rem">{{ user.name }}</span>
           </p>
 
           <p class="p-0 m-0">
@@ -220,9 +220,14 @@
               <div class="mb-2" style="font-weight: bold;">
                 Observaciones
               </div>
-              <div>
-                {{ Observaciones }}
-              </div>
+                <h6 class="  col-12">
+      
+            <Textarea class="col-12 text-xl" style="min-width: 600px; max-width: 600px;" v-model="Observaciones" required="true" autofocus />
+
+
+        </h6>
+          
+            
             </div>
 
 
@@ -392,10 +397,11 @@ const solicitarPermiso = async () => {
     employer_id: user.value.id,
     start_date: formatDate(desde.value),
     end_date: formatDate(hasta.value),
-    observations: Observaciones.value,
+    observations: Observaciones.value || 'sin observaciones',
+    tipo:'General',
     status: { status: 'generado', timestamp: serverDate.value },
-    history: [{}]
-  };
+    history: [{ status: 'generado', timestamp: serverDate.value }]
+  }
 
   try {
     const response = await fetch(`${URI}/permission`, {

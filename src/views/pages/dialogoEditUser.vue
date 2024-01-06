@@ -139,7 +139,7 @@
         <!-- Sample input field with validation -->
         <div class="field">
             <label for="birth_department">Departamento de Nacimiento</label>
-            <Dropdown filter v-model="departamentDropValue" :options="departamentos" optionLabel="departamento"
+            <InputText filter v-model="departamentDropValue" optionLabel="departamento"
                 placeholder="" required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
             <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
             </small>
@@ -148,7 +148,7 @@
         <!-- Sample input field with validation -->
         <div class="field">
             <label for="birth_city">Ciudad de Nacimiento</label>
-            <Dropdown filter v-model="cityDropValue" :options="departamentDropValue.ciudades" placeholder="" required="true"
+            <InputText filter v-model="cityDropValue"  placeholder="" required="true"
                 :class="{ 'p-invalid': submitted && !currentUser.gender }" />
             <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
             </small>

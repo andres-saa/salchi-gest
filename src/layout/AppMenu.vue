@@ -128,6 +128,7 @@ const model = ref([
                 
             },
             
+            
 
             // {
             //     label: 'Auditorias', icon: 'pi pi-fw pi-home', to: '/sites',
@@ -137,6 +138,35 @@ const model = ref([
         ]
     },
 
+    {
+        label: 'Revisar',
+        roles:roles.todos,
+        items: [
+            // {
+            //     label: 'Base de datos del personal', icon: 'pi pi-fw pi-home', to: '/pages/crud',
+               
+            // },
+            // {
+            //     label: 'Celebraciond de cumpleanos', icon: 'pi pi-fw pi-home', to: '/cumples',
+                
+            // },
+            {
+                label: 'Permisos', icon: 'pi pi-fw pi-home', to: '/autorizar-permisos',
+                
+            },
+
+            
+            
+
+            // {
+            //     label: 'Auditorias', icon: 'pi pi-fw pi-home', to: '/sites',
+                
+            // }
+        
+        ]
+    },
+
+    
 
     {
         label: 'Datos',
