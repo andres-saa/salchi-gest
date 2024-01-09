@@ -288,13 +288,13 @@
 
 
 
-
     <div v-if="!user.dni" class="col-12">
       <img src="/images/vacaciones.jpg" alt="" srcset="" style="width: 100%;height: 50vh;object-fit: cover; border-radius: 1rem;">
     </div>
  
 
   </div>
+
 
 
 
