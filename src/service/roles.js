@@ -24,7 +24,8 @@
         'diseñador',
         'community manager',
         'gerente',
-        'subgerente'
+        'subgerente',
+        'getion humana',
         ],
     documentos:[
     
@@ -40,7 +41,8 @@
     
         'gerencia general',
         'gerente',
-        'subgerente'
+        'subgerente',
+        'gestion humana'
         ]
  }
 

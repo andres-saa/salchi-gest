@@ -38,7 +38,7 @@ const model = ref([
 
     {
         label: 'RECURSOS HUMANOS',
-        roles:roles.documentos,
+        roles:roles.adminTienda,
         items: [
             {
                 label: 'Base de datos del personal', icon: 'pi pi-fw pi-home', to: '/pages/crud',
@@ -145,7 +145,7 @@ const model = ref([
 
     {
         label: 'Revisar',
-        roles:roles.adminTienda,
+        roles:[],
         items: [
             // {
             //     label: 'Base de datos del personal', icon: 'pi pi-fw pi-home', to: '/pages/crud',

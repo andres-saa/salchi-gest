@@ -212,7 +212,7 @@ const router = createRouter({
                     path: '/pages/crud',
                     name: 'crud',
                     component: () => import('@/views/pages/Crud.vue'),
-                    meta: { roles: roles.todos } // Asignación correcta dentro de 'meta'
+                    meta: { roles: roles.adminTienda } // Asignación correcta dentro de 'meta'
 
                 },
                 {
