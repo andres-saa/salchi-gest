@@ -47,13 +47,13 @@ onMounted(obtenerFechaServidor);
 </script>
 
 <template>
-<div class="cont">
+<div class="cont p-2">
   <h5 class="m-auto col-12  text-center text-5xl" style="font-weight: bold; color: ;"> Cumples <i class="pi pi-spin pi-star-fill
 " style="font-size: 3rem"></i> </h5>
   <h5 class="m-auto col-12  text-center text-2xl"> Hoy: {{ fechaFormateada }} 
        </h5>
 
-  <div class="lg:col-6 md:col-9 m-auto" style="border-radius: 1REM; box-shadow: 0 0 20px rgba(0, 0, 0, 0.433); background-color: rgb(255, 206, 206);">
+  <div class="lg:col-6 md:col-9 m-auto p-4" style="border-radius: 1REM; box-shadow: 0 0 20px rgba(0, 0, 0, 0.433); background-color: rgb(255, 206, 206);">
 
 
 

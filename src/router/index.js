@@ -107,6 +107,7 @@ const router = createRouter({
                     name: 'actualizar-datos',
                     component: () => import('@/views/pages/dialogoEditUser.vue')
                   },
+                  
   
   
                 // {
@@ -211,9 +212,33 @@ const router = createRouter({
                     path: '/pages/crud',
                     name: 'crud',
                     component: () => import('@/views/pages/Crud.vue'),
-                    meta: { roles: roles.administracion } // Asignación correcta dentro de 'meta'
+                    meta: { roles: roles.todos } // Asignación correcta dentro de 'meta'
 
                 },
+                {
+                    path: '/autorizar-permisos',
+                    name: 'autorizar',
+                    component: () => import('@/views/pages/autorizar-permisos.vue'),
+                    children:[
+                        {
+                            path: '/autorizar-permisos/:tipo',
+                            name: 'permisotipo',
+                            component: () => import('@/views/pages/permisoType.vue'),
+                            meta: { roles: roles.todos }, // Asignación correcta dentro de 'meta'
+                            children:[
+                                {
+                                    path: '/autorizar-permisos/:tipo/:status',
+                                    name: 'permisoestado',
+                                    component: () => import('@/views/pages/permisoStatus.vue'),
+
+                                  },
+
+                            ]
+        
+                        },
+
+                    ]
+                  },
                 // {
                 //     path: '/documentation',
                 //     name: 'documentation',

@@ -9,8 +9,8 @@
     <Button  @click="showAgregarProducto = !showAgregarProducto" class=" ml-2 mb-4"> Agregar  </Button>
 </span>
 
-    <div class="grid p-2 col-12 m-auto" style="max-width: 1280px;" >
-        <div v-for="product in products" :key="product.id" class="xl:col-3 lg:col-4 md:p-3 col-12 m-0 ">
+    <div class="grid p-5 md:p-0 m-0 col-12 m-auto" style="max-width: 1280px;" >
+        <div v-for="product in products" :key="product.id" class="xl:col-3 lg:col-4 md:p-3 p-2 col-12 md:col-6 mb-4 ">
             <TarjetaMenu class="col-12 m-0 p-0"  :product="product"></TarjetaMenu>
         </div>
     </div>

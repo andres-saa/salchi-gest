@@ -1,38 +1,44 @@
 <template>
-    <div class="col-12 m-auto" style="position:relative;;width:700px">
-        <img  style="width:100%;opacity:0.4; height:100%;object-fit:cover" src="/images/home.jpg" alt="">
+    <div class="col-12 m-auto "
+        style="max-width: 900px;display: ;height: 70vh;align-items: center;justify-content: center; flex-direction: column; ">
 
-    
+        <p class="text-2xl lg:text-4xl   col-12 text-center" style="font-weight: bold;width: auto; "> Accesos rápidos</p>
+
+        <div class="col-12 grid  p-3 m-auto  ">
 
 
-        <router-link to="/certificado-laboral">
 
-            <button style="position:absolute;display:flex;justify-content:center; background-color:transparent;border:none;right:30px;top:75px;filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.9))"> 
-            <img style="width:96px; z-index:99" src="/images/boton1.png" alt="">
-            <span class="text-2xl text-white pt-4 px-3 pb-2" style="font-weight:bold; position:absolute;bottom:-80px;border-radius:0.5rem;background-color:red" >Descargar certificado laboral</span>
+            <div class="lg:col-4 col-6  p-0 " v-for="menu in menus" >
+                <div class="p-2">
+                    <RouterLink :to="menu.to">
+                        <Button class="text-xl "
+                            style="display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; height: 20vh;min-height:200px; background-color: rgb(255, 211, 211);">
 
-        </button>
-        </router-link>
+                            <span class="text-lg lg:text-xl p-3 col-12" style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px black;">
+                                {{menu.nombre}}
+                            </span>
+                    
 
-        <router-link to="/permiso">
-            <button style="position:absolute;display:flex;justify-content:center; background-color:transparent;border:none;right:283px;top:7px;top:140px;filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.9))"> 
-            <img style="width:96px; z-index:99" src="/images/boton2.png" alt="">
-            <span class="text-2xl text-white pt-4 px-3 pb-2" style="font-weight:bold; position:absolute;bottom:-60px;border-radius:0.5rem;background-color:red" >Solicitar permiso</span>
+                            <div style="width: 100%;height: 100%; object-fit: ; position: absolute;" class="imagen p-0">
+                                <img class=" p-0" :src="menu.imagen" alt="" style="height: 100%;width: 100%; object-fit: cover;">
 
-        </button>
-        </router-link>
-        
+                            </div>
+                        
+                        
+                        </Button>
+                    </RouterLink>
 
-        <router-link to="/actualizar-datos">
+                </div>
+            </div>
 
-            <button style="position:absolute;display:flex; justify-content:center; background-color:transparent;border:none;right:532px;top:150px;    filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.9));
-"> 
-            <img style="width:96px; z-index:99" src="/images/boton3.png" alt="">
-            <span class="text-2xl text-white pt-4 px-3 pb-2" style="font-weight:bold; position:absolute;bottom:-60px;border-radius:0.5rem;background-color:red" >Actualizar mis datos</span>
-        </button>
-        </router-link>
 
-        
+
+        </div>
+
+
+
+
+
     </div>
 </template>
 
@@ -43,16 +49,70 @@
 <script setup>
 
 
+const menus = [
+    {
+        nombre:'Descargar certificado laboral',
+        to:'/certificado-laboral',
+        imagen:"/images/certificado.webp"
+    },
+    {
+        nombre:'Actualizar mis datos',
+        to:'/actualizar-datos',
+        imagen:"/images/actualizar.webp"
+    },
+    {
+        nombre:'Solicitar permiso general',
+        to:'/permiso',
+        imagen:"/images/permiso.jpg"
+    },
+    {
+        nombre:'Descargar solicitar permiso por licencia',
+        to:'/permiso-licencia',
+        imagen:"/images/licencia.avif"
+    },
+    {
+        nombre:'Solicitar vacaciones',
+        to:'/permiso-vacaciones',
+        imagen:"/images/vacaciones.jpg"
+    },
+
+]
+
 </script>
+
+
 
 <style scoped>
 
 
-button{
-    transition:  all .3s ease;
+.imagen::before{
+
+    content: '';
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    position: absolute;
+    top:0;
+    left:0;
+    backdrop-filter: blur(2px);
+    object-fit: cover;
+
 
 }
-button:hover{
-    transform: scale(1.1);
+Button img {
+    transition: all .3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.208);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+
 }
-</style>
+
+Button img:hover {
+    transform: scale(1.03);
+
+}</style>

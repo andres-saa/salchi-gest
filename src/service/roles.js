@@ -44,6 +44,7 @@
         ]
  }
 
+ 
  function verificarRol(rol, rolesPermitidos) {
     // Eliminar espacios innecesarios y convertir a minúsculas
     let rolNormalizado = rol.trim().toLowerCase();

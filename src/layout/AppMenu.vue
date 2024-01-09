@@ -104,7 +104,7 @@ const model = ref([
         ]
     },
     {
-        label: 'PERMISOS',
+        label: 'SOLICITAR PERMISOS',
         roles:roles.todos,
         items: [
             // {
@@ -127,6 +127,11 @@ const model = ref([
                 label: 'Permiso', icon: 'pi pi-fw pi-home', to: '/permiso'
                 
             },
+            {
+                label: 'Mis permisos', icon: 'pi pi-fw pi-home', to: '/permiso'
+                
+            },
+            
             
 
             // {
@@ -137,6 +142,43 @@ const model = ref([
         ]
     },
 
+    {
+        label: 'Revisar',
+        roles:roles.adminTienda,
+        items: [
+            // {
+            //     label: 'Base de datos del personal', icon: 'pi pi-fw pi-home', to: '/pages/crud',
+               
+            // },
+            // {
+            //     label: 'Celebraciond de cumpleanos', icon: 'pi pi-fw pi-home', to: '/cumples',
+                
+            // },
+            {
+                label: 'Permisos', icon: 'pi pi-fw pi-home', to: '/autorizar-permisos/general/generado',
+                
+            },
+            {
+                label: 'vacaciones', icon: 'pi pi-fw pi-home', to: '/autorizar-permisos/vacaciones/generado',
+                
+            },
+            {
+                label: 'Licencias', icon: 'pi pi-fw pi-home', to: '/autorizar-permisos/licencia/generado',
+                
+            },
+
+            
+            
+
+            // {
+            //     label: 'Auditorias', icon: 'pi pi-fw pi-home', to: '/sites',
+                
+            // }
+        
+        ]
+    },
+
+    
 
     {
         label: 'Datos',

@@ -1,16 +1,20 @@
 <template>
-    <div style="display: flex;height: 100vh;">
-
-      <form class="col-12 md:col-6 lg:col-4 xl:col-3 m-auto p-5 " @submit.prevent="login" style="border-radius: 1rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.389); display: flex;flex-direction: column; background-color: rgb(255, 255, 255);">
-        <p class="text-2xl" style="font-weight: bold;">Iniciar sesion</p>
-        <InputText class="my-3" v-model="credentials.username" type="text" placeholder="identificacion" />
-        <InputText class="my-3" v-model="credentials.password" type="password" placeholder="Clave" />
-        <Button class="my-3" type="submit">Iniciar</Button>
+  <div style="display: flex; height: 90vh;" class="p-5">
+      <form class="col-12 md:col-6 lg:col-4 xl:col-3 m-auto p-" @submit.prevent="login" 
+            style="display: flex; border-radius: 1rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.389); 
+            display: flex; flex-direction: column; background-color: rgb(255, 255, 255); 
+            align-items: center;">
+          <img src="/images/logo.png" alt="" style="width: 48px;" class="m-3">
+          <p class="text-2xl" style="font-weight: bold;">Iniciar sesión</p>
+          <InputText class="my-3  " v-model="credentials.username" type="text" 
+                     placeholder="identificación" style="width: 100%;" />
+          <Password class="my-3 col-12 p-0 " v-model="credentials.password" placeholder="Clave" 
+                    toggleMask style="width: ;" />
+          <Button class="my-3 " type="submit" style=""><span class="text-center m-auto"> Iniciar Sesion </span></Button>
       </form>
+  </div>
+</template>
 
-
-    </div>
-  </template>
   
   <script>
   import { ref } from 'vue';

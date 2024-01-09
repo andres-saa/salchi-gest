@@ -1,15 +1,15 @@
 <template>
 
-    <div class="col-12" style="height:80vh; display:flex; align-items: center; justify-content: center;">
+    <div class="col-12" style="height:80vh; display:flex; align-items: center; justify-content: center;overflow-x: auto;">
         
-        <Button @click="productDialog = true" class="p-button-danger" style="z-index: 99; position: absolute;border: none; ; font-weight: bold"> ACTUALIZAR MIS DATOS</Button>
-        <img class=""  style="width: 900px;opacity: 0.5; max-width: 900px;height: 100%;object-fit: cover;" src="/images/actualizar-datos.jpg" alt="">
+        <!-- <Button @click="productDialog = true" class="p-button-danger" style="z-index: 99; position: absolute;border: none; ; font-weight: bold"> ACTUALIZAR MIS DATOS</Button> -->
+        <img class=""  style="width: 900px; max-width: 900px;height: 100%;object-fit: cover;" src="/images/actualizar.webp" alt="">
     </div>
 
 
    <Toast/>
     <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Actualizar mis datos" :modal="true"
-        class="p-fluid m-4">
+        class="p-fluid m-2">
 
         <!-- <img src="http://localhost:8000/read-site-cover/IMPERIO%20CANEY" :alt="currentUser.id"
                         v-if="currentUser.id" width="150" class="mt-0 mx-auto mb-5 block shadow-2" /> -->
@@ -25,7 +25,7 @@
         <img class="img-profile-add" style="width: 100%;; object-fit: contain;border-radius: 1rem;"
             :src="urlPhotoProfile ? urlPhotoProfile : `${URI}/read-product-image/600/employer-${currentUser.dni}`"
             alt="">
-        <div class="field col-12 mt-5 p-0">
+        <div class="field col-12 mt-6 mb-6 p-0">
             <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" style="display: none;">
             <Button  label="Seleccionar foto de perfil" class=" m-0"
                 style="width: 100%; background-color: var(--primary-color);" @click="$refs.fileInput.click();" />
@@ -139,18 +139,18 @@
         <!-- Sample input field with validation -->
         <div class="field">
             <label for="birth_department">Departamento de Nacimiento</label>
-            <Dropdown filter v-model="departamentDropValue" :options="departamentos" optionLabel="departamento"
+            <InputText filter v-model="currentUser.birth_department" optionLabel="departamento"
                 placeholder="" required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
             <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
             </small>
-        </div>
+        </div>  
 
         <!-- Sample input field with validation -->
         <div class="field">
             <label for="birth_city">Ciudad de Nacimiento</label>
-            <Dropdown filter v-model="cityDropValue" :options="departamentDropValue.ciudades" placeholder="" required="true"
-                :class="{ 'p-invalid': submitted && !currentUser.gender }" />
-            <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
+            <InputText filter v-model="currentUser.birth_city"  placeholder="" required="true"
+                :class="{ 'p-invalid': submitted && !currentUser.birth_city }" />
+            <small class="p-invalid" v-if="submitted && !currentUser.birth_city">el genero es obligatorio
             </small>
         </div>
 
@@ -181,7 +181,7 @@
 
         <div class="field">
             <label for="entry_date">Fecha de Ingreso</label>
-            <Calendar id="entry_date" v-model="currentUser.entry_date" required="true" autofocus
+            <Calendar :disabled="!verificarRol(getUserRole(),roles.adminTienda)" id="entry_date" v-model="currentUser.entry_date" required="true" autofocus
                 :class="{ 'p-invalid': submitted && !currentUser.entry_date }" />
             <small class="p-invalid" v-if="submitted && !currentUser.entry_date">Fecha de ingreso es
                 obligatoria.</small>
@@ -204,8 +204,8 @@
         </div>
 
         <div class="field">
-            <label for="contract_type">Tipo de Contrato</label>
-            <Dropdown v-model="currentUser.contract_type" :options="employmentContractTypeDropValues" placeholder=""
+            <label for="contract_type" >Tipo de Contrato</label>
+            <Dropdown :disabled="!verificarRol(getUserRole(),roles.adminTienda)" v-model="currentUser.contract_type" :options="employmentContractTypeDropValues" placeholder=""
                 required="true" :class="{ 'p-invalid': submitted && !currentUser.contract_type }" />
             <small class="p-invalid" v-if="submitted && !currentUser.contract_type">Tipo de Contrato es
                 obligatorio.</small>
@@ -234,7 +234,7 @@
                 obligatorio.</small>
         </div>
 
-        <div class="field inputSwith">
+        <div class="field inputSwith" style="display: flex; align-items: center; justify-content: space-between;">
             <label for="has_children">Tiene Hijos</label>
             <InputSwitch id="has_children" v-model="currentUser.has_children" />
         </div>
@@ -248,7 +248,7 @@
         </div>
 
 
-        <div class="field inputSwith">
+        <div class="field inputSwith" style="display: flex; align-items: center; justify-content: space-between;">
             <label for="has_vehicle">Tiene Vehiculo</label>
             <InputSwitch id="has_vehicle" v-model="currentUser.has_vehicle" />
         </div>
@@ -293,9 +293,9 @@
                 obligatoria.</small>
         </div>
 
-        <div class="field inputSwith">
-            <label for="food_handling_certificate">Certificado de Manejo de Alimentos</label>
-            <InputSwitch id="food_handling_certificate" v-model="currentUser.food_handling_certificate" />
+        <div class="field inputSwith p-0" style="display: flex; align-items: center; justify-content: space-between;">
+            <label class="p-0" for="food_handling_certificate">Certificado de Manejo de Alimentos</label>
+            <InputSwitch class="p-0" id="food_handling_certificate" v-model="currentUser.food_handling_certificate" />
         </div>
 
         <div class="field" v-show="currentUser.food_handling_certificate">
@@ -308,7 +308,7 @@
 
         <div class="field">
             <label for="salary">Salario</label>
-            <InputNumber id="salary" v-model.number="currentUser.salary" />
+            <InputNumber :disabled="!verificarRol(getUserRole(),roles.adminTienda)" id="salary" v-model.number="currentUser.salary" />
         </div>
 
         <div class="field">
@@ -320,7 +320,7 @@
 
         <div class="field">
             <label for="status">Estado</label>
-            <Dropdown v-model="currentUser.status" :options="statusDropValues" placeholder="" required="true"
+            <Dropdown :disabled="!verificarRol(getUserRole(),roles.adminTienda)" v-model="currentUser.status" :options="statusDropValues" placeholder="" required="true"
                 :class="{ 'p-invalid': submitted && !currentUser.status }" />
             <small class="p-invalid" v-if="submitted && !currentUser.status">Estado es obligatorio.</small>
         </div>
@@ -337,7 +337,7 @@
                 requerido.</small>
         </div>
 
-        <div class="field inputSwith">
+        <div class="field inputSwith" style="display: flex; align-items: center; justify-content: space-between;">
             <label for="authorization_data">Autorización de Datos</label>
             <div class="input-with-label">
                 <InputSwitch id="authorization_data" v-model="currentUser.authorization_data" />
@@ -471,7 +471,7 @@ const epsDropValue = ref(null)
 const housingTypesDropValue = ref(null)
 const vehicleTypeDropValue = ref(null)
 const serverResponse = ref('')
-const departamentDropValue = ref([])
+const departamentDropValue = ref('')
 const cityDropValue = ref([])
 const excelData = ref(null);
 const imageUrlUserAdd = ref("file:///home/ludi/Downloads/9aa6397c673a5906ed994997df3a66bdc3e4f68dr1-194-259v2_00.jpg")
@@ -537,8 +537,8 @@ const asingDataToSave = () => {
     data.site_id = SiteDropValue.value.site_id
     data.food_handling_certificate_number = switchFoodHandlingCertificate.value ? data.food_handling_certificate_number : null;
     // swithHasVehicle.value? data.vehicle_type = null:data.vehicle_type = vehicleTypeDropValue.value
-    data.birth_department = departamentDropValue.value.departamento
-    data.birth_city = cityDropValue.value
+    data.birth_department = data.birth_department
+    data.birth_city = data.birth_city
 
     // data.status = currentUser.status
     data.exit_date = (data.status === "activo") ? null : data.exit_date;
@@ -641,7 +641,7 @@ const asignDropValueToEdit = (user) => {
 // GenderDropValue.value = findByName(user.gender, GenderDropValues)
 // PositionDropValue.value = findByName(user.position, PositionDropValues)
 SiteDropValue.value = findSiteById(user.site_id)
-departamentDropValue.value = findByDepartament(user.birth_department)
+departamentDropValue.value = user.birth_department
 cityDropValue.value = user.birth_city
 statusDropValue.value = user.status
 

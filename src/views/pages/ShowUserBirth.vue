@@ -500,7 +500,7 @@ const initFilters = () => {
 
 
                    
-                    <!-- <Column field="site_name" header="Sede" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <Column field="site_name" header="Sede" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="user">
                             <span class="p-column-title">Category</span>
                             {{ user.data.site_name }}
@@ -508,7 +508,7 @@ const initFilters = () => {
                     </Column>
 
                    
-
+ <!--
 
                     <Column field="gender" header="Género" :sortable="true" headerStyle="width:10%; min-width:8rem;">
                         <template #body="user">

@@ -254,7 +254,7 @@ overflow: hidden;
 .cont {
     /* border: 1px solid gray; */
     border-radius: 1rem;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.11);
     /* margin: 20px; */
     /* height: max-content; */
     /* width: 100%; */

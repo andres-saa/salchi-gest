@@ -1,5 +1,7 @@
 <template>
-    <div style="display: flex; align-items: center;" class="col p-2 col-12">
+
+    <div class="col-12 m-auto md:pl-6 p-2" style="max-width: 1024px;">
+        <div style="display: flex; align-items: center;" class="col p-2 col-12">
         <Dropdown class="col-12 md:col-6 p-0   " v-model="siteDropValue" :options="siteDropValues" optionLabel="site_name"
             placeholder="sede" />
     </div>
@@ -42,6 +44,9 @@
 
 
 
+
+    </div>
+   
     <Dialog header="Confirmation" v-model:visible="showAgregarCategoria" :style="{ width: '350px' }" :modal="true">
         <h5>Nombre de la nueva categoria</h5>
         <span class="p-input-icon-left " style="width: 100%;">

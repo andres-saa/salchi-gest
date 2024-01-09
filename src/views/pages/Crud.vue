@@ -4,6 +4,8 @@ import { FilterMatchMode } from 'primevue/api';
 import { ref, onMounted, onBeforeMount, computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { departamentos, findByDepartament } from '@/service/CountryService.js'
+import { jsPDF } from "jspdf";
+
 import { uploadUserPhotoProfile } from '@/service/sendFileService'
 import {
     sitesDropValues,
@@ -29,6 +31,7 @@ import { URI } from "@/service/conection.js"
 // import logo from '@/images/logo.png'
 import { getUserRole } from '@/service/valoresReactivosCompartidos.js'
 import * as XLSX from 'xlsx';
+// import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 const toast = useToast();
 const users = ref([]);
 const adding = ref(false);
@@ -89,12 +92,12 @@ const obtenerDatosFiltrados = () => {
     if (!filters.value.global.value) {
         return users.value;
     }
-    const filtroGlobal = filters.value.global.value.toLowerCase();
+    const filtroGlobal = filters.value.global.value.trim().toLowerCase();
     return users.value.filter(user => {
         // Aquí asumimos que `user` es un objeto y comprobamos cada propiedad
         // Cambia esto según la estructura de tus datos
         return Object.values(user).some(value =>
-            value && value.toString().toLowerCase().includes(filtroGlobal)
+            value && value.toString().trim().toLowerCase().includes(filtroGlobal)
         );
     });
 };
@@ -108,74 +111,203 @@ const onImageError = (gender, event) => {
         default: '/images/who.png'
     }
 
-    if (!gender || gender == '') {
+
+    if (!gender || gender == '' || gender == 'N/A') {
         event.target.src = genders.default
     } else
-        event.target.src = genders[gender.toLowerCase()]
+        event.target.src = genders[gender.trim().toLowerCase()]
 }
 
 
 
+function normalizarCedula(cedula) {
+  // Reemplazar puntos, comas y espacios con una cadena vacía
+  const cedulaNormalizada = cedula.toString().replace(/[.,\s]/g, '');
+
+  return cedulaNormalizada;
+}
+
+
+function validarCargo(cargo) {
+  // Convertir el cargo a minúsculas y eliminar espacios al inicio y al final para comparar de manera insensible a mayúsculas y minúsculas
+  const cargoLowerCase = cargo.toString().trim().toLowerCase();
+
+  // Recorrer la lista predefinida y comparar con cada elemento
+  for (let i = 0; i < PositionDropValues.value.length; i++) {
+    // Aplicar toLowerCase y trim al elemento actual de la lista
+    let valorLista = PositionDropValues.value[i].trim().toLowerCase();
+
+    // Verificar si el cargo está en la lista predefinida
+    if (valorLista === cargoLowerCase) {
+      // Si está en la lista, devuelve el valor original de la lista
+      return PositionDropValues.value[i];
+    }
+  }
+
+  // Si no está en la lista, devuelve un valor predeterminado o null
+  return null; // O puedes devolver un mensaje de error, por ejemplo: "Cargo no válido"
+}
+
+
+function validar_marital_status(marital_status) {
+  // Convertir el cargo a minúsculas y eliminar espacios al inicio y al final para comparar de manera insensible a mayúsculas y minúsculas
+  const Marital_lowecase = marital_status?.toString()?.trim()?.toLowerCase();
+
+  // Recorrer la lista predefinida y comparar con cada elemento
+  for (let i = 0; i < maritalStatusDropValues.value.length; i++) {
+    // Aplicar toLowerCase y trim al elemento actual de la lista
+    let valorLista = maritalStatusDropValues.value[i].trim().toLowerCase();
+
+    // Verificar si el cargo está en la lista predefinida
+    if (valorLista === Marital_lowecase) {
+      // Si está en la lista, devuelve el valor original de la lista
+      return maritalStatusDropValues.value[i];
+    }
+  }
+
+  // Si no está en la lista, devuelve un valor predeterminado o null
+  return maritalStatusDropValues.value[0]; // O puedes devolver un mensaje de error, por ejemplo: "Cargo no válido"
+}
+
+
+function normalizarCadena(cadena) {
+    return cadena.trim().toLowerCase();
+}
+
+
+function encontrarCoincidenciaMasCercana(valor, valoresPosibles) {
+    let mejorCoincidencia = '';
+    let mejorPuntaje = 0; // Puedes ajustar el umbral de coincidencia según sea necesario
+
+    valoresPosibles.forEach(opcion => {
+        // Aquí puedes implementar un algoritmo de comparación, como la distancia de Levenshtein
+        let puntajeActual = calcularPuntajeDeSimilitud(valor, opcion);
+        if (puntajeActual > mejorPuntaje) {
+            mejorPuntaje = puntajeActual;
+            mejorCoincidencia = opcion;
+        }
+    });
+
+    return mejorCoincidencia;
+}
+
 const processAndSendData = async (data) => {
 
 
+    const reporte = []
     let sites = await getSites()
     console.log(sites)
 
+    const nombresSedesDisponibles = sites.map(item => item.site_name).join(", ");
 
     for (let employer of data) {
         // Transformar los datos del empleado
+
+        
+
+        if (!employer.Documento || normalizarCedula(employer.Documento) === '' ||  normalizarCedula(employer.Documento) === 'null') {
+            // Agregar al reporte que el usuario no tiene cédula y no se puede registrar
+            reporte.push(`El usuario con nombre ${employer.Nombre} no tiene cédula y no se puede registrar.`);
+            continue; // Saltar al siguiente elemento en el bucle
+        }
+
+        const cargoValidado = validarCargo(employer.Cargo);
+        if (cargoValidado === null) {
+            reporte.push(`El cargo del usuario con nombre ${employer.Nombre} ( ${employer.Cargo} ) no es válido y no se puede registrar, la lista de cargos validos es ${PositionDropValues.value}`);
+            continue;
+        }
+
+
+        const marital_status_valido = validar_marital_status(employer['Estado Civil']);
+
+        
+        const sedeEncontrada = sites.find(item => item.site_name?.trim().toLowerCase().includes(employer.Sede.trim().toLowerCase()));
+        if (!sedeEncontrada) {
+            reporte.push(`No se pudo encontrar la sede para el usuario con nombre ${employer.Nombre}. Las sedes disponibles son: ${nombresSedesDisponibles}.`);
+            continue;
+        }
+
+
+        const estadoNormalizado = employer.Estado ? employer.Estado.trim().toLowerCase() : '';
+        const status = (estadoNormalizado === 'activo' || estadoNormalizado === 'inactivo') ? estadoNormalizado : 'inactivo';
+
+        // Asignar género
+        const generosValidos = ['masculino', 'femenino']; // Asegúrate de que esta lista contenga todos los géneros válidos
+        const generoNormalizado = employer.Género ? employer.Género.trim().toLowerCase() : '';
+        const gender = generosValidos.includes(generoNormalizado) ? generoNormalizado : '';
+
+
+
+        if (!isValidDate(employer["Fecha de Nacimiento"])) {
+            reporte.push(`La fecha de nacimiento del usuario con nombre ${employer.Nombre} (${employer["Fecha de Nacimiento"]}) no es válida. Se sugiere revisar y corregir. formato permitido AAAA-MM-DD`);
+            continue; // Saltar al siguiente empleado
+        }
+        const birth_date = typeof employer["Fecha de Nacimiento"] === 'string'
+                ? employer["Fecha de Nacimiento"]
+                : excelDateToDate(employer["Fecha de Nacimiento"]);
+
+        // Verificar y asignar fecha de ingreso
+        if (!isValidDate(employer["Fecha de Ingreso"])) {
+            reporte.push(`La fecha de ingreso del usuario con nombre ${employer.Nombre} (${employer["Fecha de Ingreso"]}) no es válida. Se sugiere revisar y corregir. formato permitido AAAA-MM-DD`);
+            continue; // Saltar al siguiente empleado
+        }
+        const entry_date = typeof employer["Fecha de Ingreso"] === 'string'
+                ? employer["Fecha de Ingreso"]
+                : excelDateToDate(employer["Fecha de Ingreso"]);
+
+        // Asignar fecha de salida
+        const exit_date = isValidDate(employer["Fecha de Salida"])
+            ? (typeof employer["Fecha de Salida"] === 'string'
+                ? employer["Fecha de Salida"]
+                : excelDateToDate(employer["Fecha de Salida"]))
+            : null;
+
+
+
         const transformedEmployer = {
-            name: employer.Nombre || '',
-            dni: employer.Documento ? employer.Documento.toString() : '  ',
-            address: employer.Direccion || '',
-            position: employer.Cargo || '',
-            site_id: sites.find(item => item.site_name?.toLowerCase().includes(employer.Sede.toLowerCase()))?.site_id || 12,
-            status: employer.Estado || '',
-            gender: employer.Género || '',
 
-            birth_date: isValidDate(employer["Fecha de Nacimiento"])
-                ? (typeof employer["Fecha de Nacimiento"] === 'string'
-                    ? employer["Fecha de Nacimiento"]
-                    : excelDateToDate(employer["Fecha de Nacimiento"]))
-                : '2023-1-1',
 
-            entry_date: isValidDate(employer["Fecha de Ingreso"])
-                ? (typeof employer["Fecha de Ingreso"] === 'string'
-                    ? employer["Fecha de Ingreso"]
-                    : excelDateToDate(employer["Fecha de Ingreso"]))
-                : '2023-1-1',
+            name: employer.Nombre || 'SIN NOMBRE',
+            dni: employer.Documento ? normalizarCedula( employer.Documento) : '',
+            address: employer?.Direccion?.toString()?.trim()?.toLowerCase() || 'N/A',
+            position: validarCargo(employer.Cargo)  ||  '',
+            site_id: sites.find(item => item.site_name?.trim().toLowerCase().includes(employer.Sede.trim().toLowerCase()))?.site_id || 12,
+            
 
-            exit_date: isValidDate(employer["Fecha de Salida"])
-                ? (typeof employer["Fecha de Salida"] === 'string'
-                    ? employer["Fecha de Salida"]
-                    : excelDateToDate(employer["Fecha de Salida"]))
-                : '2023-1-1',
+            status: status,
+            gender: gender,
+
+            birth_date: birth_date,
+            entry_date: entry_date,
+            exit_date: exit_date,
+
 
             phone: employer.Teléfono ? employer.Teléfono.toString() : '  ',
             email: employer["Correo Electrónico"] || null,
             exit_reason: employer["Motivo de Salida"] || null,
             comments_notes: "",
-            authorization_data: employer["Autorización de Datos"].toLowerCase() == 'sí' || employer["Autorización de Datos"].toLowerCase() == 'si',
+            authorization_data: true,
+
             birth_country: employer["País de Nacimiento"] || null,
             birth_department: employer["Departamento de Nacimiento"] || null,
             birth_city: employer["Ciudad de Nacimiento"] || null,
             blood_type: employer["Tipo de Sangre"] || null,
-            marital_status: employer["Estado Civil"] || null,
+
+            marital_status: marital_status_valido || 'soltero/a',
             education_level: employer["Nivel de Educación"] || null,
             contract_type: employer["Tipo de Contrato"] || null,
             eps: employer.EPS || null,
             pension_fund: employer["Fondo de Pensión"] || null,
             severance_fund: employer["Fondo de Cesantías"] || null,
-            has_children: employer["Tiene Hijos"]?.toLowerCase() == 'sí' || employer["Tiene Hijos"]?.toLowerCase() == 'si',
+            has_children: employer["Tiene Hijos"]?.trim().toLowerCase() == 'sí' || employer["Tiene Hijos"]?.trim().toLowerCase() == 'si',
             housing_type: employer["Tipo de Vivienda"] || null,
-            has_vehicle: employer["Tiene Vehiculo"]?.toLowerCase() == 'sí' || employer["Tiene Vehiculo"]?.toLowerCase() == 'si',
+            has_vehicle: employer["Tiene Vehiculo"]?.trim().toLowerCase() == 'sí' || employer["Tiene Vehiculo"]?.trim().toLowerCase() == 'si',
             vehicle_type: employer["Tipo de Vehiculo"] || null,
             household_size: employer["Tamaño del Hogar"] ? parseInt(employer["Tamaño del Hogar"], 10) : 0,
             emergency_contact: employer["Contacto de Emergencia"] ? employer["Contacto de Emergencia"].toString() : '  ',
             shirt_size: employer["Talla de Camisa"] ? employer["Talla de Camisa"].toString() : '  ',
             jeans_sweater_size: employer["Talla de Pantalón"] ? employer["Talla de Pantalón"].toString() : '  ',
-            food_handling_certificate: employer["Certificado de Manejo de Alimentos"]?.toLowerCase() === 'sí' || employer["Certificado de Manejo de Alimentos"]?.toLowerCase() === 'si',
+            food_handling_certificate: employer["Certificado de Manejo de Alimentos"]?.trim().toLowerCase() === 'sí' || employer["Certificado de Manejo de Alimentos"]?.trim().toLowerCase() === 'si',
             food_handling_certificate_number: employer["Número de Certificado de Manejo de Alimentos"] || "",
             salary: employer.Salario ? parseFloat(employer.Salario) : 0
         };
@@ -202,8 +334,72 @@ const processAndSendData = async (data) => {
         }
     }
 
+    console.log(reporte)
+
     getUsers().then(data => users.value = data)
+
+    // const blob = new Blob([reporte.join("\n")], { type: 'text/plain' });
+
+    // // Crear un enlace para descargar el archivo
+    // const downloadLink = document.createElement("a");
+    // const url = URL.createObjectURL(blob);
+    // downloadLink.href = url;
+    // downloadLink.download = "reporte.txt";
+
+    // // Simular un click en el enlace para iniciar la descarga
+    // document.body.appendChild(downloadLink);
+    // downloadLink.click();
+
+    // // Limpiar y remover el enlace
+    // document.body.removeChild(downloadLink);
+    // URL.revokeObjectURL(url);
+    if (reporte.length <= 0){
+        reporte.push(`Enhorabuena, todo se ha cargado con exito`)
+    }
+    generatePDF(reporte)
 };
+
+
+const generatePDF = (reporte) => {
+  const doc = new jsPDF();
+  let y = 10; // Posición inicial en el eje Y para el texto
+
+  const fontSize = 11; // Tamaño de la fuente
+  const interlineSpacing = 0.5; // Factor de interlineado
+  const lineHeight = fontSize * interlineSpacing; // Altura de la línea
+  const pageHeight = doc.internal.pageSize.height; // Altura total de la página
+  const margin = 10; // Margen inferior para evitar desbordamiento
+
+  // Configurar la fuente a Helvetica (similar a Arial) y tamaño 11
+  doc.setFont("Helvetica");
+  doc.setFontSize(fontSize);
+
+  reporte.forEach((mensaje, index) => {
+    // Añadir un salto de línea entre mensajes, excepto antes del primero
+    if (index > 0) {
+      y += lineHeight;
+      if (y > pageHeight - margin) {
+        doc.addPage();
+        y = 10;
+      }
+    }
+
+    const lines = doc.splitTextToSize(mensaje, 180); // Ajustar el texto a la anchura de la página
+    lines.forEach((line) => {
+      if (y + lineHeight > pageHeight - margin) {
+        doc.addPage();
+        y = 10;
+      }
+      doc.text(line, 10, y);
+      y += lineHeight;
+    });
+  });
+
+  doc.save('reporte.pdf'); // Descargar el PDF
+};
+
+
+
 
 
 function isValidDate(dateStr) {
@@ -311,9 +507,10 @@ const asignDropValueToEdit = (user) => {
     // GenderDropValue.value = findByName(user.gender, GenderDropValues)
     // PositionDropValue.value = findByName(user.position, PositionDropValues)
     SiteDropValue.value = findSiteById(user.site_id)
-    departamentDropValue.value = findByDepartament(user.birth_department)
+    departamentDropValue.value = user.birth_department
     cityDropValue.value = user.birth_city
     statusDropValue.value = user.status
+    PositionDropValue.value = user.position.trim().toLowerCase()
 
     // bloodTypesDropValue.value = findByType(user.blood_type, bloodTypesDropValues)
     // maritalStatusDropValue.value = findByName(user.marital_status, maritalStatusDropValues)
@@ -391,7 +588,7 @@ const asingDataToSave = () => {
     data.site_id = SiteDropValue.value.site_id
     data.food_handling_certificate_number = switchFoodHandlingCertificate.value ? data.food_handling_certificate_number : null;
     // swithHasVehicle.value? data.vehicle_type = null:data.vehicle_type = vehicleTypeDropValue.value
-    data.birth_department = departamentDropValue.value.departamento
+    data.birth_department = departamentDropValue.value
     data.birth_city = cityDropValue.value
 
     // data.status = currentUser.status
@@ -480,6 +677,7 @@ const saveProduct = async () => {
 
 
     console.log(currentUser.value)
+    getUsers()
     console.log(data);
     console.log(serverResponse.value)
     submitted.value = true
@@ -797,64 +995,72 @@ const verIMagen = (dni) => {
 </script>
 
 <template>
-    <Dialog v-model:visible="visibleImage" modal header="Foto de Perfil" :style="{ width: '50rem' }"
-        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
 
 
-        <img style="width: 100%; max-width: 600px; max-height: 600px; object-fit: contain;" :src="bigImage" alt=""
+
+
+
+    <div class="grid  lg:m-8 m-0 " >
+        
+        <Dialog  class="p-0 " v-model:visible="visibleImage" modal header="Foto de Perfil" :style="{ width: '50rem' }"
+        :breakpoints="{ '1199px': '75vw', '575px': '90vw' ,'padding':0 }">
+
+
+        <img class="p-0 m-0" style="width: 100%;  ; object-fit: cover;" :src="bigImage" alt=""
             srcset="">
-    </Dialog>
-
-
-
-
-
-    <div class="grid">
+        </Dialog>
 
         <!-- {{ getUserRole() }} -->
-        <div class="col-12">
-            <div class="">
+        <div class="col-12 m-0 ">
+            
+            <div class="col-12 p-0 m-0 ">
                 <Toast />
 
 
-                <Toolbar class="mb-4">
-                    <template v-slot:start>
-                        <div class="my-2 ">
-                            <input ref="cargarExcel" style="display:none" type="file" @change="handleFileUpload" />
-                            <Button label="CARGAR DE EXCEL  " icon="pi pi-plus" class="p-button-error  m-2   "
-                                @click="$refs.cargarExcel.click();" />
-                            <Button label="REGISTRAR USUARIO" icon="pi pi-plus" class="p-button-success m-2  "
-                                @click="openNew" />
-                        </div>
-                    </template>
+    
+               
+                        <div class="grid   " style="">
 
-                    <template v-slot:end>
+
+                            <input ref="cargarExcel" style="display:none" type="file" @change="handleFileUpload" />
+
+                            <div class="col py-2 md:col-3" style="min-width:max-content ;"> <Button label="SUBIR EXCEL  " icon="pi pi-plus" class="p-button-error  m-0 col-12 text-sm "
+                                @click="$refs.cargarExcel.click();" /></div>
+                            <div class="col py-2 md:col-3" style="min-width:max-content ;" > <Button label="REGISTRAR USUARIO" icon="pi pi-plus" class="p-button-success m-0 col-12 text-sm "
+                                @click="openNew" /></div>
+                            <div class="col py-2 md:col-3" style="min-width:max-content ;"> <Button label="EXPORTAR EXCEL" icon="pi pi-upload" class="p-button-success m-0 col-12  text-sm "
+                                @click="exportCSV($event)" /></div>
+                            <div class="col py-2 md:col-3" style="min-width:max-content ;"><Button label="DESCARGAR  PLANTILLA" icon="pi pi-upload" class="p-button-error m-0 col-12 text-sm"
+                                @click="downloadEmptyTemplate()" /></div>
+                            <div class="col py-2 md:col-3" style="min-width:max-content ;"> <Button label="EXPORTAR DOTACION" icon="pi pi-upload" class="p-button-error m-0 col-12 text-sm  "
+                                @click="exportDotacion()" /></div>
+                            
+                           
+                
+
+               
                         <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
                             class="mr-2 inline-block" /> -->
-                        <div class="my-2">
+                        
 
 
-                            <Button label="EXPORTAR EXCEL" icon="pi pi-upload" class="p-button-success m-2 "
-                                @click="exportCSV($event)" />
+                           
 
-                            <Button label="DESCARGAR LA PLANTILLA" icon="pi pi-upload" class="p-button-error m-2"
-                                @click="downloadEmptyTemplate()" />
-                            <Button label="EXPORTAR DOTACION" icon="pi pi-upload" class="p-button-error m-2"
-                                @click="exportDotacion()" />
+                            
+                           
                         </div>
 
-                    </template>
-                </Toolbar>
+                
 
                 <DataTable ref="dt" :value="users" v-model:selection="selectedProducts" dataKey="id" :paginator="true"
                     :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
+                    :rowsPerPageOptions="[5, 10, 25,100]"
                     currentPageReportTemplate="Mostrando {first} to {last} de {totalRecords} empleados"
                     responsiveLayout="scroll" scrollable scroll-height="62vh" :frozenValue="lockedCustomers">
-                    <template #header>
-                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                            <h5 class="m-0 text-white text-2xl">Administrar usuarios</h5>
+                    <template #header style="z-index:200">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
+                            <h5 class="m-0  text-2xl">Administrar usuarios</h5>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
                                 <InputText v-model="filters['global'].value" placeholder="Search..." />
@@ -862,7 +1068,7 @@ const verIMagen = (dni) => {
                         </div>
                     </template>
 
-                    <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column>
+                    <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen  ></Column>
 
                     <Column class="p-2" field="id" header="Id" :sortable="true"
                         headerStyle="width:min-content; min-width:min-content; ">
@@ -872,16 +1078,16 @@ const verIMagen = (dni) => {
                         </template>
                     </Column>
 
-                    <Column class="p-2" header="Image" headerStyle="width:14%; min-width:10rem;">
+                    <Column class="p-2" header="Foto" headerStyle="width:5%; min-width:3rem;">
                         <template #body="user">
-                            <span class="p-column-title">Image</span>
-                            <div>
+                            <!-- <span class="p-column-title">Foto</span> -->
+                           
 
                                 <img @click="verIMagen(user.data.dni)"
                                     :src="`${URI}/read-product-image/96/employer-${user.data.dni}`"
                                     @error="onImageError(user.data.gender, $event)" class="shadow-2 img-profile"
                                     style="border:none; position:relative; height: 3rem; width:3rem; object-fit: cover; border-radius: 50%;" />
-                            </div>
+                        
 
                             <div>
 
@@ -937,7 +1143,7 @@ const verIMagen = (dni) => {
                     </Column>
 
                     <Column class="p-2" field="site_name" header="Sede" :sortable="true"
-                        headerStyle="width:14%; min-width:10rem;">
+                        headerStyle="width:14%; min-width:5rem;">
                         <template #body="user">
                             <span class="p-column-title">Category</span>
                             {{ user.data.site_name }}
@@ -945,7 +1151,7 @@ const verIMagen = (dni) => {
                     </Column>
 
                     <Column class="p-2" field="status" header="Estado" :sortable="true"
-                        headerStyle="width:14%; min-width:10rem;">
+                        headerStyle="width:14%; min-width:5rem;">
                         <template #body="user">
                             <span class="p-column-title">Category</span>
                             {{ user.data.status }}
@@ -978,7 +1184,7 @@ const verIMagen = (dni) => {
                     </Column>
 
                     <Column class="p-2" field="email" header="Correo Electrónico" :sortable="true"
-                        headerStyle="width:16%; min-width:12rem;">
+                        headerStyle="width:10%; min-width:5rem;">
                         <template #body="user">
                             <span class="p-column-title">Correo Electrónico</span>
                             {{ user.data.email }}
@@ -1336,7 +1542,7 @@ const verIMagen = (dni) => {
                     <!-- Sample input field with validation -->
                     <div class="field">
                         <label for="birth_department">Departamento de Nacimiento</label>
-                        <Dropdown filter v-model="departamentDropValue" :options="departamentos" optionLabel="departamento"
+                        <InputText filter v-model="departamentDropValue"  optionLabel="departamento"
                             placeholder="" required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
                         </small>
@@ -1345,7 +1551,7 @@ const verIMagen = (dni) => {
                     <!-- Sample input field with validation -->
                     <div class="field">
                         <label for="birth_city">Ciudad de Nacimiento</label>
-                        <Dropdown filter v-model="cityDropValue" :options="departamentDropValue.ciudades" placeholder=""
+                        <InputText filter v-model="cityDropValue"  placeholder=""
                             required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
                         </small>
@@ -1554,7 +1760,7 @@ const verIMagen = (dni) => {
                                     <span :class="'product-badge status-' + slotProps.value.value">{{ slotProps.value.label }}</span>
                                 </div>
                                 <div v-else-if="slotProps.value && !slotProps.value.value">
-                                    <span :class="'product-badge status-' + slotProps.value.toLowerCase()">{{ slotProps.value }}</span>
+                                    <span :class="'product-badge status-' + slotProps.value.trim().toLowerCase()">{{ slotProps.value }}</span>
                                 </div>
                                 <span v-else>
                                     {{ slotProps.placeholder }}
@@ -1629,22 +1835,26 @@ const verIMagen = (dni) => {
 }
 
 
-button {
+
+Button {
     border: none;
+    min-width: max-content;
+    // max-width: 500px;
+    // margin: 2px;
 }
 
 
 
 .img-profile::before {
     content: "";
-    position: absolute;
+    // position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: rgb(255, 255, 255);
     /* Color de fondo desde la variable */
-    opacity: 0.5;
+    // opacity: 0.5;
     /* Opacidad deseada (0.5 = 50%) */
     z-index: -1;
     /* Asegura que el fondo esté detrás del contenido */
@@ -1653,6 +1863,7 @@ button {
 
 .img-profile-add {
     border: 1px solid var(--primary-color);
+    // z-index: -1;
     // content: 'hola';
     // background-color: var(--primary-color)
 }</style>

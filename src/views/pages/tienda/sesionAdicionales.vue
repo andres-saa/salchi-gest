@@ -1,17 +1,20 @@
 <template>
-    <div class="col-12">
-        <div class="card">
-            <h5 class="text-2xl titulo mb-6" style="text-transform: capitalize;">grupos de {{ route.params.adicionales }} 
+    <div class="col-12 p-1" style="background-color: transparent;border: none;">
+        <div class="card p-0 lg:p-6" style="background-color: transparent; border: none;">
+            <h5 class="text-2xl titulo my-6" style="text-transform: capitalize;">grupos de {{ route.params.adicionales }} 
                 
                </h5>  <Button class="mb-6" style="text-transform: capitalize; " @click="showAgregarGrupoAdicional = !showAgregarGrupoAdicional">Nuevo grupo</Button>
-            <div class="grid">
-                <div class="col-8 grid  " >
+            
+                <div class="col-12  grid  m-0 p-0" >
 
                     <!-- {{ adicionales }} -->
-                    <div class="col-12 lg:col-6 " v-for=" Grupoadicional in grupoAdicionales">
+                    <div class="col-12 md:col-12 p-0 m-0 mb-4 " style="" v-for=" Grupoadicional in grupoAdicionales">
 
-                        <div class="card"  :style="`background-color:${pastelColors[route.params.adicionales]}`" style="position: relative; box-shadow: 0 0 20px rgba(0, 0, 0, 0.144);border: none;">
+                        
+                        <div class="card m-0 grid col-12"  :style="`background-color:${pastelColors[route.params.adicionales]}`" style="position: relative; box-shadow: 0 0 20px rgba(0, 0, 0, 0.144);border: none;">
 
+                            <p style="text-transform:capitalize;" class="text-xl mb-4 col-12"> <b>{{ Grupoadicional.name }}</b>
+                            </p>
                             <button @click="openConfirmation(Grupoadicional)" class="add-cart-btn text-xl" style="cursor: pointer; position: absolute;top: -1rem;right: -1rem;background-color:var(--red-400); width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;">
                                 
                                 <i style=" color: white;;"  class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.TIMES"> </i> 
@@ -19,8 +22,7 @@
                             </button>
 
 
-                            <p style="text-transform:capitalize;" class="text-xl mb-4 "> <b>{{ Grupoadicional.name }}</b>
-                            </p>
+                           
 
 
 
@@ -28,10 +30,10 @@
 
 
 
-                            <div style="text-transform: capitalize;" class="grid"
-                                v-for=" adicional in  grupos[Grupoadicional[grupoIds[route.params.adicionales]]]">
-                                <span class="col-6 text-left"> {{ adicional.name }} </span>
-                                <span class="col-6 text-right"> {{ formatoPesosColombianos(adicional.price) }} </span>
+                            <div style="text-transform: capitalize; border-right: 2px solid rgba(0, 0, 0, 0.144) ;" class="grid col-12 lg:col-6 mx-0 px-0"  st
+                                v-for=" (adicional,index ) in  grupos[Grupoadicional[grupoIds[route.params.adicionales]]]">
+                                <span class="col-6 text-left py-0"> {{ adicional.name }} </span>
+                                <span class="col-6 text-right py-0"> {{ formatoPesosColombianos(adicional.price) }} </span>
                             </div>
 
 
@@ -52,41 +54,38 @@
 
                     
 
+                    
+
 
 
                 </div>
 
-                <div class="col-1 p-0 m-0">
-                    <Divider layout="vertical">
-                        <!-- <b>OR</b> -->
-                    </Divider>
-                </div>
 
+                <div class="card col-12  p-4 " style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.172);border: none;">
 
-
-
-
-
-                <div class="card col-3 p-4" style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.172);border: none;">
-
-                    <p style="text-transform:capitalize;" class="text-xl mb-4 "> <b>Todas las {{ route.params.adicionales
+                    <p style="text-transform:capitalize;" class="text-xl mb-6 mt-3 "> <b>Todas las {{ route.params.adicionales
                     }}</b>
                     </p>
 
 
-                    <div class="">
+                    <div class=" grid">
 
 
-                        <div style="text-transform: lowercase; text-transform:;" class="grid"
+                        <div style="text-transform: lowercase; text-transform:;" class="grid lg:col-6 col-12 px-0 py-3 mx-0"
                             v-for=" adicional in  adicionales">
-                            <span style="" class="col-6 text-left"> {{ adicional.name }} </span>
-                            <span class="col-6 text-right"> {{ formatoPesosColombianos(adicional.price) }} </span>
+                            <span style="" class="col-6 text-left py-0"> {{ adicional.name }} </span>
+                            <span class="col-6 text-right py-0"> {{ formatoPesosColombianos(adicional.price) }} </span>
                         </div>
 
-                        <Button style="text-transform: capitalize; "
-                            @click="showAgregarAdicional = !showAgregarAdicional">Agregar</Button>
+                        
                     </div>
 
+                    <div class="col-12" style="display: flex; justify-content: center;">
+                        <Button class="" style="text-transform: capitalize; "
+                            @click="showAgregarAdicional = !showAgregarAdicional">Agregar</Button>
+
+                    </div>
+                   
 
 
 
@@ -98,7 +97,8 @@
 
 
                 </div>
-            </div>
+
+   
         </div>
     </div>
 
