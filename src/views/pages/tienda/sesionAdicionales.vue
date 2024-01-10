@@ -1,9 +1,11 @@
 <template>
-    <div class="col-12 p-1" style="background-color: transparent;border: none;">
+    <div class="col-12 px-4 m-0" style="background-color: transparent;border: none; ">
         <div class="card p-0 lg:p-6" style="background-color: transparent; border: none;">
-            <h5 class="text-2xl titulo my-6" style="text-transform: capitalize;">grupos de {{ route.params.adicionales }} 
+            <p class="text-2xl titulo my-6" style="text-transform: capitalize; font-weight: bold;">grupos de {{ route.params.adicionales }} 
                 
-               </h5>  <Button class="mb-6" style="text-transform: capitalize; " @click="showAgregarGrupoAdicional = !showAgregarGrupoAdicional">Nuevo grupo</Button>
+            </p> 
+               
+               <Button class="mb-6" style="text-transform: capitalize; " @click="showAgregarGrupoAdicional = !showAgregarGrupoAdicional">Nuevo grupo</Button>
             
                 <div class="col-12  grid  m-0 p-0" >
 
@@ -32,8 +34,9 @@
 
                             <div style="text-transform: capitalize; border-right: 2px solid rgba(0, 0, 0, 0.144) ;" class="grid col-12 lg:col-6 mx-0 px-0"  st
                                 v-for=" (adicional,index ) in  grupos[Grupoadicional[grupoIds[route.params.adicionales]]]">
-                                <span class="col-6 text-left py-0"> {{ adicional.name }} </span>
-                                <span class="col-6 text-right py-0"> {{ formatoPesosColombianos(adicional.price) }} </span>
+                                <span class="col-9 text-left py-0"> {{ adicional.name }} <Button  @click="openEditar(adicional)" class="p-0" size="small" text label="Editar"></Button></span>
+                                
+                                <span class="col-3 text-right py-0"> {{ formatoPesosColombianos(adicional.price) }} </span>
                             </div>
 
 
@@ -73,7 +76,7 @@
 
                         <div style="text-transform: lowercase; text-transform:;" class="grid lg:col-6 col-12 px-0 py-3 mx-0"
                             v-for=" adicional in  adicionales">
-                            <span style="" class="col-6 text-left py-0"> {{ adicional.name }} </span>
+                            <span style="" class="col-6 text-left py-0"> {{ adicional.name }} <Button  @click="openEditar(adicional)" class="p-0" size="small" text label="Editar"></Button> </span>
                             <span class="col-6 text-right py-0"> {{ formatoPesosColombianos(adicional.price) }} </span>
                         </div>
 
@@ -113,6 +116,19 @@
 
         {{ newAdicional }}
         <Button style="text-transform: capitalize;" @click="enviarAdicional">Agregar</Button>
+    </Dialog>
+
+
+
+    <Dialog v-model:visible="dialogoEditarAdicional" modal="true" :style="{ width: '500px', height: 'max-content' }"
+        :header="`EDITAR ${adicionalEditar.name}`" :modal="true" class="p-fluid p-2 m-3" style="   ; background-color: white;border-radius:1rem">
+
+
+        <inputText class="mb-4" v-model="adicionalEditar.name"></inputText>
+        <inputNumber class="mb-4" v-model="adicionalEditar.price"></inputNumber>
+
+        <!-- {{ newAdicional }} -->
+        <Button style="text-transform: capitalize;" @click="guardarAdicional(adicionalEditar[ids[route.params.adicionales]])">Guardar</Button>
     </Dialog>
 
 
@@ -188,6 +204,8 @@ const route = useRoute();
 const showAgregarAdicional = ref(false)
 const showAgregarGrupoAdicional = ref(false)
 const grupoParaBorrar = ref()
+const dialogoEditarAdicional = ref()
+const adicionalEditar = ref({})
 
 const displayConfirmation = ref(false)
 const newAdicional = ref({price:0})
@@ -195,7 +213,36 @@ const listAdicionales = ref({lista:{}})
 const newGrupoAdicional = ref({grupo:[]})
 
 
+const openEditar = (adicional) => {
+    dialogoEditarAdicional.value = true
+    adicionalEditar.value = adicional
 
+}
+
+
+const guardarAdicional = (adicional_id) => {
+
+    ids[route.params.adicionales]
+    const url = `${URI}/${route.params.adicionales}/${adicional_id}`;
+
+    // Realizar la solicitud POST
+    fetch(url, {
+        method: 'PUT', // Método HTTP
+        headers: {
+            'Content-Type': 'application/json' // Indicar el tipo de contenido
+        },
+        body: JSON.stringify(adicionalEditar.value) // Convertir los datos a formato JSON
+    })
+        .then(response => response.json()) // Convertir la respuesta en JSON
+        .then(json => {
+            // console.log(json)
+            dialogoEditarAdicional.value = false
+            getAdicionaes()
+            getGrupoAdicionaes().then(data => data.map(dato => getGrupos(dato[grupoIds[route.params.adicionales]])));
+        } ) // Manejar la respuesta
+        .catch(error => console.error('Error:', error));
+
+}
 
 watch(() => listAdicionales.value.lista, (nuevaLista) => {
   // Iterar sobre los ids y actualizar 'newGrupoAdicional' según sea necesario

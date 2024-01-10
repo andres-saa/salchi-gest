@@ -491,12 +491,12 @@ const initFilters = () => {
                         </template>
                     </Column> -->
 
-                    <Column field="position" header="Cargo" :sortable="true" headerStyle="width:auto; min-width:10rem;">
+                    <!-- <Column field="position" header="Cargo" :sortable="true" headerStyle="width:auto; min-width:10rem;">
                         <template #body="user">
                             <span class="p-column-title">Category</span>
                             {{ user.data.position }}
                         </template>
-                    </Column>
+                    </Column> -->
 
 
                    
@@ -504,6 +504,14 @@ const initFilters = () => {
                         <template #body="user">
                             <span class="p-column-title">Category</span>
                             {{ user.data.site_name }}
+                        </template>
+                    </Column>
+
+                    
+                    <Column field="phone" header="Teléfono" :sortable="true" headerStyle="width:12%; min-width:10rem;">
+                        <template #body="user">
+                            <span class="p-column-title">Teléfono</span>
+                            {{ user.data.phone }}
                         </template>
                     </Column>
 
@@ -525,12 +533,6 @@ const initFilters = () => {
                         </template>
                     </Column>
 
-                    <Column field="phone" header="Teléfono" :sortable="true" headerStyle="width:12%; min-width:10rem;">
-                        <template #body="user">
-                            <span class="p-column-title">Teléfono</span>
-                            {{ user.data.phone }}
-                        </template>
-                    </Column>
 
                     <Column field="email" header="Correo Electrónico" :sortable="true"
                         headerStyle="width:16%; min-width:12rem;">

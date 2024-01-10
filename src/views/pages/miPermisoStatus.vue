@@ -1,4 +1,5 @@
 <template>
+
     <div class="col-12 m-auto p-0"> 
 <!-- {{ permisos }}  -->
 
@@ -56,14 +57,9 @@
 
 
 
-        <div class="col-12 grid m-0 p-1" :class="permiso.status.status">
-            <p class="col-6 my-0 py-0 " style="font-weight: bold;"> <span>Estado <br> Fecha   </span></p>
-            <p class="col-6 my-0 py-0 text-right " >{{permiso.status.status}} <br> {{permiso.status.timestamp.split(" ")[0]}}  </p>
-        </div>
-
-        <div class="col-12 grid m-0 p-1" :class="permiso.status.status">
-            <p class="col-12 my-0 py-0 " style="font-weight: bold;"> <span v-if="permiso.status?.razones"> Razones</span>  </p>
-            <p class="col-12 my-0 py-0  " > <span v-if="permiso.status?.razones"> {{permiso.status.razones}}</span> </p>
+        <div class="col-12 grid m-0 p-1"  :class="permiso.status.status" >
+            <p class="col-6 my-0 py-0 " style="font-weight: bold;"> <span>Estado <br> Fecha</span></p>
+            <p class="col-6 my-0 py-0 text-right " >{{permiso.status.status}} <br> {{permiso.status.timestamp.split(" ")[0]}} </p>
         </div>
         
 
@@ -75,8 +71,8 @@
 
         <div class="    px-3 mt-4" style="display: flex;gap: 1rem; justify-content: space-around;position: relative;bottom: 0;"> 
             <Button  outlined severity="info" label="Small"  @click="open(permiso)" style="width: 100%;display: flex;justify-content: center;"> <span class=" text-sm text-center">REVISAR</span></Button>
-            <Button v-if="permiso.status.status != 'aprobado' " outlined severity="success" label="Small"  class="" @click="openAceptar(permiso)"  style="width: 100%;display: flex;justify-content: center;" > <span class="text-sm">APROBAR</span> </Button>
-            <Button v-if="permiso.status.status != 'rechazado' && permiso.status.status != 'aprobado' " outlined severity="danger" label="Small"  @click="openRechazar(permiso)" style="width: 100%;display: flex;justify-content: center;"> <span class="text-sm" > RECHAZAR</span> </Button>
+            <!-- <Button outlined severity="success" label="Small"  class="" @click="openAceptar(permiso)"  style="width: 100%;display: flex;justify-content: center;" > <span class="text-sm">DESCARGAR COMPROBANTE</span> </Button> -->
+
         </div>
        
 </div>
@@ -132,7 +128,7 @@
 
   <p class="p-0 m-0">
     <span style="font-weight: bold;">Fecha de la solicitud: </span> <span
-      style="border-bottom: 1px solid ; padding-bottom: 0; padding-right: 2rem">   {{ convertirFechaALocal(currentPermiso.start_date) }}</span>
+      style="border-bottom: 1px solid ; padding-bottom: 0; padding-right: 2rem">   {{ convertirFechaALocal(currentPermiso.status.timestamp) }}</span>
     
   </p>
 
@@ -256,11 +252,10 @@
 
         </div>
 
-        <div class=" col-12 md:col-6 m-auto p-0" style=" display: flex;gap: 1rem;; overflow: hidden; justify-content: space-around;position: absolute;top: 0rem;right: 0; background-color:rgba(255, 255, 255, 0)te;"> 
-            <!-- <Button style="background-color: rgb(255, 255, 168);color: rgba(0, 0, 0, 0.864); border: none;" @click="open(permiso)"> REVISAR</Button> -->
+        <!-- <div class=" col-12 md:col-6 m-auto p-0" style=" display: flex;gap: 1rem;; overflow: hidden; justify-content: space-around;position: absolute;top: 0rem;right: 0; background-color:rgba(255, 255, 255, 0)te;"> 
             <Button style="background-color: rgb(105, 255, 157);color: rgba(0, 0, 0, 0.864); border: none;"> APROBAR</Button>
             <Button style="background-color: rgb(255, 125, 125);color: rgba(0, 0, 0, 0.864); border: none;"> RECHAZAR</Button>
-        </div>
+        </div> -->
     </Dialog>
 
 
@@ -274,7 +269,6 @@
         <h5>Seguro que desea aceptar el permiso de {{ currentUser.name }}</h5>
         <span class="p-input-icon-left " style="width: 100%;">
             <i class="pi pi-pencil" />
-            <!-- <InputText v-model="nameNewCategorie" class="w-100" style="width: 100%;"  type="text"  /> -->
         </span>
 
         <Button @click="acceptPermission(currentPermiso)" style="margin:auto ; background-color:rgb(105, 255, 157) ; color: black;border: none;" class="m-auto my-4 text-center"> <span class="text-center col-12 p-0">Si, continuar</span></Button>
@@ -283,12 +277,9 @@
     </Dialog>
 
     <Dialog header="Confirmacion" v-model:visible="consfirmacionRechazar" :style="{ width: '350px' }" :modal="true">
-        <h5>Seguro que desea Rechazar el permiso de {{ currentUser.name }}?</h5>
-        <h6>Razones para rechazar este permiso </h6>
-        <Textarea v-model="razonesDeRechazo" style="max-width: 100%; min-width: 100%;min-height: 100px;" class="col-12"></Textarea>
+        <h5>Seguro que desea Rechazar el permiso de {{ currentUser.name }}</h5>
         <span class="p-input-icon-left " style="width: 100%;">
             <i class="pi pi-pencil" />
-            <!-- <InputText v-model="nameNewCategorie" class="w-100" style="width: 100%;"  type="text"  /> -->
         </span>
 
         <Button @click="rejectPermission(currentPermiso)"  style="margin:auto ; background-color:rgb(105, 255, 157) ; color: black;border: none;" class="m-auto my-4 text-center"> <span class="text-center col-12 p-0">Si, continuar</span></Button>
@@ -304,13 +295,14 @@ import { onMounted, ref,watch } from 'vue';
 import { URI } from '../../service/conection';
 import router from '../../router';
 import { useRoute } from 'vue-router';
-import { getUserDni, getUserId } from '../../service/valoresReactivosCompartidos';
+import { getUserDni } from '../../service/valoresReactivosCompartidos'
+import {getUserId} from '../../service/valoresReactivosCompartidos'
 
 const route = useRoute();
 const ruta = ref(route.params.status);
 const tipo = ref(route.params.tipo);
 const status = ref(route.params.status);
-const razonesDeRechazo = ref('')
+
 
 const show = ref( false)
 const serverDate = ref("2029-12-21 16:19")
@@ -324,30 +316,19 @@ const consfirmacionRechazar = ref(false)
 
 
 
-watch(() => route.params.status, (newTipo) => {
-    ruta.value = newTipo;
-    // Aquí también puedes llamar a funciones que dependan del cambio de ruta
-    // Por ejemplo, actualizar la lista de permisos
-    // getPermissions(newTipo).then(data => permisos.value = data);
-});
-
-
 watch(() => route.params.tipo, (newTipo) => {
     tipo.value = newTipo;
     console.log(tipo)
-    // Aquí también puedes llamar a funciones que dependan del cambio de ruta
-    // Por ejemplo, actualizar la lista de permisos
-    getPermissions(newTipo,status.value).then(data => permisos.value = data);
+
+    getPermissions(status.value,tipo.value).then(data => permisos.value = data);
 });
 
 
 
 watch(() => route.params.status, (newstatus) => {
     status.value = newstatus
-    // Aquí también puedes llamar a funciones que dependan del cambio de ruta
-    // Por ejemplo, actualizar la lista de permisos
-    // getPermissions(newTipo).then(data => permisos.value = data);
-    getPermissions(tipo.value,newstatus).then(data => permisos.value = data);
+
+    getPermissions(status.value,tipo.value).then(data => permisos.value = data)
 });
 
 
@@ -380,7 +361,7 @@ function acceptPermission(permiso) {
     
     // Actualizar el estado y agregar al historial
   
-    permiso.status = { status: 'aprobado', timestamp: serverDate.value,responsable:getUserId() }; // Asumiendo que manejas el timestamp aquí
+    permiso.status = { status: 'aprobado', timestamp: serverDate.value }; // Asumiendo que manejas el timestamp aquí
     permiso.history.push({ ...permiso.status });
 
     // Enviar la actualización
@@ -403,7 +384,7 @@ function acceptPermission(permiso) {
 
 function rejectPermission(permiso) {
     // Actualizar el estado y agregar al historial
-    permiso.status = { status: 'rechazado', timestamp: serverDate.value,razones:razonesDeRechazo.value,responsable:getUserId() }; // Asumiendo que manejas el timestamp aquí
+    permiso.status = { status: 'rechazado', timestamp: serverDate.value }; // Asumiendo que manejas el timestamp aquí
     permiso.history.push({ ...permiso.status });
 
     // Enviar la actualización
@@ -509,9 +490,11 @@ const getUser = async (dni) => {
 
 
 
-async function getPermissions(tipo,estado) {
+async function getPermissions(estado,type) {
   // URL de la API para obtener los permisos, reemplaza con tu URL real
-  const url = `${URI}/permissions/status/${estado}/type/${tipo}`;
+  const id = await getUserId()
+  const url = `${URI}/permissions/user/${id}/status/${estado}/type/${type}`;
+ 
 
   try {
     // Realiza la solicitud a la API
@@ -534,7 +517,7 @@ async function getPermissions(tipo,estado) {
 
 
 onMounted(() => {
-    getPermissions(tipo.value,status.value).then(data => permisos.value = data)
+    getPermissions(status.value,tipo.value).then(data => permisos.value = data)
     getDate()
 })
 
@@ -567,6 +550,12 @@ Button{
 }
 
 
+Button{
+  text-transform: capitalize;
+}
+
+
+
 .generado{
     display: flex;
     background-color:#eeff0060;
@@ -583,10 +572,6 @@ Button{
   display: flex;
     background-color:#ff000044;
     justify-content: center;
-}
-
-Button{
-  text-transform: capitalize;
 }
   
 </style>

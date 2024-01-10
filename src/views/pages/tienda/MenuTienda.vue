@@ -1,10 +1,17 @@
 <template>
 
-    <div class="col-12 m-auto md:pl-6 p-2" style="max-width: 1024px;">
-        <div style="display: flex; align-items: center;" class="col p-2 col-12">
-        <Dropdown class="col-12 md:col-6 p-0   " v-model="siteDropValue" :options="siteDropValues" optionLabel="site_name"
-            placeholder="sede" />
+
+<p  class="mb-2 text-4xl text-center px-4" style="font-weight: bold;">
+        Administrador de la tienda virtual
+    </p>
+
+
+    <div class="col-12 m-auto md:pl-6 p-2 " style="max-width: 1024px; ">
+    <div style="display: flex; align-items: center;" class="col p- ">
+      <SPan class=" mr-4" style="font-weight: bold;">  SEDE: </SPan>  <Dropdown class="col md:col-6 p-0   " v-model="siteDropValue" :options="siteDropValues" optionLabel="site_name"
+placeholder="sede" />
     </div>
+    
     <div class="grid col-12 m-0 p-0 ">
 
         <div class="col p-2">
@@ -40,12 +47,24 @@
         </div>
     </div>
 
-    <RouterView />
+    
+
+    <div class="col-12 lg:col-9 mr-auto ml-auto m-0 p-0 mt-8 " v-for="i in [1,2,3,4,5,6]" style="width: 100%; " v-if="ruta == '/tienda-menu/'">
+
+        <!-- {{ ruta }} -->
+    <img style="width: 100%;" :src="`/images/carta/${i}.jpeg`" alt="">
+
+    </div>
+
+    
 
 
 
 
     </div>
+
+    <div class="col-12 m-auto  p-0 " style="max-width: 1024px; "> <RouterView  /></div>
+   
    
     <Dialog header="Confirmation" v-model:visible="showAgregarCategoria" :style="{ width: '350px' }" :modal="true">
         <h5>Nombre de la nueva categoria</h5>
@@ -84,7 +103,7 @@ import { PrimeIcons } from 'primevue/api';
 const showAgregarCategoria = ref(false)
 const categories = ref([]);
 const nameNewCategorie = ref()
-const ruta = ref();
+const ruta = ref(route.path);
 // const route = useRoute();
 
 
@@ -107,6 +126,10 @@ const getCategories = async () => {
 
 
 
+watch(() => route.path, (newpad) => {
+    ruta.value = newpad
+
+});
 
 
 

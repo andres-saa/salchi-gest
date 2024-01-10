@@ -1060,10 +1060,10 @@ const verIMagen = (dni) => {
                     responsiveLayout="scroll" scrollable scroll-height="62vh" :frozenValue="lockedCustomers">
                     <template #header style="z-index:200">
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
-                            <h5 class="m-0  text-2xl">Administrar usuarios</h5>
+                            <p class="m-0  text-2xl my-4">Administrar usuarios</p>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
-                                <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                <InputText class="" v-model="filters['global'].value" placeholder="Search..." />
                             </span>
                         </div>
                     </template>

@@ -24,7 +24,7 @@ const model = ref([
             {
                 label: 'Tienda', icon: 'pi pi-fw pi-home', to: '/',
                 items: [
-                    {label: 'Menu',icon: 'pi pi-fw pi-home', to: '/tienda-menu'},
+                    {label: 'Menu',icon: 'pi pi-fw pi-home', to: '/tienda-menu/'},
                     {label: 'Domicilios',icon: 'pi pi-fw pi-home', to: '/domicilios'},
 
 
@@ -124,11 +124,23 @@ const model = ref([
                 
             },
             {
-                label: 'Permiso', icon: 'pi pi-fw pi-home', to: '/permiso'
+                label: 'Permiso general', icon: 'pi pi-fw pi-home', to: '/permiso'
                 
             },
             {
-                label: 'Mis permisos', icon: 'pi pi-fw pi-home', to: '/permiso'
+                label: 'Permisos solicitados', icon: 'pi pi-fw pi-home', to: '/mis-permisos',
+                roles:roles.todos, 
+                items: [
+                    {
+                        label: 'Mis permisos', icon: 'pi pi-fw pi-home', to: '/mis-permisos/general/generado',
+                    },
+                    {
+                        label: 'Mis Licencias', icon: 'pi pi-fw pi-home', to: '/mis-permisos/licencia/generado',
+                    },
+                    {
+                        label: 'Mis Vacaciones', icon: 'pi pi-fw pi-home', to: '/mis-permisos/vacaciones/generado',
+                    }
+                ]
                 
             },
             
@@ -145,7 +157,7 @@ const model = ref([
 
     {
         label: 'Revisar',
-        roles:[],
+        roles:roles.adminTienda,
         items: [
             // {
             //     label: 'Base de datos del personal', icon: 'pi pi-fw pi-home', to: '/pages/crud',

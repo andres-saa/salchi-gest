@@ -66,7 +66,7 @@ const menus = [
         imagen:"/images/permiso.jpg"
     },
     {
-        nombre:'Descargar solicitar permiso por licencia',
+        nombre:'Solicitar permiso por licencia',
         to:'/permiso-licencia',
         imagen:"/images/licencia.avif"
     },

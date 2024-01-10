@@ -107,6 +107,30 @@ const router = createRouter({
                     name: 'actualizar-datos',
                     component: () => import('@/views/pages/dialogoEditUser.vue')
                   },
+                  {
+                    path: '/mis-permisos',
+                    name: 'mis-permisos',
+                    component: () => import('@/views/pages/misPermisos.vue'),
+                    children:[
+                        {
+                            path: '/mis-permisos/:tipo',
+                            name: 'mis-permisotipo',
+                            component: () => import('@/views/pages/miPermisoType.vue'),
+                            meta: { roles: roles.todos }, // Asignación correcta dentro de 'meta'
+                            children:[
+                                {
+                                    path: '/mis-permisos/:tipo/:status',
+                                    name: 'mis-permisoestado',
+                                    component: () => import('@/views/pages/miPermisoStatus.vue'),
+
+                                  },
+
+                            ]
+        
+                        },
+
+                    ]
+                  },
                   
   
   

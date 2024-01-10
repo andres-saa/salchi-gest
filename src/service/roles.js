@@ -34,7 +34,8 @@
         'getion humana',
         'gerencia general',
         'gerente',
-        'subgerente'
+        'subgerente',
+        // 'cajero',
         ],
         
     adminTienda:[
@@ -42,6 +43,7 @@
         'gerencia general',
         'gerente',
         'subgerente',
+        // 'cajero',
         'gestion humana'
         ]
  }

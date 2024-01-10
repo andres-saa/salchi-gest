@@ -51,6 +51,21 @@ const getUserDni = () => {
     if (token) {
     try {
         const decoded = jwtDecode(token);
+        return decoded.dni; // Asegúrate de que 'rol' es la propiedad correcta en tu token
+    } catch (error) {
+        console.error('Error decodificando el token:', error);
+        return null;
+    }
+    }
+    return null;
+}
+
+
+const getUserId = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+    try {
+        const decoded = jwtDecode(token);
         return decoded.id; // Asegúrate de que 'rol' es la propiedad correcta en tu token
     } catch (error) {
         console.error('Error decodificando el token:', error);
@@ -59,4 +74,5 @@ const getUserDni = () => {
     }
     return null;
 }
-export {getUserDni, getUserRole, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
+
+export {getUserDni, getUserRole,getUserId, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
