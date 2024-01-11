@@ -143,6 +143,7 @@ const model = ref([
                 ]
                 
             },
+           
             
             
             
@@ -154,6 +155,8 @@ const model = ref([
         
         ]
     },
+
+  
 
     {
         label: 'Revisar',
@@ -394,6 +397,17 @@ const model = ref([
     //         }
     //     ]
     // }
+    {
+                label: 'Extras', icon: 'pi pi-fw pi-home', to: '/mis-permisos',
+                roles:roles.todos, 
+                items: [
+                    {
+                        label: 'Mi carnet digital', icon: 'pi pi-fw pi-home', to: '/mi-carnet',
+                    },
+                   
+                ]
+                
+            },
 ]);
 
 

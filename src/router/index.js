@@ -108,6 +108,11 @@ const router = createRouter({
                     component: () => import('@/views/pages/dialogoEditUser.vue')
                   },
                   {
+                    path: '/mi-carnet',
+                    name: 'mi-carnet',
+                    component: () => import('@/views/pages/miCarnet.vue')
+                  },
+                  {
                     path: '/mis-permisos',
                     name: 'mis-permisos',
                     component: () => import('@/views/pages/misPermisos.vue'),

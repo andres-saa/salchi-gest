@@ -75,6 +75,11 @@ const menus = [
         to:'/permiso-vacaciones',
         imagen:"/images/vacaciones.jpg"
     },
+    {
+        nombre:'Mi carnet digital',
+        to:'/mi-carnet',
+        imagen:"/images/vacaciones.jpg"
+    },
 
 ]
 
