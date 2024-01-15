@@ -6,16 +6,16 @@
         <a class="col-12 p-2" href="https://forms.gle/mr7CD1sWT6C2NRKi8">
 
             <div class="col-12 p-4" style=""> 
-                <Button class="p-0  " 
-                            style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.524); display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; height: ;min-height:200px; background-color: rgb(255, 255, 255);">
+                <Button class=" p-0 " 
+                            style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.524); display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; background-color: rgb(255, 255, 255);">
 
                             <!-- <span class="text-3xl  p-3 col-12" style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px black;">
                                 Encuesta clima organizacional 
                             </span> -->
                     
 
-                            <div style=" position: ;" class=" p-0">
-                                <img class=" p-0"  alt="" src="/images/clima.jpg" style="height: 100%;width: 100%; object-fit: contain;">
+                            <div style=" position: ;" class=" p-0 col-12" >
+                                <img class=" p-0"  alt="" src="/images/clima.jpg" style="height: 100%;width: 100%;border-radius: 0.5rem; object-fit: cover;">
 
                             </div>
 
@@ -167,6 +167,6 @@ Button img {
 }
 
 Button img:hover {
-    transform: scale(1.03);
+    /* transform: scale(1.03); */
 
 }</style>
