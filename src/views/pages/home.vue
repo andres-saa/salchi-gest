@@ -3,12 +3,12 @@
         style="max-width: 900px;display: ;height: 70vh;align-items: center;justify-content: center; flex-direction: column; ">
         <p class="text-2xl lg:text-4xl   col-12 text-center" style="font-weight: bold;width: auto; "> Novedades</p>
 
-
+        <a href="https://forms.gle/mr7CD1sWT6C2NRKi8">
         <Button class="  "
                             style="display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; height: 20vh;min-height:200px; background-color: rgb(255, 211, 211);">
 
                             <span class="text-3xl  p-3 col-12" style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px black;">
-                                Clima organizacional 
+                                Encuesta clima organizacional 
                             </span>
                     
 
@@ -22,18 +22,19 @@
                                 Nuevo
                             </div>
 
-                            <a href="https://meet.google.com/uet-kwjf-bqc">
+               
                             <div class="pl-3 text-2xl" style= "display: flex; align-items: center; width: 15rem; height: 3rem;right: 0; bottom: 0; background-color: rgb(255, 255, 255);outline: 10px solid rgb(255, 255, 255); color: white; position: absolute;z-index: 100;border-radius: 10rem 0 0   0;
                            ">
-                                <img style="width: 80%; object-fit: contain;" class="p-0" src="/images/meet logo.jpg" alt="">
+                                <img style="width: 80%; object-fit: contain;" class="p-0" src="/images/forms.png" alt="">
                             </div>
                         
                         
-                        </a>
+                       
                            
                         
                         
                         </Button>
+                    </a>
 
                         <p class="text-2xl lg:text-4xl   col-12 text-center" style="font-weight: bold;width: auto; "> Accesos rápidos</p>
 

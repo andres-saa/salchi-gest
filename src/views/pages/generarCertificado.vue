@@ -7,7 +7,7 @@
   
   
   
-  <InputNumber v-model="usrDni" :disabled="getUserRole()?.toLowerCase() != 'gerente'"  class="mr-5" style="width: 100%;" placeholder="Cedula del empleado"></InputNumber>
+  <InputNumber v-model="usrDni" :disabled="!roles.documentos.includes(getUserRole()?.toLowerCase())"  class="mr-5" style="width: 100%;" placeholder="Cedula del empleado"></InputNumber>
     <Button style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;" @click="getUser(usrDni)"><span style="color: white;">Buscar</span></Button>
     
 
@@ -184,6 +184,7 @@ import { nextTick } from 'vue';
 
 import { getUserDni, getUserRole } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
+import { roles } from '../../service/roles';
 const screenWidth = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenWidth.value < 600);
 
