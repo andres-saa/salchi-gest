@@ -16,30 +16,29 @@
     </div>
 
 
-    <img  class="fotoPerfil" style="position: absolute; width: 50%;;width: 3cm;z-index: 99; height: 3cm;object-fit: cover; border-radius: 50%;top:1.5cm"
-        :src="`${URI}/read-product-image/600/employer-${getUserDni()}`" alt="">
-
+    <div style="position: absolute;;width: 3cm;height: 3cm; z-index: 99;border-radius: 50%;top:1.5cm;overflow: hidden;box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
+        <img  class="fotoPerfil" style=";object-fit: cover;width:100%;background-color: white "
+        :src="getImageUrl()" alt="">
+    </div>
+   
     <div style="position: absolute; display: flex; align-items: center;top:0.5cm">
         <img style=" ;width: 0.8cm; object-fit: contain;" src="/images/logo blanco.png" alt="">
         <span class="ml-2 text-white" style="font-weight: bold;"> Salchimonster</span>
     </div>
 
     <div class="info" style="position: absolute; top:4.8cm">
-        <p class="px-3 py-0 my-0 text-center text-sm " style="font-weight: bold;text-transform: uppercase;"> {{currentUser.name}}x</p>
-        <p class="px-3 py-0 mb-3 text-center text-sm " style="text-transform: capitalize;"> {{currentUser.position}}</p>
+        <p class="px-3 py-0 my-0 text-center text-sm " style="font-weight: bold;text-transform: uppercase;"> {{currentUser.name}}</p>
+        <p class="px-3 py-0 mb-2 text-center text-sm " style="text-transform: capitalize;"> {{currentUser.position}}</p>
 
         <p class="px-3 py-0 my-0 text-center   "  style="font-size: 0.7rem;">Email: {{ currentUser?.email || ''}}</p>
         <p class="px-3 py-0 my-0 text-center  " style="font-size: 0.7rem;">Telefono: {{currentUser?.phone || ''}}</p>
-        <p class="px-3 py-0 mt-3 text-center text-sm " style="font-weight: bold;">ID {{ getUserId() }}</p>
+        <p class="px-3 py-0 mt-0 text-center text-sm " style="font-weight: bold;">ID {{ getUserId() }}</p>
     </div>
 
 
 </div>
     </div>
-        
-
-
-
+    
 </div>
               </div>
 
@@ -53,9 +52,6 @@
     <Button @click="downloadCarnetAsJPG()"> <i :class="PrimeIcons.DOWNLOAD" class="mr-2"></i> Descargar</Button>
     
 </div>
-
-
-
 
 
 </template>
@@ -162,6 +158,11 @@ const originalImageUrl = `${URI}/read-product-image/600/employer-${getUserDni()}
 const proxiedImageUrl = addAllOriginsProxy(originalImageUrl);
 
 // Usar la URL modificada en tu imagen
+
+const getImageUrl = () => {
+            const timestamp = new Date().getTime(); // Obtiene el timestamp actual
+            return `${URI}/read-product-image/600/employer-${getUserDni()}?timestamp=${timestamp}`;
+        }
 
 onMounted(() => {
     // currentUser.value = props.user

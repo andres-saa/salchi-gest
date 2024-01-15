@@ -61,9 +61,22 @@ const isOutsideClicked = (event) => {
 };
 
 
+
+const getImageUrl = () => {
+            const timestamp = new Date().getTime(); // Obtiene el timestamp actual
+            return `${URI}/read-product-image/600/employer-${getUserDni()}?timestamp=${timestamp}`;
+        }
+
+
+
 const cerrar = () => {
     localStorage.removeItem('token')
     router.push('/auth/login')
+
+
+
+
+
 }
 </script>
 
@@ -86,7 +99,7 @@ const cerrar = () => {
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
             
             <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
-                <img style="height: 32px;width: 32px; border-radius: 50%; object-fit: cover;" :src="`${URI}/read-product-image/600/employer-${getUserDni()}`" alt="">
+                <img style="height: 32px;width: 32px; border-radius: 50%; object-fit: cover;" :src="getImageUrl()" alt="">
               
             </button>
             <!-- <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">

@@ -6,8 +6,8 @@
 
 <!-- {{ permisos }} -->
 
-<div class="col-12 p-0" v-if="permisos.length <= 0" style="position: relative; display: flex; align-items: center;justify-content:center;">
-      <img src="/images/empty.avif" alt="" srcset="" style="width: 100%;height: 50vh;object-fit: cover; border-radius: 1rem;">
+<div class="col-12 p-0 m-auto" v-if="permisos.length <= 0" style="max-width: 900px; position: relative; display: flex; align-items: center;justify-content:center;">
+      <img src="/images/empty.avif" alt="" srcset=""  style="opacity: 0.5; width: 100%;height: 50vh;object-fit: cover; border-radius: 1rem;">
       <span class="text-6xl" style="font-weight: bold; position: absolute; ;"> Nada por aquí</span>
   </div>
 <!-- <P class="text-center text-2xl" style="font-weight: bold; text-transform: capitalize;">  {{ ruta }}</P> -->

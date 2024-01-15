@@ -67,6 +67,7 @@ const op = ref(null);
 const op2 = ref(null);
 const file = ref(null)
 const urlPhotoProfile = ref("")
+const currentBoss = ref({})
 
 
 const handleFileUpload = async (event) => {
@@ -511,6 +512,7 @@ const asignDropValueToEdit = (user) => {
     cityDropValue.value = user.birth_city
     statusDropValue.value = user.status
     PositionDropValue.value = user.position.trim().toLowerCase()
+    currentBoss.value = users.value.filter( u => (u.id == user.boss_id))[0] || {}
 
     // bloodTypesDropValue.value = findByType(user.blood_type, bloodTypesDropValues)
     // maritalStatusDropValue.value = findByName(user.marital_status, maritalStatusDropValues)
@@ -590,6 +592,7 @@ const asingDataToSave = () => {
     // swithHasVehicle.value? data.vehicle_type = null:data.vehicle_type = vehicleTypeDropValue.value
     data.birth_department = departamentDropValue.value
     data.birth_city = cityDropValue.value
+    data.boss_id = currentBoss.value.id
 
     // data.status = currentUser.status
     data.exit_date = (data.status === "activo") ? null : data.exit_date;
@@ -677,7 +680,7 @@ const saveProduct = async () => {
 
 
     console.log(currentUser.value)
-    getUsers()
+    getUsers().then(data => users.value = data)
     console.log(data);
     console.log(serverResponse.value)
     submitted.value = true
@@ -1117,6 +1120,14 @@ const verIMagen = (dni) => {
                         </template>
                     </Column>
 
+                    <Column class="p-2" field="boss_id" header="Id del jefe" :sortable="true"
+                        headerStyle="width:5%; min-width:10rem; ">
+                        <template #body="user">
+                            <span class="p-column-title">id del jefe</span>
+                            {{ user.data?.boss_id }}
+                        </template>
+                    </Column>
+
 
                     <Column class="p-2" field="dni" header="Documento" :sortable="true"
                         headerStyle="width:14%; min-width:10rem;">
@@ -1464,6 +1475,47 @@ const verIMagen = (dni) => {
                         <label for="position">Cargo</label>
                         <Dropdown filter v-model.trim="currentUser.position" :options="PositionDropValues" placeholder=""
                             required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" />
+
+                        <small class="p-invalid" v-if="submitted && !currentUser.position">el cargo es obligatorio</small>
+
+                    </div>
+
+                    <div class="field">
+                        <label for="position">Jefe inmediato</label>
+                        <Dropdown filter v-model.trim="currentBoss" :options="users" placeholder="" optionLabel="name"
+                            required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" 
+                            >
+                        
+                            <template  #value="user" >
+                            
+                               
+                                <div style="display: flex; align-items: center;gap: 1rem;">
+                                    <img @click="verIMagen(user?.value?.dni)"
+                                    :src="`${URI}/read-product-image/96/employer-${user?.value?.dni}`"
+                                    @error="onImageError(user?.value?.gender, $event)" class="shadow-2 img-profile"
+                                    style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+                        
+                                    {{ user?.value?.name }}
+
+                                </div>
+                            </template>
+
+                            <template  #option="user">
+                                <div style="display: flex; align-items: center;gap: 1rem;">
+                                    <img @click="verIMagen(user.option.dni)"
+                                    :src="`${URI}/read-product-image/96/employer-${user.option.dni}`"
+                                    @error="onImageError(user.option.gender, $event)" class="shadow-2 img-profile"
+                                    style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+                        
+                                {{ user?.option?.name}}
+                                </div>
+                                
+                            </template>
+                        
+                        
+                        
+                        
+                        </Dropdown>
 
                         <small class="p-invalid" v-if="submitted && !currentUser.position">el cargo es obligatorio</small>
 

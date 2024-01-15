@@ -44,14 +44,22 @@ const model = ref([
                 label: 'Base de datos del personal', icon: 'pi pi-fw pi-home', to: '/pages/crud',
                
             },
-            {
-                label: 'Cumpleanos', icon: 'pi pi-fw pi-home', to: '/cumples',
-                
-            },
+            
            
         
         ]
     },
+
+    {
+                label: 'CELEBRACIONES', icon: 'pi pi-fw pi-home', to: '/cumples',
+                roles:roles.todos,
+                items:[
+                    {
+                        label: 'Cumpleanos', icon: 'pi pi-fw pi-home', to: '/cumples',
+                    }
+                ]
+                
+            },
 
     {
         label: 'SEDES',
@@ -403,6 +411,9 @@ const model = ref([
                 items: [
                     {
                         label: 'Mi carnet digital', icon: 'pi pi-fw pi-home', to: '/mi-carnet',
+                    },
+                    {
+                        label: 'Organigrama empresarial', icon: 'pi pi-fw pi-home', to: '/organigrama',
                     },
                    
                 ]

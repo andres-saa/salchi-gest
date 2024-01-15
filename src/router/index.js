@@ -108,6 +108,11 @@ const router = createRouter({
                     component: () => import('@/views/pages/dialogoEditUser.vue')
                   },
                   {
+                    path: '/organigrama',
+                    name: 'organigrama',
+                    component: () => import('@/views/pages/organigrama.vue')
+                  },
+                  {
                     path: '/mi-carnet',
                     name: 'mi-carnet',
                     component: () => import('@/views/pages/miCarnet.vue')

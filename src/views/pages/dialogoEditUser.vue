@@ -11,16 +11,6 @@
     <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Actualizar mis datos" :modal="true"
         class="p-fluid m-2">
 
-        <!-- <img src="http://localhost:8000/read-site-cover/IMPERIO%20CANEY" :alt="currentUser.id"
-                        v-if="currentUser.id" width="150" class="mt-0 mx-auto mb-5 block shadow-2" /> -->
-        <!-- <FileUpload /> -->
-
-        <!-- <img :src="imageUrlUserAdd.value" :alt="currentUser.id"
-                         width="150" class="mt-0 mx-auto mb-5 block shadow-2"  id="imagePreview"/> -->
-
-
-
-        <!-- <FileUpload /> -->
 
         <img class="img-profile-add" style="width: 100%;; object-fit: contain;border-radius: 1rem;"
             :src="urlPhotoProfile ? urlPhotoProfile : `${URI}/read-product-image/600/employer-${currentUser.dni}`"
@@ -694,10 +684,6 @@ onMounted(() => {
     getUser(getUserDni())
     getSites()
 })
-
-
-
-
 
 
 </script>

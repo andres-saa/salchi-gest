@@ -1,14 +1,51 @@
 <template>
     <div class="col-12 m-auto "
         style="max-width: 900px;display: ;height: 70vh;align-items: center;justify-content: center; flex-direction: column; ">
+        <p class="text-2xl lg:text-4xl   col-12 text-center" style="font-weight: bold;width: auto; "> Novedades</p>
 
-        <p class="text-2xl lg:text-4xl   col-12 text-center" style="font-weight: bold;width: auto; "> Accesos rápidos</p>
+
+        <Button class="  "
+                            style="display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; height: 20vh;min-height:200px; background-color: rgb(255, 211, 211);">
+
+                            <span class="text-3xl  p-3 col-12" style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px black;">
+                                Clima organizacional 
+                            </span>
+                    
+
+                            <div style="width: 100%;height: 100%; object-fit: ; position: absolute;" class="imagen p-0">
+                                <img class=" p-0"  alt="" src="/images/meet.jpg" style="height: 100%;width: 100%; object-fit: cover;">
+
+                            </div>
+
+                            <div class="pl-3 text-2xl" style= "display: flex; align-items: center; width: 15rem; height: 3rem;left: 0; top: 0; background-color: red;color: white; position: absolute;z-index: 100;border-radius: 0 0  10rem 0;
+                           ">
+                                Nuevo
+                            </div>
+
+                            <a href="https://meet.google.com/uet-kwjf-bqc">
+                            <div class="pl-3 text-2xl" style= "display: flex; align-items: center; width: 15rem; height: 3rem;right: 0; bottom: 0; background-color: rgb(255, 255, 255);outline: 10px solid rgb(255, 255, 255); color: white; position: absolute;z-index: 100;border-radius: 10rem 0 0   0;
+                           ">
+                                <img style="width: 80%; object-fit: contain;" class="p-0" src="/images/meet logo.jpg" alt="">
+                            </div>
+                        
+                        
+                        </a>
+                           
+                        
+                        
+                        </Button>
+
+                        <p class="text-2xl lg:text-4xl   col-12 text-center" style="font-weight: bold;width: auto; "> Accesos rápidos</p>
 
         <div class="col-12 grid  p-3 m-auto  ">
 
 
+    
+                     
+             
 
             <div class="lg:col-4 col-6  p-0 " v-for="menu in menus" >
+                
                 <div class="p-2">
                     <RouterLink :to="menu.to">
                         <Button class="text-xl "
@@ -107,7 +144,7 @@ const menus = [
 }
 Button img {
     transition: all .3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.208);
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.208); */
     width: 100%;
     display: flex;
     justify-content: center;
