@@ -164,6 +164,30 @@ const model = ref([
         ]
     },
 
+    {
+        label: 'GESTION HUMANA MAS CERCA DE TI',
+        roles:roles.todos,
+        items: [
+
+            {
+                label: 'Planeacíon Estrategica ', icon: 'pi pi-fw pi-home', to: '/mas-cerca-de-ti',
+                
+            },
+            {
+                label: 'Evaluación clima organizacional ', icon: 'pi pi-fw pi-home', to: '/clima',
+                
+            },
+
+            {
+                label: 'Evaluación de desempeño ', icon: 'pi pi-fw pi-home', to: '/desempeno',
+                
+            },
+           
+           
+        
+        ]
+    },
+
   
 
     {

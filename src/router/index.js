@@ -59,6 +59,11 @@ const router = createRouter({
                     name: 'cumples',
                     component: () => import('@/views/pages/cumples.vue')
                 },
+                {
+                    path: '/mas-cerca-de-ti',
+                    name: 'gestion',
+                    component: () => import('@/views/pages/gestion.vue')
+                },
 
   
                 {
@@ -107,6 +112,21 @@ const router = createRouter({
                     name: 'actualizar-datos',
                     component: () => import('@/views/pages/dialogoEditUser.vue')
                   },
+                  {
+                    path: '/clima',
+                    name: 'clima',
+                    component: () => import('@/views/pages/clima.vue')
+                },
+                  {
+                    path: '/desempeno',
+                    name: 'desempeno',
+                    component: () => import('@/views/pages/desempeno.vue')
+                },
+                {
+                    path: '/error',
+                    name: 'error',
+                    component: () => import('@/views/pages/error.vue')
+                },
                   {
                     path: '/organigrama',
                     name: 'organigrama',
@@ -296,11 +316,8 @@ const router = createRouter({
             name: 'login',
             component: () => import('@/views/pages/auth/Login.vue')
         },
-        {
-            path: '/error',
-            name: 'error',
-            component: () => import('@/views/pages/error.vue')
-        },
+
+        
         // {
         //     path: '/auth/access',
         //     name: 'accessDenied',

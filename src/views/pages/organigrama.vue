@@ -9,8 +9,12 @@
 
 <script setup> 
 import OrganigramaItem from './OrganigramaItem.vue';
-import { getUsers, } from '@/service/userServices'
+import { getUsers,getUsersBySite } from '@/service/userServices'
+import {
 
+    getSites
+
+} from '@/service/dropDownAux';
 
 import { nextTick } from 'vue';
 
@@ -82,12 +86,14 @@ function buildOrgChart(users, jefeId = null) {
 onMounted(async() => {
 
 
-  getUsers().then(data => {
+  getUsersBySite(3).then(data => {
     users.value = data
     const organigrama = buildOrgChart(data);
     items.value = organigrama
 
   })
+
+  
 })
 
 

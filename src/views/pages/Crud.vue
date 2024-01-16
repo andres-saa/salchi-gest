@@ -1128,7 +1128,7 @@ const verIMagen = (dni) => {
                         </template>
                     </Column>
 
-
+                    
                     <Column class="p-2" field="dni" header="Documento" :sortable="true"
                         headerStyle="width:14%; min-width:10rem;">
                         <template #body="user">
