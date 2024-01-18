@@ -66,9 +66,9 @@ import  {formatoPesosColombianos} from '../service/formatoPesos'
 import { check_site, setProductDialog,showProductDialog } from '../service/state';
 import { useToast } from 'primevue/usetoast';
 import { comprobar_sede } from '../service/state';
-import dialogoAgregarProducto from './dialogos/dialogoAgregarProducto.vue';
+// import dialogoAgregarProducto from './dialogos/dialogoAgregarProducto.vue';
 import { productoAEliminar, showEditarProducto, showEliminarProducto } from '../service/valoresReactivosCompartidos';
-import dialogoEditarProducto from './dialogos/dialogoEditarProducto.vue';
+// import dialogoEditarProducto from './dialogos/dialogoEditarProducto.vue';
 import { onMounted, ref, watch } from 'vue';
 import { productoAEditar } from '../service/valoresReactivosCompartidos';
 const toast = useToast();
@@ -76,9 +76,12 @@ const isActive = ref(false);
 
 
 const prepararParaEditar = () => {
+    console.log('hola')
     showEditarProducto.value = !showEditarProducto.value
     productoAEditar.value = props.product
 }
+
+
 const displayConfirmation = ref(false)
 
 

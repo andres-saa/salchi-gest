@@ -17,7 +17,7 @@
             <div class="cont p-2" style="background-color: white; height: 100%;position: relative"  >
         <!-- <router-link :to="`product/${product.id}` " @click="changeProduct(product)"> -->
 
-            <button style="position: absolute;top: -1rem;right: -1rem;background-color:var(--primary-color); width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;z-index: 99;" @click="prepararParaEditar" class="add-cart-btn text-xl"><i   class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.PENCIL"> </i>  </button>
+            <button style="position: absolute;top: -1rem;right: -1rem;background-color:var(--primary-color); width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;z-index: 99;" @click="prepararParaEditar(product)" class="add-cart-btn text-xl"><i   class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.PENCIL"> </i>  </button>
 
             
 
@@ -105,7 +105,8 @@ import { showAgregarProducto, showEliminarProducto } from '../../../service/valo
 // import { siteDropValue } from '../../../service/valoresReactivosCompartidos';
 // import { categoryValue } from '../../../service/valoresReactivosCompartidos';
 import { productoEnviado } from '../../../service/valoresReactivosCompartidos';
-
+import { showEditarProducto } from '../../../service/valoresReactivosCompartidos';
+import { productoAEditar } from '../../../service/valoresReactivosCompartidos';
 const products = ref([]); // Definiendo la variable reactiva para almacenar los productos
 const ruta = useRoute(); // Usando useRoute para acceder a los parámetros de la ruta
 const isActive = ref([]);
@@ -131,31 +132,53 @@ const toast = useToast()
 
 
 // }
+const prepararParaEditar = (product) => {
+    console.log('hola')
+    showEditarProducto.value = !showEditarProducto.value
+    productoAEditar.value = product
+}
+
 
 
 const getProducts = async (category_name) => {
 
 console.log(localStorage)
 
+
+
+
+
+
+
+
+
+
+
+
+
+// Check if siteDropValue?.value?.site_id is undefined or null
+if (!siteDropValue?.value?.site_id) {
+    console.log('Site ID is not available. Exiting function.');
+    return; // Exit the function early
+}
+
 try {
-    
-    let response = await fetch(`${URI}/products/category/name/${category_name}/site/${siteDropValue.value.site_id}`);
+    let response = await fetch(`${URI}/products/category/name/${category_name}/site/${siteDropValue?.value?.site_id}`);
     if (!response.ok) {
         products.value = [];
         throw new Error(`HTTP error! status: ${response.status}`);
-       
     }
     let data = await response.json();
     products.value = data.map(product => ({
-    ...product,
-    isActive: product.state == 'active' // Inicializar el campo isActive basado en los datos del servidor
-
-}));
+        ...product,
+        isActive: product.state == 'active' // Initialize the isActive field based on server data
+    }));
 } catch (error) {
     products.value = [];
     console.error('Error fetching data: ', error);
 }
-}
+};
+
 
 
 const updateProductState = (product) => {

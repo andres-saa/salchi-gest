@@ -26,6 +26,7 @@
         'gerente',
         'subgerente',
         'getion humana',
+        'mesero'
         ],
     documentos:[
     

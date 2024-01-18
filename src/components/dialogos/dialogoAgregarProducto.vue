@@ -398,11 +398,14 @@ onMounted(async () => {
     getGrupoGrupoToppings().then(data => { grupoToppingsDropValues.value = data })
 
 
-    siteDropValues.value.forEach(sede => {
+    siteDropValues?.value?.forEach(sede => {
         sedesSeleccionadas.value[sede.site_id] = false;
     });
 
 })
+
+
+
 
 
 </script>

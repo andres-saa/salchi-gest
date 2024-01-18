@@ -1,10 +1,14 @@
 <template>
-    <Dialog v-model:visible="showEditarProducto" :style="{ width: '500px', height: 'max-content' }" header="Agregar producto"
+    <Dialog v-model:visible="showEditarProducto" :style="{ width: '500px', height: 'max-content' }" :header="`Editar ${productoAEditar.name}`"
         :modal="true" class="p-fluid p-2 m-3" style="   ; background-color: white;border-radius:1rem;overflow:hidden">
 
 
+        <!-- {{ grupoSalsasdropValue }} -->
+
+        <!-- <h5>Foto del Producto</h5> -->
 
 
+        {{ productoAEditar }}
 
 <div v-if="urlFoto">
     <!-- <h5>Previsualización de la Foto</h5> -->
@@ -12,6 +16,7 @@
 </div>
 
 <Input type="file" @change="cargarFoto" accept="image/*" />
+<Button text style="width: auto;" class="p-0" label="Reset image" size="small" @click="urlFoto =  `${URI}/read-product-image/300/${productoAEditar.name}` "></Button>
 
 
         <h5>Nombre</h5>
@@ -25,8 +30,8 @@
 
         <h5>Precio</h5>
         <span class="p-input-icon-left">
-            <i class="pi pi-pencil" />
-            <InputText v-model="productoAEditar.price" type="number" placeholder="Precio" />
+            <!-- <i class="pi pi-pencil mr-7" /> -->
+            <InputNumber class="" v-model="productoAEditar.price" type="number" placeholder="Precio" />
         </span>
 
         <h5 style="display: flex; align-items: center;"> <InputSwitch class="p-0 m-0" v-model="checkedValuesSalsas" /> 
@@ -70,23 +75,28 @@
         <h5 style="display: flex; align-items: center;"> 
             <span class="">Estado</span></h5>
         <span class="p-input-icon-left">
-            <Dropdown style="outline: none; " class="p-0  "  primary v-model="productoAEditar.state" :options="estados"
+            <Dropdown style="outline: none; " class="p-0  " primary v-model="productoAEditar.state" :options="estados"
                      />
         </span>
 
 
 
         <h5 style="display: flex; align-items: center;">  
-            <span class="ml-0 mt-6" style="text-transform: capitalize; ">Sedes en las que estara disponible el producto  {{ nombre }}</span></h5>
+            <span class="ml-0 mt-6" style="text-transform: capitalize; ">En que sedes quiere modificar  {{ productoAEditar.name }}</span></h5>
         
         <div class="mt-6">            
             <h5 style="display: flex; align-items: center;"> <InputSwitch class="p-0 m-0" v-model="todasLasSedes" /> 
             <span class="ml-5">Todas</span></h5>
 
-            <div  v-for="sede in siteDropValues" >
-            <h5 style="display: flex; align-items: center;"> <InputSwitch class="p-0 m-0" v-model="sedesSeleccionadas[sede.site_id]" /> 
-            <span class="ml-5">{{ sede.site_name }}</span></h5>
-        </div>
+            <div v-for="sede in siteDropValues" :key="sede.site_id">
+    <h5 style="display: flex; align-items: center;">
+        <InputSwitch 
+            class="p-0 m-0" 
+            v-model="sedesSeleccionadas[sede.site_id]" 
+            :disabled="!estadoSedeProducto[sede.site_id]" /> 
+        <span class="ml-5">{{ sede.site_name }}</span>
+    </h5>
+</div>
         </div>
          
 
@@ -100,7 +110,7 @@
                         </span> -->
 
 
-                        <Button @click="enviarProducto" class="m-auto my-4 text-center"> <span class="text-center col-12 p-0">Agregar</span></Button>
+                        <Button @click="enviarProducto" class="m-auto my-4 text-center"> <span class="text-center col-12 p-0">Guardar</span></Button>
 
 
 
@@ -118,9 +128,9 @@
 <script setup>
 import { onMounted, ref,computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import { productoAEditar } from '../../service/valoresReactivosCompartidos';
 import { 
-    showAgregarProducto,
-    showEditarProducto, 
+    showAgregarProducto, 
     categoryValue, 
     siteDropValues,
     grupoAdicionesDropValue, 
@@ -129,18 +139,30 @@ import {
     GrupoAcompananterDropvalue, 
     GrupoToppingsDropValue } from '@/service/valoresReactivosCompartidos.js'
 import { URI } from '../../service/conection';
-import { checkedAdiciones } from '../../service/state';
+import { checkedAdiciones, checkedSalsas } from '../../service/state';
 import { useRoute } from 'vue-router';
 import { getProductsByCategory } from '../../service/productServices';
 
 import { watch } from 'vue';
-import { productoAEditar, productoEnviado } from '../../service/valoresReactivosCompartidos';
+import { productoEnviado, showEditarProducto } from '../../service/valoresReactivosCompartidos';
 import { fotos } from '../../service/menu/fotos';
 
 
+const estadoSedeProducto = ref({});
 
 
+watch(productoAEditar, async (nuevoProducto) => {
+    // Restablecer estado de las sedes
+    Object.keys(estadoSedeProducto.value).forEach(key => {
+        estadoSedeProducto.value[key] = false;
+    });
 
+    // Suponiendo que obtienes la lista actualizada de sedes donde está disponible el producto
+    const sedesActualizadas = await getSitesByProductName(productoAEditar.value.name);
+    sedesActualizadas.forEach(sede => {
+        estadoSedeProducto.value[sede.site_id] = true;
+    });
+});
 
 const urlFoto = ref(null);
 const file = ref(null);
@@ -229,53 +251,84 @@ const checkedValuesAcompanantes = ref()
 
 
 const enviarProducto = async () => {
-    const url = `${URI}/products`;
-    uploadImage(nombre.value);
-
+    // const uploadUrl = `${URI}/upload-product-image/${productoAEditar.value.product_id}`;
+    await uploadImage(productoAEditar.value.name);
 
     for (const [site_id, isSelected] of Object.entries(sedesSeleccionadas.value)) {
         if (isSelected) {
-            const nuevoProducto = {
-                "name": nombre.value,
-                "price": precio.value,
-                "description": description.value,
+            const productoActualizado = {
+                "product_id": productoAEditar.value.product_id, // Asegúrate de que este es el ID correcto del producto
+                "name": productoAEditar.value.name,
+                "price": productoAEditar.value.price,
+                "description": productoAEditar.value.description,
                 "category_id": category_id.value,
                 "porcion": "1",
-                "state": estado.value,
-                "grupo_salsa_id": grupoSalsasdropValue.value ? grupoSalsasdropValue.value.grupo_salsa_id : null,
-                "grupo_topping_id": GrupoToppingsDropValue.value ? GrupoToppingsDropValue.value.grupo_topping_id : null,
-                "grupo_acompanante_id": GrupoAcompananterDropvalue.value ? GrupoAcompananterDropvalue.value.grupo_acompanante_id : null,
-                "grupo_cambio_id": grupoCambiosDropValue.value ? grupoCambiosDropValue.value.grupo_cambio_id : null,
-                "grupo_adicional_id": grupoAdicionesDropValue.value ? grupoAdicionesDropValue.value.grupo_adicional_id : null,
+                "state": productoAEditar.value.state,
+                // Asegúrate de que estos campos se asignan correctamente
+                "grupo_salsa_id": checkedValuesSalsas.value ? grupoSalsasdropValue.value.grupo_salsa_id : null,
+                "grupo_topping_id": checkedValuesToppinns.value ? GrupoToppingsDropValue.value.grupo_topping_id : null,
+                "grupo_acompanante_id": checkedValuesAcompanantes.value ? GrupoAcompananterDropvalue.value.grupo_acompanante_id : null,
+                "grupo_cambio_id": checkedValuesCambios.value ? grupoCambiosDropValue.value.grupo_cambio_id : null,
+                "grupo_adicional_id": checkedValuesAdiciones.value ? grupoAdicionesDropValue.value.grupo_id : null,
                 "site_id": site_id
             };
 
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
+                const response = await fetch(`${URI}/products/${productoActualizado.product_id}`, {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(nuevoProducto)
+                    body: JSON.stringify(productoActualizado)
                 });
 
                 if (!response.ok) {
                     throw new Error(`Error: ${response.status}`);
                 }
-                toast.add({ severity:'success' , summary:`agregado a la sede ${site_id}` , detail: 'espaerando las otras sedes', life: 3000 });
-                productoEnviado.value = productoEnviado.value + 1
-               
-                
+                toast.add({ severity: 'success', summary: `Producto actualizado en la sede ${site_id}`, detail: 'Actualización completada', life: 3000 });
             } catch (error) {
-                console.error('Error al enviar producto:', error);
+                console.error('Error al actualizar el producto:', error);
             }
         }
     }
 
-    showAgregarProducto.value = false;
-    // location.reload();
+    showEditarProducto.value = false;
+    location.reload()
+    
 };
 
+watch(productoAEditar, async (nuevoProducto) => {
+    // Reiniciar todas las selecciones a false
+    Object.keys(sedesSeleccionadas.value).forEach(site_id => {
+        sedesSeleccionadas.value[site_id] = false;
+    });
+
+    // Cargar y establecer las sedes del nuevo producto
+    if (nuevoProducto && nuevoProducto.name) {
+        try {
+            const sites = await getSitesByProductName(productoAEditar.value.name);
+            sites.forEach(site => {
+                sedesSeleccionadas.value[site.site_id] = true;
+            });
+        } catch (error) {
+            console.error('Error al obtener sedes para el producto:', error);
+        }
+    }
+}, { immediate: true });
+
+const getSitesByProductName = async (productName) => {
+    try {
+        const response = await fetch(`${URI}/products/name/${productName}/sites`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const sites = await response.json();
+        return sites;
+    } catch (error) {
+        console.error('Error fetching sites:', error);
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Error fetching sites data', life: 3000 });
+    }
+};
 
 
 const uploadImage = async (productId) => {
@@ -292,7 +345,7 @@ const uploadImage = async (productId) => {
             throw new Error('Error al subir la imagen');
         }
 
-        // Manejar respuesta de éxito
+        urlFoto.value = `${URI}/read-product-image/600/${productoAEditar.value.name}`
     } catch (error) {
         console.error('Error al subir la imagen:', error);
         // Manejar error
@@ -387,22 +440,22 @@ const getGrupoGrupoAcompanantes = async () => {
 }
 
 
-onMounted(async () => {
-    
+watch(productoAEditar, async() => {
+
+
+    urlFoto.value = `${URI}/read-product-image/600/${productoAEditar.value.name}`
+    productoAEditar.value.grupo_salsa_id? checkedValuesSalsas.value = true : checkedValuesSalsas.value = false
+    productoAEditar.value.grupo_adicional_id? checkedValuesAdiciones.value = true : checkedValuesAdiciones.value = false
+    productoAEditar.value.grupo_acompanante_id? checkedValuesAcompanantes.value = true : checkedValuesAcompanantes.value = false
+    productoAEditar.value.grupo_topping_id? checkedValuesToppinns.value = true : checkedValuesToppinns.value = false
+    productoAEditar.value.grupo_cambio_id? checkedValuesCambios.value = true : checkedValuesCambios.value = false
+
+
     getGrupoSalsas().then(data => { grupoSalsasdropValues.value = data })
     getGrupoAdiciones().then(data => { grupoAdicionesDropValues.value = data })
     getGrupoCambios().then(data => { grupoCambiosDropValues.value = data })
     getGrupoGrupoAcompanantes().then(data => { grupoAcompanantesDropValues.value = data })
     getGrupoGrupoToppings().then(data => { grupoToppingsDropValues.value = data })
-
-
-    siteDropValues.value.forEach(sede => {
-        sedesSeleccionadas.value[sede.site_id] = false;
-    });
-
-
-
-
 
     const gruposSalsas = await getGrupoSalsas();
     grupoSalsasdropValues.value = gruposSalsas;
@@ -420,13 +473,48 @@ onMounted(async () => {
     grupoAcompanantesDropValues.value = gruposAcompanantes;
 
     // Preseleccionar valores basados en el producto a editar
-    grupoSalsasdropValue.value = gruposSalsas.find(grupo => grupo.id === productoAEditar.grupo_salsa_id);
-    grupoCambiosDropValue.value = gruposCambios.find(grupo => grupo.id === productoAEditar.grupo_cambio_id);
-    grupoAdicionesDropValue.value = gruposAdiciones.find(grupo => grupo.id === productoAEditar.grupo_adicional_id);
-    GrupoToppingsDropValue.value = gruposToppings.find(grupo => grupo.id === productoAEditar.grupo_topping_id);
-    GrupoAcompananterDropvalue.value = gruposAcompanantes.find(grupo => grupo.id === productoAEditar.grupo_acompanante_id);
+
+    grupoSalsasdropValue.value = gruposSalsas.find(grupo => grupo.grupo_salsa_id === productoAEditar.value.grupo_salsa_id);
+    grupoCambiosDropValue.value = gruposCambios.find(grupo => grupo.grupo_cambio_id === productoAEditar.value.grupo_cambio_id);
+    grupoAdicionesDropValue.value = gruposAdiciones.find(grupo => grupo.grupo_id === productoAEditar.value.grupo_adicional_id);
+    GrupoToppingsDropValue.value = gruposToppings.find(grupo => grupo.grupo_topping_id === productoAEditar.value.grupo_topping_id);
+    GrupoAcompananterDropvalue.value = gruposAcompanantes.find(grupo => grupo.grupo_acompanante_id === productoAEditar.value.grupo_acompanante_id);
+
+
+
+
 
 })
+
+
+
+onMounted(async () => {
+
+    urlFoto.value = `${URI}/read-product-image/600/${productoAEditar.value.name}`
+    productoAEditar.value.grupo_salsa_id? checkedValuesSalsas.value = true : checkedValuesSalsas.value = false
+    productoAEditar.value.grupo_adicional_id? checkedValuesAdiciones.value = true : checkedValuesAdiciones.value = false
+    productoAEditar.value.grupo_acompanante_id? checkedValuesAcompanantes.value = true : checkedValuesAcompanantes.value = false
+    productoAEditar.value.grupo_topping_id? checkedValuesToppinns.value = true : checkedValuesToppinns.value = false
+    productoAEditar.value.grupo_cambio_id? checkedValuesCambios.value = true : checkedValuesCambios.value = false
+
+    
+    getGrupoSalsas().then(data => { grupoSalsasdropValues.value = data })
+    getGrupoAdiciones().then(data => { grupoAdicionesDropValues.value = data })
+    getGrupoCambios().then(data => { grupoCambiosDropValues.value = data })
+    getGrupoGrupoAcompanantes().then(data => { grupoAcompanantesDropValues.value = data })
+    getGrupoGrupoToppings().then(data => { grupoToppingsDropValues.value = data })
+
+    
+
+
+    siteDropValues?.value?.forEach(sede => {
+        sedesSeleccionadas.value[sede.site_id] = false;
+    });
+
+})
+
+
+
 
 
 </script>
