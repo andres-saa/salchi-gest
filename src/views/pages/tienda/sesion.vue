@@ -21,7 +21,7 @@
 
             
 
-            <button  style="position: absolute;top: -1rem;right: 2rem;background-color:var(--red-500); width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;z-index: 99;" @click="pregpararParaEliminar" class="add-cart-btn text-xl"><i  class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.TRASH"> </i>  </button>
+            <button  style="position: absolute;top: -1rem;right: 2rem;background-color:var(--red-500); width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;z-index: 99;" @click="pregpararParaEliminar(product)" class="add-cart-btn text-xl"><i  class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.TRASH"> </i>  </button>
 
 
             <div class="imagen-cont " style="position: ;">
@@ -137,7 +137,11 @@ const prepararParaEditar = (product) => {
     showEditarProducto.value = !showEditarProducto.value
     productoAEditar.value = product
 }
-
+const pregpararParaEliminar = (product) => {
+    
+    showEliminarProducto.value = !showEliminarProducto.value
+    productoAEliminar.value = product
+}
 
 
 const getProducts = async (category_name) => {

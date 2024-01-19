@@ -8,11 +8,11 @@
         <!-- <h5>Foto del Producto</h5> -->
 
 
-        {{ productoAEditar }}
+    <!-- el texto en verde es para el desarrollador, dejaran de aparecer cuando este componente sea completado al 100% <br col> <p style="color: rgb(0, 187, 78);">{{ productoAEditar }}</p>   -->
 
-<div v-if="urlFoto">
+<div v-if="urlFoto" style="">
     <!-- <h5>Previsualización de la Foto</h5> -->
-    <img :src="urlFoto" alt="Previsualización del Producto" style="max-width: 100%; height: auto;" />
+    <img :src="urlFoto"  style="width: 100%; height: auto;" />
 </div>
 
 <Input type="file" @change="cargarFoto" accept="image/*" />
@@ -20,10 +20,12 @@
 
 
         <h5>Nombre</h5>
-        <span class="p-input-icon-left mb-4">
+        <span class="p-input-icon-left mb-0">
             <i class="pi pi-pencil" />
-            <InputText v-model="productoAEditar.name" type="text" />
+            <InputText disabled v-model="productoAEditar.name" type="text" />
         </span>
+        <!-- <span style="color: rgb(0, 255, 17); font-size: 0.7rem; padding: 0;">actualmente no se pueden cambiar los nombres de los productos vigentes por que su foto esta asociada al nombre y se perderia, podra hacerlo pronto</span> -->
+
 
         <h5>Description</h5>
         <Textarea v-model="productoAEditar.description" :autoResize="true" rows="3" cols="30" />
@@ -55,6 +57,7 @@
             <Dropdown v-if=" checkedValuesAcompanantes" style="outline: none; " class="p-0  " primary v-model="GrupoAcompananterDropvalue" :options="grupoAcompanantesDropValues"
                     optionLabel='name'  />
         </span>
+
 
         <h5 style="display: flex; align-items: center;"> <InputSwitch class="p-0 m-0" v-model="checkedValuesToppinns" /> 
             <span class="ml-5">Conjunto de toppings</span></h5>
@@ -147,8 +150,29 @@ import { watch } from 'vue';
 import { productoEnviado, showEditarProducto } from '../../service/valoresReactivosCompartidos';
 import { fotos } from '../../service/menu/fotos';
 
-
+const getImageUrl = (nombre) => {
+            const timestamp = new Date().getTime(); // Obtiene el timestamp actual
+            return `${URI}/read-product-image/300/${nombre}?timestamp=${timestamp}`;
+        }
 const estadoSedeProducto = ref({});
+
+const sedesProducto = ref({});
+watch(productoAEditar, async (nuevoProducto) => {
+    if (nuevoProducto && nuevoProducto.name) {
+        try {
+            const sedes = await getSitesByProductName(nuevoProducto.name);
+            sedes.forEach(sede => {
+                sedesProducto.value[sede.site_id] = {
+                    seleccionada: true,
+                    product_id: sede.product_id
+                };
+            });
+        } catch (error) {
+            console.error('Error al obtener sedes para el producto:', error);
+        }
+    }
+}, { immediate: true });
+
 
 
 watch(productoAEditar, async (nuevoProducto) => {
@@ -254,10 +278,12 @@ const enviarProducto = async () => {
     // const uploadUrl = `${URI}/upload-product-image/${productoAEditar.value.product_id}`;
     await uploadImage(productoAEditar.value.name);
 
-    for (const [site_id, isSelected] of Object.entries(sedesSeleccionadas.value)) {
-        if (isSelected) {
+
+    for (const [site_id, seleccionada] of Object.entries(sedesSeleccionadas.value)) {
+        if (seleccionada && sedesProducto.value[site_id] && sedesProducto.value[site_id].product_id) {
             const productoActualizado = {
-                "product_id": productoAEditar.value.product_id, // Asegúrate de que este es el ID correcto del producto
+                "product_id": sedesProducto.value[site_id].product_id, // ID del producto en la sede
+              // Asegúrate de que este es el ID correcto del producto
                 "name": productoAEditar.value.name,
                 "price": productoAEditar.value.price,
                 "description": productoAEditar.value.description,
@@ -345,7 +371,7 @@ const uploadImage = async (productId) => {
             throw new Error('Error al subir la imagen');
         }
 
-        urlFoto.value = `${URI}/read-product-image/600/${productoAEditar.value.name}`
+        urlFoto.value = getImageUrl(productoAEditar.value.name)
     } catch (error) {
         console.error('Error al subir la imagen:', error);
         // Manejar error
@@ -443,7 +469,7 @@ const getGrupoGrupoAcompanantes = async () => {
 watch(productoAEditar, async() => {
 
 
-    urlFoto.value = `${URI}/read-product-image/600/${productoAEditar.value.name}`
+    urlFoto.value = getImageUrl(productoAEditar.value.name)
     productoAEditar.value.grupo_salsa_id? checkedValuesSalsas.value = true : checkedValuesSalsas.value = false
     productoAEditar.value.grupo_adicional_id? checkedValuesAdiciones.value = true : checkedValuesAdiciones.value = false
     productoAEditar.value.grupo_acompanante_id? checkedValuesAcompanantes.value = true : checkedValuesAcompanantes.value = false
@@ -490,7 +516,7 @@ watch(productoAEditar, async() => {
 
 onMounted(async () => {
 
-    urlFoto.value = `${URI}/read-product-image/600/${productoAEditar.value.name}`
+    urlFoto.value = getImageUrl(productoAEditar.value.name)
     productoAEditar.value.grupo_salsa_id? checkedValuesSalsas.value = true : checkedValuesSalsas.value = false
     productoAEditar.value.grupo_adicional_id? checkedValuesAdiciones.value = true : checkedValuesAdiciones.value = false
     productoAEditar.value.grupo_acompanante_id? checkedValuesAcompanantes.value = true : checkedValuesAcompanantes.value = false
