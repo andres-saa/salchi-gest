@@ -4,6 +4,8 @@
         <p class="text-4xl lg:text-6xl   col-12 text-center" style="font-weight: bold;width: auto; "> Novedades</p>
 
 
+
+
         <div class="col-12 p-3 mb-3" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);border-radius: 0.5rem;">
             <RouterLink to="mas-cerca-de-ti">
                 <Button class=" p-0 "

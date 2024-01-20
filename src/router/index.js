@@ -108,6 +108,38 @@ const router = createRouter({
                     component: () => import('@/views/pages/permiso-licencia.vue')
                   },
                   {
+                    path: '/capt',
+                    name: 'capt',
+                    component: () => import('@/views/pages/capacitacionNueva.vue')
+                  },
+                  {
+                    path: '/capacitaciones',
+                    name: 'capacitaciones',
+                    component: () => import('@/views/pages/capacitaciones.vue'),
+                    children:[
+                        {
+                            path: '/capacitaciones/guias',
+                            name: 'guias',
+                            component: () => import('@/views/pages/guias.vue')
+                          },
+                          {
+                            path: '/capacitaciones/cuestionario',
+                            name: 'cuestionario',
+                            component: () => import('@/views/pages/cuestionario.vue')
+                        },
+                        {
+                            path: '/capacitaciones/asistencia',
+                            name: 'asistencia',
+                            component: () => import('@/views/pages/asistencia.vue')
+                        },
+                        {
+                            path: '/capacitaciones/links',
+                            name: 'links',
+                            component: () => import('@/views/pages/links.vue')
+                        },
+                    ]
+                  },
+                  {
                     path: '/actualizar-datos',
                     name: 'actualizar-datos',
                     component: () => import('@/views/pages/dialogoEditUser.vue')

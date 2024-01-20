@@ -188,6 +188,30 @@ const model = ref([
         ]
     },
 
+
+    {
+        label: 'CAPACITACIONES',
+        roles:roles.todos,
+        items: [
+
+            {
+                label: 'Capacitaciones', icon: 'pi pi-fw pi-home', to: '/capacitaciones/guias',
+                
+            },
+            // {
+            //     label: 'Agendadas', icon: 'pi pi-fw pi-home', to: '/clima',
+                
+            // },
+
+            // {
+            //     label: 'Finalizadas', icon: 'pi pi-fw pi-home', to: '/desempeno',
+                
+            // },
+           
+           
+        
+        ]
+    },
   
 
     {
@@ -436,9 +460,9 @@ const model = ref([
                     {
                         label: 'Mi carnet digital', icon: 'pi pi-fw pi-home', to: '/mi-carnet',
                     },
-                    {
-                        label: 'Organigrama empresarial', icon: 'pi pi-fw pi-home', to: '/organigrama',
-                    },
+                    // {
+                    //     label: 'Organigrama empresarial', icon: 'pi pi-fw pi-home', to: '/organigrama',
+                    // },
                    
                 ]
                 
@@ -459,6 +483,7 @@ const model = ref([
             <app-menu-item v-if="item.roles?.includes(getUserRole().toLowerCase())" :item="item" :index="i"></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>
+        
 
     </ul>
 </template>
