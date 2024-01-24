@@ -327,6 +327,14 @@
                 requerido.</small>
         </div>
 
+
+        <div class="field" >
+            <label for="exit_reason">Clave</label>
+            <Password toggleMask id="exit_reason" v-model.trim="currentUser.password" required="true" autofocus />
+            <small class="p-invalid" v-if="submitted && !currentUser.clave">El motivo de salida es
+                requerido.</small>
+        </div>
+
         <div class="field inputSwith" style="display: flex; align-items: center; justify-content: space-between;">
             <label for="authorization_data">Autorización de Datos</label>
             <div class="input-with-label">

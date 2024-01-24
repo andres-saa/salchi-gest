@@ -1795,6 +1795,17 @@ const verIMagen = (dni) => {
                             requerido.</small>
                     </div>
 
+
+
+                    <div class="field"
+                        >
+                        <label for="exit_reason">Clave</label>
+                        <Password toggleMask id="exit_reason" v-model.trim="currentUser.password" required="true" autofocus />
+                        <small class="p-invalid" v-if="submitted && !currentUser.password">la clave del usuario es obligatoria
+
+                        </small>
+                    </div>
+
                     <div class="field inputSwith">
                         <label for="authorization_data">Autorización de Datos</label>
                         <div class="input-with-label">
