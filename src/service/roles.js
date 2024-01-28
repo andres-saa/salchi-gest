@@ -26,8 +26,11 @@
         'gerente',
         'subgerente',
         'getion humana',
-        'mesero'
+        'mesero',
+        'Lider Contable',
+        'desarrollador web'
         ],
+
     documentos:[
     
         'gerencia general',
@@ -36,6 +39,8 @@
         'gerencia general',
         'gerente',
         'subgerente',
+        'desarrollador web'
+
         // 'cajero',
         ],
         
@@ -45,7 +50,9 @@
         'gerente',
         'subgerente',
         // 'cajero',
-        'gestion humana'
+        'gestion humana',
+        'desarrollador web'
+
         ]
  }
 
