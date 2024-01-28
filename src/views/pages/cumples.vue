@@ -88,6 +88,15 @@ const cargarImagenAvatar = (dni, gender) => {
 };
 
 
+const onImageError = (gender, event) => {
+    const avataresPredeterminados = {
+        masculino: '/images/male-avatar.png',
+        femenino: '/images/female-avatar.png',
+        default: '/images/who.png'
+    };
+
+    event.target.src = avataresPredeterminados[gender] || avataresPredeterminados.default;
+};
 
 const obtenerImagenPredeterminada = (gender) => {
     const avataresPredeterminados = {
@@ -121,8 +130,8 @@ const obtenerImagenPredeterminada = (gender) => {
 
 
       <AvatarGroup class="mb-3 avatar"  @click="$refs.currentCumple.click()">
-      <Avatar v-for="user in users.slice(0,6)" :image="`${URI}/read-product-image/96/employer-${user.dni}`" size="xlarge" shape="circle">
-      </Avatar>
+        <Avatar v-for="user in users" shape="circle" size="xlarge" :style="{ 'background-color': '#fff', color: '#ffffff' }" :key="user.dni" :image="`${URI}/read-product-image/96/employer-${user.dni}` " @error="onImageError(user.gender, $event)" />
+
      
       <Avatar v-if="users.length>6" :label="`+${users.length-6}`" shape="circle" size="xlarge" :style="{ 'background-color': '#9c27b0', color: '#ffffff' }">
       </Avatar>

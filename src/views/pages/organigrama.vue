@@ -1,9 +1,17 @@
 <template>
-    <div ref="scrollContainer mt-8" class="m-auto col" style="overflow-x: auto; background-color: rgb(255, 255, 255);">
-        <OrganigramaItem class="pt-8" :items="items" ref="organigramaItem"></OrganigramaItem>
+    <div   v-for="item in items.filter(item =>  item?.site?.site_name != 'prueba')" ref="scrollContainer mt-8" class="m-auto col" style="overflow-x: auto; background-color: rgb(255, 255, 255);border-top: 4px solid rgb(0, 0, 0);">
 
+      <p class="text-5xl mb-6" style="font-weight: bold; position: absolute;">{{ item?.site?.site_name }}</p>
 
+        <div  class="py-8" style="">
 
+        
+                <OrganigramaItem class="pt-8" :items="item.organigrama" ref="organigramaItem"></OrganigramaItem>
+
+        
+        
+        </div>
+ 
     </div>
 </template>
 
@@ -24,12 +32,7 @@ import { nextTick } from 'vue';
 import { onMounted, ref } from 'vue';
 
 const users = ref()
-const props = defineProps({
-  items: {
-    type: Array,
-    default: () => []
-  }
-});
+
 
 const scrollContainer = ref(null);
 
@@ -39,6 +42,17 @@ onMounted(() => {
 });
 
 
+
+onMounted(async () => {
+  const sedes = await getSites();
+
+  for (const sede of sedes) {
+    const users = await getUsersBySite(sede.site_id);
+    const organigrama = buildOrgChart(users);
+    console.log(organigrama)
+    items.value.push({ site: sede, organigrama });
+  }
+});
 
 
 
@@ -83,18 +97,25 @@ function buildOrgChart(users, jefeId = null) {
 }
 
 
-onMounted(async() => {
 
 
-  getUsersBySite(3).then(data => {
-    users.value = data
-    const organigrama = buildOrgChart(data);
-    items.value = organigrama
 
-  })
 
-  
-})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </script>

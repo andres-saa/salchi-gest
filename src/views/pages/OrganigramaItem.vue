@@ -1,5 +1,5 @@
 <template >
-  <ul class="list-unstyled  pt-0 5 m-0 mt-5  px-0" style="  position: ; display: flex; list-style: none;"  >
+  <ul class="list-unstyled  pt-0 5 m-0 mt-5  px-0" style="   position: ; display: flex; list-style: none;"  >
 
 
 
@@ -11,6 +11,7 @@
        <div class=" tex-center p-0"  style="height: auto; position: relative;min-width: max-content;background-color: rgba(255, 255, 255, 0);border: 2px; display: flex;justify-content: center;"> 
 
 
+        
         <img style="width: 1.5cm;z-index: 100;background-color: white; height: 1.5cm; border-radius: 50%;object-fit: cover; border: 5px solid rgb(0, 0, 0);" :src="`${URI}/read-product-image/96/employer-${item.dni}`"
                                     @error="onImageError(item.gender, $event)" class="shadow-2 img-profile"
                                      />
@@ -27,7 +28,7 @@
  </p>
 
 
- <p cla class="text-center p-0  text-sm p-0" style="min-width: max-content; width: 100%;">  
+ <p cla class="text-center p-0  text-sm p-0" style="min-width: max-content; width: 100%;text-transform:uppercase;">  
              {{!item.subordinates? item.name.slice(0, 15) : item.name.slice(0, 30) }} {{!item.subordinates && item.name.length > 10 ? '...' : item.subordinates && item.name.length > 20 ? '...' : '' }}
              
  </p>
@@ -55,6 +56,7 @@
 <script setup>
 import { defineProps } from 'vue';
 import OrganigramaItem from './OrganigramaItem.vue';
+import { URI } from '@/service/conection';
 
 const props = defineProps({
   items: {
@@ -84,5 +86,8 @@ if (!gender || gender == '' || gender == 'N/A') {
 </script>
 
 <style scoped>
+*{
+  text-transform: uppercase;
+}
 /* Aquí puedes añadir estilos personalizados si lo necesitas */
 </style>

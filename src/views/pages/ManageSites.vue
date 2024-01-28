@@ -4,6 +4,8 @@ import ProductService from '@/service/ProductService';
 import { URI } from "@/service/conection.js"
 import { useRouter } from 'vue-router';
 import router from '@/router';
+import { getUsers,getUsersBySite } from '@/service/userServices'
+
 import {
     sitesDropValues,
     curentSite,
@@ -17,6 +19,41 @@ const navigateToSite = (siteData) => {
     router.push(`/site/${siteData.site_id}`);
 };
 
+
+const usersBySite = ref({}); // Nuevo objeto para almacenar usuarios por sede
+
+// ... Resto del código ...
+
+// Función modificada para obtener usuarios por sede
+const fetchUsersForSite = async (siteId) => {
+    try {
+        const users = await getUsersBySite(siteId);
+        usersBySite.value[siteId] = users;
+    } catch (error) {
+        console.error("Error al obtener usuarios por sede:", error);
+    }
+};
+
+onMounted(() => {
+    // ... tu código existente ...
+    getSites().then(sites => {
+        sites.forEach(site => fetchUsersForSite(site.site_id));
+    });
+});
+
+
+
+const onImageError = (gender, event) => {
+    const avataresPredeterminados = {
+        masculino: '/images/male-avatar.png',
+        femenino: '/images/female-avatar.png',
+        default: '/images/who.png'
+    };
+
+    event.target.src = avataresPredeterminados[gender] || avataresPredeterminados.default;
+};
+
+
 const dataviewValue = ref(null);
 const layout = ref('grid');
 const sortKey = ref(null);
@@ -28,8 +65,14 @@ const productService = new ProductService();
 onMounted(() => {
     productService.getProductsSmall().then((data) => (dataviewValue.value = data));
     getSites()
+
+    getUsers().then(data => users.value = data)
+
+    
 });
 
+
+const users = ref([])
 </script>
 
 <template>
@@ -52,24 +95,12 @@ onMounted(() => {
                                 <div class=" m-4      container-">
                                     <div class="text-center cont-img-sede">
                                         <div class="nombre-sede-cont">
-                                            <AvatarGroup class="mb-3 avatar">
-                                                <Avatar :image="'demo/images/avatar/amyelsner.png'" size="large"
-                                                    shape="circle">
-                                                </Avatar>
-                                                <Avatar :image="'demo/images/avatar/asiyajavayant.png'" size="large"
-                                                    shape="circle"></Avatar>
-                                                <Avatar :image="'demo/images/avatar/onyamalimba.png'" size="large"
-                                                    shape="circle"></Avatar>
-                                                <Avatar :image="'demo/images/avatar/ionibowcher.png'" size="large"
-                                                    shape="circle"></Avatar>
-                                                <Avatar :image="'demo/images/avatar/xuxuefeng.png'" size="large"
-                                                    shape="circle">
-                                                </Avatar>
-                                                <Avatar label="+2" shape="circle" size="large" :style="{ color: '#ffffff' }"
-                                                    style="background-color: var(--primary-color);"></Avatar>
-                                            </AvatarGroup>
+                                            <AvatarGroup>
+                <Avatar shape="circle" size="xlarge" :style="{ 'background-color': '#fff', color: '#ffffff' }" v-for="user in usersBySite[slotProps.data.site_id]?.slice(0, 4)" :key="user.dni" :image="`${URI}/read-product-image/96/employer-${user.dni}`" @error="onImageError(user.gender, $event)" />
+                <Avatar shape="circle" size="xlarge" :style="{ 'background-color': 'red', color: '#ffffff' }" v-if="usersBySite[slotProps.data.site_id]?.length > 6" :label="`+${usersBySite[slotProps.data.site_id].length-4}`" />
+            </AvatarGroup>
                                             <div class="text-5xl font-bold text-white nombre-sede">
-                                                <p style="width: 100%;">
+                                                <p style="width: 100%; animation: ;">
                                                     {{ slotProps.data.site_name }}
                                                 </p>
                                             </div>
@@ -100,6 +131,12 @@ button {
     /* background-color: ;
  */
     padding: 0;
+    border: none;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .nombre-sede {
@@ -113,20 +150,28 @@ button {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    text-shadow: 0 0 10px rgb(0, 0, 0);
     display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 1rem;
     justify-content: center;
+    /* backdrop-filter: blur(3px); */
 }
+
+
 
 .nombre-sede-cont:hover {
     opacity: 0;
-    transition: all .3s ease;
+    /* transition: all .3s ease; */
 }
 
 
+*{
+    animation: aparecer .5s ease; /* Aplicando la animación */
+
+}
 
 .nombre-sede-cont:hover+.imagen {
     transition: all .3s ease;
@@ -144,6 +189,14 @@ button {
 }
 
 
+.imagen {
+    width: 100%;
+    height: 33vh;
+    padding: 5px;
+    border-radius: 1rem;
+    object-fit: cover;
+    transition: opacity 1s ease; /* Transición de opacidad */
+}
 
 .imagen {
     width: 100%;

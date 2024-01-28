@@ -447,12 +447,13 @@ const model = ref([
                     {
                         label: 'Mi carnet digital', icon: 'fa-solid fa-id-card', to: '/mi-carnet',
                     },
-                    // {
-                    //     label: 'Organigrama empresarial', icon: 'pi pi-fw pi-home', to: '/organigrama',
-                    // },
+                    {
+                        label: 'Organigrama empresarial', icon: 'fa-solid fa-diagram-project', to: '/organigrama',
+                    },
                    
                 ]
                 
+                // <i class=""></i>
             },
 ]);
 
