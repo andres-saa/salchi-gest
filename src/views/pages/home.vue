@@ -1,12 +1,12 @@
 <template>
-    <div class="col-12 m-auto px-3"
+    <div class="col-12 m-auto px-0"
         style="max-width: 900px;display: ;align-items: center;justify-content: center; flex-direction: column; ">
         <p class="text-4xl lg:text-6xl   col-12 text-center" style="font-weight: bold;width: auto; "> Novedades</p>
 
 
 
 
-        <div class="col-12 p-3 mb-3" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);border-radius: 0.5rem;">
+        <div class="col-12  mb-3" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);border-radius: 0.5rem;">
             <RouterLink to="mas-cerca-de-ti">
                 <Button class=" p-0 "
                     style=" display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; background-color: rgb(255, 255, 255);">
@@ -48,7 +48,7 @@
 
 
 
-        <a class="col-12 p-2" href="https://forms.gle/mr7CD1sWT6C2NRKi8">
+        <a class="col-12 p-1" href="https://forms.gle/mr7CD1sWT6C2NRKi8">
 
             <div class="col-12 p-3 mb-3" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);border-radius: 0.5rem;">
                 <Button class=" p-0 "
@@ -135,10 +135,10 @@
 
             <div class="lg:col-4 col-6  p-0 " v-for="menu in menus" >
 
-                <div class="p-2">
+                <div class="p-2 m-0">
                     <RouterLink :to="menu.to">
                         <Button class="text-xl "
-                            style="display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; height: 20vh;min-height:200px; background-color: rgb(255, 211, 211);">
+                            style="display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold;height: 15vh ;min-height:120px; background-color: rgb(255, 211, 211);">
 
                             <span class="text-lg lg:text-xl p-3 col-12"
                                 style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px black;">

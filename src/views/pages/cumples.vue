@@ -3,6 +3,22 @@
 import ShowUserBirth from './ShowUserBirth.vue';
 import { ref, onMounted, onBeforeMount, computed, cloneVNode } from 'vue';
 import { URI } from '../../service/conection';
+import { getUsers, } from '@/service/userServices'
+
+
+
+
+const users = ref([]);
+onMounted(async () => {
+    const fechaServidor = await obtenerFechaServidor();
+    const mesActual = fechaServidor.getMonth() + 1; // getMonth() devuelve un índice basado en 0, por lo que se suma 1.
+
+    getUsers().then(data => {
+        users.value = filtrarUsuariosPorMes(data, mesActual);
+    });
+});
+
+
 
 const fechaFormateada = ref('');
 const mesActual = ref()
@@ -32,9 +48,11 @@ const obtenerFechaServidor = async () => {
         const mes = serverTime.getMonth();
         const anio = serverTime.getFullYear();
         mesActual.value = mes
+   
 
         // Formatear la fecha
         fechaFormateada.value = `${dia} de ${nombresMeses[mes]} de ${anio}`;
+        return new Date(serverTime)
     } catch (error) {
         console.error('Error al obtener la hora del servidor:', error);
         fechaFormateada.value = 'Fecha no disponible';
@@ -44,16 +62,53 @@ const obtenerFechaServidor = async () => {
 onMounted(obtenerFechaServidor);
 
 
+const filtrarUsuariosPorMes = (users, mes) => {
+    return users.filter(usuario => {
+        const fechaNacimiento = new Date(usuario.birth_date);
+        return fechaNacimiento.getMonth() + 1 === mes && usuario?.status.toLowerCase().split(' ')[0] === 'activo';
+    });
+};
+
+
+const cargarImagenAvatar = (dni, gender) => {
+    const url = `${URI}/read-product-image/96/employer-${dni}`;
+    const imagen = new Image();
+
+    imagen.onload = () => {
+        // La imagen se cargó correctamente
+        return url;
+    };
+
+    imagen.onerror = () => {
+        // Error al cargar la imagen, devuelve una imagen predeterminada
+        return obtenerImagenPredeterminada(gender);
+    };
+
+    imagen.src = url;
+};
+
+
+
+const obtenerImagenPredeterminada = (gender) => {
+    const avataresPredeterminados = {
+        masculino: '/images/male-avatar.png',
+        femenino: '/images/female-avatar.png',
+        default: '/images/who.png'
+    };
+
+    return avataresPredeterminados[gender] || avataresPredeterminados.default;
+};
+
 </script>
 
 <template>
-<div class="cont p-2">
+<div class="cont p-2 col-12">
   <h5 class="m-auto col-12  text-center text-5xl" style="font-weight: bold; color: ;"> Cumples <i class="pi pi-spin pi-star-fill
 " style="font-size: 3rem"></i> </h5>
   <h5 class="m-auto col-12  text-center text-2xl"> Hoy: {{ fechaFormateada }} 
        </h5>
 
-  <div class="lg:col-6 md:col-9 m-auto p-4" style="border-radius: 1REM; box-shadow: 0 0 20px rgba(0, 0, 0, 0.433); background-color: rgb(255, 206, 206);">
+  <div class="md:col-9 m-auto p-4 col-12" style="border-radius: 1REM; box-shadow: 0 0 20px rgba(0, 0, 0, 0.433); background-color: rgb(255, 206, 206);">
 
 
 
@@ -62,16 +117,14 @@ onMounted(obtenerFechaServidor);
         Este mes
       </h2>
 
+      <!-- {{ users }} -->
+
 
       <AvatarGroup class="mb-3 avatar"  @click="$refs.currentCumple.click()">
-      <Avatar :image="'demo/images/avatar/amyelsner.png'" size="xlarge" shape="circle">
+      <Avatar v-for="user in users.slice(0,6)" :image="`${URI}/read-product-image/96/employer-${user.dni}`" size="xlarge" shape="circle">
       </Avatar>
-      <Avatar :image="'demo/images/avatar/asiyajavayant.png'" size="xlarge" shape="circle"></Avatar>
-      <Avatar :image="'demo/images/avatar/onyamalimba.png'" size="xlarge" shape="circle"></Avatar>
-      <Avatar :image="'demo/images/avatar/ionibowcher.png'" size="xlarge" shape="circle"></Avatar>
-      <Avatar :image="'demo/images/avatar/xuxuefeng.png'" size="xlarge" shape="circle">
-      </Avatar>
-      <Avatar label="+2" shape="circle" size="xlarge" :style="{ 'background-color': '#9c27b0', color: '#ffffff' }">
+     
+      <Avatar v-if="users.length>6" :label="`+${users.length-6}`" shape="circle" size="xlarge" :style="{ 'background-color': '#9c27b0', color: '#ffffff' }">
       </Avatar>
     </AvatarGroup>
 
@@ -131,7 +184,10 @@ onMounted(obtenerFechaServidor);
     position: relative;
     min-height: 100vh; /* Asegura que el div cubra toda la altura de la pantalla */
     width: 100%; /* Asegura que el div cubra todo el ancho de la pantalla */
-    overflow: hidden; /* Evita cualquier desbordamiento del contenido */
+    overflow: hidden;
+    /* min-width: 900px; */
+ 
+  /* Evita cualquier desbordamiento del contenido */
 }
 
 .cont::before {

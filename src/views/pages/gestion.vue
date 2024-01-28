@@ -1,11 +1,8 @@
 <template>
-    <div  class="col-12 m-auto" style="max-width: 900px;position: relative;border-radius: 1rem;" >
+    <div  class="col-12 mx-auto my-0 py-0" style="max-width: 1024px;position: relative;border-radius: 1rem;" >
      
-        <iframe width="100%" style="height: 85vh; border-radius: 1rem; overflow: hidden; box-shadow: 0 0 20px;box-shadow: 0 0 20px;" src="/documents/Planeación Estrategica Completa.pdf" frameborder="0"></iframe>
+        <iframe width="100%" style="height: 85vh; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 0 20px;box-shadow: 0 0 20px;" src="/documents/Planeación Estrategica Completa.pdf" frameborder="0"></iframe>
 
-        <!-- <div style="background-color: red; height: 1em;width: 100%; position: absolute;bottom:0px; z-index: 300;">
-
-        </div> -->
     </div>
   </template>
   

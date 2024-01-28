@@ -292,11 +292,11 @@
 
 <script setup>
 import { onMounted, ref,watch } from 'vue';
-import { URI } from '../../service/conection';
-import router from '../../router';
+import { URI } from '@/service/conection';
+// import router from '.@/router';
 import { useRoute } from 'vue-router';
-import { getUserDni } from '../../service/valoresReactivosCompartidos'
-import {getUserId} from '../../service/valoresReactivosCompartidos'
+import { getUserDni } from '@/service/valoresReactivosCompartidos'
+import {getUserId} from '@/service/valoresReactivosCompartidos'
 
 const route = useRoute();
 const ruta = ref(route.params.status);

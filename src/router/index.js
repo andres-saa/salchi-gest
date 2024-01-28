@@ -93,6 +93,11 @@ const router = createRouter({
                     component: () => import('@/views/pages/generarCertificado.vue')
                   },
                   {
+                    path: '/permisos',
+                    name: 'permisos',
+                    component: () => import('@/views/pages/permisosEmployer.vue')
+                  },
+                  {
                     path: '/permiso',
                     name: 'permiso',
                     component: () => import('@/views/pages/permiso.vue')
@@ -107,38 +112,100 @@ const router = createRouter({
                     name: 'permiso-licencia',
                     component: () => import('@/views/pages/permiso-licencia.vue')
                   },
-                  {
-                    path: '/capt',
-                    name: 'capt',
-                    component: () => import('@/views/pages/capacitacionNueva.vue')
-                  },
+
+
+
+
+
+
+
+
+
+
+
                   {
                     path: '/capacitaciones',
                     name: 'capacitaciones',
-                    component: () => import('@/views/pages/capacitaciones.vue'),
+                    component: () => import('@/views/pages/capacitaciones/capacitaciones.vue'),
+                    
+                  },
+
+                  {
+                    path: '/capacitaciones-invitaciones',
+                    name: 'capacitaciones-invitaciones',
+                    component: () => import('@/views/pages/capacitaciones/capacitaciones-invitaciones.vue'),
+                    
+                  },
+                  {
+                    path: '/capacitacion/:capacitacion_id/',
+                    name: 'capacitacion',
+                    component: () => import('@/views/pages/capacitaciones/capacitacion.vue'),
                     children:[
                         {
-                            path: '/capacitaciones/guias',
-                            name: 'guias',
-                            component: () => import('@/views/pages/guias.vue')
+                            path: '/capacitacion/:capacitacion_id/configuracion',
+                            name: 'capacitacion_configuracion',
+                            component: () => import('@/views/pages/capacitaciones/configCapacitacion.vue'),
+                            
+                          },
+                        {
+                            path: '/capacitacion/:capacitacion_id/archivos',
+                            name: 'capacitacion_archivos',
+                            component: () => import('@/views/pages/capacitaciones/archivCapacitaciones.vue'),
+                            
                           },
                           {
-                            path: '/capacitaciones/cuestionario',
-                            name: 'cuestionario',
-                            component: () => import('@/views/pages/cuestionario.vue')
-                        },
-                        {
-                            path: '/capacitaciones/asistencia',
-                            name: 'asistencia',
-                            component: () => import('@/views/pages/asistencia.vue')
-                        },
-                        {
-                            path: '/capacitaciones/links',
-                            name: 'links',
-                            component: () => import('@/views/pages/links.vue')
-                        },
+                            path: '/capacitacion/:capacitacion_id/asistencia',
+                            name: 'capacitacion_asistencia',
+                            component: () => import('@/views/pages/capacitaciones/asistencia.vue'),
+                            
+                          },
+                        //   {
+                        //     path: '/capacitaciones',
+                        //     name: 'capacitaciones',
+                        //     component: () => import('@/views/pages/capacitacionNueva.vue'),
+                            
+                        //   },
+
                     ]
+                    
                   },
+
+
+
+
+
+
+
+
+
+         
+                //   {
+                //     path: '/capacitaciones',
+                //     name: 'capacitaciones',
+                //     component: () => import('@/views/pages/capacitaciones.vue'),
+                //     children:[
+                //         {
+                //             path: '/capacitaciones/guias',
+                //             name: 'guias',
+                //             component: () => import('@/views/pages/guias.vue')
+                //           },
+                //           {
+                //             path: '/capacitaciones/cuestionario',
+                //             name: 'cuestionario',
+                //             component: () => import('@/views/pages/cuestionario.vue')
+                //         },
+                //         {
+                //             path: '/capacitaciones/asistencia',
+                //             name: 'asistencia',
+                //             component: () => import('@/views/pages/asistencia.vue')
+                //         },
+                //         {
+                //             path: '/capacitaciones/links',
+                //             name: 'links',
+                //             component: () => import('@/views/pages/links.vue')
+                //         },
+                //     ]
+                //   },
                   {
                     path: '/actualizar-datos',
                     name: 'actualizar-datos',
@@ -311,15 +378,15 @@ const router = createRouter({
                             name: 'permisotipo',
                             component: () => import('@/views/pages/permisoType.vue'),
                             meta: { roles: roles.todos }, // Asignación correcta dentro de 'meta'
-                            children:[
-                                {
-                                    path: '/autorizar-permisos/:tipo/:status',
-                                    name: 'permisoestado',
-                                    component: () => import('@/views/pages/permisoStatus.vue'),
+                            // children:[
+                            //     {
+                            //         path: '/autorizar-permisos/:tipo/:status',
+                            //         name: 'permisoestado',
+                            //         component: () => import('@/views/pages/permisoStatus.vue'),
 
-                                  },
+                            //       },
 
-                            ]
+                            // ]
         
                         },
 

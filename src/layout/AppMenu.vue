@@ -12,7 +12,7 @@ const model = ref([
         roles:roles.todos,
         items: [
             {
-                label: 'inicio', icon: 'pi pi-fw pi-home', to: '/',
+                label: 'inicio', icon: 'fa-solid fa-house', to: '/',
 
             }]
     },
@@ -22,10 +22,10 @@ const model = ref([
         roles:roles.adminTienda,
         items: [
             {
-                label: 'Tienda', icon: 'pi pi-fw pi-home', to: '/',
+                label: 'Tienda', icon: 'fa-solid fa-cart-shopping', to: '/',
                 items: [
-                    {label: 'Menu',icon: 'pi pi-fw pi-home', to: '/tienda-menu/'},
-                    {label: 'Domicilios',icon: 'pi pi-fw pi-home', to: '/domicilios'},
+                    {label: 'Menu',icon: ' fa-solid fa-burger', to: '/tienda-menu/'},
+                    {label: 'Domicilios',icon: ' fa-solid fa-truck-fast', to: '/domicilios'},
 
 
 
@@ -41,7 +41,7 @@ const model = ref([
         roles:roles.adminTienda,
         items: [
             {
-                label: 'Base de datos del personal', icon: 'pi pi-fw pi-home', to: '/pages/crud',
+                label: 'Base de datos del personal', icon: 'fa-database fa-solid', to: '/pages/crud',
                
             },
             
@@ -55,7 +55,7 @@ const model = ref([
                 roles:roles.todos,
                 items:[
                     {
-                        label: 'Cumpleanos', icon: 'pi pi-fw pi-home', to: '/cumples',
+                        label: 'Cumpleanos', icon: 'fa-solid fa-cake-candles', to: '/cumples',
                     }
                 ]
                 
@@ -74,7 +74,7 @@ const model = ref([
                 
             // },
             {
-                label: 'Documentos', icon: 'pi pi-fw pi-home', to: '/sites',
+                label: 'Documentos', icon: 'fa-solid fa-book', to: '/sites',
                 
             },
 
@@ -99,7 +99,7 @@ const model = ref([
                 
             // },
             {
-                label: 'Generar certificado laboral', icon: 'pi pi-fw pi-home', to: '/certificado-laboral',
+                label: 'Generar certificado laboral', icon: 'fa-solid fa-certificate', to: '/certificado-laboral',
                 
             },
             
@@ -124,31 +124,21 @@ const model = ref([
                 
             // },
             {
-                label: 'Vacaciones', icon: 'pi pi-fw pi-home', to: '/permiso-vacaciones',
+                label: 'Vacaciones', icon: 'fa-solid fa-sun', to: '/permiso-vacaciones',
                 
             },
             {
-                label: 'Licencia', icon: 'pi pi-fw pi-home', to: '/permiso-Licencia',
+                label: 'Licencia', icon: 'fa-solid fa-id-card', to: '/permiso-Licencia',
                 
             },
             {
-                label: 'Permiso general', icon: 'pi pi-fw pi-home', to: '/permiso'
+                label: 'Permiso general', icon: 'fa-solid fa-person-walking-arrow-right', to: '/permiso'
                 
             },
             {
-                label: 'Permisos solicitados', icon: 'pi pi-fw pi-home', to: '/mis-permisos',
+                label: 'Permisos solicitados', icon: 'fa-solid fa-list', to: '/mis-permisos',
                 roles:roles.todos, 
-                items: [
-                    {
-                        label: 'Mis permisos', icon: 'pi pi-fw pi-home', to: '/mis-permisos/general/generado',
-                    },
-                    {
-                        label: 'Mis Licencias', icon: 'pi pi-fw pi-home', to: '/mis-permisos/licencia/generado',
-                    },
-                    {
-                        label: 'Mis Vacaciones', icon: 'pi pi-fw pi-home', to: '/mis-permisos/vacaciones/generado',
-                    }
-                ]
+                
                 
             },
            
@@ -170,16 +160,16 @@ const model = ref([
         items: [
 
             {
-                label: 'Planeacíon Estrategica ', icon: 'pi pi-fw pi-home', to: '/mas-cerca-de-ti',
+                label: 'Planeacíon Estrategica ', icon: 'fa-solid fa-dumbbell', to: '/mas-cerca-de-ti',
                 
             },
             {
-                label: 'Evaluación clima organizacional ', icon: 'pi pi-fw pi-home', to: '/clima',
+                label: 'Evaluación clima organizacional ', icon: 'fa-solid fa-umbrella', to: '/clima',
                 
             },
 
             {
-                label: 'Evaluación de desempeño ', icon: 'pi pi-fw pi-home', to: '/desempeno',
+                label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-simple', to: '/desempeno',
                 
             },
            
@@ -195,7 +185,11 @@ const model = ref([
         items: [
 
             {
-                label: 'Capacitaciones', icon: 'pi pi-fw pi-home', to: '/capacitaciones/guias',
+                label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
+                
+            },
+            {
+                label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones',
                 
             },
             // {
@@ -227,17 +221,10 @@ const model = ref([
                 
             // },
             {
-                label: 'Permisos', icon: 'pi pi-fw pi-home', to: '/autorizar-permisos/general/generado',
+                label: 'Permisos', icon: 'fa-solid fa-person-through-window', to: '/permisos',
                 
             },
-            {
-                label: 'vacaciones', icon: 'pi pi-fw pi-home', to: '/autorizar-permisos/vacaciones/generado',
-                
-            },
-            {
-                label: 'Licencias', icon: 'pi pi-fw pi-home', to: '/autorizar-permisos/licencia/generado',
-                
-            },
+ 
 
             
             
@@ -265,7 +252,7 @@ const model = ref([
                 
             // },
             {
-                label: 'Actualizar mis datos', icon: 'pi pi-fw pi-home', to: '/actualizar-datos',
+                label: 'Actualizar mis datos', icon: 'fa-solid fa-user', to: '/actualizar-datos',
                 
             },
             // {
@@ -458,7 +445,7 @@ const model = ref([
                 roles:roles.todos, 
                 items: [
                     {
-                        label: 'Mi carnet digital', icon: 'pi pi-fw pi-home', to: '/mi-carnet',
+                        label: 'Mi carnet digital', icon: 'fa-solid fa-id-card', to: '/mi-carnet',
                     },
                     // {
                     //     label: 'Organigrama empresarial', icon: 'pi pi-fw pi-home', to: '/organigrama',
