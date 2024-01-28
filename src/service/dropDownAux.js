@@ -5,6 +5,7 @@ import { ref, onMounted, onBeforeMount } from 'vue';
 import ProductService from '@/service/ProductService';
 import { useToast } from 'primevue/usetoast';
 import { URI } from './conection';
+import { roles } from './roles';
 
 const sitesDropValues = ref([{}])
 const curentSite = ref([])
@@ -107,53 +108,58 @@ const housingTypesDropValues = ref([
     // { name: "Otros", code: "OTHER" }
   ]);
   
-const PositionDropValues = ref([
-     'Coordinador de Sedes Cali',
-     'Coordinador de Sede Bogotá',
-     'Líder de Punto',
-     'Cajero',
-     'Cocinero',
-     'Mesero',
-     'Auxiliar de Cocina',
-     'Jefe de Cocina', 
-     'Domiciliario', 
-     'Gerencia General', 
-     'Jefe de Gestión Humana',
-     'gestion humana',
-     'SAAMOVAR',
-     'AUXILIAR CONTABLE',
-     'DIGITADORA',
-     'AUXILIAR DE LOGISTICA',
-     'AUXILIAR DE TESORERIA',
-     'TESORERO',
-     'PATINADOR',
-     'cajero dia',
-     'AUXILIAR DE PRODUCCION',
-     'Aprendiz SENA',
-     'Jefe de Producción',
-     'Líder de Producción', 
-     'Auxiliar de Producción', 
-     'Contadora', 
-     'Auxiliar de Contabilidad',
-     'Coordinador de Inventarios',
-     'Auxiliar de Logística',
-     'Conductor',
-     'JEFE DE PRODUCCION',
-     'FRITADOR',
-     ' LIDER DE CAJA',
-     'SUBGERENTE',
-     'LIDER DE PUNTO',
-     'CAJERO NOCHE',
-     'Jefe de Compras',
-     'Auxiliar de Compras',
-     'Gerente de Marketing',
-     'Diseñador',
-     'Community Manager',
-     'administrador',
+// const PositionDropValues = ref([
+//      'Coordinador de Sedes Cali',
+//      'Coordinador de Sede Bogotá',
+//      'Líder de Punto',
+//      'Cajero',
+//      'Cocinero',
+//      'Mesero',
+//      'Auxiliar de Cocina',
+//      'Jefe de Cocina', 
+//      'Domiciliario', 
+//      'Gerencia General', 
+//      'Jefe de Gestión Humana',
+//      'gestion humana',
+//      'SAAMOVAR',
+//      'AUXILIAR CONTABLE',
+//      'DIGITADORA',
+//      'AUXILIAR DE LOGISTICA',
+//      'AUXILIAR DE TESORERIA',
+//      'TESORERO',
+//      'PATINADOR',
+//      'cajero dia',
+//      'AUXILIAR DE PRODUCCION',
+//      'Aprendiz SENA',
+//      'Jefe de Producción',
+//      'Líder de Producción', 
+//      'Auxiliar de Producción', 
+//      'Contadora', 
+//      'Auxiliar de Contabilidad',
+//      'Coordinador de Inventarios',
+//      'Auxiliar de Logística',
+//      'Conductor',
+//      'JEFE DE PRODUCCION',
+//      'FRITADOR',
+//      ' LIDER DE CAJA',
+//      'SUBGERENTE',
+//      'LIDER DE PUNTO',
+//      'CAJERO NOCHE',
+//      'Jefe de Compras',
+//      'Auxiliar de Compras',
+//      'Gerente de Marketing',
+//      'Diseñador',
+//      'Community Manager',
+//      'administrador',
      
-]);
+// ]);
 
 
+
+const PositionDropValues = ref(
+
+  roles.todos 
+);
 
 
 const getSites = async () => {
