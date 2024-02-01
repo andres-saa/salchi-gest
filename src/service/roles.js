@@ -13,6 +13,8 @@
         'jefe de producción',
         'líder de producción',
         'auxiliar de producción',
+        'lider de gestión humana',
+        'lider de inventarios',
         'contadora',
         'auxiliar de contabilidad',
         'coordinador de inventarios',
@@ -39,7 +41,9 @@
         'gerencia general',
         'gerente',
         'subgerente',
-        'desarrollador web'
+        'desarrollador web',
+        'lider de inventarios',
+
 
         // 'cajero',
         ],
@@ -51,7 +55,8 @@
         'subgerente',
         // 'cajero',
         'gestion humana',
-        'desarrollador web'
+        'desarrollador web',
+        
 
         ]
  }
