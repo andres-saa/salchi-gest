@@ -90,13 +90,13 @@
 
 
 
-            <div class="mx-5 my-0 p-5" style="border-radius: 0.5rem;background-color: rgba(0, 0, 0, 0.061); display:  1rem; align-items: center;">
+            <div class="mx-5 my-0 p-5" style="border-radius: 0.5rem;background-color: rgba(252, 155, 0, 0.105); display:  1rem; align-items: center;">
                 
 
                 <p class="text-xl p-0 m-0" style="font-weight: bold;">Description de las funciones del Grupo:
                 </p>
 
-                <p class="text-xl p-0 m-0"> {{ group.description }}      </p>
+                <p class="text-sm md:text-lg p-0 m-0"> {{ group.description }}      </p>
                 
             </div>
 
@@ -114,11 +114,11 @@
                     <Button severity="warning" style="font-weight: bold;" @click="openRoleModificationDialog(group)">Modificar</Button>
                 </div>
                 
-                <div v-for="(role, rIndex) in group.roles" :key="role.id" class="col-12 md:col-6 p-1">
+                <div v-for="(role, rIndex) in group.roles" :key="role.id" class="col-12 md:col-6 p-1 text-sm lg:text-lg">
                     <div style="display: flex; gap: 0.5rem; align-items:center;">
-                        <p class="p-0 m-0" style="text-transform: capitalize;">{{ rIndex + 1 }}. {{ role.title }}</p>
-                        <Button text style="font-weight: bold;" class="p-0 m-0">Editar</Button>
-                        <Button severity="danger" text style="font-weight: bold;" class="p-0 m-0">Eliminar</Button>
+                        <p class="p-0 m-0 " style="text-transform: capitalize;"><i :class="PrimeIcons.CIRCLE_FILL"></i> {{ rIndex + 1 }}. {{ role.title }}</p>
+                        <!-- <Button text style="font-weight: bold;" class="p-0 m-0"><i :class="PrimeIcons.PENCIL    "></i></Button>
+                        <Button severity="danger" text style="font-weight: bold;" class="p-0 m-0"><i :class="PrimeIcons.TIMES    "></i></Button> -->
                     </div>
                 </div>
 
@@ -143,6 +143,7 @@
 import { ref, onMounted } from 'vue';
 import { URI } from '../../service/conection';
 import Loading from '../../components/Loading.vue';
+import { PrimeIcons } from 'primevue/api';
 
 const visibleModify = ref(false)
 const roleGroups = ref([]);
