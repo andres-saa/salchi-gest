@@ -5,6 +5,7 @@ import { ref, onMounted, onBeforeMount, computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { departamentos, findByDepartament } from '@/service/CountryService.js'
 import { jsPDF } from "jspdf";
+import { roles,obtenerRolesYActualizar,getRoles } from '@/service/roles';
 
 import { uploadUserPhotoProfile } from '@/service/sendFileService'
 import {
@@ -42,7 +43,7 @@ const dt = ref(null);
 const filters = ref(null);
 const submitted = ref(false);
 const GenderDropValue = ref(null);
-const PositionDropValue = ref(null);
+const PositionDropValue = ref([]);
 const statusDropValue = ref({ name: 'activo', code: 'active' });
 const SiteDropValue = ref(null);
 const swithHasVehicle = ref(false)
@@ -445,7 +446,13 @@ const cambiar2 = (event) => {
 };
 
 onMounted(async () => {
-    getUsers().then(data => users.value = data)
+    getUsers().then(data => {
+        users.value = data
+        charging.value = false
+    
+    })
+
+    getRoles().then(data => PositionDropValues.value = data)
 
 
 });
@@ -511,7 +518,7 @@ const asignDropValueToEdit = (user) => {
     departamentDropValue.value = user.birth_department
     cityDropValue.value = user.birth_city
     statusDropValue.value = user.status
-    PositionDropValue.value = user.position.trim().toLowerCase()
+    PositionDropValue.value = PositionDropValues.value.filter(rol => rol.title?.trim().toLowerCase() == user.position?.trim().toLowerCase())[0] || {}
     currentBoss.value = users.value.filter( u => (u.id == user.boss_id))[0] || {}
 
     // bloodTypesDropValue.value = findByType(user.blood_type, bloodTypesDropValues)
@@ -593,6 +600,7 @@ const asingDataToSave = () => {
     data.birth_department = departamentDropValue.value
     data.birth_city = cityDropValue.value
     data.boss_id = currentBoss.value.id
+    data.position = PositionDropValue.value.title
 
     // data.status = currentUser.status
     data.exit_date = (data.status === "activo") ? null : data.exit_date;
@@ -988,6 +996,8 @@ const handleFileChange = (event) => {
 }
 
 
+const charging = ref(true)
+
 const visibleImage = ref(false)
 const bigImage = ref('/images/male-avatar.png')
 
@@ -999,6 +1009,18 @@ const verIMagen = (dni) => {
 
 <template>
 
+<div class="col-12" v-if="charging" style="display: flex;flex-direction: column; pointer-events: none; align-items: center; justify-content: center; position: fixed;z-index: 1000;left: 0;top: 0; height: 100%;background-color: rgba(0, 0, 0, 0.5);">
+
+
+<p class="text-3xl" style="font-weight: bold; color: white; text-shadow: 0 0 10px rgba(0, 0, 0, 0.551);">CARGANDO USUARIOS</p>
+<div style="display: flex;">
+
+    
+        <ProgressSpinner  style="width: 100px; height: 100px" strokeWidth="4" fill="var(--surface-ground)"
+        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+
+    </div>
+</div>
 
 
 
@@ -1473,7 +1495,7 @@ const verIMagen = (dni) => {
 
                     <div class="field">
                         <label for="position">Cargo</label>
-                        <Dropdown filter v-model.trim="currentUser.position" :options="PositionDropValues" placeholder=""
+                        <Dropdown optionLabel="title" filter v-model.trim="PositionDropValue" :options="PositionDropValues" placeholder=""
                             required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" />
 
                         <small class="p-invalid" v-if="submitted && !currentUser.position">el cargo es obligatorio</small>

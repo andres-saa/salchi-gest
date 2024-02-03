@@ -81,11 +81,11 @@ const cerrar = () => {
 </script>
 
 <template>
-    <div class="layout-topbar">
+    <div class="layout-topbar" style="z-index: 9000;">
         <router-link to="/" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
             <!-- <span>SAKAI</span> -->
-           <span class="pl-4 text-lg">{{ getUserRole() }}</span> 
+           <span class="pl-4 text-sm">{{ getUserRole() }}</span> 
         </router-link>
 
         <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">

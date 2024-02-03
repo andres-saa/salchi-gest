@@ -3,7 +3,7 @@ import AppLayout from '@/layout/AppLayout.vue';
 import { roles } from '../service/roles';
 import { getUserRole } from '../service/valoresReactivosCompartidos';
 import { jwtDecode } from 'jwt-decode';// import { roles } from '../service/roles';
-const router = createRouter({
+const router = createRouter({ 
     history: createWebHistory(),
     routes: [
         {
@@ -34,11 +34,18 @@ const router = createRouter({
 
                     ]
                 },
+
                 {
                     path: '/domicilios/',
                     name: 'domicilios',
                     component: () => import('@/views/pages/domicilios.vue')
                 },
+
+                {
+                  path: '/cargos/',
+                  name: 'cargos',
+                  component: () => import('@/views/pages/gestionCargos.vue')
+              },
                 // {
                 //     path: '/uikit/input',
                 //     name: 'input',
@@ -245,7 +252,7 @@ const router = createRouter({
                             path: '/mis-permisos/:tipo',
                             name: 'mis-permisotipo',
                             component: () => import('@/views/pages/miPermisoType.vue'),
-                            meta: { roles: roles.todos }, // Asignación correcta dentro de 'meta'
+                            meta: { roles: roles.value.todos }, // Asignación correcta dentro de 'meta'
                             children:[
                                 {
                                     path: '/mis-permisos/:tipo/:status',
@@ -365,32 +372,14 @@ const router = createRouter({
                     path: '/pages/crud',
                     name: 'crud',
                     component: () => import('@/views/pages/Crud.vue'),
-                    meta: { roles: roles.adminTienda } // Asignación correcta dentro de 'meta'
+                    meta: { roles: roles.value.adminTienda } // Asignación correcta dentro de 'meta'
 
                 },
                 {
                     path: '/autorizar-permisos',
                     name: 'autorizar',
                     component: () => import('@/views/pages/autorizar-permisos.vue'),
-                    children:[
-                        {
-                            path: '/autorizar-permisos/:tipo',
-                            name: 'permisotipo',
-                            component: () => import('@/views/pages/permisoType.vue'),
-                            meta: { roles: roles.todos }, // Asignación correcta dentro de 'meta'
-                            // children:[
-                            //     {
-                            //         path: '/autorizar-permisos/:tipo/:status',
-                            //         name: 'permisoestado',
-                            //         component: () => import('@/views/pages/permisoStatus.vue'),
-
-                            //       },
-
-                            // ]
-        
-                        },
-
-                    ]
+                    
                   },
                 // {
                 //     path: '/documentation',

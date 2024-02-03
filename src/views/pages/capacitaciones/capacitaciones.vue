@@ -6,15 +6,19 @@
 
 
 
-    <Dialog v-model:visible="charging" modal  :style="{ width: '50rem'}" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" style="background-color;red">
-        
-        <div style="display: flex;">
-            <ProgressSpinner  style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
-            animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+    <div class="col-12" v-if="charging" style="display: flex;flex-direction: column; pointer-events: none; align-items: center; justify-content: center; position: fixed;z-index: 1000;left: 0;top: 0; height: 100%;background-color: rgba(0, 0, 0, 0.5);">
+
+
+<p class="text-3xl" style="font-weight: bold; color: white; text-shadow: 0 0 10px rgba(0, 0, 0, 0.551);">CARGANDO CAPACITACIONES</p>
+<div style="display: flex;">
+
     
-        </div>
-        
-    </Dialog>
+        <ProgressSpinner  style="width: 100px; height: 100px" strokeWidth="4" fill="var(--surface-ground)"
+        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+
+    </div>
+</div>
+
 
 
 

@@ -1,6 +1,21 @@
 
 
 <template>
+
+
+<div class="col-12" v-if="charging" style="display: flex;flex-direction: column; pointer-events: none; align-items: center; justify-content: center; position: fixed;z-index: 1000;left: 0;top: 0; height: 100%;background-color: rgba(0, 0, 0, 0.5);">
+
+
+<p class="text-3xl" style="font-weight: bold; color: white; text-shadow: 0 0 10px rgba(0, 0, 0, 0.551);">GENERANDO CARNET</p>
+<div style="display: flex;">
+
+    
+        <ProgressSpinner  style="width: 100px; height: 100px" strokeWidth="4" fill="var(--surface-ground)"
+        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+
+    </div>
+</div>
+
             
 
               <div class="col-12 " style="display: flex;justify-content: center ;flex-direction: column; align-items: center;">
@@ -69,8 +84,12 @@ import { URI } from "@/service/conection.js"
 import html2canvas from 'html2canvas';
 import { ref,onMounted } from 'vue';
 
+
+const charging = ref(true)
 const currentUser = ref({})
 const visibleCarga = ref(false)
+
+
 const getUser = async (dni) => {
     fetch(`${URI}/employer/dni/${dni}`)
         .then(response => {
@@ -83,6 +102,7 @@ const getUser = async (dni) => {
         .then(data => {
             console.log('Employer data:', data);
             currentUser.value = data
+            charging.value = false
             // getSites().then(() => { SiteDropValue.value = findSiteById(data.site_id)})
             // departamentDropValue.value = findByDepartament(data.birth_department) || []
             // cityDropValue.value = data.birth_city

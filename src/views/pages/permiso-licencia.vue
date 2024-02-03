@@ -304,6 +304,7 @@ import { useRoute } from 'vue-router';
 import { getUserRole } from '../../service/valoresReactivosCompartidos';
 import { getUserDni } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
+import router from '@/router/index.js'
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { nextTick } from 'vue';
@@ -421,6 +422,8 @@ const solicitarPermiso = async () => {
 
     const responseData = await response.json();
     console.log('Permiso creado exitosamente:', responseData);
+    router.push('/mis-permisos')
+    
     // Lógica adicional después de crear el permiso
   } catch (error) {
     console.error('Error al solicitar el permiso:', error);

@@ -130,7 +130,7 @@ const obtenerImagenPredeterminada = (gender) => {
 
 
       <AvatarGroup class="mb-3 avatar"  @click="$refs.currentCumple.click()">
-        <Avatar v-for="user in users" shape="circle" size="xlarge" :style="{ 'background-color': '#fff', color: '#ffffff' }" :key="user.dni" :image="`${URI}/read-product-image/96/employer-${user.dni}` " @error="onImageError(user.gender, $event)" />
+        <Avatar v-for="user in users.slice(0,6)" shape="circle" size="xlarge" :style="{ 'background-color': '#fff', color: '#ffffff' }" :key="user.dni" :image="`${URI}/read-product-image/96/employer-${user.dni}` " @error="onImageError(user.gender, $event)" />
 
      
       <Avatar v-if="users.length>6" :label="`+${users.length-6}`" shape="circle" size="xlarge" :style="{ 'background-color': '#9c27b0', color: '#ffffff' }">

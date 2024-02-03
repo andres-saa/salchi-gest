@@ -181,7 +181,7 @@ import { useRoute } from 'vue-router';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { nextTick } from 'vue';
-
+  
 import { getUserDni, getUserRole } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
 import { roles } from '../../service/roles';

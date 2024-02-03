@@ -1,65 +1,48 @@
- const roles = {
-    todos: [
-        'coordinador de sedes cali',
-        'coordinador de sede bogotá',
-        'líder de punto',
-        'cajero',
-        'auxiliar de cocina',
-        'jefe de cocina',
-        'domiciliario',
-        'gerencia general',
-        'jefe de gestión humana',
-        'aprendiz sena',
-        'jefe de producción',
-        'líder de producción',
-        'auxiliar de producción',
-        'lider de gestión humana',
-        'lider de inventarios',
-        'contadora',
-        'auxiliar de contabilidad',
-        'coordinador de inventarios',
-        'auxiliar de logística',
-        'conductor',
-        'jefe de compras',
-        'auxiliar de compras',
-        'gerente de marketing',
-        'diseñador',
-        'community manager',
-        'gerente',
-        'subgerente',
-        'getion humana',
-        'mesero',
-        'Lider Contable',
-        'desarrollador web'
-        ],
-
-    documentos:[
-    
-        'gerencia general',
-        'jefe de gestión humana',
-        'getion humana',
-        'gerencia general',
-        'gerente',
-        'subgerente',
-        'desarrollador web',
-        'lider de inventarios',
+ 
+ import {URI} from '@/service/conection.js'
+import { ref } from 'vue';
+ const  roles = ref({})
 
 
-        // 'cajero',
-        ],
-        
-    adminTienda:[
-    
-        'gerencia general',
-        'gerente',
-        'subgerente',
-        // 'cajero',
-        'gestion humana',
-        'desarrollador web',
-        
 
-        ]
- }
+
+async function obtenerRolesYActualizar() {
+    try {
+        // Hacer la solicitud fetch al endpoint /formatted-rolegroups
+        const response = await fetch(`${URI}/formatted-rolegroups`);
+        if (!response.ok) {
+            throw new Error('Hubo un problema al obtener los datos: ' + response.statusText);
+        } 
+        let rolesActualizados = await response.json();
+
+        // Actualizar la variable roles con los nuevos datos obtenidos
+        // Asegúrate de que esta variable roles está definida en un ámbito accesible
+        roles.value = rolesActualizados;
+     
+
+        console.log('Roles actualizados:', roles);
+        return rolesActualizados
+    } catch (error) {
+        console.error('Error al obtener los roles:', error);
+    }
+}
+
+
+const getRoles = async () => {
+    try {
+        const response = await fetch(URI + '/roles');
+        const groups = await response.json();
+
+        // roles.value = groups;
+        return groups
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+// Ejecutar la función para actualizar los roles
+obtenerRolesYActualizar();
 
  
  function verificarRol(rol, rolesPermitidos) {
@@ -67,10 +50,10 @@
     let rolNormalizado = rol.trim().toLowerCase();
 
     // Normalizar también los roles permitidos
-    let rolesPermitidosNormalizados = rolesPermitidos.map(r => r.toLowerCase());
+    let rolesPermitidosNormalizados = rolesPermitidos.map(r => r.trim().toLowerCase());
 
     return rolesPermitidosNormalizados.includes(rolNormalizado);
 }
 
 
-export {roles, verificarRol}
+export {roles, verificarRol,obtenerRolesYActualizar,getRoles}

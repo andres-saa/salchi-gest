@@ -50,7 +50,7 @@
 
         <div class="field">
             <label for="position" >Cargo</label>
-            <Dropdown :disabled="!verificarRol(getUserRole(),roles.adminTienda)" filter v-model.trim="currentUser.position" :options="PositionDropValues" placeholder=""
+            <InputText disabled filter v-model.trim="currentUser.position" :options="[]" placeholder="" opti
                 required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" />
 
             <small class="p-invalid" v-if="submitted && !currentUser.position">el cargo es obligatorio</small>
@@ -331,7 +331,7 @@
         <div class="field" >
             <label for="exit_reason">Clave</label>
             <Password toggleMask id="exit_reason" v-model.trim="currentUser.password" required="true" autofocus />
-            <small class="p-invalid" v-if="submitted && !currentUser.clave">El motivo de salida es
+            <small class="p-invalid" v-if="submitted && !currentUser.password">El motivo de salida es
                 requerido.</small>
         </div>
 

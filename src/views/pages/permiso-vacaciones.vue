@@ -316,6 +316,7 @@ import { PrimeIcons } from 'primevue/api';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { nextTick } from 'vue';
+import router from '@/router/index.js'
 const user = ref({})
 const usrDni = ref(getUserDni())
 const mensaje = ref()
@@ -430,6 +431,7 @@ const solicitarPermiso = async () => {
 
     const responseData = await response.json();
     console.log('Permiso creado exitosamente:', responseData);
+    router.push('/mis-permisos')
     // Lógica adicional después de crear el permiso
   } catch (error) {
     console.error('Error al solicitar el permiso:', error);

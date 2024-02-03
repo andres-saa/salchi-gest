@@ -18,6 +18,7 @@ const productoEnviado = ref(1)
 const productoAEditar = ref({})
 const productoAEliminar = ref({})
 const showEliminarProducto = ref(false)
+const verInfo = ref(true)
 
 const pastelColors = {
 
@@ -75,4 +76,4 @@ const getUserId = () => {
     return null;
 }
 
-export {getUserDni, getUserRole,getUserId, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
+export {getUserDni,verInfo, getUserRole,getUserId, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
