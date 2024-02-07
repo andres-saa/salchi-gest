@@ -38,7 +38,14 @@ const router = createRouter({
                 {
                     path: '/domicilios/',
                     name: 'domicilios',
-                    component: () => import('@/views/pages/domicilios.vue')
+                    component: () => import('@/views/pages/domicilios.vue'),
+                    children:[
+                      {
+                          path: '/domicilios/:site_id',
+                          name: 'domicilio',
+                          component: () => import('@/views/pages/domicilio.vue')
+                      },
+                  ]
                 },
 
                 {

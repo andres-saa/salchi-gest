@@ -33,7 +33,7 @@ async function fetchAndUpdateRoles() {
                     label: 'Tienda', icon: 'fa-solid fa-cart-shopping', to: '/',
                     items: [
                         { label: 'Menu', icon: ' fa-solid fa-burger', to: '/tienda-menu/' },
-                        { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios' },
+                        { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
 
                     ]
                 }]
