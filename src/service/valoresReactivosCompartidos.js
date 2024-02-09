@@ -124,4 +124,28 @@ const getUserId = () => {
     return null;
 }
 
-export {showDotation,getUserDni,verInfo,currentDotacion, getUserRole,getUserId,getUserBasic, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
+
+const getUsersBasic = async (id) => {
+  try {
+    const response = await fetch(`${URI}/employers-basic`, {
+      method: 'GET',
+      // headers: headers,
+    });
+
+    // Verifica si la respuesta es exitosa
+    if (response.ok) {
+      const data = await response.json();
+      
+      return data;
+    } else {
+      // Puedes manejar errores de autenticación o cualquier otro tipo de error aquí
+      console.error('Error al obtener usuarios:', response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    return null;
+  }
+};
+
+export {showDotation,getUserDni,verInfo,currentDotacion, getUserRole,getUserId,getUserBasic,getUsersBasic, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
