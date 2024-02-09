@@ -123,4 +123,10 @@ const cerrar = () => {
     border: none;
 }
 
+
+@media print {
+ * {
+    display: none !important;
+  }
+}
 </style>
