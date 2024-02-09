@@ -54,19 +54,28 @@
                         </template>
                     </Column>
 
-
-                    <Column class="p-2" field="employer_id" header=" empleado" :sortable="true"
-                        headerStyle="width:10rem; min-width:max-content; ">
+                    <Column class="p-2" field="fecha" header="Fecha de solicitud" :sortable="true"
+                        headerStyle="width:10rem; min-width:min-content; ">
                         <template #body="permiso">
                             <span class="p-column-title">Code</span>
                             <!-- {{ permiso.data.id }} -->
-                            {{ permiso.data.employer_id }}
+                            {{ permiso.data.history?.filter(e => e.status == 'generado')[0].timestamp?.split(' ')[0] }}
                         </template>
                     </Column>
 
 
-                    <Column class="p-2" field="start_date" header="fecha de inicio" :sortable="true"
-                        headerStyle="width:15rem; min-width:10rem; ">
+                    <Column class="p-2" field="employer_id" header=" Empleado" :sortable="true"
+                        headerStyle="width:20rem; min-width:max-content; ">
+                        <template #body="permiso">
+                            <span class="p-column-title">Code</span>
+                            <!-- {{ permiso.data.id }} -->
+                            {{ allUsersBasic.filter(e => e.id == permiso.data.employer_id)[0]?.name  }}
+                        </template>
+                    </Column>
+
+
+                    <Column class="p-2" field="start_date" header="Fecha de inicio" :sortable="true"
+                        headerStyle="width:10rem; min-width:10rem; ">
                         <template #body="permiso">
                             <span class="p-column-title">Code</span>
                             <!-- {{ permiso.data.id }} -->
@@ -74,7 +83,7 @@
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="end_date" header="fecha finalizacion" :sortable="true"
+                    <Column class="p-2" field="end_date" header="Fecha finalizacion" :sortable="true"
                         headerStyle="width:15rem; min-width:max-content; ">
                         <template #body="permiso">
                             <span class="p-column-title">Code</span>
@@ -146,13 +155,14 @@
     </div>
 
 
-    <Dialog style="border: none; box-shadow: none;" v-model:visible="show" :style="{ width: '700px' }" header="Revizar permiso" :modal="true"
+    <Dialog style="border: none; box-shadow: none;" v-model:visible="show" :style="{ width: '700px' }"  :modal="true"
         class="p-fluid m-2 pt-8">
 
        
         <div class=" a4-size p-0 lg:p-6 mi-clase mt-4" >
 
 
+          <!-- {{ currentPermiso }} -->
 
 
 <img class="m-auto" src="https://salchimonster.com/images/logo.png" style="width: 10%;" alt="">
@@ -180,7 +190,7 @@
 
   <p class="p-0 m-0">
     <span style="font-weight: bold;">Fecha de la solicitud: </span> <span
-      style="border-bottom: 1px solid ; padding-bottom: 0; padding-right: 2rem">   {{ convertirFechaALocal(currentPermiso.start_date) }}</span>
+      style="border-bottom: 1px solid ; padding-bottom: 0; padding-right: 2rem">   {{ convertirFecha(currentPermiso.history.filter(e => e.status == 'generado')[0].timestamp) }}</span>
     
   </p>
 
@@ -210,7 +220,7 @@
         Desde
       </div>
       <div>
-        {{ convertirFechaALocal(currentPermiso.start_date) }}
+        {{ convertirFecha(currentPermiso.start_date) }}
       </div>
     </div>
 
@@ -220,7 +230,7 @@
         Hasta
       </div>
       <div>
-        {{ convertirFechaALocal(currentPermiso.end_date) }}
+        {{ convertirFecha(currentPermiso.end_date) }}
       </div>
     </div>
 
@@ -251,9 +261,6 @@
 
 
 
-
-
-
 </div>
 
 
@@ -277,7 +284,7 @@
       </div>
 
       <div class="mb-1" >
-        <span style="font-weight: bold;"> Responsable Id:</span>   {{ currentPermiso.status?.responsable }}
+        <span style="font-weight: bold;"> Responsable :</span>  {{ allUsersBasic.filter(e => e.id == currentPermiso.status?.responsable)[0]?.name  }}
       </div>
 
       <div v-if="currentPermiso.status.status == 'rechazado'">
@@ -304,10 +311,12 @@
 
         </div>
 
-        <div class=" col-12 md:col-6 m-auto p-0" style=" display: flex;gap: 1rem;; overflow: hidden; justify-content: space-around;position: absolute;top: 0rem;right: 0; background-color:rgba(255, 255, 255, 0)te;"> 
+        <div class=" col-12 md:col-6 m-auto p-0 botonera" style=" display: flex;gap: 1rem;; overflow: hidden; justify-content: space-around;position: absolute;top: 0rem;right: 0; background-color:rgba(255, 255, 255, 0)te;"> 
             <!-- <Button style="background-color: rgb(255, 255, 168);color: rgba(0, 0, 0, 0.864); border: none;" @click="open(permiso)"> REVISAR</Button> -->
-            <Button class="text-center" @click="openAceptar(currentPermiso)" style="background-color: rgb(105, 255, 157);color: rgba(0, 0, 0, 0.864); border: none;display: flex; justify-content: center;" > APROBAR </Button>
-            <Button @click="openRechazar(currentPermiso)" style="background-color: rgb(255, 125, 125);color: rgba(0, 0, 0, 0.864); border: none;display: flex; justify-content: center;"> RECHAZAR</Button>
+            <Button class="text-center" @click="openAceptar(currentPermiso)" severity="success" style="; border: none;display: flex; justify-content: center;" > APROBAR </Button>
+            <Button @click="openRechazar(currentPermiso)" severity="danger"  style=" border: none;display: flex; justify-content: center;"> RECHAZAR</Button>
+
+            <Button @click="imprimir" severity="warning"  style=" border: none;display: flex; justify-content: center;"> imprimir</Button>
         </div>
     </Dialog>
 
@@ -353,7 +362,7 @@ import { FilterMatchMode } from 'primevue/api';
 import { URI } from '../../service/conection';
 import router from '../../router';
 import { useRoute } from 'vue-router';
-import { getUserDni, getUserId } from '../../service/valoresReactivosCompartidos';
+import { getUserDni, getUserId,getUserBasic,getUsersBasic } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
 
 const dt = ref(null)
@@ -488,6 +497,10 @@ function rejectPermission(permiso) {
 
 
 
+const allUsersBasic =ref([])
+onMounted(() => {
+  getUsersBasic().then(data => allUsersBasic.value = data)
+})
 
 
 
@@ -604,6 +617,9 @@ onMounted(() => {
 })
 
 
+const imprimir = () => {
+  window.print()
+}
 </script>
 
 <style scoped>
@@ -653,5 +669,17 @@ Button{
 Button{
   text-transform: capitalize;
 }
-  
+
+@media print {
+   .botonera {
+    display: none !important ;
+  }
+
+  .a4-size{
+    margin: 0 ;
+    position: absolute !important;
+    top: -400px !important; 
+  }
+}
+
 </style>

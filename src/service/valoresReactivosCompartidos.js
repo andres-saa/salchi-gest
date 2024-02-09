@@ -1,7 +1,7 @@
 import { ref } from "vue";
     
 import {jwtDecode} from 'jwt-decode';
-
+import { URI } from "./conection";
 
 const categoryValue = ref()
 const siteDropValue = ref()
@@ -76,4 +76,52 @@ const getUserId = () => {
     return null;
 }
 
-export {getUserDni,verInfo, getUserRole,getUserId, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
+
+const getUserBasic = async (id) => {
+    try {
+      const response = await fetch(`${URI}/employer-basic/${id}`, {
+        method: 'GET',
+        // headers: headers,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (response.ok) {
+        const data = await response.json();
+        
+        return data;
+      } else {
+        // Puedes manejar errores de autenticación o cualquier otro tipo de error aquí
+        console.error('Error al obtener usuarios:', response.statusText);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error al obtener usuarios:', error);
+      return null;
+    }
+  };
+
+
+  
+const getUsersBasic = async (id) => {
+    try {
+      const response = await fetch(`${URI}/employers-basic`, {
+        method: 'GET',
+        // headers: headers,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (response.ok) {
+        const data = await response.json();
+        
+        return data;
+      } else {
+        // Puedes manejar errores de autenticación o cualquier otro tipo de error aquí
+        console.error('Error al obtener usuarios:', response.statusText);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error al obtener usuarios:', error);
+      return null;
+    }
+  };
+export {getUserDni,verInfo,getUserBasic,getUsersBasic, getUserRole,getUserId, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
