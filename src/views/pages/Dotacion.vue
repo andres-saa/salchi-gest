@@ -60,9 +60,9 @@
             <Column class="p-2" field="id" header="Entregado por" :sortable="true"
                 headerStyle="width:3rem; min-width:min-content; ">
                 <template #body="dotacion">
-                    <span class="p-column-name">Empleado</span>
+                    <!-- <span class="p-column-name">Empleado</span> -->
                     <!-- {{ permiso.data.id }} -->
-                    {{ dotacion.data.user_delivery_id }} <Button :severity="dotacion.data.firmado_enviado? 'success' : 'danger'"  class="p-0 rounded" rounded text severity="success"
+                 {{ allUsersBasic.filter(u => u.id == dotacion.data.user_delivery_id )[0].name }}   <Button :severity="dotacion.data.firmado_enviado? 'success' : 'danger'"  class="p-0 rounded" rounded text severity="success"
                         label="Small" @click="" style="display: flex;justify-content: center;"> {{dotacion.data.firmado_enviado? 'Firmado' : 'Sin firmar'}} </Button>
                 </template>
             </Column>
@@ -72,9 +72,9 @@
                 headerStyle="width:3rem; min-width:min-content; ">
                 <template #body="dotacion">
                     <span class="p-column-name"></span>
-                    <span class="p-column-name">Empleado</span>
+       
 
-                    {{ dotacion.data.user_receive_id }}
+                    {{ allUsersBasic.filter(u => u.id == dotacion.data.user_delivery_id )[0].name }}
                     <Button  class="p-0 rounded" rounded text :severity="dotacion.data.firmado_recibido? 'success' : 'danger'"
                         label="Small" @click="" style="display: flex;justify-content: center;"> {{dotacion.data.firmado_recibido? 'Firmado' : 'Sin firmar'}} </Button>
                 </template>
@@ -238,7 +238,7 @@ import doc from '../../layout/doc.vue';
 import { URI } from '../../service/conection';
 import router from '../../router';
 import { useRoute } from 'vue-router';
-import { getUserDni, getUserId, currentDotacion, showDotation } from '../../service/valoresReactivosCompartidos';
+import { getUserDni, getUserId, currentDotacion, showDotation,getUsersBasic } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
 import Loading from '@/components/Loading.vue'
 import html2pdf from 'html2pdf.js'
@@ -250,6 +250,10 @@ const user_receive = ref()
 const confirmSignSentDialog = ref(false);
 const confirmSignReceivedDialog = ref(false);
 const selectedDeliveryIdToSign = ref(null);
+const allUsersBasic =ref([])
+onMounted(() => {
+getUsersBasic().then(data => allUsersBasic.value = data)
+})
 
 const see = (dotacion) => {
     currentDotacion.value = dotacion
@@ -346,6 +350,7 @@ const downloadPdf = () => {
   // Usa html2pdf para convertir el elemento a PDF y descargarlo
   html2pdf().set(options).from(element).save();
 }
+
 
 
 async function saveDelivery() {
