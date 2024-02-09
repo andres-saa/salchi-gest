@@ -59,6 +59,20 @@ async function fetchAndUpdateRoles() {
         },
 
         {
+            label: 'ENTREGAS',
+            roles: roles.value['Dotacion'],
+            items: [
+                {
+                    label: 'Dotacion', icon: 'fa-shirt fa-solid', to: '/dotacion',
+
+                },
+
+
+
+            ]
+        },
+
+        {
             label: 'CELEBRACIONES', icon: 'pi pi-fw pi-home', to: '/cumples',
             roles:roles.value.todos,
             items: [

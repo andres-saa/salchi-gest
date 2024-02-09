@@ -68,6 +68,13 @@ const router = createRouter({
                     name: 'sites',
                     component: () => import('@/views/pages/ManageSites.vue')
                 },
+
+
+                {
+                  path: '/dotacion',
+                  name: 'dotacion',
+                  component: () => import('@/views/pages/Dotacion.vue')
+              },
                 {
                     path: '/cumples',
                     name: 'cumples',
