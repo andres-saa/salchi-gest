@@ -161,7 +161,7 @@
 <h6 style="font-size: 11pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
 
 
-  {{ convertirFecha(currentPermiso.status.timestamp) }}
+  {{ convertirFecha(currentPermiso.history.filter(e => e.status == 'generado')[0].timestamp) }}
 </h6>
 <h6 class="text-center"
   style="font-size: 11pt; font-weight: bold;color: black; font-family: Arial, Helvetica, sans-serif;">
@@ -181,7 +181,7 @@
 
   <p class="p-0 m-0">
     <span style="font-weight: bold;">Fecha de la solicitud: </span> <span
-      style="border-bottom: 1px solid ; padding-bottom: 0; padding-right: 2rem">   {{ convertirFecha(currentPermiso.start_date) }}</span>
+      style="border-bottom: 1px solid ; padding-bottom: 0; padding-right: 2rem">   {{ convertirFecha(currentPermiso.history.filter(e => e.status == 'generado')[0].timestamp) }}</span>
     
   </p>
 

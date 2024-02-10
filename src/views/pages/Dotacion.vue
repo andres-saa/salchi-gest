@@ -41,7 +41,7 @@
 
             <Column class="p-2" field="id" header="Id" :sortable="true" headerStyle="width:3rem; min-width:min-content; ">
                 <template #body="dotacion">
-                    <span class="p-column-name">entrega</span>
+                    <span class="p-column-name">entrega </span>
                     <!-- {{ permiso.data.id }} -->
                     {{ dotacion.data.delivery_id }}
                 </template>
@@ -62,7 +62,7 @@
                 <template #body="dotacion">
                     <!-- <span class="p-column-name">Empleado</span> -->
                     <!-- {{ permiso.data.id }} -->
-                 {{ allUsersBasic.filter(u => u.id == dotacion.data.user_delivery_id )[0].name }}   <Button :severity="dotacion.data.firmado_enviado? 'success' : 'danger'"  class="p-0 rounded" rounded text severity="success"
+                 {{ allUsersBasic?.filter(u => u.id == dotacion.data?.user_delivery_id )[0]?.name }}   <Button :severity="dotacion.data.firmado_enviado? 'success' : 'danger'"  class="p-0 rounded" rounded text severity="success"
                         label="Small" @click="" style="display: flex;justify-content: center;"> {{dotacion.data.firmado_enviado? 'Firmado' : 'Sin firmar'}} </Button>
                 </template>
             </Column>
@@ -74,7 +74,7 @@
                     <span class="p-column-name"></span>
        
 
-                    {{ allUsersBasic.filter(u => u.id == dotacion.data.user_delivery_id )[0].name }}
+                    {{ allUsersBasic.filter(u => u.id == dotacion?.data.user_receive_id )[0]?.name }}
                     <Button  class="p-0 rounded" rounded text :severity="dotacion.data.firmado_recibido? 'success' : 'danger'"
                         label="Small" @click="" style="display: flex;justify-content: center;"> {{dotacion.data.firmado_recibido? 'Firmado' : 'Sin firmar'}} </Button>
                 </template>
@@ -142,71 +142,92 @@
 
     <!-- <Button label="Show" @click="visible = true" /> -->
 
-    <Dialog v-model:visible="openNew" modal header="Registrar entrega" :style="{ width: '50rem' }">
-        <!-- <span class="p-text-secondary block mb-5">Update your information.</span> -->
-
-        <!-- {{ deliveryItems }} -->
-        <div class="my-3" style=";">
-            <p for="username" class="font-semibold ">Recibe</p>
-            <Dropdown class="p-0" style="width: 100%;" filter v-model.trim="user_receive"
-                :options="users.filter(user => user.id != getUserId())" placeholder="" optionLabel="name" required="true"
-                :class="{ 'p-invalid'    : submitted && !currentUser.position }">
-
-                <template #value="user">
+    <Dialog class="pb-8" style="overflow: hidden; border-radius: 1rem;" v-model:visible="openNew" modal header="Registrar entrega" :style="{ width: '50rem', height:'80vh' }">
+        <div style="height: 70vh">
+        
+            <div class="my-3" >
+            <p for="username" class="font-semibold " >{{selectedReceivers.length > 1?  'Reciben' : 'Recibe'}}</p>
 
 
-                    <div style="display: flex; align-items: center;gap: 1rem;">
-                        <img @click="verIMagen(user?.value?.dni)"
-                            :src="`${URI}/read-product-image/96/employer-${user?.value?.dni}`"
-                            @error="onImageError(user?.value?.gender, $event)" class="shadow-2 img-profile"
-                            style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+            <!-- {{ selectedReceivers }} -->
 
-                        {{ user?.value?.name }}
+            <div class="col-12 py-1" v-for="user in selectedReceivers">
 
-                    </div>
-                </template>
 
-                <template #option="user">
-                    <div style="display: flex; align-items: center;gap: 1rem;">
-                        <img @click="verIMagen(user.option.dni)"
-                            :src="`${URI}/read-product-image/96/employer-${user.option.dni}`"
-                            @error="onImageError(user.option.gender, $event)" class="shadow-2 img-profile"
-                            style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+<div style="display: flex; gap: 1rem; align-items: center;">
 
-                        {{ user?.option?.name }}
-                    </div>
+    <img @click="verImagen(user.dni)"
+             :src="`${URI}/read-product-image/96/employer-${user.dni}`"
+             @error="onImageError(user.gender, $event)" class="shadow-2 img-profile"
+             style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+    {{ user.name }}
+</div>
+       
 
-                </template>
+    </div>
+        
+            <MultiSelect filter v-model="selectedReceivers"  display="chip"
+               :options="users.filter(user => user.id != getUserId())"
+                optionLabel="name" placeholder="Seleccione los receptores"
+               class="my-4 p-1" style="width: 100%;border-radius: 10rem;"
+               :class="{ 'p-invalid': submitted && !currentUser.position } ">
 
 
 
+    <template #option="opcion">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <img @click="verImagen(opcion.option.dni)"
+             :src="`${URI}/read-product-image/96/employer-${opcion.option.dni}`"
+             @error="onImageError(opcion.option.gender, $event)" class="shadow-2 img-profile"
+             style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+        {{ opcion.option.name }}
+      </div>
+    </template>
+  </MultiSelect>
 
-            </Dropdown>
+
+    
+
+
+
+  
+
+        
         </div>
 
         <Divider> Lista de la entrega</Divider>
 
 
-        <div v-for="(item, index) in deliveryItems" :key="index" style="display: flex; align-items: center;">
-    <span style="border-radius: 0.5rem; overflow: hidden; display: flex; width: 100%; gap; align-items: center; border-bottom: 1px solid rgb(186, 186, 186)">
+        <div v-for="(item, index) in deliveryItems" :key="index" class="my-3" style="display: flex; align-items: center;">
+    <span style="border-radius: 0.5rem; overflow: hidden; display: flex; width: 100%; border-radius: 10rem; gap; align-items: center; border: 1px solid rgb(186, 186, 186)">
         <InputText v-model="item.name" placeholder="Nombre" style="width: 90%; border: none;" />
-        <div style="width: 3px; height: 2rem; border: none; background-color: rgb(187, 187, 187);"></div>
+        <div style="width: 2px; height: 2rem; border: none; background-color: rgb(187, 187, 187);"></div>
         <InputText v-model.number="item.quantity" type="number" placeholder="cant" style="width: 20%; border: none;" />
     </span>
     <Button text class="p-0 m-0" severity="danger" @click="removeDeliveryItem(index)">
-        <i class="text-3xl p-2 m-0" style="font-weight: bold" :class="PrimeIcons.TRASH"></i>
+        <i class="text-3xl p-2 m-0" style="font-weight: " :class="PrimeIcons.TRASH"></i>
     </Button>
 </div>
 
-<Button text class="p-0 mt-3" @click="addDeliveryItem">
-    <i class="text-5xl p-0 m-0" style="font-weight: bold" :class="PrimeIcons.PLUS_CIRCLE"></i>
+<Button style="z-index: 9999 !important;" text class="p-1 mt-3" @click="addDeliveryItem">
+    <i class="text-4xl p-0 m-0" style="font-weight: " :class="PrimeIcons.PLUS_CIRCLE"></i>
 </Button>
 
 
 
 
-        <div class="flex justify-content-end gap-2">
-            <Button type="button" label="Cancel" severity="danger" @click="visible = false"></Button>
+
+
+        
+        
+        
+        
+        </div>
+
+        <div class="flex justify-content-end gap-2 p-4" style="position: absolute;    background-color: rgb(255, 255, 255);
+
+ width: 100%; right: 0; bottom: 0rem; ">
+            <Button type="button" label="Cancelar" severity="danger" @click="openNew = false"></Button>
             <Button type="button" label="Guardar" @click="saveDelivery()"></Button>
         </div>
 
@@ -246,6 +267,7 @@ import html2pdf from 'html2pdf.js'
 const newSupplyDelivery = ref({})
 const user_delivery_id = ref()
 const user_receive = ref()
+const selectedReceivers = ref([]);
 
 const confirmSignSentDialog = ref(false);
 const confirmSignReceivedDialog = ref(false);
@@ -354,58 +376,60 @@ const downloadPdf = () => {
 
 
 async function saveDelivery() {
+    Load.value.enviando = true;
 
-    Load.value.enviando = true
-    // Construye el objeto de entrega con los datos del formulario y los ítems
-    // newSupplyDelivery.value.user_receive_id = newSupplyDelivery.value.user_delivery_id.id
+    // Asume que ya has definido una fecha de entrega y los ID de usuarios correctamente.
     const deliveryData = {
-        delivery_data: {
-            delivery_date:serverDate.value.split(' ')[0],
-            user_delivery_id: user_delivery_id.value,
-            user_receive_id: user_receive?.value?.id,
-       
-        }, // Asumiendo que newSupplyDelivery contiene los datos de la entrega
-        items_data: deliveryItems.value, // Los ítems agregados
-        
+        delivery_date: new Date().toISOString().slice(0, 10), // Formato YYYY-MM-DD
+        user_delivery_id: getUserId(), // ID del usuario que realiza la entrega
+        user_receive_id: selectedReceivers.value[0]?.id || 0, // ID del primer usuario receptor (ajustar según lógica específica si es necesario)
+    };
+
+    // IDs de los usuarios receptores
+    const userReceiveIds = selectedReceivers.value.map(receiver => receiver.id);
+
+    // Preparar los items_data basado en los ítems agregados en el UI
+    const itemsData = deliveryItems.value.map(item => ({
+        item_id: item.item_id || 0, // Asume un item_id predeterminado de 0 para nuevos ítems
+        name: item.name,
+        quantity: item.quantity,
+        delivery_id: 0, // Este valor será ignorado ya que la asignación del delivery_id se maneja en el backend
+    }));
+
+    // Payload que se enviará
+    const payload = {
+        delivery_data: deliveryData,
+        items_data: itemsData,
+        user_receive_ids: userReceiveIds, // Asegúrate de incluir todos los IDs de usuarios receptores
     };
 
     try {
-        // Envía los datos al servidor
+        // Asume que `URI` es tu URL base donde está alojado tu backend
         const response = await fetch(`${URI}/supply-delivery-with-items`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(deliveryData),
+            body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
-            Load.value.enviando = false
             throw new Error('Error al guardar la entrega');
-            
         }
 
-        // Procesa la respuesta
-        const result = await response.json();
-        console.log('Entrega guardada con éxito', result);
-        Load.value.enviando = false
-
-
-        // Actualiza la lista de entregas o muestra un mensaje de éxito
-        getDotacion().then(data => dotacion.value = data); // Recargar las entregas
-
-        // Cierra el diálogo y limpia el formulario
-        openNew.value = false;
-        newSupplyDelivery.value = {}; // Reinicia el formulario de nueva entrega
-        deliveryItems.value = [{ name: '', quantity: 1 }]; // Reinicia los ítems
-
+        // Procesa la respuesta de éxito aquí, como cerrar el diálogo y actualizar la lista
+        openNew.value = false; // Cierra el diálogo de creación de nueva entrega
+        await    getDotacion().then(data => dotacion.value = data)
+; // Actualiza la lista de entregas
     } catch (error) {
         console.error('Error al guardar la entrega:', error);
-        Load.value.enviando = false
-
-        // Muestra un mensaje de error o maneja el error de alguna manera
+    } finally {
+        Load.value.enviando = false;
     }
 }
+
+
+
 
 
 
@@ -463,6 +487,17 @@ const dotacion = ref([])
 const selectedSupply = ref([])
 
 const charging = ref(false)
+
+
+
+watch(openNew, (nuevo) => {
+    if(nuevo){
+        console.log(4)
+        selectedReceivers.value=[]
+        deliveryItems.value =[]
+    }
+})
+
 
 onBeforeMount(async() => {
     initFilters()
@@ -645,5 +680,8 @@ Button {
 Button {
     text-transform: capitalize;
 }
+
+
+
 
 </style>

@@ -170,7 +170,7 @@
 <h6 style="font-size: 11pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
 
 
-{{ convertirFecha(currentPermiso.status.timestamp) }}
+  {{ convertirFecha(currentPermiso.history.filter(e => e.status == 'generado')[0].timestamp) }}
 </h6>
 <h6 class="text-center"
 style="font-size: 11pt; font-weight: bold;color: black; font-family: Arial, Helvetica, sans-serif;">
@@ -270,12 +270,12 @@ style="font-size: 11pt; font-weight: normal;color: black; font-family: Arial, He
 <div style="display: flex; flex-direction: column;" class="">
 
 
-<div style="display: flex; flex-direction: column;">
+<div style="display: flex; flex-direction: column; ">
     <div class="mb-2" style="font-weight: bold;">
       Estado actual
     </div>
     <div class="mb-1">
-     <span style="font-weight: bold;">Resumen:</span>  {{ currentPermiso.status.status }}
+     <span style="font-weight: bold;">Resumen:</span> <span style="border-radius: 0 1rem 1rem 0;" class="col-12 p-0" :class="currentPermiso.status.status">  {{ currentPermiso.status.status }}</span> 
     </div>
 
     <div class="mb-1">
@@ -651,19 +651,20 @@ Button{
 .generado{
   display: flex;
   background-color:#eeff0060;
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 .aprobado{
   display: flex;
   background-color:#2bff0060;
-  justify-content: center;
+  /* justify-content: center; */
+  width: 100%;
 }
 
 .rechazado{
 display: flex;
   background-color:#ff000044;
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 Button{
