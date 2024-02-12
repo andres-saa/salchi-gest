@@ -90,14 +90,14 @@ const users = ref([])
                     
                     <template #grid="slotProps">
                         
-                        <div class="col-12 lg:col-4 md:col-6">
+                        <div class="col-12 lg:col-6 md:col-6 xl:col-4" style="aspect-ratio: 4 / 3;">
                             <div @click="navigateToSite(slotProps.data)">
                                 <div class=" m-4      container-">
                                     <div class="text-center cont-img-sede">
                                         <div class="nombre-sede-cont">
                                             <AvatarGroup>
-                <Avatar shape="circle" size="xlarge" :style="{ 'background-color': '#fff', color: '#ffffff' }" v-for="user in usersBySite[slotProps.data.site_id]?.slice(0, 4)" :key="user.dni" :image="`${URI}/read-product-image/96/employer-${user.dni}`" @error="onImageError(user.gender, $event)" />
-                <Avatar shape="circle" size="xlarge" :style="{ 'background-color': 'red', color: '#ffffff' }" v-if="usersBySite[slotProps.data.site_id]?.length > 6" :label="`+${usersBySite[slotProps.data.site_id].length-4}`" />
+                <Avatar shape="circle" size="large" :style="{ 'background-color': '#fff', color: '#ffffff' }" v-for="user in usersBySite[slotProps.data.site_id]?.slice(0, 4)" :key="user.dni" :image="`${URI}/read-product-image/96/employer-${user.dni}`" @error="onImageError(user.gender, $event)" />
+                <Avatar shape="circle" size="large" :style="{ 'background-color': 'red', color: '#ffffff' }" v-if="usersBySite[slotProps.data.site_id]?.length > 6" :label="`+${usersBySite[slotProps.data.site_id].length-4}`" />
             </AvatarGroup>
                                             <div class="text-5xl font-bold text-white nombre-sede">
                                                 <p style="width: 100%; animation: ;">
@@ -191,22 +191,15 @@ button {
 
 .imagen {
     width: 100%;
-    height: 33vh;
+    /* height: 33vh; */
+    aspect-ratio: 4 / 3;
     padding: 5px;
     border-radius: 1rem;
     object-fit: cover;
     transition: opacity 1s ease; /* Transición de opacidad */
 }
 
-.imagen {
-    width: 100%;
-    height: 33vh;
-    padding: 5px;
-    border-radius: 1rem;
-    object-fit: cover;
-    transition: .3s ease;
 
-}
 
 p:hover {}
 

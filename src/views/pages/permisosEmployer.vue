@@ -107,9 +107,9 @@
                           <span class="p-column-title">Code</span>
                           <!-- {{ permiso.data.id }} -->
 
-                          <div class="p-2" style="border-radius: 10rem;" :class="permiso.data.status.status">
-                            {{ permiso.data.status.status }}
-
+                          <div class="p-2 text-center" style="border-radius: 10rem;" :class="permiso.data.status.status">
+                           <span class="text-center" style="width: 100%;"> {{ permiso.data.status.status }}
+</span>  
                           </div>
                       </template>
                   </Column>
@@ -155,7 +155,7 @@
   </div>
 
 
-  <Dialog style="border: none; box-shadow: none;" v-model:visible="show" :style="{ width: '700px' }"  :modal="true"
+  <Dialog style="border: none; box-shadow: none;position: relative;" v-model:visible="show" :style="{ width: '700px' }"  :modal="true"
       class="p-fluid m-2 pt-8">
 
      
@@ -311,12 +311,12 @@ style="font-size: 11pt; font-weight: normal;color: black; font-family: Arial, He
 
       </div>
 
-      <div class=" col-12 md:col-6 m-auto p-0 botonera" style=" display: flex;gap: 1rem;; overflow: hidden; justify-content: space-around;position: absolute;top: 0rem;right: 0; background-color:rgba(255, 255, 255, 0)te;"> 
+      <div class=" col-12 md:col-6 m-auto p-0 botonera" style=" display: flex;gap: 1rem;; overflow: hidden; justify-content: space-around;position: absolute;top: 4rem;right: 0rem; background-color:rgba(255, 255, 255, 0)te;"> 
           <!-- <Button style="background-color: rgb(255, 255, 168);color: rgba(0, 0, 0, 0.864); border: none;" @click="open(permiso)"> REVISAR</Button> -->
           <Button class="text-center" @click="openAceptar(currentPermiso)" severity="success" style="; border: none;display: flex; justify-content: center;" > APROBAR </Button>
           <Button @click="openRechazar(currentPermiso)" severity="danger"  style=" border: none;display: flex; justify-content: center;"> RECHAZAR</Button>
 
-          <Button @click="imprimir" severity="warning"  style=" border: none;display: flex; justify-content: center;"> imprimir</Button>
+          <Button @click="imprimir" severity="warning"  style=" border: none;display: flex; justify-content: center;"> IMPRIMIR</Button>
       </div>
   </Dialog>
 

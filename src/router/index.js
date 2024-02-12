@@ -75,6 +75,12 @@ const router = createRouter({
                   name: 'dotacion',
                   component: () => import('@/views/pages/Dotacion.vue')
               },
+
+              {
+                path: '/guias',
+                name: 'guias',
+                component: () => import('@/views/pages/Guias.vue')
+            },
                 {
                     path: '/cumples',
                     name: 'cumples',

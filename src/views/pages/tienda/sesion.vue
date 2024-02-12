@@ -1,6 +1,6 @@
 <template>
 
-<div class="col-12 px-6">
+<div class="col-12 ">
 
     
 

@@ -1,78 +1,90 @@
 <template>
-    
 
-  
+<!-- {{ archivedFiles }} -->
 
-    <div class="col-12 m-auto p-0 grid" style="max-width:600px ;"> 
 
-    <div class="col-6 md:col-4" v-for=" documento  in documentos">
-    
-        <Button style="transition: all ease .2s; background-color: transparent; border-radius: 1rem; border: none" class="p-2 m-0" @click="ver(documento.src)">
-            <div style="width: 100%; background-color: white; ">
-    <!-- <iframe src="https://drive.google.com/file/d/1SEEIG-xUP67ro3HtXMpkNdCGc3wjS_vt/view" width=100%  frameborder="0" marginheight="0" marginwidth="0" style="width: 100%;height: 85vh;">Cargando…</iframe> -->
-         <img class="md:p-5 p-2" src="/images/doc.png" style="width: 100%;box-shadow: 0 0 10px rgba(0, 0, 0, 0.254); border-radius: 1rem; object-fit: contain;" alt="">
-         
+<p class="text-center text-5xl py-3" style="font-weight: bold;">Guias para el area finanzas</p>
+
+
+<div class="col-12 p-0 m-0" style="height: 80vh; display: flex; align-items: center;">
+
+    <div class="grid m-auto m-0" style="max-width: 1280px;">
+
+<div class="col-12 sm:col-6 md:col-4 lg:col-6 xl:col-4 py-2" v-for=" file in archivedFiles" style=" background-color: rgba(255, 0, 0, 0);aspect-ratio: 4 / 3;">
+
+    <div style="box-shadow: 0 0 10px;background-size: cover; background-image: url('https://static2.bigstockphoto.com/0/1/3/large1500/310380877.jpg'); height: 100%;width: 100%;overflow: hidden; border-radius: 1rem; position: relative;">
+        
+
+        
+        <div class="p-3 text-sm xl:text-lg" style="text-shadow: 0 0 3px black ; width: 100%;position: ;color: white; height: 100%;background-color: rgba(0, 0, 0, 0.661);">
+
+            
+
+            <p class="text-2xl" style="font-weight: bold;"> Descripcion: </p> <p>Informacion referente a todo lo relacionado con las facturas y como se debe realizar el proceso de instalacion de los vienes de servicion dados a los integrantes de la sesion del inicio</p>
+        </div>
+
+        
+        <div style="box-shadow: 0 0 10px ; width: 50%;right: 0;display: flex;align-items: center;justify-content: center; position: absolute;bottom: 0;border-radius: 10rem 0 0 0; background-color: rgb(255, 255, 255);aspect-ratio: 16 / 4;">
+
+            <i class="fa-solid fa-download text-5xl p-1" style="z-index: ;color:rgb(255, 0, 0)" :class="PrimeIcons.DOWNLOAD"></i>
+        
+        
+        </div>
+
+   
     </div>
-    </Button>
- 
-    
-    <div class="p-1 " style="height: auto;font-weight: bold;">
-        <p>{{documento.tittle}}   </p>
-    </div>
-    </div>
-    
+
 </div>
 
+</div>
 
-<Dialog v-model:visible="visible" :style="{ width: '1024px',height:'100vh' }" header="Salchimonster" :modal="true"
-        class="p-fluid m-2">
-
-        <iframe width="100%" style="height: 100vh;" :src="currentDocument" frameborder="0"></iframe>
-
-</Dialog>
-
+</div>
 
 </template>
+
+
 
 <script setup>
 
 
-import {ref} from  'vue'
+import { PrimeIcons } from 'primevue/api';
+import { URI } from '../../service/conection';
+import {ref,onMounted,watch} from 'vue'
 
-const visible = ref(false)
 
-const ver = (documento) => {
-    visible.value = true
-    currentDocument.value = documento
-}
-const currentDocument = ref("")
-const documentos = ref([
-    {
-        src:"/documents/Elegant and Professional Company Business Proposal Presentation.pdf",
-        tittle:'titulo'
-    },
-    {
-        src:"/documents/Planeación Estrategica Completa.pdf",
-        tittle:'titulo'
-    },
-    {
-        src:"/documents/Elegant and Professional Company Business Proposal Presentation.pdf",
-        tittle:'titulo'
+
+
+const archivedFiles = ref([])
+
+
+
+const getArchivedFiles = async() => {
+
+    try {
+        const response =await fetch(`${URI}/archived-files`)
+
+        if(!response.ok){
+            throw "paila"
+        }
+
+        const data = await response.json()
+        return data
+    } catch (error) {
+        console.log(error)
     }
-])
+}
+
+
+onMounted(()=> {
+    getArchivedFiles().then( data => archivedFiles.value = data)
+})
+
+
+
+
 </script>
 
 
 <style scoped>
 
-
-
-Button:hover{
-transform: scale(1.05);
-background-color: red;
-}
-
-
-
 </style>
-

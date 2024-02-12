@@ -151,26 +151,27 @@
 
             <!-- {{ selectedReceivers }} -->
 
-            <div class="col-12 py-1" v-for="user in selectedReceivers">
+        <div class="grid">
+            <div class="col py-1" v-for="user in selectedReceivers"  style="min-width: max-content; display: flex; gap: 1rem; align-items: center;">
+     
 
-
-<div style="display: flex; gap: 1rem; align-items: center;">
-
-    <img @click="verImagen(user.dni)"
-             :src="`${URI}/read-product-image/96/employer-${user.dni}`"
-             @error="onImageError(user.gender, $event)" class="shadow-2 img-profile"
-             style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
-    {{ user.name }}
-</div>
-       
+                <img @click="verImagen(user.dni)"
+                        :src="`${URI}/read-product-image/96/employer-${user.dni}`"
+                        @error="onImageError(user.gender, $event)" class="shadow-2 img-profile"
+                        style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+                {{ user.name }}
+    
 
     </div>
-        
-            <MultiSelect filter v-model="selectedReceivers"  display="chip"
-               :options="users.filter(user => user.id != getUserId())"
-                optionLabel="name" placeholder="Seleccione los receptores"
-               class="my-4 p-1" style="width: 100%;border-radius: 10rem;"
-               :class="{ 'p-invalid': submitted && !currentUser.position } ">
+        </div>
+
+    
+    <!-- {{ users }} -->
+    <MultiSelect v-model="selectedReceivers" display="chip" filter
+             :options="allUsersBasic.filter(user => user.id != getUserId())"
+             optionLabel="shortName" placeholder="Seleccione los receptores"
+             class="my-4 p-1" style="width: 100%;border-radius: 10rem;"
+             :class="{ 'p-invalid': submitted && !currentUser.position } ">
 
 
 
@@ -269,12 +270,33 @@ const user_delivery_id = ref()
 const user_receive = ref()
 const selectedReceivers = ref([]);
 
+
+
+const preprocessUsers = () => {
+    allUsersBasic.value.forEach(user => {
+      if (user.name) {
+        user.shortName = user.name.split(' ')[0];
+        // console.log(user)
+
+      }
+    });
+
+  }
+
+
 const confirmSignSentDialog = ref(false);
 const confirmSignReceivedDialog = ref(false);
 const selectedDeliveryIdToSign = ref(null);
 const allUsersBasic =ref([])
+
+
 onMounted(() => {
-getUsersBasic().then(data => allUsersBasic.value = data)
+getUsersBasic().then(data => {
+    allUsersBasic.value = data
+
+    preprocessUsers()
+    
+} )
 })
 
 const see = (dotacion) => {
@@ -357,7 +379,7 @@ async function signDeliveryAsReceived(delivery_id) {
 
 const downloadPdf = () => {
   // Opciones para html2pdf
-  console.log('')
+//   console.log('')
   const options = {
     margin:       1,
     filename:     'documento.pdf',
@@ -492,7 +514,7 @@ const charging = ref(false)
 
 watch(openNew, (nuevo) => {
     if(nuevo){
-        console.log(4)
+        // console.log(4)
         selectedReceivers.value=[]
         deliveryItems.value =[]
     }
@@ -561,7 +583,7 @@ const getDate = async () => {
             return response.json();
         })
         .then(data => {
-            console.log('Employer data:', data);
+            // console.log('Employer data:', data);
             serverDate.value = data
         })
         .catch(error => {
@@ -595,9 +617,12 @@ function convertirFecha(fecha) {
 
 async function getDotacion() {
 
+    const user_id = await getUserId()
+    
     Load.value.start = true
     // URL de la API para obtener los permisos, reemplaza con tu URL real
-    const url = `${URI}/supply-deliveries/`;
+    const url = `${URI}/user/${user_id}/supply-deliveries/`;
+    
 
     try {
         // Realiza la solicitud a la API

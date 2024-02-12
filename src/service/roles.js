@@ -20,7 +20,7 @@ async function obtenerRolesYActualizar() {
         roles.value = rolesActualizados;
      
 
-        console.log('Roles actualizados:', roles);
+        // console.log('Roles actualizados:', roles);
         return rolesActualizados
     } catch (error) {
         console.error('Error al obtener los roles:', error);

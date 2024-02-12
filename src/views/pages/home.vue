@@ -19,7 +19,7 @@
         <div class="p-2 m-0">
             <RouterLink :to="menu.to">
                 <Button class="text-xl m-auto"
-                    style="display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: 500;height: 20vh ;min-height:120px;min-width: 120px; border-radius: 5%; background-color: rgb(255, 211, 211);">
+                    style="display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: 500;aspect-ratio: 4 / 3;min-width: 120px; border-radius: 5%; background-color: rgb(255, 211, 211);">
 
                     <span class="text-lg lg:text-xl p-3 col-12"
                         style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px rgba(0, 0, 0, 0.359);">

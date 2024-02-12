@@ -170,6 +170,10 @@ async function fetchAndUpdateRoles() {
             items: [
 
                 {
+                    label: 'Guias', icon: 'fa-solid fa-book', to: '/guias',
+
+                },
+                {
                     label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
 
                 },
