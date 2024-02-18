@@ -1,5 +1,6 @@
 <template>
     <Loading v-if="visibleLoading" tittle="Cargando barrios"></Loading>
+    <Loading v-if="guardando" tittle="Guardando barrios"></Loading>
     <Dialog v-model:visible="showDialog" style="width: auto" header="Confirmar eliminación" :modal="true" :closable="false">
         <p>¿Estás seguro de que quieres eliminar este barrio?</p>
         <Button label="Cancelar" @click="showDialog = false" class="p-button-text" />
@@ -132,7 +133,7 @@
 import { ref, onMounted, onBeforeMount, watch } from 'vue'
 import { URI } from '@/service/conection';
 import Loading from '@/components/Loading.vue'
-
+const guardando  = ref(false)
 const barriosToAdd = ref([{}])
 const removeBarrio = (index) => {
     if (barriosToAdd.value.length > 1){
@@ -191,535 +192,15 @@ watch(showCreateDialog, ( nuevo, viejo) => {
 })
 
 const createNeighborhood = async () => {
-    const barrios = [
-      {
-        name: 'Alvernia',
-        delivery_price: 3000
-      },
-      {
-        name: 'Nuevo alvernia',
-        delivery_price: 3000
-      },
-      {
-          name: 'Entre rios',
-          delivery_price: 3000
-        },
-        {
-          name: 'Villa nueva',
-          delivery_price: 3000
-        },
-        {
-          name: 'Conj residencial la villa',
-          delivery_price: 3000
-        },
-        {
-          name: 'El dorado',
-          delivery_price: 3000
-        },
-        {
-          name: 'Franciscano',
-          delivery_price: 3000
-        },
-        {
-          name: 'Morales',
-          delivery_price: 3000
-        },
-        {
-          name: 'Popular',
-          delivery_price: 3000
-        },
-        {
-          name: 'El bosque',
-          delivery_price: 3000
-        },
-        {
-          name: 'Cespedes',
-          delivery_price: 3000
-        },
-        {
-          name: 'Victoria',
-          delivery_price: 3000
-        },
-        {
-          name: 'Panamericano',
-          delivery_price: 3000
-        },
-        {
-          name: 'Miraflores',
-          delivery_price: 3000
-        },
-        {
-          name: 'Jazmin',
-          delivery_price: 3000
-        },
-        {
-          name: 'Lomitas',
-          delivery_price: 3000
-        },
-        {
-          name: 'Tomas uribe',
-          delivery_price: 3000
-        },
-        {
-          name: 'Centro',
-          delivery_price: 3000
-        },
-        {
-          name: 'Nuevo farfan',
-          delivery_price: 4000
-        },
-        {
-          name: 'Villa del lago',
-          delivery_price: 4000
-        },
-        {
-          name: 'Villa margarita',
-          delivery_price: 4000
-        },
-        {
-          name: 'Portales de san felipe',
-          delivery_price: 4000
-        },
-        {
-          name: 'Asoagrin',
-          delivery_price: 4000
-        },
-        {
-          name: 'Villa liliana 1',
-          delivery_price: 4000
-        },
-        {
-          name: 'Villa liliana 2',
-          delivery_price: 4000
-        },
-        {
-          name: 'Sintra san carlos',
-          delivery_price: 4000
-        },
-        {
-          name: 'Prados del limonar',
-          delivery_price: 4000
-        },
-        {
-          name: 'Bosques de maracaibo',
-          delivery_price: 4000
-        },
-        {
-          name: 'Agua clara av principal',
-          delivery_price: 4000
-        },
-        {
-          name: 'tercer milenio',
-          delivery_price: 4000
-        },
-        {
-          name: 'Casa huertas',
-          delivery_price: 4000
-        },
-        {
-          name: 'San luis',
-          delivery_price: 4000
-        },
-        {
-          name: 'Simon bolivar',
-          delivery_price: 4000
-        },
-        {
-          name: 'Ciudad campestre',
-          delivery_price: 4000
-        },
-        {
-          name: 'La rivera',
-          delivery_price: 4000
-        },
-        {
-          name: 'Cienegueta',
-          delivery_price: 5000
-        },
-        {
-          name: 'Motel',
-          delivery_price: 4000
-        },
-        {
-          name: 'Aeropuerto',
-          delivery_price: 4000
-        },
-        {
-          name: 'Parque verzalles',
-          delivery_price: 4000
-        },
-        {
-          name: 'La Paz',
-          delivery_price: 4000
-        },
-        {
-          name: 'El condor',
-          delivery_price: 3000
-        },
-        {
-          name: 'El conder 2',
-          delivery_price: 3000
-        },
-        {
-          name: 'Nuevo morales',
-          delivery_price: 3000
-        },
-        {
-          name: 'Estambul',
-          delivery_price: 3000
-        },
-        {
-          name: 'La cruz',
-          delivery_price: 3000
-        },
-        {
-          name: 'Santa rita del rio',
-          delivery_price: 3000
-        },
-        {
-          name: 'La inmaculada',
-          delivery_price: 3000
-        },
-        {
-          name: 'San antonio',
-          delivery_price: 3000
-        },
-        {
-          name: 'Playas',
-          delivery_price: 4000
-        },
-        {
-          name: 'Palo bonito',
-          delivery_price: 3000
-        },
-        {
-          name: 'Escobar',
-          delivery_price: 3000
-        },
-        {
-          name: 'Maracaibo',
-          delivery_price: 3500
-        },
-        {
-          name: 'Rojas',
-          delivery_price: 3500
-        },
-        {
-          name: 'La merced',
-          delivery_price: 3000
-        },
-        {
-          name: 'Saleciano',
-          delivery_price: 3000
-        },
-        {
-          name: 'Sajonia',
-          delivery_price: 3000
-        },
-        {
-          name: 'Santa ines',
-          delivery_price: 4000
-        },
-        {
-          name: 'Pueblo nuevo',
-          delivery_price: 3000
-        },
-        {
-          name: 'Progresar',
-          delivery_price: 3000
-        },
-        {
-          name: 'Urb la herradura',
-          delivery_price: 3000
-        },
-        {
-          name: 'Palmas de progresar',
-          delivery_price: 3000
-        },
-        {
-          name: 'San carlos',
-          delivery_price: 3000
-        },
-        {
-          name: '12 de octubre',
-          delivery_price: 3000
-        },
-        {
-          name: 'El lago',
-          delivery_price: 3000
-        },
-        {
-          name: 'El laguito',
-          delivery_price: 3000
-        },
-        {
-          name: 'Principe',
-          delivery_price: 3000
-        },
-        {
-          name: 'Laureles',
-          delivery_price: 4000
-        },
-        {
-          name: 'Av cali',
-          delivery_price: 3000
-        },
-        {
-          name: 'La bastilla',
-          delivery_price: 3000
-        },
-        {
-          name: 'Quintas de san felipe',
-          delivery_price: 4000
-        },
-        {
-          name: 'Fatima',
-          delivery_price: 3000
-        },
-        {
-          name: 'Nuevo fatima',
-          delivery_price: 3000
-        },
-        {
-          name: 'Villa campestre',
-          delivery_price: 3000
-        },
-        {
-          name: 'San benito',
-          delivery_price: 3000
-        },
-        {
-          name: 'La esperanza',
-          delivery_price: 3500
-        },
 
-        {
-          name: 'Las delicias',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'La ceiba',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'Ruben cruz velez',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'Diablos rojos',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'La campiña',
-          delivery_price: 3000
-        },
-
-        {
-          name: 'La quinta',
-          delivery_price: 3000
-        },
-
-        {
-          name: 'La graciela',
-          delivery_price: 3000
-        },
-
-        {
-          name: 'Los olmos',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'El jardin',
-          delivery_price: 3000
-        },
-
-        {
-          name: 'La trinidad',
-          delivery_price: 3000
-        },
-
-        {
-          name: '7 de agosto',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'Buenos aires',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Bolivar',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'San pedro claver',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Marandua',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Chiminangos',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Prados del norte',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Guayacanes',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Las americas',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Las nieves',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Villa del sur',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Farfan',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Municipal',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'La independencia',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Villa colombia',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Porvenir',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Saman del norte',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'El palmar',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Alameda',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'urb peñaranda',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'Portales del Rio',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Santa isabel',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Flor de la campana',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Bello horizonte',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Horizonte',
-          delivery_price: 4000
-        },
-
-        {
-          name: 'Lucitania',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'Nuevo principe',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'Hotel',
-          delivery_price: 3500
-        },
-
-        {
-          name: 'Callejoness agua clara',
-          delivery_price: 5000
-        },
-        {
-          name: 'Nariño',
-          delivery_price: 5000
-        },
-
-        {
-          name: 'Tres esquinas',
-          delivery_price: 5000
-        },
-
-        {
-          name: 'Cienegueta alto',
-          delivery_price: 5000
-        },
-
-        {
-          name: 'El picacho',
-          delivery_price: 5000
-        },
-
-        {
-          name: 'Campo alegre',
-          delivery_price: 5000
-        },
-    ].map(barrio => ({
-        ...barrio,
-        site_id: 6,
-        city_id: 12
-    }));
-
-    // Usar Promise.all para enviar todas las peticiones simultáneamente
+   guardando.value = true
     try {
-        await Promise.all(barrios.map(async (barrio) => {
+        // Iterate over each new neighborhood
+        await Promise.all(barriosToAdd.value.map(async (barrio) => {
+            // Include site_id and city_id in each neighborhood object
+            barrio.site_id = newNeighborhoodSite.value.site_id;
+            barrio.city_id = newNeighborhoodCity.value.city_id;
+
             const response = await fetch(`${URI}/neighborhood`, {
                 method: 'POST',
                 headers: {
@@ -729,23 +210,31 @@ const createNeighborhood = async () => {
             });
 
             if (!response.ok) {
-                throw new Error(`Error al crear el barrio: ${barrio.name}`);
+                throw new Error(`Error creating neighborhood: ${barrio.name}`);
             }
-
-            // Respuesta exitosa para este barrio
-            return response.json();
         }));
 
-        // Si todas las peticiones son exitosas
-        toast.add({ severity: 'success', summary: 'Creado', detail: 'Todos los barrios creados con éxito', life: 3000 });
-        showCreateDialog.value = false; // Cierra el diálogo después de la creación
-        await getNeighborhoods().then(barrio => neighborhoods.value = barrio); // Actualizar la lista de barrios
-        router.push(`/domicilios/${newNeighborhoodSite.value.site_id}`)
+        // After all neighborhoods are successfully added
+        toast.add({ severity: 'success', summary: 'Created', detail: 'All neighborhoods created successfully', life: 3000 });
+
+        // Reset the barriosToAdd array and close the dialog
+        barriosToAdd.value = [{}];
+        showCreateDialog.value = false;
+
+        // Optionally, you can fetch and update the neighborhoods list after creation
+        await getNeighborhoods().then(barrio => neighborhoods.value = barrio);
+        guardando.value = false
+
+
     } catch (error) {
-        console.error('Error en la petición:', error);
-        toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron crear algunos barrios', life: 3000 });
+        console.error('Request error:', error);
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to create some neighborhoods', life: 3000 });
+        guardando.value = false
+
     }
 };
+
+
 
 const cities = ref([])
 const getCities = async () => {
