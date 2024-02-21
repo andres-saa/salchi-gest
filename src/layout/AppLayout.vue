@@ -63,13 +63,21 @@ const isOutsideClicked = (event) => {
         <div class="layout-sidebar">
             <app-sidebar></app-sidebar>
         </div>
-        <div class="layout-main-container " style="overflow-x:hidden;">
-            <div class="layout-main p-0">
-                <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);"></div>
+        <div class="layout-main-container " >
 
-                <div style="background-color: red; height: 200vh;position: fixed;top: -10%;left: 100%; z-index: 999; width: 100vw;box-shadow: -10px 0 15px rgba(0, 0, 0, 0.15);">
+            <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 9999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);">
 
-                </div>
+</div>
+
+<div style="background-color: red; height: 200vh;position: fixed;top: -10%;left: 100%; z-index: 9999; width: 100vw;box-shadow: -10px 0 15px rgba(0, 0, 0, 0.15);">
+
+</div>
+
+            <div class="layout-main p-0" style="contain: paint;">
+                <!-- <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);"></div> -->
+
+             
+                
                 <router-view class="p-0"></router-view>
             </div>
             

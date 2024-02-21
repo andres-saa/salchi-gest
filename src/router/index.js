@@ -53,6 +53,36 @@ const router = createRouter({
                   name: 'cargos',
                   component: () => import('@/views/pages/gestionCargos.vue')
               },
+
+              {
+                path: '/reporte-ventas/',
+                name: 'reporte-ventas',
+                component: () => import('@/views/pages/reporteVentas.vue'),
+                children:[
+                  {
+                    path: '/reporte-ventas/valor-ventas',
+                    name: 'reporte-ventas-valor-ventas',
+                    component: () => import('@/views/pages/RepValorVentas.vue'),
+                },
+                {
+                  path: '/reporte-ventas/no-ordenes',
+                  name: 'reporte-ventas-no-ordenes',
+                  component: () => import('@/views/pages/RepNoOrdenes.vue'),
+              },
+              {
+                path: '/reporte-ventas/ticket',
+                name: 'reporte-ventas-ticket',
+                component: () => import('@/views/pages/RepTicket.vue'),
+            }
+            ,
+              {
+                path: '/reporte-ventas/clientes',
+                name: 'reporte-ventas-clientes',
+                component: () => import('@/views/pages/RepClientes.vue'),
+            }
+
+                ]
+            },
                 // {
                 //     path: '/uikit/input',
                 //     name: 'input',

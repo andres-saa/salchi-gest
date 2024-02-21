@@ -34,6 +34,8 @@ async function fetchAndUpdateRoles() {
                     items: [
                         { label: 'Menu', icon: ' fa-solid fa-burger', to: '/tienda-menu/' },
                         { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
+                        { label: 'Conectividad', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
+                        { label: 'Reportes de ventas', icon: ' fa-solid fa-truck-fast', to: '/reporte-ventas/valor-ventas/' },
 
                     ]
                 }]

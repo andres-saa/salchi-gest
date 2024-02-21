@@ -147,5 +147,15 @@ const getUsersBasic = async (id) => {
     return null;
   }
 };
-
-export {showDotation,getUserDni,verInfo,currentDotacion, getUserRole,getUserId,getUserBasic,getUsersBasic, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
+const salesReport= ref({})
+function formatToColombianPeso(number) {
+  if(!number){
+    return
+  }
+  return number.toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0, // Opcional: ajusta a 0 para no mostrar decimales
+  });
+}
+export {showDotation,getUserDni,formatToColombianPeso,verInfo,currentDotacion,salesReport, getUserRole,getUserId,getUserBasic,getUsersBasic, productoAEliminar, showEliminarProducto, productoAEditar, showEditarProducto, productoEnviado,siteDropValues,isInitialWatchCall, showAgregarProducto,pastelColors, categoryValue,siteDropValue,grupoAdicionesDropValue,grupoCambiosDropValue,grupoSalsasdropValue,GrupoAcompananterDropvalue,GrupoToppingsDropValue}
