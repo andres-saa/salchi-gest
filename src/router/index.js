@@ -79,7 +79,12 @@ const router = createRouter({
                 path: '/reporte-ventas/clientes',
                 name: 'reporte-ventas-clientes',
                 component: () => import('@/views/pages/RepClientes.vue'),
-            }
+            },
+            {
+              path: '/reporte-ventas/ordenes',
+              name: 'reporte-ventas-ordenes',
+              component: () => import('@/views/pages/ordenes.vue'),
+          }
 
                 ]
             },
@@ -105,6 +110,12 @@ const router = createRouter({
                   name: 'dotacion',
                   component: () => import('@/views/pages/Dotacion.vue')
               },
+              {
+                path: '/conectividad',
+                name: 'conectividad',
+                component: () => import('@/views/pages/conectividad.vue')
+            },
+
 
               {
                 path: '/guias',

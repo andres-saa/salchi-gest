@@ -1,7 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import { createPinia } from 'pinia';
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
 import Accordion from 'primevue/accordion';
@@ -103,9 +102,12 @@ import VirtualScroller from 'primevue/virtualscroller';
 import BlockViewer from '@/components/BlockViewer.vue';
 
 import '@/assets/styles.scss';
-
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 const app = createApp(App);
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
 app.use(router);
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);

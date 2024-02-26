@@ -1,5 +1,6 @@
 import {URI} from '@/service/conection'
-
+import { useReportesStore } from '../store/reportes';
+const store = useReportesStore()
 const getUsers = async () => {
     try {
       // Obtiene el token de acceso desde el Local Storage
@@ -19,6 +20,7 @@ const getUsers = async () => {
       // };
   
       // Realiza la solicitud HTTP con el encabezado configurado
+      store.setLoading(true,'cargando usuarios')
       const response = await fetch(`${URI}/employers`, {
         method: 'GET',
         // headers: headers,
@@ -26,6 +28,8 @@ const getUsers = async () => {
   
       // Verifica si la respuesta es exitosa
       if (response.ok) {
+        store.setLoading(false,'cargando usuarios')
+
         const data = await response.json();
         
         return data;
@@ -36,6 +40,8 @@ const getUsers = async () => {
       }
     } catch (error) {
       console.error('Error al obtener usuarios:', error);
+      store.setLoading(false,'cargando usuarios')
+
       return null;
     }
   };

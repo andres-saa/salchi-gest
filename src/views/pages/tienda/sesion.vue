@@ -111,6 +111,8 @@ const products = ref([]); // Definiendo la variable reactiva para almacenar los 
 const ruta = useRoute(); // Usando useRoute para acceder a los parámetros de la ruta
 const isActive = ref([]);
 const toast = useToast()
+import { useReportesStore } from '../../../store/reportes';
+const store = useReportesStore()
 // const getProducts = async (category_name) => {
 
 
@@ -166,13 +168,17 @@ if (!siteDropValue?.value?.site_id) {
     return; // Exit the function early
 }
 
+
+
 try {
+    store.setLoading(true,`cargando ${category_name} de ${siteDropValue.value.site_name}`)
     let response = await fetch(`${URI}/products/category/name/${category_name}/site/${siteDropValue?.value?.site_id}`);
     if (!response.ok) {
         products.value = [];
         throw new Error(`HTTP error! status: ${response.status}`);
     }
     let data = await response.json();
+    store.setLoading(false,`cargando ${category_name}s`)
     products.value = data.map(product => ({
         ...product,
         isActive: product.state == 'active' // Initialize the isActive field based on server data
@@ -180,6 +186,8 @@ try {
 } catch (error) {
     products.value = [];
     console.error('Error fetching data: ', error);
+    store.setLoading(false,`cargando ${category_name}s`)
+
 }
 };
 
@@ -190,6 +198,7 @@ const updateProductState = (product) => {
 const data = {...product}    
 data.state = product.isActive? 'active': 'inactive'
 // console.log(data)
+
 
 fetch(`${URI}/products/${product.product_id}`, {
     method: 'PUT',

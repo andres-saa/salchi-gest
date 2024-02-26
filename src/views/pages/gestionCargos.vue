@@ -1,7 +1,7 @@
 <template>
 
 
-<Loading v-if="modificandoCargos" tittle="MODIFICANDO GRUPO DE CARGOS"></Loading>
+<!-- <Loading v-if="modificandoCargos" tittle="MODIFICANDO GRUPO DE CARGOS"></Loading> -->
 
 
 
@@ -165,12 +165,14 @@ const selectedGroupIds = ref(["todos"]); // "todos" es un valor especial para ma
 
 
 
-
-const charging = ref(true)
+import { useReportesStore } from '../../store/reportes';
+const store = useReportesStore()
+// const charging = ref(true)
 
 // Función modificada para obtener los grupos de cargos y sus cargos correspondientes
 const getRoleGroups = async () => {
     try {
+        store.setLoading(true, 'BUSCANDO CARGOS')
         const response = await fetch(URI + '/rolegroups');
         const groups = await response.json();
         for (const group of groups) {
@@ -180,8 +182,12 @@ const getRoleGroups = async () => {
         }
         roleGroups.value = groups;
         charging.value = false 
+        store.setLoading(false, 'BUSCANDO CARGOS')
+
     } catch (error) {
         console.error(error);
+        store.setLoading(false, 'BUSCANDO CARGOS')
+
     }
 };
 

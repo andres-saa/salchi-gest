@@ -1,6 +1,12 @@
 <template>
-    <Loading v-if="visibleLoading" tittle="Cargando barrios"></Loading>
-    <Loading v-if="guardando" tittle="Guardando barrios"></Loading>
+
+
+
+
+
+
+
+
     <Dialog v-model:visible="showDialog" style="width: auto" header="Confirmar eliminación" :modal="true" :closable="false">
         <p>¿Estás seguro de que quieres eliminar este barrio?</p>
         <Button label="Cancelar" @click="showDialog = false" class="p-button-text" />
@@ -133,6 +139,10 @@
 import { ref, onMounted, onBeforeMount, watch } from 'vue'
 import { URI } from '@/service/conection';
 import Loading from '@/components/Loading.vue'
+
+import {useReportesStore} from '@/store/reportes.js'
+const store = useReportesStore()
+
 const guardando  = ref(false)
 const barriosToAdd = ref([{}])
 const removeBarrio = (index) => {
@@ -193,7 +203,11 @@ watch(showCreateDialog, ( nuevo, viejo) => {
 
 const createNeighborhood = async () => {
 
-   guardando.value = true
+   
+    showCreateDialog.value = false;
+   store.setLoading(true,'guardando barrios')
+   
+   
     try {
         // Iterate over each new neighborhood
         await Promise.all(barriosToAdd.value.map(async (barrio) => {
@@ -219,17 +233,17 @@ const createNeighborhood = async () => {
 
         // Reset the barriosToAdd array and close the dialog
         barriosToAdd.value = [{}];
-        showCreateDialog.value = false;
+        
 
         // Optionally, you can fetch and update the neighborhoods list after creation
         await getNeighborhoods().then(barrio => neighborhoods.value = barrio);
-        guardando.value = false
+        store.setLoading(false,'guardando barrios')
 
 
     } catch (error) {
         console.error('Request error:', error);
         toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to create some neighborhoods', life: 3000 });
-        guardando.value = false
+        store.setLoading(false,'guardando barrios')
 
     }
 };
@@ -294,23 +308,26 @@ const getNeighborhoods = async () => {
     const site_id = route.params.site_id
 
     try {
-        visibleLoading.value = true
+       
+        store.setLoading(true,'cargando barrios')
+
         const response = await fetch(`${URI}/neighborhoods/by-site/${site_id}`)
 
         if (!response.ok) {
             visibleLoading.value = false
+            store.setLoading(false,'cargando barrios')
 
         }
         if (response.ok) {
             const data = await response.json()
-            visibleLoading.value = false
+            store.setLoading(false,'cargando barrios')
 
             // cities.value = data
             return data
         }
 
     } catch (error) {
-        visibleLoading.value = false
+        store.setLoading(false,'cargando barrios')
 
 
     }
@@ -331,17 +348,22 @@ try {
 
     if (!response.ok) {
         // visibleLoading.value = false
+        store.setLoading(false,'cargando barrios')
+
 
     }
     if (response.ok) {
         const data = await response.json()
         // visibleLoading.value = false
+        store.setLoading(false,'cargando barrios')
 
         // cities.value = data
         return data
     }
 
 } catch (error) {
+    store.setLoading(false,'cargando barrios')
+
     // visibleLoading.value = false
 
 
@@ -358,7 +380,9 @@ onMounted(async () => {
 
 })
 
-
+onBeforeMount(() => {
+    store.setLoading(false)
+})
 
 
 
@@ -729,4 +753,63 @@ Button {
 .Cancelada {
     background-color: var(--red-200);
     border-radius: 5rem;
-}</style>
+}
+
+
+
+
+.loading-enter-active,.loading-leave-active {
+  transition: all ease  .3s;
+  
+}
+
+
+
+ .loading-leave-to{
+  opacity: 0;
+  transform: translateY(20rem);
+
+}
+
+
+.loading-leave-from  {
+  opacity: 1;
+  transform: translateY(20rem);
+
+}
+ /*
+*/
+
+ .loading-enter-from {
+  opacity: 0;
+  transform: translateY(20rem);
+  filter: blur(10px);
+  /* filter: blur(0); */
+  
+}
+
+
+
+.loading-enter-to {
+  opacity: 1;
+  filter: blur(0);
+
+  
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>

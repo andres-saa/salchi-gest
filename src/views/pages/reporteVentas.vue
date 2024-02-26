@@ -1,13 +1,18 @@
 <template>
 
-{{ store }}
-<!-- {{ salesReport }} -->
-<div class="px-0 pt-0 col-12" style="display: flex;z-index: 99; position: sticky;top: 4rem;background-color:#fafafa; align-items: center;">
+    <!-- <Transition name="fade">
+        <Loading :tittle=" `CARGANDO REPORTE DE ORDENES ${store.order_status}s` " v-if="store.loading"></Loading>
+
+    </Transition> -->
+
+
+    <div style="position: relative;">
+        <div class="px-0 pt-0 col-12" style="display: flex;z-index: 99; position: sticky;top: 4rem;background-color:#fafafa; align-items: center;z-index: 900;">
             <!-- <span class="p-0 m-0 text-xl" style="font-weight: bold;">Filtros</span> -->
         
             <div class="col-12 grid gap m-0 py-2 px-0 " >
                 <div class="col-12 xl:col-2 px-2 p-2" style="height: 100%;">
-                <Dropdown v-model="estadosDropValue" :options="estadosDropValues" class="col-12 p-0 m-0" placeholder="Estado"></Dropdown>
+                <Dropdown v-model="store.order_status" :options="estadosDropValues" class="col-12 p-0 m-0" placeholder="Estado"></Dropdown>
 
             </div>
 
@@ -22,7 +27,7 @@
             </div>
 
             <div class="col-12 xl:col-2 p-2 " style="height: 100%;" >
-                <Button style="height: 100;" @click="store.fetchSalesReport"> ir</Button>
+                <Button    style="height: 100; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH"></i></Button>
             </div>
 
 
@@ -33,41 +38,67 @@
         </div>
 
 
-        </div>
-     
-    <div class="app">
-       
+        
+    
+    
+    
+    
+    </div>
 
+    <div class="contenedor mt-8" style="position: sticky;top: 4rem;z-index: 99;">
 
+<span class="text-5xl pt-8" style="font-weight: bold;">Vision General</span>
 
-        <div class="contenedor mt-8" style="">
+<div class="col-12 px-0 p-0 my-4 p-2" style="overflow-x:auto; background-color: #ffffff;box-shadow: 0 1rem  1rem rgb(255, 255, 255);">
+    <div class="px-0 mx-0" style="width: max-content; background-color:#ffffff; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">
+   <div v-for="boton in menus">
 
-            <span class="text-5xl pt-8" style="font-weight: bold;">Vision General</span>
-
-            <div class="col-12 px-0" style="overflow-x:auto; background-color: #fafafa;">
-                <div class="px-0 mx-0" style="width: max-content; background-color:#fafafa; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">
-               <div v-for="boton in menus">
-
-                <RouterLink :to="boton.to" >
-                    <Button  :style="ruta.fullPath == boton.to? 'box-shadow: 0 4px 0 #ff6200;color:#000;font-weight:bold;':''" class="text-xl px-0 py-4 mx-0" text   severity="secondary" style=" border-radius: 0;">
-                        
-                        {{ boton.name }}
-
-                        <!-- {{ ruta.fullPath }} -->
-                        
-                    
-                    </Button>
-                </RouterLink>
-               </div>
-                   
+    <RouterLink :to="boton.to" >
+        <Button  :style="ruta.fullPath == boton.to? 'box-shadow: 0 4px 0 #ff6200;color:#000;font-weight:bold;':''" class="text-xl px-0 py-4 mx-0" text   severity="secondary" style=" border-radius: 0;">
             
-                
-            </div>
-            </div>
+            {{ boton.name }}
+
+            <!-- {{ ruta.fullPath }} -->
+            
+        
+        </Button>
+    </RouterLink>
+   </div>
+   <div class="p-3" style="display: flex;align-items: center;background-color: rgba(245, 222, 179, 0); ">
+    
+          <Button  class="text-l btn-ocultar" text @click="store.toogleVisibleNotifications" :severity="store.visibleNotifications? 'danger': 'success'"  rounded style="font-weight: bold; ">
+            <span>
+               <span >{{ store.visibleNotifications? 'Ocultar notificaciones': 'Mostrar notificaciones' }} </span> <i  :class="PrimeIcons.ANGLE_DOUBLE_RIGHT"></i>
+            </span>
+        
+        </Button>  
+        
+        <!-- <span>ooodssss</span> -->
            
 
+            <!-- {{ ruta.fullPath }} -->
+            
+        
+   </div>
        
-        </div>
+
+    
+</div>
+</div>
+
+
+
+</div>
+
+    
+
+    <div class="app" style="position: ;">
+       
+
+        <!-- <Button style="position: sticky; top:2rem;right: 2rem;"> <i :class="PrimeIcons.ARROW_LEFT"></i> </Button> -->
+
+
+      
 
 
 
@@ -77,12 +108,24 @@
     </div>
 
 
+    <div class="grid p-0 m-0"> 
+    
+    <div class="" :class="store.visibleNotifications? 'col-9':'col-12'">
+    
+    <transition name="fade">
+        <RouterView>
 
+        </RouterView>
+    </transition>
+    </div>
+    
 
+    <transition name="noti">
+    <RepNotificaciones></RepNotificaciones>
+    </transition>
 
-<RouterView>
+    </div>
 
-</RouterView>
 
 
 
@@ -117,7 +160,13 @@
 
             <div class="col-12 p-0" style="display: flex; justify-content: center;">
                 <div class="col-12" style="display: flex; justify-content: center;">
-            <Button @click="store.setDateRange(TempStartDate,TempEndDate)">Aplicar</Button>
+            <Button @click=" () => {
+                    store.setDateRange(TempStartDate,TempEndDate);
+                    showDateDialog = false;
+                    store.fetchSalesReport();
+
+
+            }">Aplicar</Button>
         </div>
             </div>
 
@@ -125,6 +174,17 @@
         </div>
 
     </Dialog>
+
+
+    
+    </div>
+
+<!-- {{ store }} -->
+<!-- {{ salesReport }} -->
+
+
+
+
 </template>
 
 
@@ -147,11 +207,16 @@ import { useLayout } from '@/layout/composables/layout';
 import { useRoute } from 'vue-router';
 import { URI } from '../../service/conection';
 import {salesReport} from '../../service/valoresReactivosCompartidos'
+import { formatToColombianPeso } from '../../service/valoresReactivosCompartidos';
+import Loading from '../../components/Loading.vue';
+import { PrimeIcons } from 'primevue/api';
 import {useReportesStore} from '@/store/reportes.js'
+import RepValorVentas from './RepValorVentas.vue';
+import RepNotificaciones from './RepNotificaciones.vue';
 const store = useReportesStore()
 const { isDarkTheme } = useLayout();
 
-const estadosDropValues = ref(['enviada', 'cancelada'])
+const estadosDropValues = ref(['enviada', 'cancelada', 'en preparacion'])
 const estadosDropValue = ref('enviada')
 const ruta = useRoute()
 const sites = ref([])
@@ -159,6 +224,24 @@ const selectedSites = ref([])
 const showDateDialog = ref(false)
 const startDate = ref(new Date(new Date().setDate(new Date().getDate() - 7))); // Fecha de inicio hace 7 días
 const endDate = ref(new Date());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function checkCustomDateRange() {
@@ -190,31 +273,42 @@ const TempEndDate = ref(new Date())
 const selectedRangeName = ref('');
 
 
-watch(estadosDropValue, (viejo,nuevo)=> {
-    if(viejo != nuevo){
-        fetchSalesReport()
+// watch(estadosDropValue, (viejo,nuevo)=> {
+//     if(viejo != nuevo){
+//         fetchSalesReport()
 
-    }
-})
+//     }
+// })
 
 function setDateRange(days) {
     const today = new Date();
-    const pastDate = new Date();
-    pastDate.setDate(today.getDate() - days + 1); // +1 para incluir el día de hoy en el rango
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Incrementa en uno para incluir el día de mañana
+
+    const pastDate = new Date(today);
+    pastDate.setDate(today.getDate() - days); // Ajustado para incluir el día de hoy en el rango si es necesario
 
     TempStartDate.value = pastDate;
-    TempEndDate.value = today;
+    TempEndDate.value = tomorrow;
+
+
+    store.setDateRange(TempStartDate.value,TempEndDate.value)
+    showDateDialog.value = false
+    store.fetchSalesReport()
+    
+    // Usando 'tomorrow' en lugar de 'today'
 }
 
 onMounted( () => {
     getSites().then(data => {
         sites.value = data
-        selectedSites.value = sites.value.filter(s => s.site_id != 12 && s.site_id != 13);
-        fetchSalesReport()
+        // selectedSites.value = sites.value.filter(s => s.site_id != 12 && s.site_id != 13);
+        // fetchSalesReport()
 
 
     } )
     // fetchSales()
+    store.fetchSalesReport()    
 })
 
 // function setDateRange(days) {
@@ -283,6 +377,19 @@ watch([startDate, endDate], () => {
 }, { deep: true });
 
 
+watch(() => store.order_status, (newValue, oldValue) => {
+  // Esta función se ejecutará cada vez que order_status cambie.
+  // Aquí puedes llamar a fetchSalesReport o cualquier otra lógica necesaria
+  console.log(`El estado de orden ha cambiado de ${oldValue} a ${newValue}`);
+  store.fetchSalesReport(); // Llamada al método de la tienda
+});
+
+
+watch(store.selectedSites, (nuevasSedes) => {
+  store.setSelectedSites(nuevasSedes);
+}, { deep: true });
+
+
 const getSites = async() => {
     try {
         const response = await fetch(`${URI}/sites`)
@@ -313,8 +420,8 @@ const menus = ref([
         to: '/reporte-ventas/ticket'
     },
     {
-        name: 'Clientes',
-        to: '/reporte-ventas/clientes'
+        name: 'Ordenes',
+        to: '/reporte-ventas/ordenes'
     }
 ])
 
@@ -471,11 +578,12 @@ watch(
 // Formatear el período de fechas
 const formattedPeriod = ref(`${startDate.value} - ${endDate.value}`)
 
-function formatDate(date) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+function formatDate(dated) {
+const date = new Date(dated)
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 
@@ -533,3 +641,98 @@ function saveState() {
 
 
 </script>
+
+
+<style scoped>
+
+.btn-ocultar{
+    /* outline: none !important; */
+    box-shadow: none    ;
+    border: none !important;
+    /* background-color: ; */
+}
+.fade-enter-active,.fade-leave-active {
+  transition: all ease  .3s;
+  
+}
+
+
+.noti-enter-active,.noti-leave-active {
+  transition: all ease  1s;
+  
+}
+
+ .fade-leave-to{
+  opacity: 0;
+  transform: translateY(20rem);
+
+}
+
+/* .fade-enter-to  {
+  opacity: 0;
+  transform: translateX(20rem);
+ 
+} */
+
+
+.fade-leave-from  {
+  opacity: 1;
+  transform: translateY(20rem);
+
+}
+ /*
+*/
+
+ .fade-enter-from {
+  opacity: 0;
+  transform: translateY(20rem);
+  filter: blur(10px);
+  /* filter: blur(0); */
+  
+}
+
+
+.noti-enter-from {
+  opacity: 0;
+  transform: translateY(20rem);
+  filter: blur(10px);
+  /* filter: blur(0); */
+  
+}
+
+.noti-enter-to {
+    opacity: 1;
+  filter: blur(0);
+  
+}
+
+
+
+.fade-enter-to {
+  opacity: 1;
+  filter: blur(0);
+
+  
+} 
+
+
+
+/* 
+.fade-leave-from {
+  opacity: 0;
+  transform: translateX(0);
+  
+} 
+
+
+.fade-leave-to {
+  opacity: 1;
+  transform: translateX(20rem);
+  
+}   */
+
+*{
+    transition: .3s ease all;
+}
+
+</style>

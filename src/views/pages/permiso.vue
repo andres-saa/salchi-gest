@@ -117,7 +117,7 @@
 
 
       <div style="display: flex;">
-        <Button @click="solicitarPermiso()"
+        <Button @click="solicitarPermiso()" :disabled="store.Loading.visible"
         style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;"><span
           style="color: white;">
           <i :class="PrimeIcons.UPLOAD"> </i> Solicitar permiso</span></Button>
@@ -338,20 +338,27 @@ watch(usrDni, (newValue, oldValue) => {
 
 
 const getUser = async (dni) => {
+  store.setLoading(true, `Buscando usuario ${dni}`)
   fetch(`${URI}/employer/dni/${dni}`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      store.setLoading(false, `Buscando usuario ${dni}`)
 
       return response.json();
+
     })
     .then(data => {
+      store.setLoading(false, `Buscando usuario ${dni}`)
+
       console.log('Employer data:', data);
       user.value = data
       queja.value = ''
     })
     .catch(error => {
+      store.setLoading(false, `Buscando usuario ${dni}`)
+
       console.error('There has been a problem with your fetch operation:', error);
       user.value = {}
       queja.value = '  No hay un usuario para el número de documento ' + usrDni.value
@@ -385,7 +392,8 @@ onMounted(async () => {
 })
 
 
-
+import { useReportesStore } from '../../store/reportes';
+const store = useReportesStore()
 
 const solicitarPermiso = async () => {
   // Asegúrate de que 'user.user_id' tenga un valor válido
@@ -408,6 +416,8 @@ const solicitarPermiso = async () => {
   }
 
   try {
+    store.setLoading(true, 'solicitando permiso')
+
     const response = await fetch(`${URI}/permission`, {
       method: 'POST',
       headers: {
@@ -418,6 +428,8 @@ const solicitarPermiso = async () => {
     });
 
     if (!response.ok) {
+      store.setLoading(false, 'solicitando permiso')
+
       throw new Error('Error en la solicitud de permiso');
     }
 
@@ -426,6 +438,7 @@ const solicitarPermiso = async () => {
     router.push('/mis-permisos')
     // Lógica adicional después de crear el permiso
   } catch (error) {
+    store.setLoading(false, 'solicitando permiso')
     console.error('Error al solicitar el permiso:', error);
     // Manejar el error
   }

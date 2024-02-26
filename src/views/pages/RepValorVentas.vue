@@ -1,14 +1,14 @@
 <template>
     <div class="grid">
 
-        <div class="grid col-12 xl:col-9">
+        <div class="grid col-12 ">
             <div class="col-12 lg:col-6 ">
                 <div class="card mb-0">
                     <div class="flex justify-content-between mb-3">
                         <div>
                             <span class="block text-500 font-medium mb-3">Venta bruta</span>
                             <div class="text-900 font-medium text-xl">
-                                {{ formatToColombianPeso(salesReport?.total_sales?.total_sales) || '$0' }}</div>
+                                {{ formatToColombianPeso(store.salesReport?.total_sales?.total_sales) || '$0' }}</div>
                         </div>
                         <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
                             style="width: 2.5rem; height: 2.5rem">
@@ -16,17 +16,25 @@
                         </div>
                     </div>
 
-                    <span class="text-500">Total de ordenes</span>
-                    <span class="text-green-500 font-medium ml-3">{{ salesReport?.total_sales?.total_orders || 0 }} </span>
+                    <div style="display:flex; align-items: center;">
+                        <span class="text-500">Total de ordenes</span>
+                    
+                    
+                    <RouterLink to="/reporte-ventas/ordenes">
+                        <Button outlined class="p-2 font-medium ml-3  " :style="store.order_status == 'enviada'? 'color:var(--blue-500);background-color:var(--blue-100)': 'color:rgba(255, 99, 132, 1);background-color:var(--pink-100)'" style="border: none ;">ver ordenes</Button>
+
+                    </RouterLink>    <span class=" font-medium ml-3" :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.salesReport?.total_sales?.total_orders || 0 }} </span>
+                    </div>
+                    
                 </div>
             </div>
-            <div class="col-12 lg:col-6 ">
-                <div class="card mb-0">
+            <div class="col-12 lg:col-6 " style="height: ;">
+                <div class="card mb-0" style="height: 100%;">
                     <div class="flex justify-content-between mb-3">
                         <div>
                             <span class="block text-500 font-medium mb-3">Ticket promedio</span>
                             <div class="text-900 font-medium text-xl">
-                                {{ formatToColombianPeso(salesReport?.total_sales?.average_ticket) || '$0' }}</div>
+                                {{ formatToColombianPeso(store.salesReport?.total_sales?.average_ticket) || '$0' }}</div>
                         </div>
                         <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
                             style="width: 2.5rem; height: 2.5rem">
@@ -180,10 +188,11 @@
         </div> -->
             <div class="col-12 ">
                 <div class="card">
-                    <h5>Historico de ventas</h5>
+                    <h5 style="background-color: ;"   >Historico de ordenes <span :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.order_status }}s</span>  </h5>
                     <!-- <Chart type="bar" :data="lineData" :options="lineOptions" /> -->
-                    <div class="card">
-                        <Chart type="line" :data="chartData" :options="chartOptions" class="h-30rem" />
+                    <div class="card" >
+                        <Button class="p-0" text @click="visible_graph = true" size="small" style="border: none;" :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'"><i class="text-4xl" style="transform: rotate(45deg);;" :class="PrimeIcons.ARROW_A"></i></Button>
+                        <Chart type="line" :data="store.ventasCharData" :options="chartOptions" class="h-30rem" />
                     </div>
                 </div>
 
@@ -192,61 +201,11 @@
         </div>
 
 
-        <div class="card col-12 xl:col-3 mt-3">
-            <div class="flex align-items-center justify-content-between mb-4">
-                <h5>Notificaciones</h5>
-                <div>
-                    <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded"
-                        @click="$refs.menu1.toggle($event)"></Button>
-                    <Menu ref="menu1" :popup="true" :model="items"></Menu>
-                </div>
-            </div>
+        <Dialog v-model:visible="visible_graph" modal header="Periodo" :style="{ width: '90vw',height:'max-content' }">
+<!-- <RepValorVentas></RepValorVentas> -->     
+                        <Chart type="line" :data="store.ventasCharData" :options="chartOptions" style="height: 60vh;" />
 
-            <span class="block text-600 font-medium mb-3">Sedes en linea</span>
-            <ul class="p-0 mx-0 mt-0 mb-4 list-none">
-                <li v-for="i in [1,2,3]" class="flex align-items-center py-2 border-bottom-1 surface-border">
-                    <div
-                        class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                        <i class="pi pi-dollar text-xl text-blue-500"></i>
-                    </div>
-                    <span class="text-900 line-height-3">Richard Jones
-                        <span class="text-700">has purchased a blue t-shirt for <span
-                                class="text-blue-500">79$</span></span>
-                    </span>
-                </li>
-                <!-- <li class="flex align-items-center py-2">
-                    <div
-                        class="w-3rem h-3rem flex align-items-center justify-content-center bg-orange-100 border-circle mr-3 flex-shrink-0">
-                        <i class="pi pi-download text-xl text-orange-500"></i>
-                    </div>
-                    <span class="text-700 line-height-3">Your request for withdrawal of <span
-                            class="text-blue-500 font-medium">2500$</span> has been initiated.</span>
-                </li> -->
-            </ul>
-
-            <span class="block text-600 font-medium mb-3">YESTERDAY</span>
-            <ul class="p-0 m-0 list-none">
-                <li class="flex align-items-center py-2 border-bottom-1 surface-border">
-                    <div
-                        class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                        <i class="pi pi-dollar text-xl text-blue-500"></i>
-                    </div>
-                    <span class="text-900 line-height-3">Keyser Wick
-                        <span class="text-700">has purchased a black jacket for <span
-                                class="text-blue-500">59$</span></span>
-                    </span>
-                </li>
-                <li class="flex align-items-center py-2 border-bottom-1 surface-border">
-                    <div
-                        class="w-3rem h-3rem flex align-items-center justify-content-center bg-pink-100 border-circle mr-3 flex-shrink-0">
-                        <i class="pi pi-question text-xl text-pink-500"></i>
-                    </div>
-                    <span class="text-900 line-height-3">Jane Davis
-                        <span class="text-700">has posted a new questions about your product.</span>
-                    </span>
-                </li>
-            </ul>
-        </div>
+</Dialog>
 
     </div>
 </template>
@@ -459,55 +418,18 @@ import { ref, onMounted } from "vue";
 import { salesReport, formatToColombianPeso } from "../../service/valoresReactivosCompartidos";
 import { URI } from "../../service/conection";
 import {useReportesStore} from '@/store/reportes.js'
+import { PrimeIcons } from "primevue/api";
 const store = useReportesStore()
+const visible_graph = ref(false)
 onMounted(() => {
-     setChartData();
+    // store.fetchDilyReport()
     chartOptions.value = setChartOptions();
 });
+
 
 const chartData = ref();
 const chartOptions = ref();
 
-const setChartData = () => {
-
-
-    fetchSalesReport().then(data => {
-        const keys = [];
-        const values = [];
-        data.forEach(obj => {
-            Object.keys(obj).forEach(key => {
-                if (!keys.includes(key)) {
-                    keys.push(key);
-                }
-            });
-
-            Object.values(obj).forEach(value => {
-                values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
-            });
-        });
-
-        chartData.value = {
-            labels: keys,
-        datasets: [
-            {
-                label: 'Venta',
-                data: values,
-                fill: true,
-                tension: 0.4,
-                borderColor: documentStyle.getPropertyValue('--purple-500'),
-                borderWidth: 1.5,
-            },
-
-        ]
-        }
-
-
-    })
-
-    const documentStyle = getComputedStyle(document.documentElement);
-
-   
-};
 
 
 
@@ -554,11 +476,14 @@ const fetchSalesReport = async () => {
 
 
 
-fetchSalesReport()
+// fetchSalesReport()
 
 
 
+// onMounted(() => {
+//     store.fetchSalesReport()    
 
+// })
 
 
 
@@ -573,7 +498,7 @@ const setChartOptions = () => {
 
     return {
         maintainAspectRatio: true,
-        aspectRatio: 2,
+        aspectRatio: 3,
         plugins: {
             legend: {
                 labels: {
@@ -587,7 +512,8 @@ const setChartOptions = () => {
                     color: textColorSecondary
                 },
                 grid: {
-                    color: surfaceBorder
+                    color: surfaceBorder,
+                    display:false
                 }
             },
             y: {

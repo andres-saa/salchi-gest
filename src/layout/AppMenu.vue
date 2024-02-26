@@ -4,6 +4,7 @@ import { ref, onMounted, onBeforeMount } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
 import { getUserRole } from '../service/valoresReactivosCompartidos';
 import { roles, obtenerRolesYActualizar } from '@/service/roles';
+import { PrimeIcons } from 'primevue/api';
 // import { getUserRole } from '../service/valoresReactivosCompartidos';
 
 
@@ -34,8 +35,8 @@ async function fetchAndUpdateRoles() {
                     items: [
                         { label: 'Menu', icon: ' fa-solid fa-burger', to: '/tienda-menu/' },
                         { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
-                        { label: 'Conectividad', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
-                        { label: 'Reportes de ventas', icon: ' fa-solid fa-truck-fast', to: '/reporte-ventas/valor-ventas/' },
+                        { label: 'Conectividad', icon: ' fa-solid fa-truck-fast', to: '/conectividad/' },
+                        { label: 'Reportes de ventas', icon: ' fa-solid fa-chart-line', to: '/reporte-ventas/valor-ventas/' },
 
                     ]
                 }]
@@ -247,14 +248,17 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-    <ul class="layout-menu">
+    
+    <ul class="layout-menu" style="position: relative;">
         <template v-for="(item, i) in model" :key="item">
             <app-menu-item v-if="item.roles?.includes(getUserRole())" :item="item" :index="i"></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>
 
 
+        
     </ul>
+    <!-- <Button style="position: fixed;top: 50%;left: 22rem;"><i :class="PrimeIcons.ANGLE_DOUBLE_LEFT"></i></Button> -->
 </template>
 
 <style lang="scss" scoped></style>

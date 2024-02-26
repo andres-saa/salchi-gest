@@ -5,6 +5,7 @@ import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppConfig from './AppConfig.vue';
 import { useLayout } from '@/layout/composables/layout';
+import Loading from '../components/Loading.vue';
 
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
 
@@ -58,27 +59,32 @@ const isOutsideClicked = (event) => {
 </script>
 
 <template>
+
     <div class="layout-wrapper " :class="containerClass">
         <app-topbar></app-topbar>
         <div class="layout-sidebar">
             <app-sidebar></app-sidebar>
         </div>
-        <div class="layout-main-container " >
+        <loading  style="z-index: 9;position: fixed;height: 100vh;"></loading>
 
+        <div class="layout-main-container " >
+<!-- 
             <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 9999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);">
 
 </div>
 
 <div style="background-color: red; height: 200vh;position: fixed;top: -10%;left: 100%; z-index: 9999; width: 100vw;box-shadow: -10px 0 15px rgba(0, 0, 0, 0.15);">
 
-</div>
+</div> -->
 
             <div class="layout-main p-0" style="contain: paint;">
                 <!-- <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);"></div> -->
 
              
-                
-                <router-view class="p-0"></router-view>
+                <transition name="fade">
+                    <router-view class="p-0"></router-view>
+
+                </transition>
             </div>
             
         </div>
@@ -88,4 +94,49 @@ const isOutsideClicked = (event) => {
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+.fade-enter-active,.fade-leave-active {
+  transition: all ease  .3s;
+  
+}
+
+
+
+/* .fade-enter-to  {
+  opacity: 0;
+  transform: translateX(20rem);
+ 
+} */
+
+
+/* .fade-leave-from  {
+  opacity: 1;
+  transform: translateY(20rem);
+
+} */
+ /*
+*/
+
+ .fade-enter-from {
+  opacity: 1;
+  transform: translateY(10vh);
+  filter: blur(10px);
+  /* filter: blur(0); */
+  
+}
+
+
+
+.fade-enter-to {
+  opacity: 1;
+  /* filter: blur(0); */
+  /* transform: translateY(0); */
+
+  
+} 
+
+
+
+
+</style>

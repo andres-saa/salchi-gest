@@ -619,7 +619,7 @@ async function getDotacion() {
 
     const user_id = await getUserId()
     
-    Load.value.start = true
+    // Load.value.start = true
     // URL de la API para obtener los permisos, reemplaza con tu URL real
     const url = `${URI}/user/${user_id}/supply-deliveries/`;
     

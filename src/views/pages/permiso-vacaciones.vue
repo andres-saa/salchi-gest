@@ -120,13 +120,13 @@
 
 
       <div style="display: flex;">
-        <Button @click="solicitarPermiso()"
+        <Button @click="solicitarPermiso()" :disabled="store.loading.visible"
         style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;"><span
           style="color: white;">
-          <i :class="PrimeIcons.UPLOAD"> </i> Solicitar permiso</span></Button>
+          <i class="fa-solid fa-umbrella text-white"> </i> Solicitar vacaciones</span></Button>
 
-          <Button @click="exportarComoPDF()" disabled style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;" ><span style="color: white;"> 
-      <i :class="PrimeIcons.UPLOAD"> </i> Descargar Comprobante</span></Button>
+          <!-- <Button @click="exportarComoPDF()" disabled style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;" ><span style="color: white;"> 
+      <i :class="PrimeIcons.UPLOAD"> </i> Descargar Comprobante</span></Button> -->
       </div>
 
       
@@ -317,6 +317,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { nextTick } from 'vue';
 import router from '@/router/index.js'
+import { useReportesStore } from '../../store/reportes';
+const store = useReportesStore()
 const user = ref({})
 const usrDni = ref(getUserDni())
 const mensaje = ref()
@@ -346,26 +348,34 @@ watch(usrDni, (newValue, oldValue) => {
 
 
 const getUser = async (dni) => {
+  store.setLoading(true, `Buscando usuario ${dni}`)
   fetch(`${URI}/employer/dni/${dni}`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      store.setLoading(false, `Buscando usuario ${dni}`)
 
       return response.json();
+
     })
     .then(data => {
+      store.setLoading(false, `Buscando usuario ${dni}`)
+
       console.log('Employer data:', data);
       user.value = data
       queja.value = ''
     })
     .catch(error => {
+      store.setLoading(false, `Buscando usuario ${dni}`)
+
       console.error('There has been a problem with your fetch operation:', error);
       user.value = {}
       queja.value = '  No hay un usuario para el número de documento ' + usrDni.value
       mensaje.value = 'error'
     });
 }
+
 
 
 const getDate = async () => {
@@ -397,6 +407,7 @@ onMounted(async () => {
 
 const solicitarPermiso = async () => {
   // Asegúrate de que 'user.user_id' tenga un valor válido
+  store.setLoading(true, 'solicitando vacaciones')
   if (!user.value.id) {
     console.error("El ID del usuario es necesario para solicitar el permiso.");
     return;

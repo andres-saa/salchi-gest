@@ -197,6 +197,8 @@ import { URI } from '../../../service/conection';
 import { formatoPesosColombianos } from '../../../service/formatoPesos';
 import { pastelColors } from '@/service/valoresReactivosCompartidos'
 import { PrimeIcons } from 'primevue/api';
+import { useReportesStore } from '../../../store/reportes';
+const store = useReportesStore()
 const adicionales = ref();
 const grupoAdicionales = ref();
 const grupos = ref([])
@@ -403,9 +405,12 @@ const grupoNames = {
 
 const getAdicionaes = async () => {
     try {
+        store.setLoading(true, `cargando ${route.params.adicionales}`)
         const response = await fetch(`${URI}/${route.params.adicionales}`);
         const data = await response.json();
         adicionales.value = data;
+        store.setLoading(false, `cargando ${route.params.adicionales}`)
+
     } catch (error) {
         console.error('Error fetching data: ', error);
     }
@@ -414,10 +419,13 @@ const getAdicionaes = async () => {
 
 const getGrupoAdicionaes = async () => {
     try {
+        store.setLoading(true, `cargando grupo de ${route.params.adicionales}`)
         const response = await fetch(`${URI}/grupo-${route.params.adicionales}`);
         const data = await response.json();
         grupoAdicionales.value = data;
+        store.setLoading(false, `cargando ${route.params.adicionales}`)
         return data
+        
     } catch (error) {
         console.error('Error fetching data: ', error);
     }

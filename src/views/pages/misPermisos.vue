@@ -2,18 +2,6 @@
     <div class="col-12 m-auto p-0"> 
 
 
-      <div class="col-12" v-if="charging" style="display: flex;flex-direction: column; pointer-events: none; align-items: center; justify-content: center; position: fixed;z-index: 1000;left: 0;top: 0; height: 100%;background-color: rgba(0, 0, 0, 0.5);">
-
-
-<p class="text-3xl" style="font-weight: bold; color: white; text-shadow: 0 0 10px rgba(0, 0, 0, 0.551);">CARGANDO PERMISOS</p>
-<div style="display: flex;">
-
-    
-        <ProgressSpinner  style="width: 100px; height: 100px" strokeWidth="4" fill="var(--surface-ground)"
-        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
-
-    </div>
-</div>
 
 
       <DataTable ref="dt" :value="permisos" v-model:selection="selectedPermisos" dataKey="id" :paginator="true"
@@ -586,8 +574,11 @@ onMounted(() => {
 
 
 
+import { useReportesStore } from '../../store/reportes';
+const store = useReportesStore()
 
 async function getPermissions() {
+  store.setLoading(true, 'Cargando permisos')
   // URL de la API para obtener los permisos, reemplaza con tu URL real
   const usr_id = await getUserId()
   const url = `${URI}/permissions/user/${usr_id}  `;
@@ -598,17 +589,24 @@ async function getPermissions() {
 
     // Verifica si la respuesta es exitosa
     if (!response.ok) {
+      store.setLoading(false, 'Cargando permisos')
+
       throw new Error(`Error al obtener los permisos: ${response.status}`);
+
     }
 
     // Parsea y retorna los datos de la respuesta
     charging.value = false
     const permissionsData = await response.json();
+    store.setLoading(false, 'Cargando permisos')
+
     return permissionsData;
    
   } catch (error) {
     // Maneja cualquier error que ocurra durante la solicitud
     console.error('Error en getPermissions:', error);
+    store.setLoading(false, 'Cargando permisos')
+
     throw [error]; // O manejar el error de la manera que prefieras
   }
 }

@@ -130,6 +130,7 @@
 
 <script setup>
 import { onMounted, ref,computed } from 'vue';
+import { useReportesStore } from '../../store/reportes';
 import { useToast } from 'primevue/usetoast';
 import { productoAEditar } from '../../service/valoresReactivosCompartidos';
 import { 
@@ -150,6 +151,7 @@ import { watch } from 'vue';
 import { productoEnviado, showEditarProducto } from '../../service/valoresReactivosCompartidos';
 import { fotos } from '../../service/menu/fotos';
 
+const store = useReportesStore()
 const getImageUrl = (nombre) => {
             const timestamp = new Date().getTime(); // Obtiene el timestamp actual
             return `${URI}/read-product-image/300/${nombre}?timestamp=${timestamp}`;
@@ -300,6 +302,11 @@ const enviarProducto = async () => {
             };
 
             try {
+
+                showEditarProducto.value = false;
+
+                store.setLoading(true,`guardando ${productoAEditar.value.name} para la sede ${site_id}`)
+
                 const response = await fetch(`${URI}/products/${productoActualizado.product_id}`, {
                     method: 'PUT',
                     headers: {
@@ -318,7 +325,6 @@ const enviarProducto = async () => {
         }
     }
 
-    showEditarProducto.value = false;
     location.reload()
     
 };

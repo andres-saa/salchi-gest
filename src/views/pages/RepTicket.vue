@@ -1,48 +1,53 @@
 <template>
+    <div class="grid">
 
-         <div class="grid">
-                <div class="col-12 lg:col-6 ">
-                    <div class="card mb-0">
-                        <div class="flex justify-content-between mb-3">
-                            <div>
-                                <span class="block text-500 font-medium mb-3">Venta bruta</span>
-                                <div class="text-900 font-medium text-xl">$5.000.000</div>
-                            </div>
-                            <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
-                                style="width: 2.5rem; height: 2.5rem">
-                                <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
-                            </div>
+        <div class="grid col-12 ">
+            <div class="col-12 lg:col-6 ">
+                <div class="card mb-0">
+                    <div class="flex justify-content-between mb-3">
+                        <div>
+                            <span class="block text-500 font-medium mb-3">Venta bruta</span>
+                            <div class="text-900 font-medium text-xl">
+                                {{ formatToColombianPeso(store.salesReport?.total_sales?.total_sales) || '$0' }}</div>
                         </div>
+                        <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                            style="width: 2.5rem; height: 2.5rem">
+                            <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+                        </div>
+                    </div>
 
+                    <div style="display:flex; align-items: center;">
                         <span class="text-500">Total de ordenes</span>
-                        <span class="text-green-500 font-medium ml-3">320 </span>
+                    
+                    
+                    <RouterLink to="/reporte-ventas/ordenes">
+                        <Button outlined class="p-2 font-medium ml-3  " :style="store.order_status == 'enviada'? 'color:var(--blue-500);background-color:var(--blue-100)': 'color:rgba(255, 99, 132, 1);background-color:var(--pink-100)'" style="border: none ;">ver ordenes</Button>
+
+                    </RouterLink>    <span class=" font-medium ml-3" :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.salesReport?.total_sales?.total_orders || 0 }} </span>
                     </div>
+                    
                 </div>
-                <div class="col-12 lg:col-6 ">
-                    <div class="card mb-0">
-                        <div class="flex justify-content-between mb-3">
-                            <div>
-                                <span class="block text-500 font-medium mb-3">Ticket promedio</span>
-                                <div class="text-900 font-medium text-xl">$50.000</div>
-                            </div>
-                            <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
-                                style="width: 2.5rem; height: 2.5rem">
-                                <i class="pi pi-map-marker text-orange-500 text-xl"></i>
-                            </div>
+            </div>
+            <div class="col-12 lg:col-6 " style="height: ;">
+                <div class="card mb-0" style="height: 100%;">
+                    <div class="flex justify-content-between mb-3">
+                        <div>
+                            <span class="block text-500 font-medium mb-3">Ticket promedio</span>
+                            <div class="text-900 font-medium text-xl">
+                                {{ formatToColombianPeso(store.salesReport?.total_sales?.average_ticket) || '$0' }}</div>
                         </div>
-                        <span class="text-green-500 font-medium">%52+ </span>
-                        <span class="text-500">Respecto al mes pasado</span>
+                        <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
+                            style="width: 2.5rem; height: 2.5rem">
+                            <i class="pi pi-map-marker text-orange-500 text-xl"></i>
+                        </div>
                     </div>
+                    <!-- <span class="text-green-500 font-medium">%52+ </span> -->
+                    <span class="text-500">Valor de la venta promedio</span>
                 </div>
+            </div>
 
 
-
-
-
-            <RouterView>
-
-            </RouterView>
-                <!-- <div class="col-12 lg:col-6 xl:col-3">
+            <!-- <div class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -56,8 +61,8 @@
                 <span class="text-green-500 font-medium">520 </span>
                 <span class="text-500">newly registered</span>
             </div>
-        </div>
-        <div class="col-12 lg:col-6 xl:col-3">
+        </div> -->
+            <!-- <div class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -71,9 +76,9 @@
                 <span class="text-green-500 font-medium">85 </span>
                 <span class="text-500">responded</span>
             </div>
-        </div>
+        </div> -->
 
-        <div class="col-12 xl:col-6">
+            <!-- <div class="col-12 xl:col-6">
             <div class="card">
                 <h5>Recent Sales</h5>
                 <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
@@ -180,80 +185,32 @@
                     </li>
                 </ul>
             </div>
-        </div>
-        <div class="col-12 xl:col-6">
-            <div class="card">
-                <h5>Sales Overview</h5>
-                <Chart type="line" :data="lineData" :options="lineOptions" />
-            </div>
-            <div class="card">
-                <div class="flex align-items-center justify-content-between mb-4">
-                    <h5>Notifications</h5>
-                    <div>
-                        <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu1.toggle($event)"></Button>
-                        <Menu ref="menu1" :popup="true" :model="items"></Menu>
+        </div> -->
+            <div class="col-12 ">
+                <div class="card">
+                    <h5 style="background-color: ;"   >Historico de ordenes <span :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.order_status }}s</span>  </h5>
+                    <!-- <Chart type="bar" :data="lineData" :options="lineOptions" /> -->
+                    <div class="card" >
+                        <Button class="p-0" text @click="visible_graph = true" size="small" style="border: none;" :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'"><i class="text-4xl" style="transform: rotate(45deg);;" :class="PrimeIcons.ARROW_A"></i></Button>
+                        <Chart type="line" :data="store.ticketsCharData" :options="chartOptions" class="h-30rem" />
                     </div>
                 </div>
 
-                <span class="block text-600 font-medium mb-3">TODAY</span>
-                <ul class="p-0 mx-0 mt-0 mb-4 list-none">
-                    <li class="flex align-items-center py-2 border-bottom-1 surface-border">
-                        <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                            <i class="pi pi-dollar text-xl text-blue-500"></i>
-                        </div>
-                        <span class="text-900 line-height-3"
-                            >Richard Jones
-                            <span class="text-700">has purchased a blue t-shirt for <span class="text-blue-500">79$</span></span>
-                        </span>
-                    </li>
-                    <li class="flex align-items-center py-2">
-                        <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-orange-100 border-circle mr-3 flex-shrink-0">
-                            <i class="pi pi-download text-xl text-orange-500"></i>
-                        </div>
-                        <span class="text-700 line-height-3">Your request for withdrawal of <span class="text-blue-500 font-medium">2500$</span> has been initiated.</span>
-                    </li>
-                </ul>
 
-                <span class="block text-600 font-medium mb-3">YESTERDAY</span>
-                <ul class="p-0 m-0 list-none">
-                    <li class="flex align-items-center py-2 border-bottom-1 surface-border">
-                        <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                            <i class="pi pi-dollar text-xl text-blue-500"></i>
-                        </div>
-                        <span class="text-900 line-height-3"
-                            >Keyser Wick
-                            <span class="text-700">has purchased a black jacket for <span class="text-blue-500">59$</span></span>
-                        </span>
-                    </li>
-                    <li class="flex align-items-center py-2 border-bottom-1 surface-border">
-                        <div class="w-3rem h-3rem flex align-items-center justify-content-center bg-pink-100 border-circle mr-3 flex-shrink-0">
-                            <i class="pi pi-question text-xl text-pink-500"></i>
-                        </div>
-                        <span class="text-900 line-height-3"
-                            >Jane Davis
-                            <span class="text-700">has posted a new questions about your product.</span>
-                        </span>
-                    </li>
-                </ul>
             </div>
-            <div
-                class="px-4 py-5 shadow-2 flex flex-column md:flex-row md:align-items-center justify-content-between mb-3"
-                style="border-radius: 1rem; background: linear-gradient(0deg, rgba(0, 123, 255, 0.5), rgba(0, 123, 255, 0.5)), linear-gradient(92.54deg, #1c80cf 47.88%, #ffffff 100.01%)"
-            >
-                <div>
-                    <div class="text-blue-100 font-medium text-xl mt-2 mb-3">TAKE THE NEXT STEP</div>
-                    <div class="text-white font-medium text-5xl">Try PrimeBlocks</div>
-                </div>
-                <div class="mt-4 mr-auto md:mt-0 md:mr-0">
-                    <a href="https://www.primefaces.org/primeblocks-vue" class="p-button font-bold px-5 py-3 p-button-warning p-button-rounded p-button-raised"> Get Started </a>
-                </div>
-            </div>
-        </div> -->
-            </div>
+        </div>
 
+
+        <Dialog v-model:visible="visible_graph" modal header="Periodo" :style="{ width: '90vw',height:'max-content' }">
+<!-- <RepValorVentas></RepValorVentas> -->     
+                        <Chart type="line" :data="store.ticketsCharData" :options="chartOptions" style="height: 60vh;" />
+
+</Dialog>
+
+    </div>
 </template>
 
-
+<!-- 
 <script setup>
 
 
@@ -277,25 +234,6 @@ const { isDarkTheme } = useLayout();
 
 const ruta = useRoute()
 
-
-const menus = ref([
-    {
-        name: 'Valor ventas',
-        to: '/reporte-ventas/valor-ventas'
-    },
-    {
-        name: 'No. Ordenes',
-        to: '/reporte-ventas/valor-ventas'
-    },
-    {
-        name: 'Ticket promedio',
-        to: '#'
-    },
-    {
-        name: 'Clientes',
-        to: '#'
-    }
-])
 
 
 
@@ -470,6 +408,129 @@ function formatDate(date) {
 const selectedCountry = ref({})
 
 const countries = ref()
+
+
+</script> -->
+
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { salesReport, formatToColombianPeso } from "../../service/valoresReactivosCompartidos";
+import { URI } from "../../service/conection";
+import {useReportesStore} from '@/store/reportes.js'
+import { PrimeIcons } from "primevue/api";
+const store = useReportesStore()
+const visible_graph = ref(false)
+onMounted(() => {
+    // store.fetchDilyReport()
+    chartOptions.value = setChartOptions();
+});
+
+
+const chartData = ref();
+const chartOptions = ref();
+
+
+
+
+
+const fetchSalesReport = async () => {
+    //   const formattedStartDate = formatDate(startDate.value);
+    //   const formattedEndDate = formatDate(endDate.value);
+    //   const siteIds = selectedSites.value.map(site => site.site_id).join(',');
+
+    // Construir la URL con parámetros de consulta
+    const queryParams = new URLSearchParams({
+        site_ids: '7',
+        status: 'enviada',
+        start_date: '2024-01-01',
+        end_date: '2024-02-08'
+    });
+
+    const url = `${URI}/daily_sales?${queryParams.toString()}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET', // Método GET especificado aquí
+            headers: {
+                'Content-Type': 'application/json',
+                // Agrega aquí otros encabezados si son necesarios
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // salesReport.value = data
+        return (data)
+
+
+        // Maneja la respuesta
+        console.log(data);
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+};
+
+
+
+// fetchSalesReport()
+
+
+
+// onMounted(() => {
+//     store.fetchSalesReport()    
+
+// })
+
+
+
+
+
+
+const setChartOptions = () => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+    return {
+        maintainAspectRatio: true,
+        aspectRatio: 3,
+        plugins: {
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    display:false
+                }
+            },
+            y: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    
+                }
+            }
+        }
+    };
+}
+
+
+
 
 
 </script>

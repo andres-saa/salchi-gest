@@ -2,30 +2,18 @@
   <div class="col-12 m-auto p-0"> 
 
 
-    <div class="col-12" v-if="charging" style="display: flex;flex-direction: column; pointer-events: none; align-items: center; justify-content: center; position: fixed;z-index: 1000;left: 0;top: 0; height: 100%;background-color: rgba(0, 0, 0, 0.5);">
-
-
-<p class="text-3xl" style="font-weight: bold; color: white; text-shadow: 0 0 10px rgba(0, 0, 0, 0.551);">CARGANDO PERMISOS</p>
-<div style="display: flex;">
-
-  
-      <ProgressSpinner  style="width: 100px; height: 100px" strokeWidth="4" fill="var(--surface-ground)"
-      animationDuration=".5s" aria-label="Custom ProgressSpinner" />
-
-  </div>
-</div>
-
 
     <DataTable ref="dt" :value="permisos" v-model:selection="selectedPermisos" dataKey="id" :paginator="true"
                   
                   :rows="10" :filters="filters"
                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                   :rowsPerPageOptions="[5, 10, 25,100]"
+                  
                   currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} permisoes"
                   responsiveLayout="scroll" scrollable scroll-height="62vh" >
                   <template #header style="z-index:200">
                       <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" >
-                          <p class="m-0  text-2xl my-4">permisos </p> 
+                          <p class="m-0  text-2xl my-4">Gestion de permisos </p> 
                           <span class="block mt-2 md:mt-0 p-input-icon-left">
                               <i class="pi pi-search" />
                               <InputText class="" v-model="filters['global'].value" placeholder="Buscar..." />
@@ -54,27 +42,27 @@
                       </template>
                   </Column>
 
-                  <Column class="p-2" field="fecha" header="Fecha de solicitud" :sortable="true"
-                      headerStyle="width:10rem; min-width:min-content; ">
+                  <Column class="p-2" field="fecha" header="Fecha" :sortable="true"
+                      headerStyle="width:10rem; min-width:10rem; ">
                       <template #body="permiso">
                           <span class="p-column-title">Code</span>
                           <!-- {{ permiso.data.id }} -->
-                          {{ permiso.data.history?.filter(e => e.status == 'generado')[0].timestamp?.split(' ')[0] }}
+                          {{ permiso.data.history?.filter(e => e.status == 'generado')[0].timestamp }}
                       </template>
                   </Column>
 
 
                   <Column class="p-2" field="employer_id" header=" Empleado" :sortable="true"
-                      headerStyle="width:20rem; min-width:max-content; ">
+                      headerStyle="width:20rem; min-width:15rem; ">
                       <template #body="permiso">
                           <span class="p-column-title">Code</span>
                           <!-- {{ permiso.data.id }} -->
-                          {{ allUsersBasic.filter(e => e.id == permiso.data.employer_id)[0]?.name  }}
+                          {{ allUsersBasic.filter(e => e.id == permiso.data.employer_id)[0]?.name?.split(' ').slice(0,3).join(" ")  }}
                       </template>
                   </Column>
 
 
-                  <Column class="p-2" field="start_date" header="Fecha de inicio" :sortable="true"
+                  <Column class="p-2" field="start_date" header="Inicio" :sortable="true"
                       headerStyle="width:10rem; min-width:10rem; ">
                       <template #body="permiso">
                           <span class="p-column-title">Code</span>
@@ -83,8 +71,8 @@
                       </template>
                   </Column>
 
-                  <Column class="p-2" field="end_date" header="Fecha finalizacion" :sortable="true"
-                      headerStyle="width:15rem; min-width:max-content; ">
+                  <Column class="p-2" field="end_date" header="Fin" :sortable="true"
+                      headerStyle="width:15rem; min-width:10rem; ">
                       <template #body="permiso">
                           <span class="p-column-title">Code</span>
                           <!-- {{ permiso.data.id }} -->
@@ -93,7 +81,7 @@
                   </Column>
 
                   <Column class="p-2" field="observations" header="Observaciones del empleado" :sortable="true"
-                      headerStyle="width:30rem; min-width:max-content; ">
+                      headerStyle="width:30rem; min-width:30rem; ">
                       <template #body="permiso">
                           <span class="p-column-title">Code</span>
                           <!-- {{ permiso.data.id }} -->
@@ -131,7 +119,8 @@
 <Button class="p-0"  outlined severity="info" label="Small"  @click="open(permiso.data)" text > <i class="text-xl" style="font-weight: bold;" :class="PrimeIcons.EYE"> </i> </Button>
                           <Button class="p-0" :disabled="permiso.data.status.status == 'aprobado' " outlined severity="success" label="Small" text  @click="openAceptar(permiso.data)"  style="display: flex;justify-content: center;" > <i class="text-xl" style="font-weight: bold;" :class="PrimeIcons.CHECK"></i> </Button>
                           <Button class="p-0" :disabled="permiso.data.status.status == 'rechazado' && permiso.data.status.status != 'aprobado' " outlined severity="danger" label="Small"  @click="openRechazar(permiso.data)" style="display: flex;justify-content: center;" text> <i  class="text-xl" style="font-weight: bold;" :class="PrimeIcons.TIMES"></i> </Button>
-    
+                          <Button class="p-0" @click="openBorrar(permiso.data)" severity="danger" text=""> <i class="text-xl" style="font-weight: bold;" :class="PrimeIcons.TRASH"></i>  </Button>
+
                         
 </div>
                             <!-- {{ permiso.data.status }} -->
@@ -324,6 +313,18 @@ style="font-size: 11pt; font-weight: normal;color: black; font-family: Arial, He
 
 
 
+  <Dialog header="Confirmacion" v-model:visible="consfirmacionBorrar" :style="{ width: '350px' }" :modal="true">
+      <h5>Seguro que desea eliminar el permiso de {{ currentUser.name }}</h5>
+      <span class="p-input-icon-left " style="width: 100%;">
+          <i class="pi pi-pencil" />
+          <!-- <InputText v-model="nameNewCategorie" class="w-100" style="width: 100%;"  type="text"  /> -->
+      </span>
+
+      <Button @click="deletePermission(currentPermiso)" style="margin:auto ; background-color:rgb(105, 255, 157) ; color: black;border: none;" class="m-auto my-4 text-center"> <span class="text-center col-12 p-0">Si, continuar</span></Button>
+      <Button @click="consfirmacionBorrar = false" style=" background-color: rgb(255, 156, 156);color: rgba(0, 0, 0, 0.864); border: none;" class="m-auto my-4 ml-4 text-center"> <span class="text-center col-12 p-0">No, talvez luego</span></Button>
+
+  </Dialog>
+
 
 
 
@@ -335,7 +336,7 @@ style="font-size: 11pt; font-weight: normal;color: black; font-family: Arial, He
       </span>
 
       <Button @click="acceptPermission(currentPermiso)" style="margin:auto ; background-color:rgb(105, 255, 157) ; color: black;border: none;" class="m-auto my-4 text-center"> <span class="text-center col-12 p-0">Si, continuar</span></Button>
-      <Button  style="background-color: rgb(255, 156, 156);color: rgba(0, 0, 0, 0.864); border: none;" class="m-auto my-4 ml-4 text-center"> <span class="text-center col-12 p-0">No, talvez luego</span></Button>
+      <Button  @click="consfirmacionAceptar = false" style="background-color: rgb(255, 156, 156);color: rgba(0, 0, 0, 0.864); border: none;" class="m-auto my-4 ml-4 text-center"> <span class="text-center col-12 p-0">No, talvez luego</span></Button>
 
   </Dialog>
 
@@ -349,7 +350,7 @@ style="font-size: 11pt; font-weight: normal;color: black; font-family: Arial, He
       </span>
 
       <Button @click="rejectPermission(currentPermiso)"  style="margin:auto ; background-color:rgb(105, 255, 157) ; color: black;border: none;" class="m-auto my-4 text-center"> <span class="text-center col-12 p-0">Si, continuar</span></Button>
-      <Button  style="background-color: rgb(255, 156, 156);color: rgba(0, 0, 0, 0.864); border: none;" class="m-auto my-4 ml-4 text-center"> <span class="text-center col-12 p-0">No, talvez luego</span></Button>
+      <Button  @click="consfirmacionRechazar = false" style="background-color: rgb(255, 156, 156);color: rgba(0, 0, 0, 0.864); border: none;" class="m-auto my-4 ml-4 text-center"> <span class="text-center col-12 p-0">No, talvez luego</span></Button>
 
   </Dialog>
 
@@ -364,6 +365,8 @@ import router from '../../router';
 import { useRoute } from 'vue-router';
 import { getUserDni, getUserId,getUserBasic,getUsersBasic } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
+import { useReportesStore } from '../../store/reportes';
+const store = useReportesStore()
 
 const dt = ref(null)
 const route = useRoute();
@@ -386,7 +389,7 @@ const permisos = ref([])
 const currentUser = ref({})
 const consfirmacionAceptar = ref(false)
 const consfirmacionRechazar = ref(false)
-
+const consfirmacionBorrar =ref(false)
 const selectedPermisos = ref([])
 
 const charging = ref(true)
@@ -438,6 +441,13 @@ const openAceptar = (permiso) => {
   getUser(permiso.employer_id)
 }
 
+const openBorrar = (permiso) => {
+  consfirmacionBorrar.value = true
+  currentPermiso.value = permiso
+
+  getUser(permiso.employer_id)
+}
+
 const openRechazar = (permiso) => {
   consfirmacionRechazar.value = true
   currentPermiso.value = permiso
@@ -469,6 +479,39 @@ function acceptPermission(permiso) {
   } )
   .then(updatedData => console.log('Permiso aprobado:', updatedData))
   .catch(error => console.error('Error:', error));
+}
+
+
+
+function deletePermission(permisoId) {
+    store.setLoading(true, 'eliminando permiso')
+    consfirmacionBorrar.value = false;
+
+    // Enviar la solicitud de eliminación
+
+        fetch(`${URI}/permission/${permisoId.id}`, { // Asegúrate de que URI esté correctamente definida
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log(`Permiso con ID ${permisoId} eliminado`);
+            show.value = false;
+            // store.setLoading(false, 'eliminando permiso')
+
+            // Actualizar la lista de permisos después de la eliminación
+            getPermissions(tipo.value, status.value).then(data => permisos.value = data);
+        } else {
+            console.error('Error al intentar eliminar el permiso');
+            // store.setLoading(false, 'eliminando permiso')
+
+        }
+    })
+    .catch(error => console.error('Error:', error));
+    // store.setLoading(false, 'eliminando permiso')
+
 }
 
 
@@ -587,6 +630,7 @@ fetch(`${URI}/employer/${dni}`)
 
 async function getPermissions() {
 // URL de la API para obtener los permisos, reemplaza con tu URL real
+store.setLoading(true, 'cargando permisos')
 const url = `${URI}/permissions/  `;
 
 try {
@@ -595,17 +639,24 @@ try {
 
   // Verifica si la respuesta es exitosa
   if (!response.ok) {
+    store.setLoading(false, 'cargando permisos')
+
     throw new Error(`Error al obtener los permisos: ${response.status}`);
+
   }
 
   // Parsea y retorna los datos de la respuesta
   charging.value = false
+  store.setLoading(false, 'cargando permisos')
+
   const permissionsData = await response.json();
   return permissionsData;
  
 } catch (error) {
   // Maneja cualquier error que ocurra durante la solicitud
   console.error('Error en getPermissions:', error);
+  store.setLoading(false, 'cargando permisos')
+
   throw error; // O manejar el error de la manera que prefieras
 }
 }
