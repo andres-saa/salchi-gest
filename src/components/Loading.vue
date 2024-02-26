@@ -11,7 +11,7 @@ border-radius: 1rem;;">
 <img  src="/images/logo.png" style="width: 5rem;"><img>
 
 
-    <p class="text-3xl p-3"  style="width: min-content; font-weight: bold;text-transform: uppercase; color: var(--orange-500);border-radius: 10rem; ;background-color: rgba(255, 255, 255, 0);">{{store.loading.tittle      }}</p>
+    <p class="text-3xl p-3 text-center"  style="width: min-content; font-weight: bold;text-transform: uppercase; color: var(--orange-500);border-radius: 10rem; ;background-color: rgba(255, 255, 255, 0);">{{store.loading.tittle      }}</p>
 <div style="display: flex;">
 
     
