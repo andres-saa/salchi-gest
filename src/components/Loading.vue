@@ -3,7 +3,7 @@
 <Transition name="loading">
     <div v-if="store.loading.visible" class="col-12" v style="display: flex;flex-direction: column; pointer-events: none; align-items: center; justify-content: center; position: fixed;z-index: 10000;left: 0;top: 0;backdrop-filter:blur(5px); height: 90vh;background-color: rgba(255, 255, 255, 0.537);">
 
-<div class="p-5" style="background-color: ;height: min-content;display: flex;flex-direction: column;align-items: center;
+<div class="p-5" style="background-color: ;height: min-content;display: flex;flex-direction: column;align-items: center;justify-content: center;
 
 
 border-radius: 1rem;;">
@@ -11,7 +11,7 @@ border-radius: 1rem;;">
 <img  src="/images/logo.png" style="width: 5rem;"><img>
 
 
-    <p class="text-3xl p-3" style="font-weight: bold;text-transform: uppercase; color: var(--orange-500);border-radius: 10rem; ;background-color: rgba(255, 255, 255, 0);">{{store.loading.tittle      }}</p>
+    <p class="text-3xl p-3"  style="width: min-content; font-weight: bold;text-transform: uppercase; color: var(--orange-500);border-radius: 10rem; ;background-color: rgba(255, 255, 255, 0);">{{store.loading.tittle      }}</p>
 <div style="display: flex;">
 
     
