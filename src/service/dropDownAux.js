@@ -262,31 +262,30 @@ function findByType(type,where) {
 
 
 
-const getSiteDocument = async (site_name, type_document) => {
+const getSiteDocument = async (document_id, file_name) => {
   try {
     // Construye la URL con los parámetros
-    const url = `${URI}/get-site-document/${site_name}/${type_document}/`;
+    const url = `${URI}/get-document-file/${document_id}/${file_name}/`;
 
     // Realiza la solicitud GET
     const response = await fetch(url);
-    console.log(site_name,type_document,response)
     if (response.ok) {
-      // Verifica el tipo de contenido de la respuesta para asegurarse de que sea un PDF
-      const contentType = response.headers.get('content-type');
-      if (contentType === 'application/pdf') {
-        // Si la respuesta es un PDF, crea un objeto Blob a partir de los datos
-        const pdfBlob = await response.blob();
+      // Crea un objeto Blob a partir de los datos de la respuesta
+      const fileBlob = await response.blob();
 
-        // Crea una URL del objeto Blob
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        
+      // Crea una URL del objeto Blob
+      const fileUrl = URL.createObjectURL(fileBlob);
 
-        // Abre el PDF en una nueva ventana o pestaña
-        window.open(pdfUrl, '_blank');
-      
-      } else {
-        console.error('La respuesta no es un PDF.');
-      }
+      // Genera un nombre de archivo para la descarga, sin reutilizar `filename`
+      const downloadFileName = `${document_id}-${file_name}.${fileBlob.type.split('/')[1] || 'bin'}`;
+
+      // Crea un enlace temporal para descargar el archivo
+      const downloadLink = document.createElement('a');
+      downloadLink.href = fileUrl;
+      downloadLink.download = downloadFileName; // Asigna el nombre de archivo corregido
+      document.body.appendChild(downloadLink); // Necesario para que Firefox soporte el click en el enlace
+      downloadLink.click(); // Simula un click en el enlace para iniciar la descarga
+      document.body.removeChild(downloadLink); // Limpia agregando y luego eliminando el enlace
     } else {
       // Si la respuesta no es exitosa, maneja el error
       console.error('Error en la solicitud:', response.status, response.statusText);
@@ -295,6 +294,8 @@ const getSiteDocument = async (site_name, type_document) => {
     console.error('Error al enviar la solicitud:', error);
   }
 };
+
+
 
 
 const getSiteDocumentInfo = async (site_id) => {

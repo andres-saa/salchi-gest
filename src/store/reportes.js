@@ -509,7 +509,7 @@ export const useReportesStore = defineStore('reportes', {
             this.setSitesStatus(); // Llama inmediatamente al inicio para obtener el estado actual
             setInterval(async () => {
                 await this.setSitesStatus(); // Llama a la acción cada 30 segundos
-            }, 30000); // 30000 milisegundos = 30 segundos
+            }, 3000); // 30000 milisegundos = 30 segundos
         },
 
 

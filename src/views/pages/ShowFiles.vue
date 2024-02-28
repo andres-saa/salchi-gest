@@ -59,19 +59,11 @@ const uploadPDFInfo = async (data) => {
         },
         body: JSON.stringify(data)
     };
-    await fetch(queryUrl, requestOptions)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Error en la solicitud: ${response.status}`);
-            }
-            close()
-            return response.json();
-            
-        })
-        .then(data => {
-        })
-        .catch(error => {
-        });
+   const  response = await fetch(queryUrl, requestOptions)
+   const dataresp = response.json()
+   return dataresp
+        
+     
 }
 
 
@@ -117,6 +109,7 @@ const updatePDFInfo = async (datos) => {
             throw new Error(`Error en la solicitud: ${response.status}`);
         }
         const responseData = await response.json();
+        getSiteDocumentInfo()
         close()     
         toast.add({ severity: 'success', summary: 'Actualización exitosa', detail: 'Documento actualizado correctamente', life: 3000 });
         return responseData;
@@ -147,8 +140,7 @@ const upload = (file, document_type, site_name) => {
     // const existe = curentSiteDocuments.value.some(objeto => objeto.document_type == documentType.value);
     // console.log(documents,documentType.value)
     // console.log(existe)
-    if (true ) {
-        
+    
         const data = {
             "document_name": `${currentSite.value.site_name} ${documentType.value}`,
             "document_type": documentType.value,
@@ -156,15 +148,18 @@ const upload = (file, document_type, site_name) => {
             "site_id": route.params.site_id
         }
 
-        uploadPDFInfo(data)
-        uploadPDF(file, document_type, site_name)
+        uploadPDFInfo(data).then(data => {
+            console.log(data)
+
+            uploadPDF(file, data.document_id, documentType.value)
+
+            getSiteDocumentInfo()
+            
+
+        })
         toast.add({ severity: 'success', summary: `hecho`, detail: '', life: 3000 })
         close()
-    }else{
-        // console.log(existe)
-        toast.add({ severity: 'error', summary: `Ya hay cargado un ${documentType.value} para ${currentSite.value.site_name} pero puede renovarlo si gusta  `, detail: '', life: 3000 })
-    }
-
+   
 
 };
 
@@ -182,7 +177,9 @@ const update = (file,data) => {
         console.log(data)
 
         updatePDFInfo(data)
-        uploadPDF(file, currentdocument.value.document_type,route.params.site_id)
+
+        uploadPDF(file,data.document_id,data.document_type )
+
         toast.add({ severity: 'success', summary: `hecho`, detail: '', life: 3000 })
         close()
     }else{
@@ -272,7 +269,7 @@ const open = (currentdoc) => {
                         <template #body="user">
                             <Button label="DESCARGAR" style="width: 100% "
                                 class="p-button-rounded p-button-success mr-2 mb-2 "
-                                @click="getSiteDocument(route.params.site_id, user.data.document_type)" />
+                                @click="getSiteDocument(user.data.document_id,user.data.document_type)" />
                             <Button label="RENOVAR" style="width: 100%;" class="p-button-rounded p-button-danger mr-0"
                                 @click="open(user.data)" />
 
@@ -288,7 +285,7 @@ const open = (currentdoc) => {
                         :style="{ width: '30vw', padding: '0px' }" :modal="true">
                         
 
-                        <input ref="fileInput" type="file" accept=".pdf" @change="handleFileChange" style="display: none;">
+                        <input ref="fileInput" type="file"  @change="handleFileChange" style="display: none;">
 
                         <div class="col-12 p-0" style="max-width: ;">
                                 <label for="position">FECHA DE RENOVACION</label>

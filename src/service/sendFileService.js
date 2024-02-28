@@ -1,14 +1,17 @@
 import { URI } from "./conection";
 
- function uploadPDF(pdfFile,type_document,site_id) {
-    // URL del servidor donde deseas enviar el PDF
-    const serverURL = `${URI}/upload-file-document/`;
+ function uploadPDF(pdfFile,document_id ,file_name ) {
+
+  if(!pdfFile){
+    return
+  }    // URL del servidor donde deseas enviar el PDF
+    const serverURL = `${URI}/upload-file-document/${document_id}`;
   
     // Crear un objeto FormData para enviar el archivo
     const formData = new FormData();
     formData.append('file', pdfFile);
-    formData.append('type_document', type_document);
-    formData.append('site_id', site_id);
+    formData.append('document_id', document_id);
+    formData.append('file_name', file_name);
   
     // Realizar una solicitud POST al servidor
     fetch(serverURL, {
