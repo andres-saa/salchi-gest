@@ -4,6 +4,8 @@
     <!-- {{ orden }} -->
     </div>
 
+    <Button size="small" severity="success" @click="exportCSV"> <i class="pr-3" :class="PrimeIcons.DOWNLOAD" ></i> Descargar reporte</Button>
+
     <div class="card p-4" style="">
         <DataTable paginator  :value="store.salesReport.total_sales.orders_info" tableStyle="min-width: 50rem"
         
@@ -91,7 +93,7 @@
     </div>
 
 
-    <Button @click="exportCSV"> hols</Button>
+    <!-- <Button  severity="success" @click="exportCSV"> Descargar reporte</Button> -->
 
     <OrderDialog>
 
