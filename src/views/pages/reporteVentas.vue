@@ -6,27 +6,27 @@
     </Transition> -->
 
 
-    <div style="position: relative;">
-        <div class="px-0 pt-0 col-12" style="display: flex;z-index: 99; position: sticky;top: 4rem;background-color:#fafafa; align-items: center;z-index: 900;">
+    <div style="position: relative; max-width: 1366px;" cls>
+        <div class="px-2 p-0 col-12" style="display: flex;z-index: 99; position: sticky;top: 4rem;background-color:#fafafa; align-items: center;z-index: 900;">
             <!-- <span class="p-0 m-0 text-xl" style="font-weight: bold;">Filtros</span> -->
         
-            <div class="col-12 grid gap m-0 py-2 px-0 " >
-                <div class="col-12 xl:col-2 px-2 p-2" style="height: 100%;">
-                <Dropdown v-model="store.order_status" :options="estadosDropValues" class="col-12 p-0 m-0" placeholder="Estado"></Dropdown>
+            <div class="col-12 grid gap m-0 py-0 px-0 " >
+                <div class="col-3 xl:col-2 px-2 p-2" style="height: 100%;">
+                <Dropdown size="small" v-model="store.order_status" :options="estadosDropValues" class="col-12 p-0 m-0" placeholder="Estado"></Dropdown>
 
             </div>
 
-            <div class="col-12 xl:col-5 p-2" style="height: 100%;">
+            <div class="col-4 xl:col-5 p-2" style="height: 100%;">
                 <MultiSelect display="chip" multiple v-model="store.selectedSites" optionLabel="site_name" :options="sites.filter(s => s.site_id != 12 & s.site_id !=13)" class="col-12 p-0 m-0" placeholder="Sedes"></MultiSelect>
 
             </div>
 
-            <div class="col-12 xl:col-3 p-2"  style="height: 100%; ">
+            <div class="col-4 xl:col-3 p-2"  style="height: 100%; ">
                 <InputText @click="showDateDialog = true" style="width: 100%;" :value="store.dateRangeDifference.rangeName || `${formatDate(store.dateRange.startDate) } | ${formatDate(store.dateRange.endDate)}`" placeholder="periodo"/>
 
             </div>
 
-            <div class="col-12 xl:col-2 p-2 " style="height: 100%;" >
+            <div class="col-1 xl:col-2 p-2 " style="height: 100%;" >
                 <Button    style="height: 100; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH"></i></Button>
             </div>
 
@@ -45,16 +45,16 @@
     
     </div>
 
-    <div class="contenedor mt-8" style="position: sticky;top: 4rem;z-index: 99;">
+    <div class="contenedor mt-5" style="position: sticky;top: 5rem;z-index: 99;">
 
-<span class="text-5xl pt-8" style="font-weight: bold;">Vision General</span>
+<span class="text-3xl pt-8 ml-3" style="font-weight: bold;">Vision General</span>
 
-<div class="col-12 px-0 p-0 my-4 p-2" style="overflow-x:auto; background-color: #ffffff;box-shadow: 0 1rem  1rem rgb(255, 255, 255);">
-    <div class="px-0 mx-0" style="width: max-content; background-color:#ffffff; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">
+<div class="col-12 px-3 p-0 my-2 p-2" style="overflow-x:auto; background-color: #fafafa;box-shadow: 0 1rem  1rem rgb(255, 255, 255);">
+    <div class="px-0 mx-0" style="width: max-content; background-color:#fafafa; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">
    <div v-for="boton in menus">
 
     <RouterLink :to="boton.to" >
-        <Button  :style="ruta.fullPath == boton.to? 'box-shadow: 0 4px 0 #ff6200;color:#000;font-weight:bold;':''" class="text-xl px-0 py-4 mx-0" text   severity="secondary" style=" border-radius: 0;">
+        <Button  size="medium" :style="ruta.fullPath == boton.to? 'box-shadow: 0 4px 0 #ff6200;color:#000;font-weight:bold;':''" class="text-md px-0 py-0 mx-0" text   severity="secondary" style=" border-radius: 0;">
             
             {{ boton.name }}
 
@@ -64,9 +64,9 @@
         </Button>
     </RouterLink>
    </div>
-   <div class="p-3" style="display: flex;align-items: center;background-color: rgba(245, 222, 179, 0); ">
+   <div class="p-0" style="display: flex;align-items: center;background-color: rgba(245, 222, 179, 0); ">
     
-          <Button  class="text-l btn-ocultar" text @click="store.toogleVisibleNotifications" :severity="store.visibleNotifications? 'danger': 'success'"  rounded style="font-weight: bold; ">
+          <Button size="medium"   class="text-md px-0 py-0 mx-0 text-l btn-ocultar" text @click="store.toogleVisibleNotifications" :severity="store.visibleNotifications? 'danger': 'success'"  rounded style="font-weight: bold; ">
             <span>
                <span >{{ store.visibleNotifications? 'Ocultar notificaciones': 'Mostrar notificaciones' }} </span> <i  :class="PrimeIcons.ANGLE_DOUBLE_RIGHT"></i>
             </span>
@@ -216,6 +216,7 @@ import RepNotificaciones from './RepNotificaciones.vue';
 const store = useReportesStore()
 const { isDarkTheme } = useLayout();
 
+
 const estadosDropValues = ref(['enviada', 'cancelada', 'en preparacion'])
 const estadosDropValue = ref('enviada')
 const ruta = useRoute()
@@ -224,11 +225,6 @@ const selectedSites = ref([])
 const showDateDialog = ref(false)
 const startDate = ref(new Date(new Date().setDate(new Date().getDate() - 7))); // Fecha de inicio hace 7 días
 const endDate = ref(new Date());
-
-
-
-
-
 
 
 

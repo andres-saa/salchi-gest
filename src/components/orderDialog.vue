@@ -46,11 +46,14 @@
                                 <span> Orden No.</span>
                                 <span> Sede</span>
                                 <span> Fecha</span>
+                                <span> Metodo de pago</span>
+
                             </div>
 
                             <div style="display: flex;font-weight: 200; flex-direction: column;">
                                 <span> |</span>
                                 <span> | </span>
+                                <span> |</span>
                                 <span> |</span>
                             </div>
 
@@ -58,6 +61,7 @@
                                 <span> {{ store.visibleOrder.order.order_id }}</span>
                                 <span> {{ store.visibleOrder.order.site_name }}</span>
                                 <span> {{ store.visibleOrder.order?.status?.timestamp.split(' ')[0] }}</span>
+                                <span> {{ store.visibleOrder.order?.payment_method }}</span>
                             </div>
 
                         </div>
@@ -83,12 +87,14 @@
                             </div>
 
                             <div style="display: flex;font-weight: 200; flex-direction: column;">
-                                <span> |</span>
                                 <span> | </span>
                                 <span> |</span>
+                                <span> |</span>
+
                             </div>
 
                             <div style="display: flex; font-weight: 400; flex-direction: column;">
+
                                 <span> {{ formatToColombianPeso(store.visibleOrder.order.total_price) }}</span>
 
                                 <span> {{ formatToColombianPeso(store.visibleOrder.order.delivery_price) }}</span>
