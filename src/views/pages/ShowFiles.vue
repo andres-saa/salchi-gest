@@ -350,7 +350,7 @@ const open = (currentdoc) => {
 
                         </div>
 
-                        <input ref="fileInput" type="file" accept=".pdf" @change="handleFileChange" style="display: none;">
+                        <input ref="fileInput" type="file"  @change="handleFileChange" style="display: none;">
 
                         <p class="p-3" v-show="file" style="background-color:rgba(19, 164, 0, 0.306);">
                             <i class="pi pi-check" style="color: slateblue"></i> {{ file ? `${file.name} :    verifique si este es su documeto antes de envirlo` : '' }} 
