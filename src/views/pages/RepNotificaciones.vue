@@ -15,7 +15,7 @@
                 <li style="display: flex; align-items: center; justify-content: space-between;" v-for="sede in store.sitesStatus.filter(s => s.online_status)" class="flex align-items-center py-2 border-bottom-1 surface-border">
                     <div style="display: flex; align-items: center;" class=" p-0">
                         <div
-                        class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
+                        class="w-2rem h-2rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
                         <img style="width: 100%;border-radius: 0.5rem; object-fit: cover; aspect-ratio: 1 / 1;" :src="`${URI}/read-product-image/96/site-${sede.id}`" alt="">
                     </div>
                     <span class="text-900 line-height-3">{{ sede.site_name }}
@@ -42,7 +42,7 @@
                 <li style=" display: flex; align-items: center; justify-content: space-between;" v-for="sede in store.sitesStatus.filter(s => !s.online_status)" class="flex align-items-center py-2 border-bottom-1 surface-border">
                     <div style="display: flex; align-items: center;" class=" p-0">
                         <div
-                        class="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
+                        class="w-2rem h-2rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
                         <img style="width: 100%;border-radius: 0.5rem; object-fit: cover; aspect-ratio: 1 / 1;" :src="`${URI}/read-product-image/96/site-${sede.id}`" alt="">
 
 

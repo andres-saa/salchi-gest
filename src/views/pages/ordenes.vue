@@ -6,30 +6,33 @@
 
     <Button size="small" class="py-2"  severity="success" @click="exportCSV"> <i class="pr-3 " :class="PrimeIcons.DOWNLOAD" ></i> Descargar reporte</Button>
 
-    <div class="card p-0 m-0 col-12 my-4" style="">
+    <div class="flex flex-wrap align-items-center justify-content-between gap-2 my-5 pl-0 ml-0">
+                    <span class="text-l p-0  text-900 font-bold">Ordenes {{ store.order_status }}s entre {{ store.formatDate(store.dateRange.startDate)  }} y {{ store.formatDate(store.dateRange.endDate)  }} </span>
+                    <div class="flex p-0  flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
+                           
+                            <span class="block mt-2 md:mt-0 py-0">
+                                <!-- <i class="pi pi-search pr-3" /> -->
+                                <InputText class="p-2"  v-model="filters['global'].value" placeholder="Buscar..." />
+                            </span>
+                        </div>
+                </div>
+
+
+
         <DataTable paginator  :value="store.salesReport.total_sales.orders_info" tableStyle="min-width: 50rem"
         
         
-        :rows="5" :filters="filters"
+        :rows="10" :filters="filters"
                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                   :rowsPerPageOptions="[5, 10, 25,100]"
                   currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} ordenes"
                   responsiveLayout="scroll" scrollable scroll-height="62vh">
 
                   
-            <template #header>
-                <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                    <span class="text-xl text-900 font-bold">Ordenes {{ store.order_status }}s entre {{ store.formatDate(store.dateRange.startDate)  }} y {{ store.formatDate(store.dateRange.endDate)  }} </span>
-                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
-                           
-                            <span class="block mt-2 md:mt-0 p-input-icon-left py-0">
-                                <i class="pi pi-search" />
-                                <InputText class="" v-model="filters['global'].value" placeholder="Search..." />
-                            </span>
-                        </div>
-                </div>
+            <template>
+                
             </template>
-            <Column field="order_id" header="Id">
+            <Column field="order_id" header="Id" class="p-0" headerStyle="max-width:4rem; width:4rem">
             
                 <template #body="slotProps">
                     {{slotProps.data.order_id}}
@@ -41,28 +44,28 @@
                     <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="w-6rem border-round" />
                 </template>
             </Column> -->
-            <Column field="total_price" header="Monto">
+            <Column field="total_price" header="Monto" class="p-0" headerStyle="max-width:10rem; width:5rem">
                 <template #body="slotProps">
                     <!-- {{ formatCurrency(slotProps.data.price) }} -->
                     {{ formatToColombianPeso(slotProps.data.total_price)  }}
                 </template>
             </Column>
 
-            <Column field="site_name" header="Sede">
+            <Column field="site_name" header="Sede" class="p-0" headerStyle="max-width:6rem; width:6rem">
                 <template #body="slotProps">
                     <!-- {{ formatCurrency(slotProps.data.price) }} -->
                     {{ formatToColombianPeso(slotProps.data.site_name)  }}
                 </template>
             </Column>
 
-            <Column field="status.timestamp" header="Fecha y hora" headerStyle="width:10rem; min-width:8rem ">
+            <Column field="status.timestamp" class="p-0" header="Fecha y hora" headerStyle="width:10rem; min-width:8rem ">
                 <template #body="slotProps">
                     <!-- {{ formatCurrency(slotProps.data.price) }} -->
                     {{ slotProps.data.status.timestamp}}
                 </template>
             </Column>
 
-            <Column v-if="store.order_status == 'cancelada'" headerStyle="width:5rem; min-width:20rem; " field="status.reazon" header="Motivo">
+            <Column class="p-0" v-if="store.order_status == 'cancelada'" headerStyle="width:30rem; max-width:40rem; " field="status.reazon" header="Motivo">
                 <template #body="slotProps">
                     <!-- {{ formatCurrency(slotProps.data.price) }} -->
                    <span class="motivo">{{ slotProps.data.status.reazon?.toLowerCase()}}.</span> 
@@ -70,27 +73,27 @@
             </Column>
 
 
-            <Column field="category" header=""></Column>
+            <!-- <Column  field="category" header=""></Column> -->
             <!-- <Column field="rating" header="Reviews">
                 <template #body="slotProps">
                     <Rating :modelValue="slotProps.data.order_id" readonly :cancel="false" />
                 </template>
             </Column> -->
-            <Column header="Status">
+            <Column header="Status" class="p-0"> 
                 <template #body="slotProps">
                     <Tag :value="slotProps.data.status?.status" :severity="getSeverity(slotProps.data?.status?.status)" />
                 </template>
             </Column>
 
 
-            <Column header="Aacciones" frozen alignFrozen="right">
+            <Column class="p-0" header="" frozen alignFrozen="right" headerStyle="width:0.5rem; max-width:0.5rem ">
                 <template #body="slotProps">
-                    <Button @click="store.setVisibleOrder(true,slotProps.data)" text ><i class="text-2xl col-12 p-0" :class="PrimeIcons.EYE"></i></Button>
+                    <Button style="width: min-content;" @click="store.setVisibleOrder(true,slotProps.data)" text ><i class="text-2xl  p-0" :class="PrimeIcons.EYE"></i></Button>
                 </template>
             </Column>
             <!-- <template #footer> In total there are {{ products ? products.length : 0 }} products. </template> -->
         </DataTable>
-    </div>
+
 
 
     <!-- <Button  severity="success" @click="exportCSV"> Descargar reporte</Button> -->
@@ -160,6 +163,7 @@ const obtenerDatosFiltrados = async () => {
 
     // Ahora podemos trabajar con los datos actualizados
     Orders1 = Orders1.concat([...store.salesReport.total_sales.orders_info]);
+    // store.order_status = store.order_status == 'enviada' ? 'cancelada' : 'enviada';
 
     if (!filters?.value?.global.value) {
         return Orders1
@@ -167,7 +171,8 @@ const obtenerDatosFiltrados = async () => {
 
     const filtroGlobal = filters.value.global.value.trim().toLowerCase();
 
-    
+
+    // store.fetchSalesReport()
 
     return Orders1.filter(order => {
         // Asumiendo que `order` es un objeto y comprobamos cada propiedad

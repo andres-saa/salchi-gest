@@ -7,61 +7,56 @@
 
 
     <div class="col-12 p-0 m-0 " style="position: relative; max-width: 1366px;" cls>
-        <div class="px-2 py-1 col-12 mx-0" style="display: flex;z-index: 99; overflow-x:auto;  top: 4rem;background-color:#fafafa;max-width: ; align-items: center;z-index: 900;">
-            <!-- <span class="p-0 m-0 text-xl" style="font-weight: bold;">Filtros</span> -->
-        
-            <div class="grid  gap m-0 py-0 px-0 "  >
-
-
-                <div class="col-3 p-2">
-                    <Dropdown style="width: 100%;"  size="small" v-model="store.order_status" :options="estadosDropValues" class=" p-0 m-0" placeholder="Estado"></Dropdown>
-
-                </div>
-               
-               
-
-                <div class="col-5 p-2">
-                    <MultiSelect  style="width: 100%;" display="chip" multiple v-model="store.selectedSites" optionLabel="site_name" :options="sites.filter(s => s.site_id != 12 & s.site_id !=13)" class="col-12 p-0 m-0" placeholder="Sedes"></MultiSelect>
-
-
-
-           
-                </div>
-    
-                <div class="col-3 p-2">
-
-                    <InputText class="text-center "  @click="showDateDialog = true" style="width: 100%;" :value="store.dateRangeDifference.rangeName || `${formatDate(store.dateRange.startDate) } | ${formatDate(store.dateRange.endDate)}`" placeholder="periodo"/>
-
-      
-
-                </div>
-               
        
-                <div class="col-1 p-2">
-                    <Button class="text-center "   style="height: 100%;width: 100%; display: flex;justify-content:center ; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH"></i></Button>
-   
-
-                </div>
-                
+        <div class="col-12 px-3 py-0 mb-3 " style="overflow-x:auto;filter:drop-shadow(0 0 0.4rem rgba(0, 0, 0, 0.138));">
+    <div class="px-0 mx-0" style="width: max-content; background-color:rgba(250, 250, 250, 0); display:  flex;color: ; justify-content: start;align-items: center; gap: 2rem;">
 
 
-            
 
-   
-
-        </div>
+     
 
 
-        
-    
-    
-    
-    
-        </div>
+
+                    <Dropdown class="text-sm"   v-model="store.order_status" :options="estadosDropValues"  placeholder="Estado"></Dropdown>
+
+
+       
+                    <MultiSelect  style="width: 30rem;" display="chip" multiple v-model="store.selectedSites" optionLabel="site_name" :options="sites.filter(s => s.site_id != 12 & s.site_id !=13)" class="text-sm" placeholder="Sedes"></MultiSelect>
+
+
+                    <InputText class="text-center "  @click="showDateDialog = true" style="" :value="store.dateRangeDifference.rangeName || `${formatDate(store.dateRange.startDate) }  |  ${formatDate(store.dateRange.endDate)}`" placeholder="periodo"/>
+
+
+                    <Button class="text-center p-2"   style="height: 100%;width:min-content;aspect-ratio:  1 / 1;border-radius: 50%; display: flex;justify-content:center ; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH" style="padding: 0.2rem;"></i></Button>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
     <div class="contenedor mt-5" style="position: sticky;top: 0.8rem;z-index: 99;">
 
-<span class="text-3xl pt-8 ml-3" style="font-weight: bold;">Vision General</span>
+
+
+
+
+
+
+
+
+
+
+<span class="text-3xl mt-8 ml-3" style="font-weight: bold;">Vision General</span>
 
 <div class="col-12 px-3 py-0 my-3 p-2" style="overflow-x:auto; background-color: #fafafa;">
     <div class="px-0 mx-0" style="width: max-content; background-color:#fafafa; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">

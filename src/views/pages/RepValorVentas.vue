@@ -2,7 +2,7 @@
     <div class="p-0 m-0" >
 
         <div class="grid col-12 p-0 m-0">
-            <div class="col-12 lg:col-6 p-0 ">
+            <div class="col-12 lg:col-6 px-0 lg:pl-0 ">
                 <div class="card mb-0">
                     <div class="flex justify-content-between mb-3">
                         <div>
@@ -28,7 +28,7 @@
                     
                 </div>
             </div>
-            <div class="col-12 lg:col-6 px-0" style="height: ;">
+            <div class="col-12 lg:col-6 px-0 lg:pr-0" style="height: ;">
                 <div class="card mb-0" style="height: 100%;">
                     <div class="flex justify-content-between mb-3">
                         <div>
@@ -190,10 +190,10 @@
                 <div class="card">
                     <h5 style="background-color: ;"   >Historico de ordenes <span :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.order_status }}s</span>  </h5>
                     <!-- <Chart type="bar" :data="lineData" :options="lineOptions" /> -->
-                    <div class="card" >
+                    
                         <Button class="p-0" text @click="visible_graph = true" size="small" style="border: none;" :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'"><i class="text-4xl" style="transform: rotate(45deg);;" :class="PrimeIcons.ARROW_A"></i></Button>
-                        <Chart type="line" :data="store.ventasCharData" :options="chartOptions" class="h-30rem" />
-                    </div>
+                        <Chart type="line" :data="store.ventasCharData" :options="chartOptions"  />
+                    
                 </div>
 
 
@@ -201,9 +201,9 @@
         </div>
 
 
-        <Dialog v-model:visible="visible_graph" modal header="Periodo" :style="{ width: '90vw',height:'max-content' }">
+        <Dialog v-model:visible="visible_graph" modal header="Periodo" :style="{ width: '90vw'}">
 <!-- <RepValorVentas></RepValorVentas> -->     
-                        <Chart type="line" :data="store.ventasCharData" :options="chartOptions" style="height: 60vh;" />
+                        <Chart type="line" :data="store.ventasCharData" :options="chartOptions"  />
 
 </Dialog>
 
