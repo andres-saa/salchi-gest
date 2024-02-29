@@ -1,8 +1,8 @@
 <template>
-    <div class="grid">
+    <div class="p-0 m-0" >
 
-        <div class="grid col-12 ">
-            <div class="col-12 lg:col-6 ">
+        <div class="grid col-12 p-0 m-0">
+            <div class="col-12 lg:col-6 p-0 ">
                 <div class="card mb-0">
                     <div class="flex justify-content-between mb-3">
                         <div>
@@ -28,7 +28,7 @@
                     
                 </div>
             </div>
-            <div class="col-12 lg:col-6 " style="height: ;">
+            <div class="col-12 lg:col-6 px-0" style="height: ;">
                 <div class="card mb-0" style="height: 100%;">
                     <div class="flex justify-content-between mb-3">
                         <div>
@@ -186,7 +186,7 @@
                 </ul>
             </div>
         </div> -->
-            <div class="col-12 ">
+            <div class="col-12 px-0">
                 <div class="card">
                     <h5 style="background-color: ;"   >Historico de ordenes <span :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.order_status }}s</span>  </h5>
                     <!-- <Chart type="bar" :data="lineData" :options="lineOptions" /> -->

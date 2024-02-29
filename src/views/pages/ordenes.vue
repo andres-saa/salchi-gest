@@ -4,9 +4,9 @@
     <!-- {{ orden }} -->
     </div>
 
-    <Button size="small" severity="success" @click="exportCSV"> <i class="pr-3" :class="PrimeIcons.DOWNLOAD" ></i> Descargar reporte</Button>
+    <Button size="small" class="py-2"  severity="success" @click="exportCSV"> <i class="pr-3 " :class="PrimeIcons.DOWNLOAD" ></i> Descargar reporte</Button>
 
-    <div class="card p-4" style="">
+    <div class="card p-0 m-0 col-12 my-4" style="">
         <DataTable paginator  :value="store.salesReport.total_sales.orders_info" tableStyle="min-width: 50rem"
         
         
@@ -22,7 +22,7 @@
                     <span class="text-xl text-900 font-bold">Ordenes {{ store.order_status }}s entre {{ store.formatDate(store.dateRange.startDate)  }} y {{ store.formatDate(store.dateRange.endDate)  }} </span>
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
                            
-                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left py-0">
                                 <i class="pi pi-search" />
                                 <InputText class="" v-model="filters['global'].value" placeholder="Search..." />
                             </span>
@@ -196,9 +196,10 @@ const exportCSV = async() => {
     "Estado":order.status.status,
     "Domicilio":order.delivery_price,
     "Metodo de pago":order.payment_method,
+    "razon de la cancelacion":order.status?.reazon || 'es una orden enviada',
     "Nombre del usuario":order.user_data?.user_name,
     "telefono del usuario":order.user_data?.user_phone,
-    "razon de la cancelacion":order.status?.reazon || 'es una orden enviada'
+    "direccion del usuario":order.user_data?.user_address
     
     
 
@@ -252,10 +253,10 @@ worksheet["!cols"] = [
     { wch: Math.max(10, "Estado".length) },
     { wch: Math.max(5, "Domicilio".length) },
     { wch: Math.max(25, "Metodo de pago".length) },
-    { wch: Math.max(20, "Fecha de Nacimiento".length) },
-    { wch: Math.max(12, "Teléfono".length) },
-    { wch: Math.max(25, "Correo Electrónico".length) },
-    { wch: Math.max(15, "Fecha de Ingreso".length) },
+    { wch: Math.max(40, "Fecha de Nacimiento".length) },
+    { wch: Math.max(20, "Teléfono".length) },
+    { wch: Math.max(10, "Correo Electrónico".length) },
+    { wch: Math.max(40, "Fecha de Ingreso".length) },
     { wch: Math.max(15, "Fecha de Salida".length) },
     { wch: Math.max(18, "Motivo de Salida".length) },
     { wch: Math.max(25, "Autorización de Datos".length) },
