@@ -180,9 +180,7 @@
     
                     <!-- <Button text class="p-0 mx-2" style="width: 100;"><span class="text-right"><i :class="PrimeIcons.PENCIL"></i></span></Button> -->
     
-                    <Button text class="p-0 mx-2" severity="danger" @click="confirmDelete(archived_file.data.id_file)">
-                        <span class="text-right"><i :class="PrimeIcons.TRASH"></i></span>
-                    </Button>
+                   
     
                     <!-- {{ archived_file.data.status }} -->
                 </template>
