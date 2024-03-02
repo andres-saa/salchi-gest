@@ -55,6 +55,10 @@ async function fetchAndUpdateRoles() {
                     label: 'Gestion de cargos', icon: 'fa-database fa-solid', to: '/cargos',
 
                 },
+                {
+                    label: 'Gestion de guias', icon: 'fa-solid fa-book', to: '/guias',
+
+                },
 
 
 
@@ -172,10 +176,11 @@ async function fetchAndUpdateRoles() {
             roles: roles.value.todos,
             items: [
 
-                {
-                    label: 'Guias', icon: 'fa-solid fa-book', to: '/guias',
+            {
+                    label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user',
 
                 },
+               
                 {
                     label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
 

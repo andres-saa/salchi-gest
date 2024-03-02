@@ -157,7 +157,7 @@
         <h6 style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;"
           class="text-center">NIT: 901.420.874-0</h6>
 
-        <h6 class="text-center py-4" style="font-weight: bold;">FORMATO SOLICITUD DE VACACIONES <span
+        <h6 class="text-center py-4" style="font-weight: bold;">FORMATO SOLICITUD DE PERMISO GENERAL <span
             style="text-transform: capitalize;"></span></h6>
 
         <h5 class="text-l "

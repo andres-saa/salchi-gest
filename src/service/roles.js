@@ -5,7 +5,6 @@ import { ref } from 'vue';
 
 
 
-
 async function obtenerRolesYActualizar() {
     try {
         // Hacer la solicitud fetch al endpoint /formatted-rolegroups

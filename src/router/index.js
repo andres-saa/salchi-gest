@@ -122,6 +122,11 @@ const router = createRouter({
                 name: 'guias',
                 component: () => import('@/views/pages/Guias.vue')
             },
+            {
+              path: '/guias-user',
+              name: 'guias-user',
+              component: () => import('@/views/pages/GuiasUsers.vue')
+          },
                 {
                     path: '/cumples',
                     name: 'cumples',
