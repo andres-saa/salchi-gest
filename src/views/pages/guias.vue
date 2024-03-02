@@ -135,10 +135,11 @@
 
         <Column class="p-2" field="id" header="" :sortable="true" headerStyle="width:min-content; min-width:min-content; ">
             <template #body="archived_file">
-                <div>
-                    <img style="height: 3rem;"
-                        src="https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg"
+                <div class="" style="position: relative; display: flex;justify-content: center;">
+                    <img style="height: 4rem; aspect-ratio: 1 / 1;object-fit: contain;border-radius: 0.5rem;" class="p-1" :style="`background-color:${colors[archived_file.data.file_extension]} `"
+                        src="/images/file.png"
                         alt="">
+                    <span  style="color:white; position: absolute;font-weight: bold;bottom: 0.9rem;; text-transform: uppercase;"> {{ archived_file.data.file_extension.slice(0,4) }}</span>
                 </div>
             </template>
         </Column>
@@ -264,6 +265,31 @@ import { useToast } from 'primevue/usetoast';
 // import { PrimeIcons } from 'primevue/api';
 import { useRoute } from 'vue-router';
 
+const colors = {
+  "pdf": "#FF0000",   // Rojo para PDF
+  "doc": "#2B579A",   // Azul para Word
+  "docx": "#2B579A",
+  "xls": "#217346",   // Verde para Excel
+  "xlsx": "#217346",
+  "ppt": "#D24726",   // Naranja para PowerPoint
+  "pptx": "#D24726",
+  "psd": "#001E36",   // Azul oscuro para Photoshop
+  "ai": "#FF9A00",    // Naranja para Illustrator
+  "indd": "#FF3366",  // Rosa para InDesign
+  "jpg": "#F0D0A0",   // Un tono de piel para imágenes JPEG
+  "jpeg": "#F0D0A0",
+  "png": "#0DB7ED",   // Azul claro para PNG
+  "gif": "#FFD700",   // Dorado para GIF
+  "bmp": "#4B5320",   // Verde oliva para BMP
+  "tiff": "#FF7D40",  // Naranja para TIFF
+  "svg": "#FFB6C1",   // Rosa claro para SVG
+  "mp3": "#008000",   // Verde para MP3
+  "wav": "#0000FF",   // Azul para WAV
+  "aac": "#800080",   // Púrpura para AAC
+  "flac": "#FF4500",  // Naranja rojizo para FLAC
+  "ogg": "#FF6347",
+  "csv": '#217346'   // Tomate para OGG
+}
 
 const showDeleteDialog = ref(false);
 const selectedToDelete = ref(null);
