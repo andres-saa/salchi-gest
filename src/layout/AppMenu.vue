@@ -55,10 +55,7 @@ async function fetchAndUpdateRoles() {
                     label: 'Gestion de cargos', icon: 'fa-database fa-solid', to: '/cargos',
 
                 },
-                {
-                    label: 'Gestion de guias', icon: 'fa-solid fa-book', to: '/guias',
-
-                },
+                
 
 
 
@@ -99,9 +96,12 @@ async function fetchAndUpdateRoles() {
                     label: 'Documentos', icon: 'fa-solid fa-book', to: '/sites',
 
                 },
+                {
+                    label: 'Gestion de guias', icon: 'fa-solid fa-book', to: '/guias',
+
+                },
 
  
-
             ]
         },
 
