@@ -108,6 +108,9 @@ export const useReportesStore = defineStore('reportes', {
             // Determina el nombre del rango basado en la diferencia de días
             let rangeName = '';
             switch(diffDays) {
+                case 1:
+                    rangeName = 'Últimos 999 días';
+                    break;
                 case 8:
                     rangeName = 'Últimos 7 días';
                     break;
