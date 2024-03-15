@@ -2,46 +2,63 @@
 
 
 <p  class="mb-2 text-4xl text-center px-4" style="font-weight: bold;">
-        Administrador de la tienda virtual
+    <i class="fa-solid fa-utensils"></i>
+       Menú
     </p>
 
 
-    <div class="col-12 m-auto md:pl-6 p-2 " style="max-width: 1024px; ">
-    <div style="display: flex; align-items: center;" class="col p- ">
-      <SPan class=" mr-4" style="font-weight: bold;">  SEDE: </SPan>  <Dropdown class="col md:col-6 p-0   " v-model="siteDropValue" :options="siteDropValues" optionLabel="site_name"
+    <div class="col-12 m-auto  grid " style="max-width: 800px;" >
+    <div style="display: flex;overflow-x: auto; align-items: center;" class="col-12  ">
+     
+    <div  style="min-width: max-content;">
+        <SPan class=" mr-4 " style="font-weight: bold;">  SEDE: </SPan>  <Dropdown  style="min-width: max-content;" class="col md:col-6 p-0   " v-model="siteDropValue" :options="siteDropValues" optionLabel="site_name"
 placeholder="sede" />
+
     </div>
-    
-    <div class="grid col-12 m-0 p-0 ">
-
-        <div class="col p-2">
-            <Dropdown style="outline: none; " class="p-1 col-12  " primary v-model="categoryValue" :options="categories"
-                 placeholder="Productos" >
 
 
-            <template #value="data">
-                <div> <i :class="PrimeIcons.STAR_FILL" class="mr-2"></i>{{ data.value?.category_name? data.value.category_name:{} }}</div> 
-               
 
-            </template>
+    <div class="" style="min-width: max-content;">
+        <SPan class=" mx-4" style="font-weight: bold;">  CATEGORIA: </SPan>
 
-            <template #option="data">
-                    <div>
-                        <span> <i :class="data.option.category_name == 'Nueva categoria'? PrimeIcons.PLUS_CIRCLE:  PrimeIcons.TRASH" class="mr-3"></i></span>{{ data.option.category_name }}
-                    </div>
+    <Dropdown style="outline: none;max-width: min-content; " class=" col-6 p-0  " primary v-model="categoryValue" :options="categories"
+                    placeholder="Productos" >
+
+
+                <template #value="data">
+                    <div> <i :class="PrimeIcons.STAR_FILL" class="mr-2"></i>{{ data.value?.category_name? data.value.category_name:{} }}</div> 
+                
+
                 </template>
 
+                <template #option="data">
+                        <div>
+                            <span> <i :class="data.option.category_name == 'Nueva categoria'? PrimeIcons.PLUS_CIRCLE:  PrimeIcons.TRASH" class="mr-3"></i></span>{{ data.option.category_name }}
+                        </div>
+                    </template>
 
 
-        </Dropdown>
 
-        </div>
+            </Dropdown>
+    </div>
 
 
-        <div v-for="menu in MenuOptions" class="col p-2 ">
+
+
+    </div>
+
+
+
+     
+    <div class="grid col-12 mt-3 m-0 p-0" style="max-width: 1000px;">
+
+  
+
+
+        <div v-for="menu in MenuOptions" class="col p-2">
             <RouterLink :to="`/tienda-menu/${menu.to}`">
-                <Button :style="`background-color:${pastelColors[menu.to]}`" class="outlined col-12 p-3 text-center"
-                    outlined Secondary> <span style="width: 100%;" sclass="text-center"> {{ menu.name }}</span> </Button>
+                <Button style="height: 2.5rem;" :severity="menu.severity"  class="outlined col-12  text-center"
+                     Secondary> <i :class="menu.icon" class="mr-2" ></i> <span style="width: 100%;" sclass="text-center"> {{ menu.name }}</span> </Button>
             </RouterLink>
 
         </div>
@@ -63,7 +80,7 @@ placeholder="sede" />
 
     </div>
 
-    <div class="col-12 m-auto  p-0 " style="max-width: 1024px; "> <RouterView  /></div>
+    <div class="col-12 m-auto  p-0 m-0" style="max-width: 800px; "> <RouterView  /></div>
    
    
     <Dialog header="Confirmation" v-model:visible="showAgregarCategoria" :style="{ width: '350px' }" :modal="true">
@@ -208,23 +225,37 @@ const MenuOptions = [
 
     {
         name: 'Adiciones',
-        to: 'adicionales'
+        to: 'adicionales',
+        severity:'success',
+        icon:'fa-solid fa-bowl-rice'
     },
     {
         name: 'Salsas',
-        to: 'salsas'
+        to: 'salsas',
+        severity:'warning',
+        icon:"fa-solid fa-pepper-hot"
+
     },
     {
         name: 'Topping',
-        to: 'toppings'
+        to: 'toppings',
+        severity:'danger',
+        icon:"fa-solid fa-candy-cane"
+
     },
     {
         name: 'Cambios',
-        to: 'cambios'
+        to: 'cambios',
+        severity:'info',
+        icon:"fa-solid fa-dice"
+
     },
     {
         name: 'Acompanantes',
-        to: 'acompanantes'
+        to: 'acompanantes',
+        severity:'help',
+       
+
     }
 ]
 

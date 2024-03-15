@@ -27,7 +27,7 @@
                     <InputText class="text-center "  @click="showDateDialog = true" style="" :value="store.dateRangeDifference.rangeName || `${formatDate(store.dateRange.startDate) }  |  ${formatDate(store.dateRange.endDate)}`" placeholder="periodo"/>
 
 
-                    <Button class="text-center p-2"   style="height: 100%;width:min-content;aspect-ratio:  1 / 1;border-radius: 50%; display: flex;justify-content:center ; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH" style="padding: 0.2rem;"></i></Button>
+                    <Button severity="info" class="text-center p-2"   style="height: 100%;width:min-content;aspect-ratio:  1 / 1;border-radius: 50%; display: flex;justify-content:center ; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH" style="padding: 0.2rem;"></i></Button>
 
 
 </div>
@@ -56,7 +56,7 @@
 
 
 
-<span class="text-3xl mt-8 ml-3" style="font-weight: bold;">Vision General</span>
+<span class="text-3xl mt-8 ml-3" style="font-weight: bold;"> <i class="fa-solid fa-chart-simple"></i> Vision General</span>
 
 <div class="col-12 px-3 py-0 my-3 p-2" style="overflow-x:auto; background-color: #fafafa;">
     <div class="px-0 mx-0" style="width: max-content; background-color:#fafafa; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">
@@ -65,6 +65,7 @@
     <RouterLink :to="boton.to" >
         <Button  size="medium" :style="ruta.fullPath == boton.to? 'box-shadow: 0 4px 0 #ff6200;color:#000;font-weight:bold;':''" class="text-md px-0 py-2 my-3 mx-0" text   severity="secondary" style=" border-radius: 0;">
             
+            <i class="mr-2" :class="boton.icon"></i>
             {{ boton.name }}
 
             <!-- {{ ruta.fullPath }} -->
@@ -414,19 +415,23 @@ const getSites = async() => {
 const menus = ref([
     {
         name: 'Valor ventas',
-        to: '/reporte-ventas/valor-ventas'
+        to: '/reporte-ventas/valor-ventas',
+        icon:'fa-solid fa-dollar-sign'
     },
     {
         name: 'No. Ordenes',
-        to: '/reporte-ventas/no-ordenes'
+        to: '/reporte-ventas/no-ordenes',
+        icon:'fa-solid fa-sort'
     },
     {
         name: 'Ticket promedio',
-        to: '/reporte-ventas/ticket'
+        to: '/reporte-ventas/ticket',
+        icon: 'fa-solid fa-money-bill'
     },
     {
         name: 'Ordenes',
-        to: '/reporte-ventas/ordenes'
+        to: '/reporte-ventas/ordenes',
+        icon:'fa-solid fa-table'
     }
 ])
 

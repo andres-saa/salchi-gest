@@ -1,11 +1,11 @@
 <script setup>
 
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode, PrimeIcons } from 'primevue/api';
 import { ref, onMounted, onBeforeMount, computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { departamentos, findByDepartament } from '@/service/CountryService.js'
 import { jsPDF } from "jspdf";
-import { roles,obtenerRolesYActualizar,getRoles } from '@/service/roles';
+import { roles, obtenerRolesYActualizar, getRoles } from '@/service/roles';
 
 import { uploadUserPhotoProfile } from '@/service/sendFileService'
 import {
@@ -124,52 +124,52 @@ const onImageError = (gender, event) => {
 
 
 function normalizarCedula(cedula) {
-  // Reemplazar puntos, comas y espacios con una cadena vacía
-  const cedulaNormalizada = cedula.toString().replace(/[.,\s]/g, '');
+    // Reemplazar puntos, comas y espacios con una cadena vacía
+    const cedulaNormalizada = cedula.toString().replace(/[.,\s]/g, '');
 
-  return cedulaNormalizada;
+    return cedulaNormalizada;
 }
 
 
 function validarCargo(cargo) {
-  // Convertir el cargo a minúsculas y eliminar espacios al inicio y al final para comparar de manera insensible a mayúsculas y minúsculas
-  const cargoLowerCase = cargo.toString().trim().toLowerCase();
+    // Convertir el cargo a minúsculas y eliminar espacios al inicio y al final para comparar de manera insensible a mayúsculas y minúsculas
+    const cargoLowerCase = cargo.toString().trim().toLowerCase();
 
-  // Recorrer la lista predefinida y comparar con cada elemento
-  for (let i = 0; i < PositionDropValues.value.length; i++) {
-    // Aplicar toLowerCase y trim al elemento actual de la lista
-    let valorLista = PositionDropValues.value[i].trim().toLowerCase();
+    // Recorrer la lista predefinida y comparar con cada elemento
+    for (let i = 0; i < PositionDropValues.value.length; i++) {
+        // Aplicar toLowerCase y trim al elemento actual de la lista
+        let valorLista = PositionDropValues.value[i].trim().toLowerCase();
 
-    // Verificar si el cargo está en la lista predefinida
-    if (valorLista === cargoLowerCase) {
-      // Si está en la lista, devuelve el valor original de la lista
-      return PositionDropValues.value[i];
+        // Verificar si el cargo está en la lista predefinida
+        if (valorLista === cargoLowerCase) {
+            // Si está en la lista, devuelve el valor original de la lista
+            return PositionDropValues.value[i];
+        }
     }
-  }
 
-  // Si no está en la lista, devuelve un valor predeterminado o null
-  return null; // O puedes devolver un mensaje de error, por ejemplo: "Cargo no válido"
+    // Si no está en la lista, devuelve un valor predeterminado o null
+    return null; // O puedes devolver un mensaje de error, por ejemplo: "Cargo no válido"
 }
 
 
 function validar_marital_status(marital_status) {
-  // Convertir el cargo a minúsculas y eliminar espacios al inicio y al final para comparar de manera insensible a mayúsculas y minúsculas
-  const Marital_lowecase = marital_status?.toString()?.trim()?.toLowerCase();
+    // Convertir el cargo a minúsculas y eliminar espacios al inicio y al final para comparar de manera insensible a mayúsculas y minúsculas
+    const Marital_lowecase = marital_status?.toString()?.trim()?.toLowerCase();
 
-  // Recorrer la lista predefinida y comparar con cada elemento
-  for (let i = 0; i < maritalStatusDropValues.value.length; i++) {
-    // Aplicar toLowerCase y trim al elemento actual de la lista
-    let valorLista = maritalStatusDropValues.value[i].trim().toLowerCase();
+    // Recorrer la lista predefinida y comparar con cada elemento
+    for (let i = 0; i < maritalStatusDropValues.value.length; i++) {
+        // Aplicar toLowerCase y trim al elemento actual de la lista
+        let valorLista = maritalStatusDropValues.value[i].trim().toLowerCase();
 
-    // Verificar si el cargo está en la lista predefinida
-    if (valorLista === Marital_lowecase) {
-      // Si está en la lista, devuelve el valor original de la lista
-      return maritalStatusDropValues.value[i];
+        // Verificar si el cargo está en la lista predefinida
+        if (valorLista === Marital_lowecase) {
+            // Si está en la lista, devuelve el valor original de la lista
+            return maritalStatusDropValues.value[i];
+        }
     }
-  }
 
-  // Si no está en la lista, devuelve un valor predeterminado o null
-  return maritalStatusDropValues.value[0]; // O puedes devolver un mensaje de error, por ejemplo: "Cargo no válido"
+    // Si no está en la lista, devuelve un valor predeterminado o null
+    return maritalStatusDropValues.value[0]; // O puedes devolver un mensaje de error, por ejemplo: "Cargo no válido"
 }
 
 
@@ -206,9 +206,9 @@ const processAndSendData = async (data) => {
     for (let employer of data) {
         // Transformar los datos del empleado
 
-        
 
-        if (!employer.Documento || normalizarCedula(employer.Documento) === '' ||  normalizarCedula(employer.Documento) === 'null') {
+
+        if (!employer.Documento || normalizarCedula(employer.Documento) === '' || normalizarCedula(employer.Documento) === 'null') {
             // Agregar al reporte que el usuario no tiene cédula y no se puede registrar
             reporte.push(`El usuario con nombre ${employer.Nombre} no tiene cédula y no se puede registrar.`);
             continue; // Saltar al siguiente elemento en el bucle
@@ -223,7 +223,7 @@ const processAndSendData = async (data) => {
 
         const marital_status_valido = validar_marital_status(employer['Estado Civil']);
 
-        
+
         const sedeEncontrada = sites.find(item => item.site_name?.trim().toLowerCase().includes(employer.Sede.trim().toLowerCase()));
         if (!sedeEncontrada) {
             reporte.push(`No se pudo encontrar la sede para el usuario con nombre ${employer.Nombre}. Las sedes disponibles son: ${nombresSedesDisponibles}.`);
@@ -246,8 +246,8 @@ const processAndSendData = async (data) => {
             continue; // Saltar al siguiente empleado
         }
         const birth_date = typeof employer["Fecha de Nacimiento"] === 'string'
-                ? employer["Fecha de Nacimiento"]
-                : excelDateToDate(employer["Fecha de Nacimiento"]);
+            ? employer["Fecha de Nacimiento"]
+            : excelDateToDate(employer["Fecha de Nacimiento"]);
 
         // Verificar y asignar fecha de ingreso
         if (!isValidDate(employer["Fecha de Ingreso"])) {
@@ -255,8 +255,8 @@ const processAndSendData = async (data) => {
             continue; // Saltar al siguiente empleado
         }
         const entry_date = typeof employer["Fecha de Ingreso"] === 'string'
-                ? employer["Fecha de Ingreso"]
-                : excelDateToDate(employer["Fecha de Ingreso"]);
+            ? employer["Fecha de Ingreso"]
+            : excelDateToDate(employer["Fecha de Ingreso"]);
 
         // Asignar fecha de salida
         const exit_date = isValidDate(employer["Fecha de Salida"])
@@ -271,11 +271,11 @@ const processAndSendData = async (data) => {
 
 
             name: employer.Nombre || 'SIN NOMBRE',
-            dni: employer.Documento ? normalizarCedula( employer.Documento) : '',
+            dni: employer.Documento ? normalizarCedula(employer.Documento) : '',
             address: employer?.Direccion?.toString()?.trim()?.toLowerCase() || 'N/A',
-            position: validarCargo(employer.Cargo)  ||  '',
+            position: validarCargo(employer.Cargo) || '',
             site_id: sites.find(item => item.site_name?.trim().toLowerCase().includes(employer.Sede.trim().toLowerCase()))?.site_id || 12,
-            
+
 
             status: status,
             gender: gender,
@@ -356,7 +356,7 @@ const processAndSendData = async (data) => {
     // // Limpiar y remover el enlace
     // document.body.removeChild(downloadLink);
     // URL.revokeObjectURL(url);
-    if (reporte.length <= 0){
+    if (reporte.length <= 0) {
         reporte.push(`Enhorabuena, todo se ha cargado con exito`)
     }
     generatePDF(reporte)
@@ -364,41 +364,41 @@ const processAndSendData = async (data) => {
 
 
 const generatePDF = (reporte) => {
-  const doc = new jsPDF();
-  let y = 10; // Posición inicial en el eje Y para el texto
+    const doc = new jsPDF();
+    let y = 10; // Posición inicial en el eje Y para el texto
 
-  const fontSize = 11; // Tamaño de la fuente
-  const interlineSpacing = 0.5; // Factor de interlineado
-  const lineHeight = fontSize * interlineSpacing; // Altura de la línea
-  const pageHeight = doc.internal.pageSize.height; // Altura total de la página
-  const margin = 10; // Margen inferior para evitar desbordamiento
+    const fontSize = 11; // Tamaño de la fuente
+    const interlineSpacing = 0.5; // Factor de interlineado
+    const lineHeight = fontSize * interlineSpacing; // Altura de la línea
+    const pageHeight = doc.internal.pageSize.height; // Altura total de la página
+    const margin = 10; // Margen inferior para evitar desbordamiento
 
-  // Configurar la fuente a Helvetica (similar a Arial) y tamaño 11
-  doc.setFont("Helvetica");
-  doc.setFontSize(fontSize);
+    // Configurar la fuente a Helvetica (similar a Arial) y tamaño 11
+    doc.setFont("Helvetica");
+    doc.setFontSize(fontSize);
 
-  reporte.forEach((mensaje, index) => {
-    // Añadir un salto de línea entre mensajes, excepto antes del primero
-    if (index > 0) {
-      y += lineHeight;
-      if (y > pageHeight - margin) {
-        doc.addPage();
-        y = 10;
-      }
-    }
+    reporte.forEach((mensaje, index) => {
+        // Añadir un salto de línea entre mensajes, excepto antes del primero
+        if (index > 0) {
+            y += lineHeight;
+            if (y > pageHeight - margin) {
+                doc.addPage();
+                y = 10;
+            }
+        }
 
-    const lines = doc.splitTextToSize(mensaje, 180); // Ajustar el texto a la anchura de la página
-    lines.forEach((line) => {
-      if (y + lineHeight > pageHeight - margin) {
-        doc.addPage();
-        y = 10;
-      }
-      doc.text(line, 10, y);
-      y += lineHeight;
+        const lines = doc.splitTextToSize(mensaje, 180); // Ajustar el texto a la anchura de la página
+        lines.forEach((line) => {
+            if (y + lineHeight > pageHeight - margin) {
+                doc.addPage();
+                y = 10;
+            }
+            doc.text(line, 10, y);
+            y += lineHeight;
+        });
     });
-  });
 
-  doc.save('reporte.pdf'); // Descargar el PDF
+    doc.save('reporte.pdf'); // Descargar el PDF
 };
 
 
@@ -450,7 +450,7 @@ onMounted(async () => {
     getUsers().then(data => {
         users.value = data
         charging.value = false
-    
+
     })
 
     getRoles().then(data => PositionDropValues.value = data)
@@ -520,7 +520,7 @@ const asignDropValueToEdit = (user) => {
     cityDropValue.value = user.birth_city
     statusDropValue.value = user.status
     PositionDropValue.value = PositionDropValues.value.filter(rol => rol.title?.trim().toLowerCase() == user.position?.trim().toLowerCase())[0] || {}
-    currentBoss.value = users.value.filter( u => (u.id == user.boss_id))[0] || {}
+    currentBoss.value = users.value.filter(u => (u.id == user.boss_id))[0] || {}
 
     // bloodTypesDropValue.value = findByType(user.blood_type, bloodTypesDropValues)
     // maritalStatusDropValue.value = findByName(user.marital_status, maritalStatusDropValues)
@@ -1012,79 +1012,98 @@ const verIMagen = (dni) => {
 
 
 
-<!-- <Loading tittle="CARGANDO USUARIOS" v-if="charging"></Loading> -->
+    <!-- <Loading tittle="CARGANDO USUARIOS" v-if="charging"></Loading> -->
 
 
 
-    <div class="grid  lg:m-8 m-0 " >
-        
-        <Dialog  class="p-0 " v-model:visible="visibleImage" modal header="Foto de Perfil" :style="{ width: '50rem' }"
-        :breakpoints="{ '1199px': '75vw', '575px': '90vw' ,'padding':0 }">
+    <div class="grid   m-0 ">
+
+        <Dialog class="p-0 " v-model:visible="visibleImage" modal header="Foto de Perfil" :style="{ width: '30rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw', 'padding': 0 }">
 
 
-        <img class="p-0 m-0" style="width: 100%;  ; object-fit: cover;" :src="bigImage" alt=""
-            srcset="">
+
+
+            <img class="p-0 m-0" style="width: 100%;  ; object-fit: contain;" :src="bigImage" alt="" srcset="">
+
+
         </Dialog>
 
         <!-- {{ getUserRole() }} -->
         <div class="col-12 m-0 ">
-            
+
             <div class="col-12 p-0 m-0 ">
                 <Toast />
 
 
-    
-               
-                        <div class="grid   " style="">
 
 
-                            <input ref="cargarExcel" style="display:none" type="file" @change="handleFileUpload" />
+                <div class="grid  m-1 " style="">
 
-                            <div class="col py-2 md:col-3" style="min-width:max-content ;"> <Button label="SUBIR EXCEL  " icon="pi pi-plus" class="p-button-error  m-0 col-12 text-sm "
-                                @click="$refs.cargarExcel.click();" /></div>
-                            <div class="col py-2 md:col-3" style="min-width:max-content ;" > <Button label="REGISTRAR USUARIO" icon="pi pi-plus" class="p-button-success m-0 col-12 text-sm "
-                                @click="openNew" /></div>
-                            <div class="col py-2 md:col-3" style="min-width:max-content ;"> <Button label="EXPORTAR EXCEL" icon="pi pi-upload" class="p-button-success m-0 col-12  text-sm "
-                                @click="exportCSV($event)" /></div>
-                            <div class="col py-2 md:col-3" style="min-width:max-content ;"><Button label="DESCARGAR  PLANTILLA" icon="pi pi-upload" class="p-button-error m-0 col-12 text-sm"
-                                @click="downloadEmptyTemplate()" /></div>
-                            <div class="col py-2 md:col-3" style="min-width:max-content ;"> <Button label="EXPORTAR DOTACION" icon="pi pi-upload" class="p-button-error m-0 col-12 text-sm  "
-                                @click="exportDotacion()" /></div>
-                            
-                           
-                
 
-               
-                        <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
+                    <input ref="cargarExcel" style="display:none" type="file" @change="handleFileUpload" />
+
+
+                    <Button severity="success" style="height: 2.5rem;" label="SUBIR EXCEL  " icon="pi pi-plus"
+                        class="p-button-error col m-2  text-sm " @click="$refs.cargarExcel.click();" />
+
+
+                    <Button severity="info" style="height: 2.5rem;" label="REGISTRAR USUARIO" icon="pi pi-plus"
+                        class=" col m-2  text-sm " @click="openNew" />
+
+
+                    <Button style="height: 2.5rem;" label="EXPORTAR EXCEL" icon="pi pi-upload"
+                        class="p-button-help col m-2   text-sm " @click="exportCSV($event)" />
+
+
+                    <!-- <Button style="height: 2.5rem;" label="DESCARGAR  PLANTILLA" icon="pi pi-upload"
+                            class="p-button-warning col m-2  text-sm" @click="downloadEmptyTemplate()" /> -->
+
+
+                    <Button style="height: 2.5rem;" label="EXPORTAR DOTACION" icon="pi pi-upload"
+                        class="p-button-danger col m-2  text-sm  " @click="exportDotacion()" />
+
+
+
+
+
+
+                    <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
                             class="mr-2 inline-block" /> -->
-                        
 
 
-                           
 
-                            
-                           
-                        </div>
 
-                
+
+
+
+                </div>
+
+
 
                 <DataTable ref="dt" :value="users" v-model:selection="selectedProducts" dataKey="id" :paginator="true"
                     :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25,100]"
+                    :rowsPerPageOptions="[5, 10, 25, 100]"
                     currentPageReportTemplate="Mostrando {first} to {last} de {totalRecords} empleados"
-                    responsiveLayout="scroll" scrollable scroll-height="62vh" :frozenValue="lockedCustomers">
+                    responsiveLayout="scroll" scrollable :frozenValue="lockedCustomers">
                     <template #header style="z-index:200">
-                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
-                            <p class="m-0  text-2xl my-4">Administrar usuarios</p>
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                            style="background-color: ;">
+                            <p class="mb-2 text-4xl text-center " style="font-weight: bold;">
+                                <i class="fa-solid fa-users"></i>
+                                Personal
+                            </p>
+
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
-                                <InputText class="" v-model="filters['global'].value" placeholder="Search..." />
+                                <InputText class="" v-model="filters['global'].value"
+                                    placeholder="Buscar empleado..." />
                             </span>
                         </div>
                     </template>
 
-                    <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen  ></Column>
+                    <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column>
 
                     <Column class="p-2" field="id" header="Id" :sortable="true"
                         headerStyle="width:min-content; min-width:min-content; ">
@@ -1097,13 +1116,13 @@ const verIMagen = (dni) => {
                     <Column class="p-2" header="Foto" headerStyle="width:5%; min-width:3rem;">
                         <template #body="user">
                             <!-- <span class="p-column-title">Foto</span> -->
-                           
 
-                                <img @click="verIMagen(user.data.dni)"
-                                    :src="`${URI}/read-product-image/96/employer-${user.data.dni}`"
-                                    @error="onImageError(user.data.gender, $event)" class="shadow-2 img-profile"
-                                    style="border:none; position:relative; height: 3rem; width:3rem; object-fit: cover; border-radius: 50%;" />
-                        
+
+                            <img @click="verIMagen(user.data.dni)"
+                                :src="`${URI}/read-product-image/96/employer-${user.data.dni}`"
+                                @error="onImageError(user.data.gender, $event)" class="shadow-2 img-profile"
+                                style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+
 
                             <div>
 
@@ -1141,7 +1160,7 @@ const verIMagen = (dni) => {
                         </template>
                     </Column>
 
-                    
+
                     <Column class="p-2" field="dni" header="Documento" :sortable="true"
                         headerStyle="width:14%; min-width:10rem;">
                         <template #body="user">
@@ -1302,7 +1321,8 @@ const verIMagen = (dni) => {
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="eps" header="EPS" :sortable="true" headerStyle="width:18%; min-width:15rem;">
+                    <Column class="p-2" field="eps" header="EPS" :sortable="true"
+                        headerStyle="width:18%; min-width:15rem;">
                         <template #body="user">
                             <span class="p-column-title">EPS</span>
                             {{ user.data.eps }}
@@ -1422,10 +1442,15 @@ const verIMagen = (dni) => {
                         </template>
                     </Column>
 
-                    <Column class="p-2" headerStyle="min-width:min-contents;" frozen alignFrozen="right">
-                        <template #body="user">
-                            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                                @click="editProduct(user.data)" />
+                    <Column class="p-2" headerStyle="min-width:5rem;" style="" header="Acciones" frozen
+                        alignFrozen="right">
+                        <template #body="user" style="margin: auto;">
+                            <div style="width:auto; display: flex;justify-content: center
+                            ;">
+                                <Button style="width: 2rem; aspect-ratio: 1 / 1;margin: auto; border-radius: 10rem;"
+                                    icon="pi pi-pencil" class=" p-button-warning " @click="editProduct(user.data)" />
+                            </div>
+
 
                         </template>
 
@@ -1447,18 +1472,23 @@ const verIMagen = (dni) => {
 
 
                     <!-- <FileUpload /> -->
+                    <div class="mt-6 mb-5" style="position: relative;">
+                        <img class="img-profile-add m-auto"
+                            style="width: 100%;border-radius: 1rem; margin: auto; object-fit: cover;"
+                            :src="adding || !adding && urlPhotoProfile ? urlPhotoProfile : `${URI}/read-product-image/600/employer-${currentUser.dni}` || urlPhotoProfile"
+                            alt="">
+                        <div class="field" style="position: absolute; bottom: 0; right: 1rem;">
+                            <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange"
+                                style="display: none;">
+                            <Button severity="info" class="" style="width: min-content;"
+                                @click="$refs.fileInput.click();">
+                                <i class="fa-solid fa-camera"></i>
 
-                    <img class="img-profile-add" style="width: 100%; height: 30vh; object-fit: cover;"
-                        :src="adding || !adding && urlPhotoProfile ? urlPhotoProfile : `${URI}/read-product-image/600/employer-${currentUser.dni}` || urlPhotoProfile"
-                        alt="">
-                    <div class="field col-12">
-                        <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange"
-                            style="display: none;">
-                        <Button label="Seleccionar foto de perfil" class="col-12 m0"
-                            style="width: 100%; background-color: var(--primary-color);"
-                            @click="$refs.fileInput.click();" />
+                            </Button>
 
+                        </div>
                     </div>
+
 
                     <div class="field">
                         <label for="name">Nombre</label>
@@ -1480,57 +1510,60 @@ const verIMagen = (dni) => {
                         <label for="address">Dirección</label>
                         <InputText id="address" v-model.trim="currentUser.address" required="true" autofocus
                             :class="{ 'p-invalid': submitted && !currentUser.address }" />
-                        <small class="p-invalid" v-if="submitted && !currentUser.address">La dirección es requerida.</small>
+                        <small class="p-invalid" v-if="submitted && !currentUser.address">La dirección es
+                            requerida.</small>
                     </div>
 
 
                     <div class="field">
                         <label for="position">Cargo</label>
-                        <Dropdown optionLabel="title" filter v-model.trim="PositionDropValue" :options="PositionDropValues" placeholder=""
-                            required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" />
+                        <Dropdown optionLabel="title" filter v-model.trim="PositionDropValue"
+                            :options="PositionDropValues" placeholder="" required="true"
+                            :class="{ 'p-invalid': submitted && !currentUser.position }" />
 
-                        <small class="p-invalid" v-if="submitted && !currentUser.position">el cargo es obligatorio</small>
+                        <small class="p-invalid" v-if="submitted && !currentUser.position">el cargo es
+                            obligatorio</small>
 
                     </div>
 
                     <div class="field">
                         <label for="position">Jefe inmediato</label>
                         <Dropdown filter v-model.trim="currentBoss" :options="users" placeholder="" optionLabel="name"
-                            required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" 
-                            >
-                        
-                            <template  #value="user" >
-                            
-                               
+                            required="true" :class="{ 'p-invalid': submitted && !currentUser.position }">
+
+                            <template #value="user">
+
+
                                 <div style="display: flex; align-items: center;gap: 1rem;">
                                     <img @click="verIMagen(user?.value?.dni)"
-                                    :src="`${URI}/read-product-image/96/employer-${user?.value?.dni}`"
-                                    @error="onImageError(user?.value?.gender, $event)" class="shadow-2 img-profile"
-                                    style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
-                        
+                                        :src="`${URI}/read-product-image/96/employer-${user?.value?.dni}`"
+                                        @error="onImageError(user?.value?.gender, $event)" class="shadow-2 img-profile"
+                                        style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+
                                     {{ user?.value?.name }}
 
                                 </div>
                             </template>
 
-                            <template  #option="user">
+                            <template #option="user">
                                 <div style="display: flex; align-items: center;gap: 1rem;">
                                     <img @click="verIMagen(user.option.dni)"
-                                    :src="`${URI}/read-product-image/96/employer-${user.option.dni}`"
-                                    @error="onImageError(user.option.gender, $event)" class="shadow-2 img-profile"
-                                    style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
-                        
-                                {{ user?.option?.name}}
+                                        :src="`${URI}/read-product-image/96/employer-${user.option.dni}`"
+                                        @error="onImageError(user.option.gender, $event)" class="shadow-2 img-profile"
+                                        style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
+
+                                    {{ user?.option?.name }}
                                 </div>
-                                
+
                             </template>
-                        
-                        
-                        
-                        
+
+
+
+
                         </Dropdown>
 
-                        <small class="p-invalid" v-if="submitted && !currentUser.position">el cargo es obligatorio</small>
+                        <small class="p-invalid" v-if="submitted && !currentUser.position">el cargo es
+                            obligatorio</small>
 
                     </div>
 
@@ -1550,8 +1583,8 @@ const verIMagen = (dni) => {
 
                     <div class="field">
                         <label for="gender">Género</label>
-                        <Dropdown v-model="currentUser.gender" :options="GenderDropValues" placeholder="" required="true"
-                            :class="{ 'p-invalid': submitted && !currentUser.gender }" />
+                        <Dropdown v-model="currentUser.gender" :options="GenderDropValues" placeholder=""
+                            required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
                         </small>
                     </div>
@@ -1607,8 +1640,8 @@ const verIMagen = (dni) => {
                     <!-- Sample input field with validation -->
                     <div class="field">
                         <label for="birth_department">Departamento de Nacimiento</label>
-                        <InputText filter v-model="departamentDropValue"  optionLabel="departamento"
-                            placeholder="" required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
+                        <InputText filter v-model="departamentDropValue" optionLabel="departamento" placeholder=""
+                            required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
                         </small>
                     </div>
@@ -1616,8 +1649,8 @@ const verIMagen = (dni) => {
                     <!-- Sample input field with validation -->
                     <div class="field">
                         <label for="birth_city">Ciudad de Nacimiento</label>
-                        <InputText filter v-model="cityDropValue"  placeholder=""
-                            required="true" :class="{ 'p-invalid': submitted && !currentUser.gender }" />
+                        <InputText filter v-model="cityDropValue" placeholder="" required="true"
+                            :class="{ 'p-invalid': submitted && !currentUser.gender }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.gender">el genero es obligatorio
                         </small>
                     </div>
@@ -1634,7 +1667,8 @@ const verIMagen = (dni) => {
                         <label for="phone">Teléfono</label>
                         <InputText id="phone" v-model.trim="currentUser.phone" required="true" autofocus
                             :class="{ 'p-invalid': submitted && !currentUser.phone }" />
-                        <small class="p-invalid" v-if="submitted && !currentUser.phone">El teléfono es requerido.</small>
+                        <small class="p-invalid" v-if="submitted && !currentUser.phone">El teléfono es
+                            requerido.</small>
                     </div>
 
 
@@ -1665,8 +1699,9 @@ const verIMagen = (dni) => {
 
                     <div class="field">
                         <label for="education_level">Nivel de Educación</label>
-                        <Dropdown v-model="currentUser.education_level" :options="educationLevelDropValues" placeholder=""
-                            required="true" :class="{ 'p-invalid': submitted && !currentUser.education_level }" />
+                        <Dropdown v-model="currentUser.education_level" :options="educationLevelDropValues"
+                            placeholder="" required="true"
+                            :class="{ 'p-invalid': submitted && !currentUser.education_level }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.education_level">Nivel de Educación es
                             obligatorio.</small>
                     </div>
@@ -1682,8 +1717,8 @@ const verIMagen = (dni) => {
 
                     <div class="field">
                         <label for="eps">EPS</label>
-                        <Dropdown filter v-model="currentUser.eps" :options="epsDropValues" placeholder="" required="true"
-                            :class="{ 'p-invalid': submitted && !currentUser.eps }" />
+                        <Dropdown filter v-model="currentUser.eps" :options="epsDropValues" placeholder=""
+                            required="true" :class="{ 'p-invalid': submitted && !currentUser.eps }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.eps">EPS es obligatorio.</small>
                     </div>
 
@@ -1742,7 +1777,8 @@ const verIMagen = (dni) => {
                         <label for="emergency_contact">Contacto de Emergencia</label>
                         <InputText id="emergency_contact" v-model.trim="currentUser.emergency_contact"
                             :class="{ 'p-invalid': submitted && !currentUser.emergency_contact }" />
-                        <small class="p-invalid" v-if="submitted && !currentUser.emergency_contact">Contacto de emergencia
+                        <small class="p-invalid" v-if="submitted && !currentUser.emergency_contact">Contacto de
+                            emergencia
                             es obligatorio.</small>
                     </div>
 
@@ -1758,7 +1794,8 @@ const verIMagen = (dni) => {
                         <label for="jeans_sweater_size">Talla de Pantalón</label>
                         <Dropdown v-model="currentUser.jeans_sweater_size" :options="pantSizesDropValues" placeholder=""
                             required="true" :class="{ 'p-invalid': submitted && !currentUser.jeans_sweater_size }" />
-                        <small class="p-invalid" v-if="submitted && !currentUser.jeans_sweater_size">Talla de pantalón es
+                        <small class="p-invalid" v-if="submitted && !currentUser.jeans_sweater_size">Talla de pantalón
+                            es
                             obligatoria.</small>
                     </div>
 
@@ -1768,11 +1805,13 @@ const verIMagen = (dni) => {
                     </div>
 
                     <div class="field" v-show="currentUser.food_handling_certificate">
-                        <label for="food_handling_certificate_number">Número de Certificado de Manejo de Alimentos</label>
+                        <label for="food_handling_certificate_number">Número de Certificado de Manejo de
+                            Alimentos</label>
                         <InputText id="food_handling_certificate_number"
                             v-model.trim="currentUser.food_handling_certificate_number"
                             :class="{ 'p-invalid': submitted && !currentUser.food_handling_certificate_number }" />
-                        <small class="p-invalid" v-if="submitted && !currentUser.food_handling_certificate_number">Número de
+                        <small class="p-invalid"
+                            v-if="submitted && !currentUser.food_handling_certificate_number">Número de
                             certificado es obligatorio.</small>
                     </div>
 
@@ -1783,15 +1822,15 @@ const verIMagen = (dni) => {
 
                     <div class="field">
                         <label for="description">Comentarios</label>
-                        <Textarea id="description" v-model="currentUser.comments_notes" required="true" rows="5" cols="20"
-                            style="resize: none;" />
+                        <Textarea id="description" v-model="currentUser.comments_notes" required="true" rows="5"
+                            cols="20" style="resize: none;" />
                     </div>
 
 
                     <div class="field">
                         <label for="status">Estado</label>
-                        <Dropdown v-model="currentUser.status" :options="statusDropValues" placeholder="" required="true"
-                            :class="{ 'p-invalid': submitted && !currentUser.status }" />
+                        <Dropdown v-model="currentUser.status" :options="statusDropValues" placeholder=""
+                            required="true" :class="{ 'p-invalid': submitted && !currentUser.status }" />
                         <small class="p-invalid" v-if="submitted && !currentUser.status">Estado es obligatorio.</small>
                     </div>
 
@@ -1810,11 +1849,12 @@ const verIMagen = (dni) => {
 
 
 
-                    <div class="field"
-                        >
+                    <div class="field">
                         <label for="exit_reason">Clave</label>
-                        <Password toggleMask id="exit_reason" v-model.trim="currentUser.password" required="true" autofocus />
-                        <small class="p-invalid" v-if="submitted && !currentUser.password">la clave del usuario es obligatoria
+                        <Password toggleMask id="exit_reason" v-model.trim="currentUser.password" required="true"
+                            autofocus />
+                        <small class="p-invalid" v-if="submitted && !currentUser.password">la clave del usuario es
+                            obligatoria
 
                         </small>
                     </div>
@@ -1942,4 +1982,5 @@ Button {
     // z-index: -1;
     // content: 'hola';
     // background-color: var(--primary-color)
-}</style>
+}
+</style>

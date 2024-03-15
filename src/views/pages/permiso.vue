@@ -36,13 +36,13 @@
       <h6 class="text-center p-2 m-0 mb-5 col-12"
         style="border-radius: 2rem; font-weight: bold; background-color: var(--gray-200);">INFORMACIÓN DEL EMPLEADO</h6>
 
-      <div class=" px-0 grid" style="display: ;">
+      <div class=" px-0 grid" style="">
         <h6 class="col-6 m-0  text-left text-md">NOMBRE</h6>
         <h6 class="col-6 m-0 text-right" style="font-weight: 300;min-width: max-content;">{{ user.name }}</h6>
       </div>
 
 
-      <div class=" px-0 grid p-0 " style="display: ; border-radius: 2rem; "
+      <div class=" px-0 grid p-0 " style=" border-radius: 2rem; "
         :style="user?.status?.toLowerCase().split(' ')[0] == 'activo' ? 'background-color:rgb(193, 255, 100);' : 'background-color: rgb(255, 132, 132);'">
         <h6 class="col-6 m-0  py-2 text-left">ESTADO</h6>
         <h6 class="col-6 m-0  py-2 text-right" style="font-weight: 300;min-width: max-content;">{{ user.status }}</h6>
@@ -83,7 +83,7 @@
       <div class="px-0 grid col-12" style="">
 
         <h6 class="  col-6">
-          <div style="font-weight: ;">
+          <div style="">
             DESDE
             <Calendar class="col p-0" v-model="desde" required="true" autofocus />
           </div>
@@ -132,7 +132,7 @@
 
 
 
-    <div class=" col-12 p-0 mt-6" style=";overflow-x: auto;  box-shadow: 0 0 20px rgba(0, 0, 0, 0.308)"
+    <div class=" col-12 p-0 mt-6" style="overflow-x: auto;  box-shadow: 0 0 20px rgba(0, 0, 0, 0.308)"
       v-show="user?.status?.toLowerCase().split(' ')[0] == 'activo' && !temporaryScreenSize" ref="contenidoParaPDF">
 
       <div class=" a4-size p-8 mi-clase" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.508)">

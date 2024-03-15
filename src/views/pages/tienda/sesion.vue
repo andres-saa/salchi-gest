@@ -4,12 +4,12 @@
 
     
 
-    <p class="text-2xl titulo my-6 px-2" style="text-transform: capitalize; font-weight: bold;"> {{ ruta.params.sesion }} 
+    <p class="text-3xl titulo my-6 px-2 text-center" style="text-transform: capitalize;align-items: center; gap:1rem;font-weight: bold;display: flex;"> <div style="height: 0.5rem;width: 100%; background-color: #a855f7;border-radius: 1rem 0 0 1rem;" ></div>  <span style="min-width: max-content;">{{ ruta.params.sesion }}</span> <div style="height: 0.5rem; background-color: #f59e0b; width: 100%; border-radius: 0 1rem 1rem 0;"></div>
                 
     </p> 
 
 <span>
-    <Button  @click="showAgregarProducto = !showAgregarProducto" class=" ml-2 mb-4"> Agregar  </Button>
+    <Button  style="height: 2.5rem;"  @click="showAgregarProducto = !showAgregarProducto" class=" ml-2 mb-4 " size="small" severity="help"> <i :class="PrimeIcons.PLUS" class="mr-3"></i> Agregar {{ ruta.params.sesion.slice(0,-1) }} </Button>
 </span>
 
     <div class="grid p-5 md:p-0 m-0 col-12 m-auto"  >
@@ -17,11 +17,11 @@
             <div class="cont p-2" style="background-color: white; height: 100%;position: relative"  >
         <!-- <router-link :to="`product/${product.id}` " @click="changeProduct(product)"> -->
 
-            <button style="position: absolute;top: -1rem;right: -1rem;background-color:var(--primary-color); width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;z-index: 99;" @click="prepararParaEditar(product)" class="add-cart-btn text-xl"><i   class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.PENCIL"> </i>  </button>
+            <Button class="p-2" size="small" rounded severity="info" style="position: absolute;top: -1rem;right: -1rem;  display: flex; align-items: center; justify-content: center; color: white;z-index: 99;" @click="prepararParaEditar(product)" ><i   class=" text-2xl  p-0 m-0 " :class="PrimeIcons.PENCIL"> </i>  </Button>
 
             
 
-            <button  style="position: absolute;top: -1rem;right: 2rem;background-color:var(--red-500); width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;z-index: 99;" @click="pregpararParaEliminar(product)" class="add-cart-btn text-xl"><i  class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.TRASH"> </i>  </button>
+            <Button  severity="danger"  style="position: absolute;top: -1rem;right: 2rem; width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center;z-index: 99;" @click="pregpararParaEliminar(product)" ><i  class=" text-2xl  p-0 m-0 " :class="PrimeIcons.TRASH"> </i>  </Button>
 
 
             <div class="imagen-cont " style="position: ;">
@@ -496,7 +496,7 @@ overflow: hidden;
 .cont {
     /* border: 1px solid gray; */
     border-radius: 1rem;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     /* margin: 20px; */
     /* height: max-content; */
     /* width: 100%; */
@@ -532,13 +532,13 @@ overflow: hidden;
 .imagen:hover {
     filter: brightness(1.1);
     /* box-shadow: 0px 0px 30px var(--primary-color); */
-    background-color: #ff620035;
+    background-color: #00000035;
 }
 .imagen{
     width: 100%;
     object-fit: contain;
     height: 200px;
-    transition: transform ease .3s ;;
+    transition: all ease .3s ;;
  
     /* background-image: url('https://i.ytimg.com/vi/yvIhfmAfsck/maxresdefault.jpg'); */
     /* height: 100%; */

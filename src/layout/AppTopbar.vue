@@ -81,15 +81,15 @@ const cerrar = () => {
 </script>
 
 <template>
-    <div class="layout-topbar" style="z-index: ">
+    <div class="layout-topbar" style="background-color:   rgba(0, 1, 22, 0.939); ">
         <router-link to="/" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
             <!-- <span>SAKAI</span> -->
-           <span class="pl-4 text-sm">{{ getUserRole() }}</span> 
+           <span class="pl-4 text-sm text-white">{{ getUserRole() }}</span> 
         </router-link>
 
         <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
-            <i class="pi pi-bars"></i>
+            <i class="pi pi-bars text-white"></i>
         </button>
 
         <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
@@ -99,7 +99,7 @@ const cerrar = () => {
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
             
             <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
-                <img style="height: 32px;width: 32px; border-radius: 50%; object-fit: cover;" :src="getImageUrl()" alt="">
+                <img style="height: 32px;width: 32px; border-radius: 50%;box-shadow: 2px 2px 5px white; object-fit: cover;" :src="getImageUrl()" alt="">
               
             </button>
             <!-- <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
@@ -107,7 +107,7 @@ const cerrar = () => {
                 <span>Profile</span>
             </button> -->
             <button @click="cerrar" class="p-link layout-topbar-button">
-                <i class="pi pi-reply"></i>
+                <i class="fa-solid fa-right-from-bracket text-white"></i>
                 <span>Cerrar sesion</span>
             </button>
         </div>

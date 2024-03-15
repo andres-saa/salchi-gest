@@ -1,17 +1,26 @@
 <script setup>
 
-import Dock from 'primevue/dock';    
-import { onMounted,onBeforeMount, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import Dock from 'primevue/dock';
+import { onMounted, onBeforeMount, ref, watch } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
 
 import ShowFiles from '@/views/pages/ShowFiles.vue'
-
+import {siteService} from '@/service/siteService.js'
 // /home/ludi/projects/salchimonster/salchimonster_frontend/src/views/pages/ShowUser.vue
 // import { ref, onBeforeMount } from 'vue';
 
 
 // import { useRouter } from 'vue-router';
 // import Router from '@/router/index.js';
+const sites = ref([])
+
+onMounted( () => {
+
+siteService.getSites().then(data => sites.value = data)
+
+})
+
+
 
 import {
     sitesDropValues,
@@ -32,7 +41,9 @@ import {
     getSite
 
 } from '@/service/dropDownAux';
+import { URI } from '../../service/conection';
 // import Showrecibos from './Showrecibos.vue';
+import router from '../../router';
 
 
 const site = ref({})
@@ -48,55 +59,104 @@ const idFrozen = ref(false);
 const products = ref(null);
 const expandedRows = ref([]);
 
-onMounted( () => {
-   getSite(route.params.site_id)
+onMounted(() => {
+    getSite(route.params.site_id)
     // console.log(curentSite)
 });
 
 onMounted(() => {
-      const storedSiteData = localStorage.getItem('currentSiteFiles');
-      if (storedSiteData) {
+    const storedSiteData = localStorage.getItem('currentSiteFiles');
+    if (storedSiteData) {
         currentSite.value = JSON.parse(storedSiteData);
-      }
-    });
+    }
+});
+
+
+watch( () => route.params.site_id, () => {
+    const storedSiteData = localStorage.getItem('currentSiteFiles');
+    if (storedSiteData) {
+        currentSite.value = JSON.parse(storedSiteData);
+    }
+});
+
+const navigateToSite = (siteData) => {
+    localStorage.setItem('currentSiteFiles', JSON.stringify(siteData));
+    router.push(`/site/${siteData.site_id}/documentos`);
+};
 </script>
 
 <template>
 
-<div cla  style="z-index: 99; max-width: 1024px;  display: flex;; align-items: center; justify-content: space-between; " class="col-12 mb-8 m-auto">
-    <div>
-        <h5 class=" text-4xl  ">SALCHIMONSTER {{ currentSite.site_name }}</h5> 
 
-    <RouterLink :to="`/site/${route.params.site_id}/documentos`">
-        <Button class="p-button-rounded mr-5 p-button-danger    " style="font-weight: bold;" outlined> DOCUMENTOS</Button>
+    <div class=" text-4xl text-center col-12 m-auto"
+        style="font-weight: bold;max-width: 900px; display: flex;align-items: center; gap: 1rem;">
 
-    </RouterLink>
+        <div style="background-color: #A855F7; height: 0.5rem;border-radius: 0 1rem 1rem 0; width: 100%;" />
 
-    <RouterLink :to="`/site/${route.params.site_id}/recibos`" style="border-radius: ;">
-        <Button class="p-button-rounded" outlined style="font-weight: bold;"> RECIBOS</Button>
-    </RouterLink>
+        <div style="display: flex; align-items: center;gap: 1rem;">
+           
+        <p class="p-0" style="min-width: max-content;"> {{ currentSite.site_name }} 
+        </p>
+        </div>
 
+        <div style="background-color: #A855F7; height: 0.5rem;border-radius: 0 1rem 1rem 0; width: 100%;" />
 
     </div>
 
-    
+
+    <div class=" my-5 m-auto  " style="width: 100%;height: 100%;display: flex;max-width: 800px;"> 
+            <div class="p-3" style="display: flex;width: 100%; overflow-x: auto;gap: 1rem; ">
+                <div class="p-1" v-for="site in sites"  style="display: flex;flex-direction: column; justify-content: center; align-items: center;" :style="route.params.site_id == site.site_id? 'border-bottom: 6px solid red;' : ''">
+                    <div @click="navigateToSite(site)" style="cursor: pointer;display: flex;flex-direction: column; align-items: center;" >
+                        <img style="width: 3rem;border-radius: 0.5rem; aspect-ratio: 1 / 1; object-fit: cover;"  :src="`${URI}/read-product-image/96/site-${site.site_id}`" />
+                    <p style="font-weight: bold; min-width: max-content;"> {{site.site_name}}</p>
+                    </div>
+ 
+                    
+                </div>
+            </div>
+           
+            </div>
 
 
-</div>
-<div class="grid m-auto p-0 col-12" style="max-width: 1024px;">
+    <div 
+        style="z-index: 99; max-width: 800px;  display: flex;; align-items: center; justify-content: space-between; "
+        class="col-12  p-0 m-auto">
 
-    <img v-if="!$route.path.includes('recibos') && !$route.path.includes('documentos')  " class="col-12" style="opacity: 0.3;position: ; height: 60vh; object-fit: cover;" src="/images/files.jpg" alt="">
+        <div style="min-width: max-content;">
 
-    <!-- {{ route.path }} -->
-    <RouterView >
 
-    </RouterView>
+            <RouterLink :to="`/site/${route.params.site_id}/documentos`">
+                <Button size="small" class=" mr-3 p-button-help    " style="font-weight: bold;"> DOCUMENTOS</Button>
 
+            </RouterLink>
+
+            <RouterLink :to="`/site/${route.params.site_id}/recibos`" style="border-radius: ;">
+                <Button size="small" class="p-button-warning" style="font-weight: bold;"> RECIBOS</Button>
+            </RouterLink>
+
+        </div>
  
 
-   </div>
+
+
+
+    </div>
+    <div class="grid m-auto p-0 col-12" style="max-width: 1024px;">
+
+        <img v-if="!$route.path.includes('recibos') && !$route.path.includes('documentos')" class="col-12"
+            style="opacity: 0.3;position: ; height: 60vh; object-fit: cover;" src="/images/files.jpg" alt="">
+
+        <!-- {{ route.path }} -->
+        <RouterView>
+
+        </RouterView>
+
+
+
+    </div>
 </template>
 
-<style lang="scss" scoped>
 
-</style>
+
+<style lang="scss" scoped></style>

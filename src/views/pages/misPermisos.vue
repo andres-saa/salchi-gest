@@ -1,6 +1,10 @@
 <template>
     <div class="col-12 m-auto p-0"> 
 
+      <p  class="mb-2 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize;">
+      <i class="fa-solid fa-person-walking-luggage"></i>
+       Mis permisos
+    </p>
 
 
 
@@ -12,8 +16,7 @@
                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} permisoes"
                     responsiveLayout="scroll" scrollable scroll-height="62vh" >
                     <template #header style="z-index:200">
-                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" >
-                            <p class="m-0  text-2xl my-4">Mis permisos </p> 
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" ><p class="m-0  text-2xl my-4"></p> 
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
                                 <InputText class="" v-model="filters['global'].value" placeholder="Buscar..." />

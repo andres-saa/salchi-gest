@@ -1,11 +1,11 @@
 <template>
     <div class="col-12 px-4 m-0" style="background-color: transparent;border: none; ">
         <div class="card p-0 lg:p-6" style="background-color: transparent; border: none;">
-            <p class="text-2xl titulo my-6" style="text-transform: capitalize; font-weight: bold;">grupos de {{ route.params.adicionales }} 
+            <p class="text-2xl titulo my-3" style="text-transform: capitalize; font-weight: bold;">grupos de {{ route.params.adicionales }} 
                 
             </p> 
                
-               <Button class="mb-6" style="text-transform: capitalize; " @click="showAgregarGrupoAdicional = !showAgregarGrupoAdicional">Nuevo grupo</Button>
+               <Button size="small" :severity="severity[route.params.adicionales]" class="mb-6" style="text-transform: capitalize; " @click="showAgregarGrupoAdicional = !showAgregarGrupoAdicional">Nuevo grupo de {{ route.params.adicionales }}</Button>
             
                 <div class="col-12  grid  m-0 p-0" >
 
@@ -17,11 +17,11 @@
 
                             <p style="text-transform:capitalize;" class="text-xl mb-4 col-12"> <b>{{ Grupoadicional.name }}</b>
                             </p>
-                            <button @click="openConfirmation(Grupoadicional)" class="add-cart-btn text-xl" style="cursor: pointer; position: absolute;top: -1rem;right: -1rem;background-color:var(--red-400); width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;">
+                            <Button size="small" severity="danger" @click="openConfirmation(Grupoadicional)" class="add-cart-btn text-xl" style="cursor: pointer; position: absolute;top: -1rem;right: -1rem; width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;">
                                 
-                                <i style=" color: white;;"  class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.TIMES"> </i> 
+                                <i   class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.TIMES"> </i> 
                             
-                            </button>
+                            </Button>
 
 
                            
@@ -84,7 +84,7 @@
                     </div>
 
                     <div class="col-12" style="display: flex; justify-content: center;">
-                        <Button class="" style="text-transform: capitalize; "
+                        <Button severity="info" size="small" style="text-transform: capitalize; "
                             @click="showAgregarAdicional = !showAgregarAdicional">Agregar</Button>
 
                     </div>
@@ -115,7 +115,7 @@
         <inputNumber class="mb-4" v-model="newAdicional.price"></inputNumber>
 
         {{ newAdicional }}
-        <Button style="text-transform: capitalize;" @click="enviarAdicional">Agregar</Button>
+        <Button size="small" severity="info" style="text-transform: capitalize;" @click="enviarAdicional">Agregar</Button>
     </Dialog>
 
 
@@ -468,7 +468,13 @@ onMounted(async () => {
 
 
 
-
+const severity = {
+    adicionales:'success',
+    salsas:'warning',
+    toppings:'danger',
+    cambios:'info',
+    acompanantes:'help'
+}
 
 
 

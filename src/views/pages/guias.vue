@@ -1,5 +1,12 @@
 <template>
 
+<p  class="mb-2 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize;">
+    <i class="fa-solid fa-person-chalkboard"></i>
+      Gestion de guias
+    </p>
+
+
+
 <Dialog v-model:visible="showDeleteDialog" header="Eliminar área o tipo" modal :closable="true" @hide="resetDeleteForm">
     <div>
         <h4>Seleccione el elemento a eliminar:</h4>
@@ -42,17 +49,16 @@
     </Dialog>
     <!-- {{ capacitacion }} -->
 
-    <p class="col-12 text-center text-3xl p-0 m-0" style="font-weight: bold;">Guias, formatos, manuales y mas</p>
-    <p class="col-12 text-center text-xl p-0 mb-5" style="font-weight: bold;">Asi lo hacemos en salchimonster</p>
+    <!-- <p class="col-12 text-center text-xl p-0 mb-5" style="font-weight: bold;">Asi lo hacemos en salchimonster</p> -->
 
-    <DataTable class="card mb-4 p-0 my-0 xl:shadow-5 p-4" grid
-        style="max-width: 900px;border: none; margin: auto    ;background-color: transparent;" ref="dt"
+    <DataTable class="card mb-4 p-5 my-3 shadow-4" grid 
+        style="background-color: white; max-width: 1024px;border: none; margin: auto    ;" ref="dt"
         :value="archived_files" v-model:selection="selectedFiles" dataKey="id" :paginator="true" :rows="10"
         :filters="filters"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25, 100]"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} archivos" responsiveLayout="scroll"
-        scrollable scroll-height="62vh">
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} archivos" 
+       >
 
 
 
@@ -60,32 +66,32 @@
 
 
 
-        <template #header style="z-index:200">
-            <div class="grid gap-3">
-                <Button @click="dialogVisible = true" rounded severity="success"><i :class="PrimeIcons.UPLOAD"
+        <template #header style="z-index:200 ; background-color: red;" >
+            <div class="grid col-12 m-0 p-0 gap-3 text-center" style="">
+                <Button class="col" style="height: 2.5rem; min-width: max-content;" @click="dialogVisible = true"  severity="success"><i :class="PrimeIcons.UPLOAD"
                         class="pr-3 "></i> Nuevo archivo</Button>
 
-                <Button rounded severity="warning" @click="showNewAreaDialog = true">
+                <Button class="col text-center" style="height: 2.5rem; min-width: max-content;"  severity="warning" @click="showNewAreaDialog = true">
                     <i :class="PrimeIcons.PLUS" class="pr-3"></i> Nueva area
                 </Button>
-                <Button rounded severity="info" @click="showNewTypeDialog = true">
+                <Button class="col" style="height: 2.5rem ; min-width: max-content;"  severity="info" @click="showNewTypeDialog = true">
                     <i :class="PrimeIcons.PLUS" class="pr-3"></i> Nuevo tipo de archivo
                 </Button>
 
-                <Button rounded severity="danger" @click="() => {showDeleteDialog = true ; loadCombinedOptions()} ">
+                <Button class="col" style="height: 2.5rem; min-width: max-content;"  severity="danger" @click="() => {showDeleteDialog = true ; loadCombinedOptions()} ">
                 <i :class="PrimeIcons.TRASH" class="pr-3"></i> Eliminar área o tipo
             </Button>
             </div>
 
 
-            <div class="grid col-12 p-0 gap-3 my-4">
+            <div class="grid col-12 p-0 gap-3 my-4 m-0">
                 <Dropdown style="height: 3rem; text-justify: center;" class="col-12 lg:col-5 p-0" optionLabel="area_name"
                     v-model="area" :options="areas" placeholder="Area de la empresa" />
                 <Dropdown style="height: 3rem; text-justify: center;" class="col-12 lg:col-5 p-0" v-model="type"
                     optionLabel="type_name" :options="types" placeholder="Tipo de archivo" />
                 <Button @click="getfiles"
                     style="height: 3rem; border-radius: 50%; aspect-ratio: 1/1; display: flex;align-items: center; justify-content: center;"
-                    class="  text-center" severity="success" size="small"> <i :class="PrimeIcons.SEARCH"></i></Button>
+                    class="  text-center" severity="help" size="small"> <i :class="PrimeIcons.SEARCH"></i></Button>
             </div>
 
 
@@ -136,10 +142,10 @@
         <Column class="p-2" field="id" header="" :sortable="true" headerStyle="width:min-content; min-width:min-content; ">
             <template #body="archived_file">
                 <div class="" style="position: relative; display: flex;justify-content: center;">
-                    <img style="height: 4rem; aspect-ratio: 1 / 1;object-fit: contain;border-radius: 0.5rem;" class="p-1" :style="`background-color:${colors[archived_file.data.file_extension]} `"
+                    <img style="height: 3.5rem; aspect-ratio: 1 / 1;object-fit: contain;border-radius: 0.5rem;" class="p-1" :style="`background-color:${colors[archived_file.data.file_extension]} `"
                         src="/images/file.png"
                         alt="">
-                    <span  style="color:white; position: absolute;font-weight: bold;bottom: 0.9rem;; text-transform: uppercase;"> {{ archived_file.data.file_extension.slice(0,4) }}</span>
+                    <span  style="color:white;font-size: 0.7rem; position: absolute;font-weight: bold;bottom: 0.9rem;; text-transform: uppercase;"> {{ archived_file.data.file_extension.slice(0,4) }}</span>
                 </div>
             </template>
         </Column>
@@ -266,29 +272,29 @@ import { useToast } from 'primevue/usetoast';
 import { useRoute } from 'vue-router';
 
 const colors = {
-  "pdf": "#FF0000",   // Rojo para PDF
-  "doc": "#2B579A",   // Azul para Word
-  "docx": "#2B579A",
-  "xls": "#217346",   // Verde para Excel
-  "xlsx": "#217346",
-  "ppt": "#D24726",   // Naranja para PowerPoint
-  "pptx": "#D24726",
-  "psd": "#001E36",   // Azul oscuro para Photoshop
-  "ai": "#FF9A00",    // Naranja para Illustrator
-  "indd": "#FF3366",  // Rosa para InDesign
-  "jpg": "#F0D0A0",   // Un tono de piel para imágenes JPEG
-  "jpeg": "#F0D0A0",
-  "png": "#0DB7ED",   // Azul claro para PNG
-  "gif": "#FFD700",   // Dorado para GIF
-  "bmp": "#4B5320",   // Verde oliva para BMP
-  "tiff": "#FF7D40",  // Naranja para TIFF
-  "svg": "#FFB6C1",   // Rosa claro para SVG
-  "mp3": "#008000",   // Verde para MP3
-  "wav": "#0000FF",   // Azul para WAV
-  "aac": "#800080",   // Púrpura para AAC
-  "flac": "#FF4500",  // Naranja rojizo para FLAC
-  "ogg": "#FF6347",
-  "csv": '#217346'   // Tomate para OGG
+  "pdf": "#E74C3C",   // Rojo para PDF
+  "doc": "#3498DB",   // Azul para Word
+  "docx": "#3498DB",
+  "xls": "#27AE60",   // Verde para Excel
+  "xlsx": "#27AE60",
+  "ppt": "#E67E22",   // Naranja para PowerPoint
+  "pptx": "#E67E22",
+  "psd": "#34495E",   // Azul marino para Photoshop
+  "ai": "#F39C12",    // Naranja para Illustrator
+  "indd": "#EB4D4B",  // Rojo para InDesign
+  "jpg": "#F1C40F",   // Amarillo para imágenes JPEG
+  "jpeg": "#F1C40F",
+  "png": "#1ABC9C",   // Turquesa para PNG
+  "gif": "#F39C12",   // Naranja para GIF
+  "bmp": "#2ECC71",   // Verde esmeralda para BMP
+  "tiff": "#D35400",  // Naranja calabaza para TIFF
+  "svg": "#9B59B6",   // Púrpura para SVG
+  "mp3": "#2ECC71",   // Verde para MP3
+  "wav": "#3498DB",   // Azul para WAV
+  "aac": "#9B59B6",   // Púrpura para AAC
+  "flac": "#E74C3C",  // Rojo para FLAC
+  "ogg": "#E67E22",   // Naranja para OGG
+  "csv": '#27AE60'    // Verde para CSV
 }
 
 const showDeleteDialog = ref(false);
@@ -856,3 +862,17 @@ const route = useRoute()
 
 
 </script>
+
+
+<style scoped>
+
+
+*{text-transform: lowercase;}
+
+Button{
+    /* text-transform: uppercase; */
+    text-transform: capitalize;
+    font-weight: 400;
+}
+
+</style>

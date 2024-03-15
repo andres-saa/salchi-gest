@@ -6,7 +6,6 @@
 
 
 
-
     <Dialog v-model:visible="showDialog" style="width: auto" header="Confirmar eliminación" :modal="true" :closable="false">
         <p>¿Estás seguro de que quieres eliminar este barrio?</p>
         <Button label="Cancelar" @click="showDialog = false" class="p-button-text" />
@@ -60,7 +59,7 @@
         </template>
     </Dialog>
 
-    <div class="col-12 m-auto  p-0" style="max-width: 900px;">
+    <div class="col-12 m-auto  p-0" style="max-width: 700px;">
 
 
 
@@ -71,10 +70,10 @@
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 100]"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} neighborhoods" responsiveLayout="scroll"
-            scrollable scroll-height="62vh" :frozenValue="lockedCustomers">
-            <template #header style="z-index:200">
-                <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                    <p class="m-0  text-2xl my-4 my-0 py-0">Precios Domicilios <Button class="p-2 ml-4" label="Nuevo Barrio"
+            scrollable :frozenValue="lockedCustomers">
+            <template  class="p-0" #header style="z-index:200;padding: 0;">
+                <div class="flex p-0 flex-column md:flex-row md:justify-content-between md:align-items-center">
+                    <p class="mx-0  text-2xl my-4  p-0">Domicilios pagina web<Button  severity="help"  size="small" class="  m-0 ml-4" label="Nuevo Barrio"
                             @click="showCreateDialog = true"></Button>
                     </p>
 
@@ -87,7 +86,7 @@
 
             <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column>
 
-            <Column class="p-2" field="id" header="Id" :sortable="true"
+            <Column class="px-2 py-0 m-0" field="id" header="Id" :sortable="true"
                 headerStyle="width:min-content; min-width:min-content; ">
                 <template #body="neighborhood">
                     <span class="p-column-title">Code</span>
@@ -95,32 +94,36 @@
                 </template>
             </Column>
 
-            <Column class="p-2" field="name" header="Barrio" :sortable="true"
-                headerStyle="width:min-content; min-width:min-content; ">
+            <Column class="px-2 py-0 m-0" field="name" header="Barrio" :sortable="true"
+                headerStyle="width:max-content; min-width:15rem ">
                 <template #body="neighborhood">
-                    <span class="p-column-title">Code</span>
-                    <!-- {{ neighborhood.data.creator_id }}
-                                 -->
-                    <InputText :onchange="() => update(neighborhood.data)" style="width:100%;"
+                    <span class="p-column-title p-0">Code</span>
+                  
+                    <InputText   :onchange="() => update(neighborhood.data)" style="width:100%; border: none;border-right:2px solid rgba(0, 0, 0, 0.1); border-radius: 0;;border-left: 2px solid rgba(0, 0, 0, 0.1); border-radius: 0;"
                         v-model="neighborhood.data.name"></InputText>
 
                 </template>
             </Column>
 
-            <Column class="p-2" field="delivery_price" header="Precio del domicilio" :sortable="true"
-                headerStyle="width:min-content; min-width:min-content; ">
+           <Column class="px-2 py-0 m-0" field="delivery_price" header="Precio del domicilio" :sortable="true"
+                headerStyle="width:15rem;min-width:15rem ">
                 <template #body="neighborhood">
-                    <span class="p-column-title">Code</span>
-                    <!-- {{ neighborhood.data.name }} -->
-                    <InputNumber style="width:100%;" v-model="neighborhood.data.delivery_price"
-                        @update:modelValue="() => update(neighborhood.data)"></InputNumber>
+                    <span class="p-column-title p-0">Code</span>
+               
+                    <InputText style="width:100%; border: none;border-right:2px solid rgba(0, 0, 0, 0.1); border-radius: 0;border-radius: 0;" v-model="neighborhood.data.delivery_price"
+                        @update:modelValue="() => update(neighborhood.data)"/>
                 </template>
             </Column>
 
-
-            <Column field="actions" header="Acciones">
+ 
+            <Column field="actions" header="Acciones" class="p-0" style="" frozen alignFrozen="right">
                 <template #body="data">
-                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="confirmDelete(data.data)" />
+                    <Button   class="p-button-rounded p-button-danger p-0" style="width: 2rem;display: flex;align-items: center;margin: auto; justify-content: center; aspect-ratio: 1 / 1;" @click="confirmDelete(data.data)" >
+
+                        <i :class="PrimeIcons.TRASH">
+                            
+                        </i>
+                    </Button>
                 </template>
             </Column>
 
@@ -787,7 +790,6 @@ Button {
   /* filter: blur(0); */
   
 }
-
 
 
 .loading-enter-to {

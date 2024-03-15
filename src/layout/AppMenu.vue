@@ -27,11 +27,11 @@ async function fetchAndUpdateRoles() {
         },
 
         {
-            label: 'PRINCIPAL',
+            label: 'VENTAS',
             roles: roles.value.adminTienda,
             items: [
                 {
-                    label: 'Tienda', icon: 'fa-solid fa-cart-shopping', to: '/',
+                    label: 'Tienda', icon: 'fa-solid fa-cart-shopping',
                     items: [
                         { label: 'Menu', icon: ' fa-solid fa-burger', to: '/tienda-menu/' },
                         { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
@@ -93,7 +93,7 @@ async function fetchAndUpdateRoles() {
             items: [
    
                 {
-                    label: 'Documentos', icon: 'fa-solid fa-book', to: '/sites',
+                    label: 'Documentos', icon: 'fa-solid fa-book', to: '/site/1/documentos',
 
                 },
                 {
@@ -147,7 +147,7 @@ async function fetchAndUpdateRoles() {
         },
 
         {
-            label: 'GESTION HUMANA MAS CERCA DE TI',
+            label: ' MAS CERCA DE TI',
             roles: roles.value.todos,
             items: [
 
@@ -162,6 +162,10 @@ async function fetchAndUpdateRoles() {
 
                 {
                     label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-simple', to: '/desempeno',
+
+                },
+                {
+                    label: 'Directorio ', icon: 'fa-solid fa-folder', to: '/directorio',
 
                 },
 
@@ -266,4 +270,34 @@ onBeforeMount(async () => {
     <!-- <Button style="position: fixed;top: 50%;left: 22rem;"><i :class="PrimeIcons.ANGLE_DOUBLE_LEFT"></i></Button> -->
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+/* Para navegadores basados en WebKit como Chrome, Safari */
+::-webkit-scrollbar {
+    width: 8px; /* Controla el ancho de la barra de desplazamiento */
+    height: 8px; /* Controla la altura de la barra de desplazamiento horizontal */
+}
+
+/* El track (o la pista) de la barra de desplazamiento */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color de fondo de la pista */
+}
+
+/* El handle (o el control deslizante) de la barra de desplazamiento */
+::-webkit-scrollbar-thumb {
+    background: #888; /* Color de fondo del deslizador */
+}
+
+/* El handle al pasar el mouse */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color de fondo del deslizador al pasar el mouse */
+}
+
+/* Para Firefox */
+* {
+  scrollbar-width: thin; /* "auto" o "thin" */
+  scrollbar-color: #888 #f1f1f1; /* color del deslizador y color de la pista */
+}
+
+
+</style>

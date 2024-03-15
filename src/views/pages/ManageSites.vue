@@ -16,7 +16,7 @@ import {
 
 const navigateToSite = (siteData) => {
     localStorage.setItem('currentSiteFiles', JSON.stringify(siteData));
-    router.push(`/site/${siteData.site_id}`);
+    router.push(`/site/${siteData.site_id}/documentos`);
 };
 
 
@@ -80,8 +80,8 @@ const users = ref([])
         <div class="col-12 m-auto" style="max-width: 1280px;">
             <div class="">
                 
-                <div class="my-2 col-12">
-                    <p style="font-weight: bold; color: black;" class="text-4xl pl-0 ml-0">Administrar recibos y documentacion</p>
+                <div class="my-2 col-12 ">
+                    <p style="font-weight: bold;" class="text-4xl text-center pl-0 ml-0"><i class="fa-solid fa-book"></i> Documentos</p>
 
                 </div>
                 
@@ -90,8 +90,8 @@ const users = ref([])
                     
                     <template #grid="slotProps">
                         
-                        <div class="col-12 lg:col-6 md:col-6 xl:col-4" style="aspect-ratio: 4 / 3;">
-                            <div @click="navigateToSite(slotProps.data)">
+                        <div  class="col-12 lg:col-6 md:col-6 xl:col-4" style="aspect-ratio: 4 / 3; ">
+                            <div @click="navigateToSite(slotProps.data)"  style="cursor: pointer;">
                                 <div class=" m-4      container-">
                                     <div class="text-center cont-img-sede">
                                         <div class="nombre-sede-cont">
@@ -100,7 +100,7 @@ const users = ref([])
                 <Avatar shape="circle" size="large" :style="{ 'background-color': 'red', color: '#ffffff' }" v-if="usersBySite[slotProps.data.site_id]?.length > 6" :label="`+${usersBySite[slotProps.data.site_id].length-4}`" />
             </AvatarGroup>
                                             <div class="text-5xl font-bold text-white nombre-sede">
-                                                <p style="width: 100%; animation: ;">
+                                                <p style="width: 100%;cursor: pointer; animation: ;">
                                                     {{ slotProps.data.site_name }}
                                                 </p>
                                             </div>
@@ -108,8 +108,7 @@ const users = ref([])
                                         <img :src="`${URI}/read-product-image/300/site-${slotProps.data.site_id}`"
                                             class="w-12   imagen" />
                                     </div>
-                                    <div class="flex align-items-center justify-content-between">
-                                    </div>
+                                  
                                 </div>
                             </div>
                         </div>
@@ -175,7 +174,7 @@ button {
 
 .nombre-sede-cont:hover+.imagen {
     transition: all .3s ease;
-    box-shadow: 1px 1px 50px var(--primary-color);
+    box-shadow: 1px 1px 10px ;
     z-index: -1;
     /* border-radius: 3rem; */
 }

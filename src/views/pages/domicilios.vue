@@ -1,5 +1,9 @@
 <template>
 
+<p  class="my-4 text-4xl text-center px-4" style="font-weight: bold;">
+    <i class="fa-solid fa-truck-arrow-right"></i>
+       Domicilios
+    </p>
 
 
 <Dialog v-model:visible="showAddNeighborhoodDialog" header="Agregar Nuevo Barrio" :modal="true" :closable="false">
@@ -29,7 +33,7 @@
     </Dialog>
 
 
-<div style="max-width: 900px;" class="m-auto ">
+<div style="max-width: 700px;" class="m-auto ">
 
     <div style="display: flex;gap:1rem; align-items: center;;">
 
@@ -38,7 +42,7 @@
 
 
 
-        <Dropdown style="width: 100%;min-width: 20rem;"  filter v-model="site" :options="sites.filter(n => n.site_id  != 12 && n.site_id  != 13 )" placeholder="SEDE" optionLabel="site_name"
+        <Dropdown style="width: 100%;max-width: 20rem;"  filter v-model="site" :options="sites.filter(n => n.site_id  != 12 && n.site_id  != 13 )" placeholder="SEDE" optionLabel="site_name"
                             required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" 
                             />
     </div>
