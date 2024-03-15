@@ -145,6 +145,8 @@
 
             <div class="col-12 px-0 mx-0">
             <!-- Botones para selección rápida de fechas -->
+            <Button text label="Hoy" @click="setDateRange(1)" class="p-button-text col-12 p-1 m-0" />
+            <Button text label="Ayer" @click="setDateRange(2)" class="p-button-text col-12 p-1 m-0" />
             <Button text label="Últimos 7 días" @click="setDateRange(7)" class="p-button-text col-12 p-1 m-0" />
             <Button text label="Últimos 14 días" @click="setDateRange(14)" class="p-button-text col-12 p-1" />
             <Button text label="Últimos 28 días" @click="setDateRange(28)" class="p-button-text col-12 p-0" />

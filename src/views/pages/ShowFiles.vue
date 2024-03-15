@@ -28,7 +28,9 @@ const documentsDropValues = ref([
     "RUT",
     "BOMBEROS",
     "CONCEPTO SANITARIO",
-    "SAYCO Y ACIMPRO"
+    "SAYCO Y ACIMPRO",
+    "CAMION",
+    "CARTA POLICÍA"
 ])
 const curentSiteDocuments = ref()
 const documentType = ref('')
