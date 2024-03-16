@@ -1,23 +1,23 @@
 <template>
-    <div class="col-12 px-4 m-0" style="background-color: transparent;border: none; ">
-        <div class="card p-0 lg:p-6" style="background-color: transparent; border: none;">
+    <div class="col-12  m-0 p-0" style="background-color: transparent;border: none; ">
+        <div class=" p-0 lg:p-6" style=" border: none;">
             <p class="text-2xl titulo my-3" style="text-transform: capitalize; font-weight: bold;">grupos de {{ route.params.adicionales }} 
                 
             </p> 
                
                <Button size="small" :severity="severity[route.params.adicionales]" class="mb-6" style="text-transform: capitalize; " @click="showAgregarGrupoAdicional = !showAgregarGrupoAdicional">Nuevo grupo de {{ route.params.adicionales }}</Button>
             
-                <div class="col-12  grid  m-0 p-0" >
+                <div class="col-12  grid  m-0 p-0" style="" >
 
                     <!-- {{ adicionales }} -->
-                    <div class="col-12 md:col-12 p-0 m-0 mb-4 " style="" v-for=" Grupoadicional in grupoAdicionales">
+                    <div class="col-12 md:col-12 p-0 m-0 mb-4 " style="background-color: ;" v-for=" Grupoadicional in grupoAdicionales">
 
                         
-                        <div class="card m-0 grid col-12"  :style="`background-color:${pastelColors[route.params.adicionales]}`" style="position: relative; box-shadow: 0 0 20px rgba(0, 0, 0, 0.144);border: none;">
+                        <div class="card m-0 grid col-12 p-1"  :style="`background-color:${pastelColors[route.params.adicionales]}`" style="position: relative;">
 
                             <p style="text-transform:capitalize;" class="text-xl mb-4 col-12"> <b>{{ Grupoadicional.name }}</b>
                             </p>
-                            <Button size="small" severity="danger" @click="openConfirmation(Grupoadicional)" class="add-cart-btn text-xl" style="cursor: pointer; position: absolute;top: -1rem;right: -1rem; width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;">
+                            <Button size="small" severity="danger" @click="openConfirmation(Grupoadicional)" class="add-cart-btn text-xl" style="cursor: pointer; position: absolute;top: -1rem;right: 0rem; width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;">
                                 
                                 <i   class="icono text-2xl  p-0 m-0 " :class="PrimeIcons.TIMES"> </i> 
                             
@@ -64,7 +64,7 @@
                 </div>
 
 
-                <div class="card col-12  p-4 " style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.172);border: none;">
+                <div class="card col-12  p-4 " >
 
                     <p style="text-transform:capitalize;" class="text-xl mb-6 mt-3 "> <b>Todas las {{ route.params.adicionales
                     }}</b>

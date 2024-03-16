@@ -98,38 +98,58 @@ export const useReportesStore = defineStore('reportes', {
         },
 
         dateRangeDifference(state) {
+            // Obtiene la fecha actual y elimina las horas, minutos y segundos
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+        
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+        
+            const dayBeforeYesterday = new Date(today);
+            dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
+        
+            // Obtiene las fechas de inicio y fin del estado y elimina las horas, minutos y segundos
+            const start_date = new Date(state.dateRange.startDate);
+            start_date.setHours(0, 0, 0, 0);
+        
+            const end_date = new Date(state.dateRange.endDate);
+            end_date.setHours(0, 0, 0, 0);
+        
             // Calcula la diferencia en días
-            const start_date =  new Date(state.dateRange.endDate)
-            const end_date = new Date(state.dateRange.startDate)
-            const diffTime = Math.abs(start_date - end_date);
+            const diffTime = Math.abs(end_date - start_date);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            console.log(diffDays,'dif')
+        
             // Determina el nombre del rango basado en la diferencia de días
             let rangeName = '';
-            switch(diffDays) {
-                case 1:
-                    rangeName = 'Últimos 999 días';
-                    break;
-                case 8:
-                    rangeName = 'Últimos 7 días';
-                    break;
-                case 15:
-                    rangeName = 'Últimos 14 días';
-                    break;
-                case 29:
-                    rangeName = 'Últimos 28 días';
-                    break;
-                default:
-                    // No coincide con ningún rango predefinido
-                    rangeName = null;
+            if (start_date.getTime() === yesterday.getTime() && end_date.getTime() === today.getTime()) {
+                rangeName = 'Hoy';
+            } else if (start_date.getTime() === dayBeforeYesterday.getTime() && end_date.getTime() === yesterday.getTime()) {
+                rangeName = 'Ayer';
+            } else {
+                switch(diffDays) {
+                    case 8:
+                        rangeName = 'Últimos 7 días';
+                        break;
+                    case 15:
+                        rangeName = 'Últimos 14 días';
+                        break;
+                    case 29:
+                        rangeName = 'Últimos 28 días';
+                        break;
+                    default:
+                        // No coincide con ningún rango predefinido
+                        rangeName = null;
+                }
             }
-
+        
             return {
                 diffDays,
                 rangeName
             };
-        },
+        }
+        
+        
+        
     },
 
     // actions y el resto de tu configuración...

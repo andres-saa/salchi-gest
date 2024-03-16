@@ -72,10 +72,16 @@
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} neighborhoods" responsiveLayout="scroll"
             scrollable :frozenValue="lockedCustomers">
             <template  class="p-0" #header style="z-index:200;padding: 0;">
-                <div class="flex p-0 flex-column md:flex-row md:justify-content-between md:align-items-center">
-                    <p class="mx-0  text-2xl my-4  p-0">Domicilios pagina web<Button  severity="help"  size="small" class="  m-0 ml-4" label="Nuevo Barrio"
+
+
+
+                    <Button  severity="help"  size="small" class="  m-0 my-5" label="Nuevo Barrio"
                             @click="showCreateDialog = true"></Button>
-                    </p>
+
+
+
+                <div class="flex p-0 flex-column md:flex-row md:justify-content-between md:align-items-center">
+                    
 
                     <span class="block mt-2 md:mt-0 p-input-icon-left">
                         <i class="pi pi-search" />
@@ -84,7 +90,7 @@
                 </div>
             </template>
 
-            <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column>
+            <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " ></Column>
 
             <Column class="px-2 py-0 m-0" field="id" header="Id" :sortable="true"
                 headerStyle="width:min-content; min-width:min-content; ">
@@ -116,7 +122,7 @@
             </Column>
 
  
-            <Column field="actions" header="Acciones" class="p-0" style="" frozen alignFrozen="right">
+            <Column field="actions" header="" class="p-0" style="" frozen alignFrozen="right">
                 <template #body="data">
                     <Button   class="p-button-rounded p-button-danger p-0" style="width: 2rem;display: flex;align-items: center;margin: auto; justify-content: center; aspect-ratio: 1 / 1;" @click="confirmDelete(data.data)" >
 

@@ -8,8 +8,8 @@
 
     <div class="col-12 p-0 m-0 " style="position: relative; max-width: 1366px;" cls>
        
-        <div class="col-12 px-3 py-0 mb-3 " style="overflow-x:auto;filter:drop-shadow(0 0 0.4rem rgba(0, 0, 0, 0.138));">
-    <div class="px-0 mx-0" style="width: max-content; background-color:rgba(250, 250, 250, 0); display:  flex;color: ; justify-content: start;align-items: center; gap: 2rem;">
+        <div class="col-12 px-3 py-0 mb-3 " style="overflow-x:auto;">
+    <div class="px-0 mx-0 pb-4 " style="width: max-content; background-color:rgba(250, 250, 250, 0); display:  flex;color: ; justify-content: start;align-items: center; gap: 2rem;">
 
 
 
@@ -145,8 +145,8 @@
 
             <div class="col-12 px-0 mx-0">
             <!-- Botones para selección rápida de fechas -->
-            <Button text label="Hoy" @click="setDateRange(1)" class="p-button-text col-12 p-1 m-0" />
-            <Button text label="Ayer" @click="setDateRange(2)" class="p-button-text col-12 p-1 m-0" />
+            <Button text label="Hoy" @click="setDateRange(0)" class="p-button-text col-12 p-1 m-0" />
+            <Button text label="Ayer" @click="setDateRange(1)" class="p-button-text col-12 p-1 m-0" />
             <Button text label="Últimos 7 días" @click="setDateRange(7)" class="p-button-text col-12 p-1 m-0" />
             <Button text label="Últimos 14 días" @click="setDateRange(14)" class="p-button-text col-12 p-1" />
             <Button text label="Últimos 28 días" @click="setDateRange(28)" class="p-button-text col-12 p-0" />
@@ -252,25 +252,25 @@ const endDate = ref(new Date());
 
 
 
-function checkCustomDateRange() {
-    // Determina la diferencia en días entre las fechas seleccionadas
-    const diffTime = Math.abs(store.dateRange - TempStartDate.value);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir ambos días en el rango
+// function checkCustomDateRange() {
+//     // Determina la diferencia en días entre las fechas seleccionadas
+//     const diffTime = Math.abs(store.dateRange - TempStartDate.value);
+//     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir ambos días en el rango
 
-    switch(diffDays) {
-        case 7:
-            selectedRangeName.value = 'Últimos 7 días';
-            break;
-        case 14:
-            selectedRangeName.value = 'Últimos 14 días';
-            break;
-        case 28:
-            selectedRangeName.value = 'Últimos 28 días';
-            break;
-        default:
-            selectedRangeName.value = ''; // No coincide con ningún rango predefinido
-    }
-}
+//     switch(diffDays) {
+//         case 7:
+//             selectedRangeName.value = 'Últimos 7 días';
+//             break;
+//         case 14:
+//             selectedRangeName.value = 'Últimos 14 días';
+//             break;
+//         case 28:
+//             selectedRangeName.value = 'Últimos 28 días';
+//             break;
+//         default:
+//             selectedRangeName.value = ''; // No coincide con ningún rango predefinido
+//     }
+// }
 
 
 
@@ -297,11 +297,24 @@ function setDateRange(days) {
     pastDate.setDate(today.getDate() - days); // Ajustado para incluir el día de hoy en el rango si es necesario
 
     TempStartDate.value = pastDate;
-    TempEndDate.value = tomorrow;
 
 
-    store.setDateRange(TempStartDate.value,TempEndDate.value)
-    showDateDialog.value = false
+    if (days == 1){
+        TempEndDate.value = today;
+        store.setDateRange(TempStartDate.value,TempEndDate.value)
+        showDateDialog.value = false
+
+
+    }else{
+        TempEndDate.value = tomorrow;
+        store.setDateRange(TempStartDate.value,TempEndDate.value)
+        showDateDialog.value = false
+
+    }
+
+    
+
+
     store.fetchSalesReport()
     
     // Usando 'tomorrow' en lugar de 'today'

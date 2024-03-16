@@ -1,10 +1,10 @@
 <template>
 
-<div class="col-12 ">
+<div class="col-12 p-0 ">
 
     
 
-    <p class="text-3xl titulo my-6 px-2 text-center" style="text-transform: capitalize;align-items: center; gap:1rem;font-weight: bold;display: flex;"> <div style="height: 0.5rem;width: 100%; background-color: #a855f7;border-radius: 1rem 0 0 1rem;" ></div>  <span style="min-width: max-content;">{{ ruta.params.sesion }}</span> <div style="height: 0.5rem; background-color: #f59e0b; width: 100%; border-radius: 0 1rem 1rem 0;"></div>
+    <p class="text-3xl titulo my-6 px-0 mx-0 text-center" style="text-transform: capitalize;align-items: center; gap:1rem;font-weight: bold;display: flex;"> <div style="height: 0.5rem;width: 100%; background-color: #a855f7;border-radius: 1rem 0 0 1rem;" ></div>  <span style="min-width: max-content;">{{ ruta.params.sesion }}</span> <div style="height: 0.5rem; background-color: #f59e0b; width: 100%; border-radius: 0 1rem 1rem 0;"></div>
                 
     </p> 
 
@@ -12,16 +12,12 @@
     <Button  style="height: 2.5rem;"  @click="showAgregarProducto = !showAgregarProducto" class=" ml-2 mb-4 " size="small" severity="help"> <i :class="PrimeIcons.PLUS" class="mr-3"></i> Agregar {{ ruta.params.sesion.slice(0,-1) }} </Button>
 </span>
 
-    <div class="grid p-5 md:p-0 m-0 col-12 m-auto"  >
-        <div v-for="product in products" :key="product.id" class="xl:col-3 lg:col-4 md:p-3 p-2 col-12 md:col-6 mb-4 ">
+    <div class="grid p-0  m-0 col-12 " style=""  >
+        <div v-for="product in products" :key="product.id" class="xl:col-3 lg:col-4 md:p-3 p-1 col-6 md:col-6 mb-4 ">
             <div class="cont p-2" style="background-color: white; height: 100%;position: relative"  >
         <!-- <router-link :to="`product/${product.id}` " @click="changeProduct(product)"> -->
 
-            <Button class="p-2" size="small" rounded severity="info" style="position: absolute;top: -1rem;right: -1rem;  display: flex; align-items: center; justify-content: center; color: white;z-index: 99;" @click="prepararParaEditar(product)" ><i   class=" text-2xl  p-0 m-0 " :class="PrimeIcons.PENCIL"> </i>  </Button>
-
             
-
-            <Button  severity="danger"  style="position: absolute;top: -1rem;right: 2rem; width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center;z-index: 99;" @click="pregpararParaEliminar(product)" ><i  class=" text-2xl  p-0 m-0 " :class="PrimeIcons.TRASH"> </i>  </Button>
 
 
             <div class="imagen-cont " style="position: ;">
@@ -43,6 +39,11 @@
             </div>
 
             
+            <Button class="p-2" size="small" rounded severity="info" style="position: absolute;top: -1rem;right: 0rem;  display: flex; align-items: center; justify-content: center; color: white;z-index: 9999999999999;" @click="prepararParaEditar(product)" ><i   class=" text-2xl  p-0 m-0 " :class="PrimeIcons.PENCIL"> </i>  </Button>
+
+            
+
+            <Button  severity="danger"  style="position: absolute;top: -1rem;right: 3rem; width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center;z-index: 99;" @click="pregpararParaEliminar(product)" ><i  class=" text-2xl  p-0 m-0 " :class="PrimeIcons.TRASH"> </i>  </Button>
             <Toast style="box-shadow: none;"  />
        
 

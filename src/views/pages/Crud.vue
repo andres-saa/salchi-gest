@@ -1016,7 +1016,7 @@ const verIMagen = (dni) => {
 
 
 
-    <div class="grid   m-0 ">
+    <div class="grid   m-0 p-0 ">
 
         <Dialog class="p-0 " v-model:visible="visibleImage" modal header="Foto de Perfil" :style="{ width: '30rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw', 'padding': 0 }">
@@ -1030,7 +1030,7 @@ const verIMagen = (dni) => {
         </Dialog>
 
         <!-- {{ getUserRole() }} -->
-        <div class="col-12 m-0 ">
+        <div class="col-12 m-0 p-0 ">
 
             <div class="col-12 p-0 m-0 ">
                 <Toast />
@@ -1038,7 +1038,7 @@ const verIMagen = (dni) => {
 
 
 
-                <div class="grid  m-1 " style="">
+                <div class="grid  m-0 " style="">
 
 
                     <input ref="cargarExcel" style="display:none" type="file" @change="handleFileUpload" />
@@ -1103,7 +1103,7 @@ const verIMagen = (dni) => {
                         </div>
                     </template>
 
-                    <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column>
+                    <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " ></Column>
 
                     <Column class="p-2" field="id" header="Id" :sortable="true"
                         headerStyle="width:min-content; min-width:min-content; ">
@@ -1933,14 +1933,6 @@ const verIMagen = (dni) => {
 
 
 
-
-    <!-- <border :model="[1,2,4]">
-    <template #item="{ item }">
-        <a v-tooltip.top="item" href="#" class="p-border-link" @click="onborderItemClick($event, item)">
-            <img :alt="item" src="https://lh3.googleusercontent.com/p/AF1QipNacg4X8DwsUhEkQ9a-VMWg6RUgCX-NdrrExueh=s680-w680-h510" style="width: 100%" />
-        </a>
-    </template>
-</border> -->
 </template>
 
 <style scoped lang="scss">

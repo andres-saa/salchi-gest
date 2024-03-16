@@ -18,7 +18,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import { uploadPDF } from '@/service/sendFileService.js'
 import { useRoute } from 'vue-router';
 import { useReportesStore } from '../../store/reportes';
-const store  = useReportesStore()
+const store = useReportesStore()
 const documents = ref([])
 const file = ref()
 const currentdocument = ref()
@@ -132,14 +132,14 @@ onMounted(() => {
 });
 
 
-watch(() => route.params.site_id, ()=> {
-    
+watch(() => route.params.site_id, () => {
+
     getSiteDocumentInfo()
     store.setLoading(true)
     store.setLoading(false)
-
-    
 })
+
+
 onMounted(() => {
     const storedSiteData = localStorage.getItem('currentSiteFiles');
     if (storedSiteData) {
@@ -226,28 +226,35 @@ const close = () => {
 
 <template>
     <Toast />
-     <div class="col-12 p-0 m-auto" style="max-width: 800px;">
-            <div class="">
+    <div class="col-12 p-0 m-auto" style="">
+        <div class="">
 
-                <DataTable  ref="dt" :value="curentSiteDocuments" dataKey="id" :paginator="true" :rows="10"
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    responsiveLayout="scroll" :frozenValue="lockedCustomers">
+            <DataTable ref="dt" :value="curentSiteDocuments" dataKey="id" :paginator="true" :rows="10"
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                :rowsPerPageOptions="[5, 10, 25]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                responsiveLayout="scroll" :frozenValue="lockedCustomers">
 
-                    <template #header>
 
-                        <div style="display: flex; justify-content: end;">
-                            <Button size="small"  style="width: max-content;font-weight: bold; "
-                            class=" p-button-success m-0 my" @click="open2()"  > 
-                            <i class="fa-solid fa-upload mr-3"></i>
-                            SUBIR NUEVO
-                        </Button>
-                        </div>
-                       
-                    </template>
+                <div style="display: flex;justify-content: end;">
 
-                    <Column class="p-0" header="Icon" headerStyle="width:0%; min-width:3rem;">
+                    <Button size="small "  style="width: max-content;font-weight: bold;display: flex;align-items: center;justify-content: center; aspect-ratio: 1 / 1; " rounded class=" p-button-info  p-3"
+                        @click="open2()">
+                        <i class="fa-solid fa-plus  text-2xl "></i>
+                        
+                    </Button>
+
+                </div>
+                <template #header>
+
+
+
+
+
+
+                </template>
+
+                <!-- <Column class="py-0" header="Icon" headerStyle="width:5rem; min-width:3rem;">
                         <template #body="user">
                             <span class="p-column-title">Image</span>
                             <i class="fa-solid fa-file-invoice"></i>
@@ -255,160 +262,168 @@ const close = () => {
 
                             </div>
                         </template>
-                    </Column>
+                    </Column> -->
 
 
 
 
-                    <Column class="p-0 p" field="name" header="Tipo" :sortable="true"
-                        headerStyle="width:30%; min-width:5rem; ">
-                        <template #body="user">
-                            <span class="p-column-title">name</span>
-                            {{ user.data.document_type }} </template>
-                    </Column>
+                <Column class="" field="name" header="Tipo" :sortable="true"
+                    headerStyle="width:20rem; min-width:max-content; ">
+                    <template #body="user">
+                        <p style="min-width: max-content;">
+                            {{ user.data.document_type }}
+                        </p>
+                    </template>
+                </Column>
 
 
-                    <Column class="p-0" field="position" header="Nombre " :sortable="true"
-                        headerStyle="width:30%; min-width:10rem;">
-                        <template #body="user">
-                            <span class="p-column-title">Category</span>
+                <Column class="py-0" field="position" header="Nombre " :sortable="true"
+                    headerStyle="width:20rem; min-width:10rem;">
+                    <template #body="user">
+                        <span class="p-column-title">Category</span>
+                        <p style="min-width: max-content;">
                             {{ user.data.document_name }}
-                        </template>
-                    </Column>
 
-                    <Column class="p-0" field="birth_date" header="Renovacion" :sortable="true"
-                        headerStyle="width:12%; min-width:10rem;">
-                        <template #body="user">
-                            <!-- <span class="p-column-title">Fecha de Nacimiento</span> -->
-                            {{ user.data.renovation_date }}
-                        </template>
-                    </Column>
-
-                    <Column class="p-2" header="Acciones" fieldheaderStyle="width:10%; min-width:5rem;" frozen alignFrozen="right">
-                        <template #body="user">
-                            <div style="display: flex;">
-                                <Button text size="large" style="min-width: max-content; aspect-ratio: 1 / 1; "
-                                    class=" p-button-success mr-2 mb-2 p-0 text-3xl "
-                                    @click="getSiteDocument(user.data.document_id, user.data.document_type)">
-
-                                    <i class="fa-solid fa-file-arrow-down"></i>
-
-                                </Button>
-
-                                <Button text size="large" style="width: max-content "
-                                    class=" p-button-info mr-2 mb-2 p-0 text-3xl"
-                                    @click="open(user.data)">
-
-                                    <i class="fa-solid fa-pen-to-square"></i>
-
-                                </Button>
-                                
-                            </div>
-
-
-
-                        </template>
-
-                    </Column>
-
-
-                    <Dialog class="p-0" :closable="true" style="max-width: 500px;"
-                        :header="` CARGAR ${currentdocument ? currentdocument.document_type : ''} PARA ${currentSite.site_name}`"
-                        v-model:visible="display" :breakpoints="{ '960px': '75vw' }"
-                        :style="{ width: '30vw', padding: '0px' }" :modal="true">
-
-
-                        <input ref="fileInput" type="file" @change="handleFileChange" style="display: none;">
-
-                        <div class="col-12 p-0" style="max-width: ;">
-                            <label for="position">FECHA DE RENOVACION</label>
-
-                            <Calendar id="entry_date" style="width: 100%;margin: 20px 0 ;"
-                                v-model="documentRenovationDate" required="true" autofocus />
-                        </div>
-
-
-                        <p class="p-3" v-show="file" style="background-color:rgba(115, 255, 76, 0.306);">
-                            <i class="pi pi-check" style="color: slateblue"></i> {{ file ? `${file.name} : si este no es
-                            su documento por
-                            favor carguelo` : '' }}
                         </p>
-                        <!-- <img src="@/images/document_image.jpg" class="shadow-2" style="width: 20%;" @click="cambiar" /> -->
-                        <div class="grid" style="display: flex; justify-content: space-between;">
+                    </template>
+                </Column>
 
-                            <div class="col-12 xl:col-6">
-                                <Button label="Seleccionar documento" class="col-12"
-                                    style=" background-color: var(--primary-color);"
-                                    @click="$refs.fileInput.click();" />
-                            </div>
+                <Column class="p-0" field="birth_date" header="Renovacion" :sortable="true"
+                    headerStyle="width:5rem; min-width:10rem;">
+                    <template #body="user">
+                        <!-- <span class="p-column-title">Fecha de Nacimiento</span> -->
+                        {{ user.data.renovation_date }}
+                    </template>
+                </Column>
 
-                            <div class="col-12 xl:col-6">
-                                <Button class="col-12" label="Enviar" style="background-color: var(--primary-color);"
-                                    @click="update(file, currentdocument)" />
+                <Column style="" class="py-0" header="Acciones" fieldheaderStyle="width:10rem;"
+                    frozen alignFrozen="right">
+                    <template #body="user">
 
-                            </div>
+                        <Button text size="large" style=" aspect-ratio: 1 / 1; "
+                            class=" p-button-success mr-2 mb-2 p-0 text-3xl "
+                            @click="getSiteDocument(user.data.document_id, user.data.document_type)">
 
+                            <i class="fa-solid fa-file-arrow-down"></i>
 
+                        </Button>
 
+                        <Button text size="large" style="" class=" p-button-info mr-2 mb-2 p-0 text-3xl"
+                            @click="open(user.data)">
 
-                            <!-- {{ currentdocument }}  -->
+                            <i class="fa-solid fa-pen-to-square"></i>
 
-                        </div>
-
-
-                        <!-- <Button label="enviar" severity="warning" @click="$refs.fileInput.click();" /> -->
-                    </Dialog>
-                    <!-- <Button label="Show" icon="pi pi-external-link" style="width: auto" @click="open" /> -->
-
-
-                    <Dialog :header="` CARGAR ${currentdocument ? currentdocument : ''} PARA ${currentSite.site_name}`"
-                        v-model:visible="display2" :breakpoints="{ '960px': '75vw' }"
-                        :style="{ width: '50vw', padding: '50p0x' }" :modal="true">
-
-
-                        <div class="grid" style="display: flex; padding: 0; margin: 0;">
-                            <div class="col-12 xl:col-6">
-                                <label for="position">TIPO DE DOCUMENTO</label>
-                                <Dropdown v-model.trim="documentType" :options="documentsDropValues" placeholder=""
-                                    required="true" :class="{ 'p-invalid': submitted }"
-                                    style="width: 100%;margin: 20px 0 ;" />
-                            </div>
-
-
-                            <div class="col-12 xl:col-6">
-                                <label for="position">FECHA DE RENOVACION</label>
-
-                                <Calendar id="entry_date" style="width: 100%;margin: 20px 0 ;"
-                                    v-model="documentRenovationDate" required="true" autofocus />
-                            </div>
-
-                        </div>
-
-                        <input ref="fileInput" type="file" @change="handleFileChange" style="display: none;">
-
-                        <p class="p-3" v-show="file" style="background-color:rgba(19, 164, 0, 0.306);">
-                            <i class="pi pi-check" style="color: slateblue"></i> {{ file ? `${file.name} : verifique si
-                            este es su documeto
-                            antes de envirlo` : '' }}
-                        </p>
-                        <!-- <img src="@/images/document_image.jpg" class="shadow-2" style="width: 20%;" @click="cambiar" /> -->
-                        <div style="display: flex; justify-content: space-between;">
-                            <Button label="Seleccionar documento"
-                                style="width: 40%; background-color: var(--primary-color);"
-                                @click="$refs.fileInput.click();" />
-                            <Button label="Enviar" style="width: 40%;background-color: var(--primary-color);"
-                                @click="upload(file, documentType, currentSite.site_id)" />
-                            <!-- {{ documentRenovationDate }} -->
-                        </div>
-                        <!-- <Button label="enviar" severity="warning" @click="$refs.fileInput.click();" /> -->
-                    </Dialog>
-                </DataTable>
+                        </Button>
 
 
 
 
-            </div>
+
+                    </template>
+
+
+                </Column>
+
+
+
+
+
+            </DataTable>
+
+            <Dialog class="p-0" :closable="true" style="max-width: 500px;"
+                :header="` CARGAR ${currentdocument ? currentdocument.document_type : ''} PARA ${currentSite.site_name}`"
+                v-model:visible="display" :breakpoints="{ '960px': '75vw' }" :style="{ width: '30vw', padding: '0px' }"
+                :modal="true">
+
+
+                <input ref="fileInput" type="file" @change="handleFileChange" style="display: none;">
+
+                <div class="col-12 p-0" style="max-width: ;">
+                    <label for="position">FECHA DE RENOVACION</label>
+
+                    <Calendar id="entry_date" style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
+                        required="true" autofocus />
+                </div>
+
+
+                <p class="p-3" v-show="file" style="background-color:rgba(115, 255, 76, 0.306);">
+                    <i class="pi pi-check" style="color: slateblue"></i> {{ file ? `${file.name} : si este no es
+                    su documento por
+                    favor carguelo` : '' }}
+                </p>
+                <!-- <img src="@/images/document_image.jpg" class="shadow-2" style="width: 20%;" @click="cambiar" /> -->
+                <div class="grid" style="display: flex; justify-content: space-between;">
+
+                    <div class="col-12 xl:col-6">
+                        <Button label="Seleccionar documento" class="col-12"
+                            style=" background-color: var(--primary-color);" @click="$refs.fileInput.click();" />
+                    </div>
+
+                    <div class="col-12 xl:col-6">
+                        <Button class="col-12" label="Enviar" style="background-color: var(--primary-color);"
+                            @click="update(file, currentdocument)" />
+
+                    </div>
+
+
+
+
+                    <!-- {{ currentdocument }}  -->
+
+                </div>
+
+
+                <!-- <Button label="enviar" severity="warning" @click="$refs.fileInput.click();" /> -->
+            </Dialog>
+            <!-- <Button label="Show" icon="pi pi-external-link" style="width: auto" @click="open" /> -->
+
+
+            <Dialog :header="` CARGAR ${currentdocument ? currentdocument : ''} PARA ${currentSite.site_name}`"
+                v-model:visible="display2" :breakpoints="{ '960px': '75vw' }"
+                :style="{ width: '50vw', padding: '50p0x' }" :modal="true">
+
+
+                <div class="grid" style="display: flex; padding: 0; margin: 0;">
+                    <div class="col-12 xl:col-6">
+                        <label for="position">TIPO DE DOCUMENTO</label>
+                        <Dropdown v-model.trim="documentType" :options="documentsDropValues" placeholder=""
+                            required="true" :class="{ 'p-invalid': submitted }" style="width: 100%;margin: 20px 0 ;" />
+                    </div>
+
+
+                    <div class="col-12 xl:col-6">
+                        <label for="position">FECHA DE RENOVACION</label>
+
+                        <Calendar id="entry_date" style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
+                            required="true" autofocus />
+                    </div>
+
+                </div>
+
+                <input ref="fileInput" type="file" @change="handleFileChange" style="display: none;">
+
+                <p class="p-3" v-show="file" style="background-color:rgba(19, 164, 0, 0.306);">
+                    <i class="pi pi-check" style="color: slateblue"></i> {{ file ? `${file.name} : verifique si
+                    este es su documeto
+                    antes de envirlo` : '' }}
+                </p>
+                <!-- <img src="@/images/document_image.jpg" class="shadow-2" style="width: 20%;" @click="cambiar" /> -->
+                <div style="display: flex; justify-content: space-between;">
+                    <Button label="Seleccionar documento" style="width: 40%; background-color: var(--primary-color);"
+                        @click="$refs.fileInput.click();" />
+                    <Button label="Enviar" style="width: 40%;background-color: var(--primary-color);"
+                        @click="upload(file, documentType, currentSite.site_id)" />
+                    <!-- {{ documentRenovationDate }} -->
+                </div>
+                <!-- <Button label="enviar" severity="warning" @click="$refs.fileInput.click();" /> -->
+            </Dialog>
+
+
+
+
+
         </div>
+    </div>
 
 
 
@@ -434,10 +449,7 @@ const close = () => {
 }
 
 
-*{
-    text-transform: capitalize ;
+* {
+    text-transform: capitalize;
 }
-
-
-
 </style>

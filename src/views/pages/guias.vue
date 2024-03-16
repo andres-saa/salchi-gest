@@ -1,6 +1,6 @@
 <template>
 
-<p  class="mb-2 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize;">
+<p  class="mb-2 my-5 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize;">
     <i class="fa-solid fa-person-chalkboard"></i>
       Gestion de guias
     </p>
@@ -51,8 +51,8 @@
 
     <!-- <p class="col-12 text-center text-xl p-0 mb-5" style="font-weight: bold;">Asi lo hacemos en salchimonster</p> -->
 
-    <DataTable class="card mb-4 p-5 my-3 shadow-4" grid 
-        style="background-color: white; max-width: 1024px;border: none; margin: auto    ;" ref="dt"
+    <DataTable class="card mb-4  my-3 shadow-5 md:p-5"  
+        style=" max-width: 1024px;border: none; margin: auto    ; padding: 0;" ref="dt"
         :value="archived_files" v-model:selection="selectedFiles" dataKey="id" :paginator="true" :rows="10"
         :filters="filters"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -89,43 +89,18 @@
                     v-model="area" :options="areas" placeholder="Area de la empresa" />
                 <Dropdown style="height: 3rem; text-justify: center;" class="col-12 lg:col-5 p-0" v-model="type"
                     optionLabel="type_name" :options="types" placeholder="Tipo de archivo" />
-                <Button @click="getfiles"
+            
+                    <div class="col p-0" style="display: flex; justify-content: end; width: 100%;">
+                        <Button  @click="getfiles"
                     style="height: 3rem; border-radius: 50%; aspect-ratio: 1/1; display: flex;align-items: center; justify-content: center;"
                     class="  text-center" severity="help" size="small"> <i :class="PrimeIcons.SEARCH"></i></Button>
+                    </div>
+              
             </div>
 
 
 
-            <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-
-
-                <p v-if="!type && !area" class="m-0  text-2xl my-4">{{ type?.type_name }} Todos los tipos de archivos de
-                    todas
-                    las areas {{ area?.area_name }}
-                </p>
-
-
-                <p v-else-if="type && !area" class="m-0  text-2xl my-4">{{ type?.type_name }} de todas las areas
-                </p>
-
-                <p v-else-if="!type && area" class="m-0  text-2xl my-4">{{ type?.type_name }} Todos los tipos de archivos
-                    del
-                    area {{ area?.area_name }}
-                </p>
-
-
-                <p v-else class="m-0  text-2xl my-4">{{ type?.type_name }} del area de {{ area?.area_name }}
-                </p>
-
-                <Button v-if="getUserId() == capacitacion.creator_id" label="Subir archivo" icon="pi pi-upload"
-                    class="p-button-success ml-4 p-2" @click="showDialog" />
-
-
-                <span class="block mt-2 md:mt-0 p-input-icon-left">
-                    <i class="pi pi-search" />
-                    <InputText class="" v-model="filters['global'].value" placeholder="Buscar..." />
-                </span>
-            </div>
+           
         </template>
 
         <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column>
@@ -153,7 +128,7 @@
 
 
         <Column class="p-2" field="file_name" header="Nombre" :sortable="true"
-            headerStyle="width:min-content; min-width:min-content; ">
+            headerStyle="width:min-content; min-width:20rem; ">
             <template #body="archived_file">
                 <span class="p-column-title">Code</span>
                 {{ archived_file.data.file_name }}
@@ -180,7 +155,7 @@
 
 
         <Column class="p-2" field="upload_date" header="Fecha" :sortable="true"
-            headerStyle="width:min-content; min-width:min-content; ">
+            headerStyle="width:10rem; min-width:7rem; ">
             <template #body="archived_file">
                 <span class="p-column-title">Code</span>
                 {{ archived_file.data.upload_date }}

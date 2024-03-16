@@ -2729,6 +2729,7 @@
   }
   .p-datatable .p-datatable-tbody > tr > td > .p-column-title {
     font-weight: 700;
+    
   }
   .p-datatable .p-datatable-tbody > tr:focus-visible {
     outline: 0.15rem solid #C7D2FE;
@@ -2765,6 +2766,7 @@
   }
   .p-datatable.p-datatable-gridlines .p-datatable-header {
     border-width: 1px 1px 0 1px;
+
   }
   .p-datatable.p-datatable-gridlines .p-datatable-footer {
     border-width: 0 1px 1px 1px;

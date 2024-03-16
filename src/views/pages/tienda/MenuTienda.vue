@@ -7,15 +7,16 @@
     </p>
 
 
-    <div class="col-12 m-auto  grid " style="max-width: 800px;" >
-    <div style="display: flex;overflow-x: auto; align-items: center;" class="col-12  ">
+    <div class="col-12 m-auto  grid p-0  " style="max-width: 800px;" >
+
+    <div style="display: flex;overflow-x: auto; align-items: center;" class="col-12 px-2 my-3 pb-4 md:p-0 ">
      
     <div  style="min-width: max-content;">
         <SPan class=" mr-4 " style="font-weight: bold;">  SEDE: </SPan>  <Dropdown  style="min-width: max-content;" class="col md:col-6 p-0   " v-model="siteDropValue" :options="siteDropValues" optionLabel="site_name"
 placeholder="sede" />
 
     </div>
-
+    
 
 
     <div class="" style="min-width: max-content;">
@@ -55,7 +56,7 @@ placeholder="sede" />
   
 
 
-        <div v-for="menu in MenuOptions" class="col p-2">
+        <div v-for="menu in MenuOptions" class="col p-2  ">
             <RouterLink :to="`/tienda-menu/${menu.to}`">
                 <Button style="height: 2.5rem;" :severity="menu.severity"  class="outlined col-12  text-center"
                      Secondary> <i :class="menu.icon" class="mr-2" ></i> <span style="width: 100%;" sclass="text-center"> {{ menu.name }}</span> </Button>

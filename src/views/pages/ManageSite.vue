@@ -87,9 +87,9 @@ const navigateToSite = (siteData) => {
 
 <template>
 
-
-    <div class=" text-4xl text-center col-12 m-auto"
-        style="font-weight: bold;max-width: 900px; display: flex;align-items: center; gap: 1rem;">
+<div class=" m-auto md:p-5 md:shadow-5" style="max-width: 1024px;">
+    <div class=" text-4xl text-center col-12 m-auto p-0"
+        style="font-weight: bold; display: flex;align-items: center; gap: 1rem;max-width: 1024px;">
 
         <div style="background-color: #A855F7; height: 0.5rem;border-radius: 0 1rem 1rem 0; width: 100%;" />
 
@@ -104,12 +104,12 @@ const navigateToSite = (siteData) => {
     </div>
 
 
-    <div class=" my-5 m-auto  " style="width: 100%;height: 100%;display: flex;max-width: 800px;"> 
+    <div class=" mb-5 m-auto  " style="width: 100%;height: 100%;display: flex;max-width: 1024px;"> 
             <div class="p-3" style="display: flex;width: 100%; overflow-x: auto;gap: 1rem; ">
-                <div class="p-1" v-for="site in sites"  style="display: flex;flex-direction: column; justify-content: center; align-items: center;" :style="route.params.site_id == site.site_id? 'border-bottom: 6px solid red;' : ''">
+                <div class="p-1" v-for="site in sites"  style="display: flex;flex-direction: column; justify-content: center; align-items: center;" :style="route.params.site_id == site.site_id? 'box-shadow:0 6px 0 red':' 6px solid red'">
                     <div @click="navigateToSite(site)" style="cursor: pointer;display: flex;flex-direction: column; align-items: center;" >
-                        <img style="width: 3rem;border-radius: 0.5rem; aspect-ratio: 1 / 1; object-fit: cover;"  :src="`${URI}/read-product-image/96/site-${site.site_id}`" />
-                    <p style="font-weight: bold; min-width: max-content;"> {{site.site_name}}</p>
+                        <img style="width:100%;min-width: 5rem; border-radius: 0.5rem; height: 4rem; object-fit: cover;"  :src="`${URI}/read-product-image/96/site-${site.site_id}`" />
+                    <p style="font-weight: bold; min-width: max-content; text-transform: uppercase;"> {{site.site_name}}</p>
                     </div>
  
                     
@@ -120,7 +120,7 @@ const navigateToSite = (siteData) => {
 
 
     <div 
-        style="z-index: 99; max-width: 800px;  display: flex;; align-items: center; justify-content: space-between; "
+        style="z-index: 99; max-width: 1024px;  display: flex;; align-items: center; justify-content: space-between; "
         class="col-12  p-0 m-auto">
 
         <div style="min-width: max-content;">
@@ -155,6 +155,11 @@ const navigateToSite = (siteData) => {
 
 
     </div>
+
+</div>
+
+
+
 </template>
 
 

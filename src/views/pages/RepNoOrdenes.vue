@@ -2,8 +2,8 @@
     <div class="grid">
 
         <div class="grid col-12 ">
-            <div class="col-12 lg:col-6 ">
-                <div class="card mb-0">
+            <div class="col-12 lg:col-6 m-0">
+                <div class="card mb-0 ">
                     <div class="flex justify-content-between mb-3">
                         <div>
                             <span class="block text-500 font-medium mb-3">Venta bruta</span>
@@ -21,7 +21,7 @@
                     
                     
                     <RouterLink to="/reporte-ventas/ordenes">
-                        <Button outlined class="p-2 font-medium ml-3  " :style="store.order_status == 'enviada'? 'color:var(--blue-500);background-color:var(--blue-100)': 'color:rgba(255, 99, 132, 1);background-color:var(--pink-100)'" style="border: none ;">ver ordenes</Button>
+                        <Button outlined class="p-2 font-medium ml-3  " :style="store.order_status == 'enviada'? 'color:var(--blue-500);background-color:var(--blue-100)': 'color:rgba(255, 99, 132, 1);background-color:var(--pink-100)'" style="border: none ;"> ordenes</Button>
 
                     </RouterLink>    <span class=" font-medium ml-3" :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.salesReport?.total_sales?.total_orders || 0 }} </span>
                     </div>

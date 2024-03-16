@@ -16,8 +16,8 @@ border-radius: 1rem;;">
 <div style="display: flex;">
 
     
-        <ProgressSpinner   style="width: 100px; height: 100px" strokeWidth="4" fill="white"
-        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+        <!-- <ProgressSpinner   style="width: 100px; height: 100px" strokeWidth="4" fill="white"
+        animationDuration=".5s" aria-label="Custom ProgressSpinner" /> -->
 
     </div>
 </div>
@@ -99,7 +99,7 @@ onUnmounted(() => {
 .noti-enter-from {
   opacity: 0;
   /* transform: translateY(20rem); */
-  filter: blur(10px);
+  /* filter: blur(10px); */
   /* filter: blur(0); */
   
 }
