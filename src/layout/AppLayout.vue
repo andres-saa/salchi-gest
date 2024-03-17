@@ -65,7 +65,6 @@ const isOutsideClicked = (event) => {
         <div class="layout-sidebar">
             <app-sidebar></app-sidebar>
         </div>
-        <loading  style="z-index: 9;position: fixed;height: 100vh;"></loading>
 
         <div class="layout-main-container " >
 <!-- 
@@ -77,11 +76,13 @@ const isOutsideClicked = (event) => {
 
 </div> -->
 
-            <div class="layout-main p-0" style="contain: paint;">
+            <div class="layout-main p-0">
                 <!-- <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);"></div> -->
 
-             
+                <loading  style="z-index: 9;position: fixed;height: 100vh;"></loading>
+
                 <transition name="fade">
+                    
                     <router-view class="p-0"></router-view>
 
                 </transition>
@@ -121,7 +122,7 @@ const isOutsideClicked = (event) => {
  .fade-enter-from {
   opacity: 1;
   transform: translateY(10vh);
-  filter: blur(10px);
+//   filter: blur(10px);
   /* filter: blur(0); */
   
 }

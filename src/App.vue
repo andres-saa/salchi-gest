@@ -47,7 +47,7 @@ const toast = useToast()
  .fade-enter-from {
   opacity: 1;
   transform: translateY(-20rem);
-  filter: blur(10px);
+  /* filter: blur(10px); */
   /* filter: blur(0); */
   
 }

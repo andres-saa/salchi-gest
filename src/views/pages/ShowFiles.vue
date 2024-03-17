@@ -2,7 +2,6 @@
 
 
 import { ref, onMounted, onBeforeMount, computed, cloneVNode, watch } from 'vue';
-import { useToast } from 'primevue/usetoast';
 import {
     curentSite, getSiteDocument
 
@@ -14,10 +13,28 @@ import { URI } from '../../service/conection';
 import ProductService from '@/service/ProductService';
 // import { ref, onMounted } from 'vue';
 // import { useToast } from 'primevue/usetoast';
-import { useConfirm } from 'primevue/useconfirm';
 import { uploadPDF } from '@/service/sendFileService.js'
 import { useRoute } from 'vue-router';
 import { useReportesStore } from '../../store/reportes';
+
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
+
+const confirm = useConfirm();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const store = useReportesStore()
 const documents = ref([])
 const file = ref()
@@ -52,6 +69,45 @@ const handleFileChange = (event) => {
     }
 
 }
+
+const deleteDocument = (document) => {
+    confirm.require({
+        target: event.currentTarget,
+        message: `Esta seguro de eliminar ${document.document_name}`,
+        icon: 'pi pi-exclamation-triangle',
+        rejectClass: 'p-button-info p-button-outlined p-button-sm',
+        acceptClass: 'p-button-sm p-button-danger',
+        rejectLabel: 'Cancelar',
+        acceptLabel: 'Eliminar',
+        accept: () => {
+            // toast.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
+            performDeletion(document)
+        },
+        reject: () => {
+            // toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+        }
+    })
+};
+
+
+const performDeletion = async (document) => {
+    try {
+        const response = await fetch(`${URI}/site_document/${document.document_id}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al eliminar el documento');
+        }
+
+        // Actualiza la lista de documentos en la interfaz de usuario
+        getSiteDocumentInfo();
+        toast.add({ severity: 'success', summary: 'Documento eliminado', detail: 'El documento ha sido eliminado correctamente.', life: 3000 });
+    } catch (error) {
+        console.error('Error al eliminar el documento:', error);
+        toast.add({ severity: 'error', summary: 'Error al eliminar', detail: 'No se pudo eliminar el documento.', life: 3000 });
+    }
+};
 
 const uploadPDFInfo = async (data) => {
     let Method = "post"
@@ -225,8 +281,16 @@ const close = () => {
 </script>
 
 <template>
+
+
+
     <Toast />
     <div class="col-12 p-0 m-auto" style="">
+
+        <Toast />
+        <ConfirmPopup></ConfirmPopup>
+
+
         <div class="">
 
             <DataTable ref="dt" :value="curentSiteDocuments" dataKey="id" :paginator="true" :rows="10"
@@ -238,10 +302,11 @@ const close = () => {
 
                 <div style="display: flex;justify-content: end;">
 
-                    <Button size="small "  style="width: max-content;font-weight: bold;display: flex;align-items: center;justify-content: center; aspect-ratio: 1 / 1; " rounded class=" p-button-info  p-3"
-                        @click="open2()">
+                    <Button size="small "
+                        style="width: max-content;font-weight: bold;display: flex;align-items: center;justify-content: center; aspect-ratio: 1 / 1; "
+                        rounded class=" p-button-info  p-3" @click="open2()">
                         <i class="fa-solid fa-plus  text-2xl "></i>
-                        
+
                     </Button>
 
                 </div>
@@ -256,7 +321,7 @@ const close = () => {
 
                 <!-- <Column class="py-0" header="Icon" headerStyle="width:5rem; min-width:3rem;">
                         <template #body="user">
-                            <span class="p-column-title">Image</span>
+                            <span class="p-column-title">Image  </span>
                             <i class="fa-solid fa-file-invoice"></i>
                             <div>
 
@@ -296,11 +361,12 @@ const close = () => {
                     </template>
                 </Column>
 
-                <Column style="" class="py-0" header="Acciones" fieldheaderStyle="width:10rem;"
-                    frozen alignFrozen="right">
+                <Column style="" class="py-0" header="Acciones" fieldheaderStyle="width:10rem; min-width:max-content" frozen
+                    alignFrozen="right">
                     <template #body="user">
 
-                        <Button text size="large" style=" aspect-ratio: 1 / 1; "
+                        <div style="display: flex;">
+                            <Button text size="large" style=" aspect-ratio: 1 / 1; "
                             class=" p-button-success mr-2 mb-2 p-0 text-3xl "
                             @click="getSiteDocument(user.data.document_id, user.data.document_type)">
 
@@ -315,7 +381,13 @@ const close = () => {
 
                         </Button>
 
+                        <Button text size="large" style="" class=" p-button-danger mr-2 mb-2 p-0 text-3xl"
+                            @click="deleteDocument(user.data)">
+                            <i class="fa-solid fa-trash"></i>
+                        </Button>
 
+                        </div>
+                       
 
 
 

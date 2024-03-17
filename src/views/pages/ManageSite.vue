@@ -95,11 +95,11 @@ const navigateToSite = (siteData) => {
 
         <div style="display: flex; align-items: center;gap: 1rem;">
            
-        <p class="p-0" style="min-width: max-content;"> {{ currentSite.site_name }} 
+        <p class="p-0" style="min-width: max-content;text-transform: uppercase;" > {{ currentSite.site_name }} 
         </p>
         </div>
 
-        <div style="background-color: #A855F7; height: 0.5rem;border-radius: 0 1rem 1rem 0; width: 100%;" />
+        <div style="background-color: #F59E0B; height: 0.5rem;border-radius: 0 1rem 1rem 0; width: 100%;" />
 
     </div>
 
