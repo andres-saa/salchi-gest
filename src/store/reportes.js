@@ -102,11 +102,11 @@ export const useReportesStore = defineStore('reportes', {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
         
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+        
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
-        
-            const dayBeforeYesterday = new Date(today);
-            dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
         
             // Obtiene las fechas de inicio y fin del estado y elimina las horas, minutos y segundos
             const start_date = new Date(state.dateRange.startDate);
@@ -121,12 +121,15 @@ export const useReportesStore = defineStore('reportes', {
         
             // Determina el nombre del rango basado en la diferencia de días
             let rangeName = '';
-            if (start_date.getTime() === yesterday.getTime() && end_date.getTime() === today.getTime()) {
+            if (start_date.getTime() === today.getTime() && end_date.getTime() === tomorrow.getTime()) {
                 rangeName = 'Hoy';
-            } else if (start_date.getTime() === dayBeforeYesterday.getTime() && end_date.getTime() === yesterday.getTime()) {
+            } else if (start_date.getTime() === yesterday.getTime() && end_date.getTime() === today.getTime()) {
                 rangeName = 'Ayer';
             } else {
-                switch(diffDays) {
+                switch (diffDays) {
+                    case 2:
+                        rangeName = 'Últimos 2 días';
+                        break;
                     case 8:
                         rangeName = 'Últimos 7 días';
                         break;
@@ -147,6 +150,7 @@ export const useReportesStore = defineStore('reportes', {
                 rangeName
             };
         }
+        
         
         
         

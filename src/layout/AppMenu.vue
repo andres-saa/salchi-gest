@@ -55,6 +55,10 @@ async function fetchAndUpdateRoles() {
                     label: 'Gestion de cargos', icon: 'fa-database fa-solid', to: '/cargos',
 
                 },
+                {
+                    label: 'Directorio ', icon: 'fa-solid fa-folder', to: '/directorio',
+
+                },
                 
 
 
@@ -164,10 +168,7 @@ async function fetchAndUpdateRoles() {
                     label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-simple', to: '/desempeno',
 
                 },
-                {
-                    label: 'Directorio ', icon: 'fa-solid fa-folder', to: '/directorio',
 
-                },
 
 
 

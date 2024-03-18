@@ -64,12 +64,12 @@ onMounted(() => {
     // console.log(curentSite)
 });
 
-onMounted(() => {
-    const storedSiteData = localStorage.getItem('currentSiteFiles');
-    if (storedSiteData) {
-        currentSite.value = JSON.parse(storedSiteData);
-    }
-});
+// onMounted(() => {
+//     const storedSiteData = localStorage.getItem('currentSiteFiles');
+//     if (storedSiteData) {
+//         currentSite.value = JSON.parse(storedSiteData);
+//     }
+// });
 
 
 watch( () => route.params.site_id, () => {
@@ -123,16 +123,16 @@ const navigateToSite = (siteData) => {
         style="z-index: 99; max-width: 1024px;  display: flex;; align-items: center; justify-content: space-between; "
         class="col-12  p-0 m-auto">
 
-        <div style="min-width: max-content;">
+        <div class="col-12 md:col-6 p-0" style="min-width: max-content;max-width: 40rem; display: flex;gap: 1rem;">
 
 
-            <RouterLink :to="`/site/${route.params.site_id}/documentos`">
-                <Button size="small" class=" mr-3 p-button-help    " style="font-weight: bold;"> DOCUMENTOS</Button>
+            <RouterLink :to="`/site/${route.params.site_id}/documentos`" style="width: 100%">
+                <Button size="small" class=" mr-3 p-button-help center   " style="font-weight: bold;width: 100%"> DOCUMENTOS</Button>
 
             </RouterLink>
 
-            <RouterLink :to="`/site/${route.params.site_id}/recibos`" style="border-radius: ;">
-                <Button size="small" class="p-button-warning" style="font-weight: bold;"> RECIBOS</Button>
+            <RouterLink :to="`/site/${route.params.site_id}/recibos`" style="width: 100%">
+                <Button size="small" class="p-button-warning" style="font-weight: bold;width: 100%"> RECIBOS</Button>
             </RouterLink>
 
         </div>

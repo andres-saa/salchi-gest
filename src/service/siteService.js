@@ -9,8 +9,19 @@ const siteService = {
         } catch (error) {
             console.log(error)
         }
+    },
+    async siteDirectory (site_id)  {
+        try {
+            const response = await fetch(`${URI}/site/${site_id}/all-details`)
+            const data = response.json()
+            return data
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
+
+
 
 
 

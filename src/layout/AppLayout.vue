@@ -76,10 +76,10 @@ const isOutsideClicked = (event) => {
 
 </div> -->
 
-            <div class="layout-main p-0">
+            <div class="layout-main p-0" style="position: relative;">
                 <!-- <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);"></div> -->
 
-                <loading  style="z-index: 9;position: fixed;height: 100vh;"></loading>
+                <loading class="col-12" style=" z-index: 9;position: fixed;height: 100vh;top: 0;"></loading>
 
                 <transition name="fade">
                     

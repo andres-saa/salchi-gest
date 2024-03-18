@@ -6,31 +6,41 @@
     </Transition> -->
 
 
-    <div class="col-12 p-0 m-0 " style="position: relative; max-width: 1366px;" cls>
+    <div class="col-12  m-auto" style="position: relative; max-width: 1366px;" cls>
        
-        <div class="col-12 px-3 py-0 mb-3 " style="overflow-x:auto;">
-    <div class="px-0 mx-0 pb-4 " style="width: max-content; background-color:rgba(250, 250, 250, 0); display:  flex;color: ; justify-content: start;align-items: center; gap: 2rem;">
+   
+            <div class="  grid " style=" background-color:rgba(250, 250, 250, 0);">
 
 
 
      
 
 
+                <div class="text-sm col-12 md:col-3 p-2 xl:col-2 ">
+                    <Dropdown class="text-sm col-12 p-0 "   v-model="store.order_status" :options="estadosDropValues"  placeholder="Estado"></Dropdown>
+                </div>
 
-                    <Dropdown class="text-sm"   v-model="store.order_status" :options="estadosDropValues"  placeholder="Estado"></Dropdown>
-
-
-       
-                    <MultiSelect  style="width: 30rem;" display="chip" multiple v-model="store.selectedSites" optionLabel="site_name" :options="sites.filter(s => s.site_id != 12 & s.site_id !=13)" class="text-sm" placeholder="Sedes"></MultiSelect>
-
-
-                    <InputText class="text-center "  @click="showDateDialog = true" style="" :value="store.dateRangeDifference.rangeName || `${formatDate(store.dateRange.startDate) }  |  ${formatDate(store.dateRange.endDate)}`" placeholder="periodo"/>
+                   
 
 
-                    <Button severity="info" class="text-center p-2"   style="height: 100%;width:min-content;aspect-ratio:  1 / 1;border-radius: 50%; display: flex;justify-content:center ; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH" style="padding: 0.2rem;"></i></Button>
-
-
+       <div class="text-sm col-12 p-2  md:col-4  xl:col-6 ">
+        <MultiSelect style="" display="chip" multiple v-model="store.selectedSites" optionLabel="site_name" :options="sites.filter(s => s.site_id != 12 & s.site_id !=13)" class="text-sm col-12 p-0" placeholder="Sedes"></MultiSelect>
+       </div>
+                    
+<div class="text-center col-12 p-2  md:col-3  ">
+    <InputText class="col-12 p-3"   @click="showDateDialog = true" style="height: 2.7rem;" :value="store.dateRangeDifference.rangeName || `${formatDate(store.dateRange.startDate) }  |  ${formatDate(store.dateRange.endDate)}`" placeholder="periodo"/>
 </div>
+
+                    
+
+
+                    <div class="col-12 md:col-1 md:p-0" style="display: flex; align-items: center; justify-content: end;">
+                        <Button severity="info" class="text-center p-0 col-12  md:p-0"   style="height: 3rem;width:min-content;aspect-ratio:  1 / 1;border-radius: 50%; display: flex;justify-content:center ; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH" style="padding: 0.2rem;"></i></Button>
+                    </div>
+                    
+
+
+
 </div>
 
 

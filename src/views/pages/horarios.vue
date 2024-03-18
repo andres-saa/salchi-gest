@@ -56,9 +56,7 @@
 
     </div>
     <div  class="col-12 px-1" style="display: flex;position: relative; align-items: center;gap: 1rem; justify-content: end;gap: 0.5rem;">
-        <div :style="isEditing? 'background-color:#a855f7' : 'background-color: #3b82f6;'" style=" height: 0.4rem;border-radius: 0 1rem 1rem 0; width: 300%;max-width: 540px; position: absolute" >
 
-</div>
         <Button  :severity="isEditing? 'help' : 'info'" @click=" enableEditing" size="small" class=""  style="transition: all  .5s;min-width:max-content ;align-items: ; font-weight: bold;border-radius: 0.5rem;"> 
             
             <i v-if="!isEditing" class="fa-solid fa-pen-to-square mr-2"></i> 
@@ -138,6 +136,7 @@ const getHorarios = async () => {
     }
 }
 
+const urlPhotoProfile = ref("")
 
 
 const saveChanges = async () => {
