@@ -105,6 +105,20 @@ import BlockViewer from '@/components/BlockViewer.vue';
 import '@/assets/styles.scss';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+
+
+
+
+// Vue.filter('formatCurrency', function (value) {
+//     const number = parseFloat(value);
+//     if (!Number.isFinite(number)) {
+//         return value;
+//     }
+
+//     return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(number);
+// });
+
+
 const app = createApp(App);
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)

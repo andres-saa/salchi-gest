@@ -39,11 +39,11 @@
             </div>
 
             
-            <Button class="p-2" size="small" rounded severity="info" style="position: absolute;top: -1rem;right: 0rem;  display: flex; align-items: center; justify-content: center; color: white;z-index: 9999999999999;" @click="prepararParaEditar(product)" ><i   class=" text-2xl  p-0 m-0 " :class="PrimeIcons.PENCIL"> </i>  </Button>
+            <Button class="p-2" size="small" rounded severity="info" style="position: absolute;top: -1rem;right: 0rem;  display: flex; align-items: center; justify-content: center; color: white;z-index:;" @click="prepararParaEditar(product)" ><i   class=" text-2xl  p-0 m-0 " :class="PrimeIcons.PENCIL"> </i>  </Button>
 
             
 
-            <Button  severity="danger"  style="position: absolute;top: -1rem;right: 3rem; width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center;z-index: 99;" @click="pregpararParaEliminar(product)" ><i  class=" text-2xl  p-0 m-0 " :class="PrimeIcons.TRASH"> </i>  </Button>
+            <Button  severity="danger"  style="position: absolute;top: -1rem;right: 3rem; width: 2.5rem;height: 2.5rem;border-radius: 50%; display: flex; align-items: center; justify-content: center;z-index:;" @click="pregpararParaEliminar(product)" ><i  class=" text-2xl  p-0 m-0 " :class="PrimeIcons.TRASH"> </i>  </Button>
             <Toast style="box-shadow: none;"  />
        
 

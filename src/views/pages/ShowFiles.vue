@@ -19,6 +19,8 @@ import { useReportesStore } from '../../store/reportes';
 
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
+import InputText from 'primevue/inputtext';
+import Divider from 'primevue/divider';
 
 const confirm = useConfirm();
 
@@ -47,7 +49,6 @@ const addNewType = async () => {
         const data = await response.json();
         console.log('Tipo de documento agregado:', data);
         newTypeName.value = ''; // Limpiar el campo después de la inserción
-        displayAddTypeDialog.value = false; // Cerrar el diálogo
         fetchDocumentTypes(); // Recargar los tipos de documentos si es necesario
     } catch (error) {
         console.error('Error al agregar el tipo de documento:', error);
@@ -99,7 +100,7 @@ const fetchDocumentTypes = async () => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        documentsDropValues.value = data.map(type => type.type_name);
+        documentsDropValues.value = data
     } catch (error) {
         console.error('Error al obtener los tipos de documentos:', error);
         // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje al usuario
@@ -243,6 +244,29 @@ onMounted(() => {
 });
 
 
+const updateFileType = async (tipo) => {
+  try {
+    const response = await fetch(`${URI}/site-file-type/${tipo.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ type_name: tipo.type_name }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Tipo de documento actualizado:', data);
+    toast.add({ severity: 'success', summary: 'Actualizado', detail: 'Tipo de archivo actualizado con éxito', life: 3000 });
+  } catch (error) {
+    console.error('Error al actualizar el tipo de documento:', error);
+    toast.add({ severity: 'error', summary: 'Error al actualizar', detail: 'No se pudo actualizar el tipo de archivo.', life: 3000 });
+  }
+};
+
 const display = ref(false);
 const display2 = ref(false);
 
@@ -252,8 +276,8 @@ const upload = (file, document_type, site_name) => {
     // console.log(existe)
 
     const data = {
-        "document_name": `${currentSite.value.site_name} ${documentType.value}`,
-        "document_type": documentType.value,
+        "document_name": `${currentSite.value.site_name} ${documentType.value.type_name}`,
+        "document_type": documentType.value.type_name,
         "renovation_date": documentRenovationDate.value,
         "site_id": route.params.site_id
     }
@@ -261,7 +285,7 @@ const upload = (file, document_type, site_name) => {
     uploadPDFInfo(data).then(data => {
         console.log(data)
 
-        uploadPDF(file, data.document_id, documentType.value)
+        uploadPDF(file, data.document_id, documentType.value.type_name)
 
         getSiteDocumentInfo()
 
@@ -376,27 +400,114 @@ const createNewSite = async () => {
 
 
 
+
+
+
+
+
+
+
+
+const deleteFileType = async (typeId) => {
+
+
+    confirm.require({
+        target: event.currentTarget,
+        message: '¿Está seguro de que desea eliminar este tipo de archivo?',
+        icon: 'pi pi-exclamation-triangle',
+        rejectClass: 'p-button-info p-button-outlined p-button-sm',
+        acceptClass: 'p-button-sm p-button-danger',
+        rejectLabel: 'Cancelar',
+        acceptLabel: 'Eliminar',
+        accept: async () => {
+            try {
+                store.setLoading(true, 'eliminando')
+
+                const response = await fetch(`${URI}/site-file-type/${typeId}`, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el tipo de archivo');
+                }
+
+                // Eliminar el tipo de archivo de la vista
+                documentsDropValues.value = documentsDropValues.value.filter(tipo => tipo.type_id !== typeId);
+                toast.add({ severity: 'success', summary: 'Eliminado', detail: 'Tipo de archivo eliminado con éxito', life: 3000 });
+                store.setLoading(false, 'eliminando')
+
+                fetchDocumentTypes(); // Recargar los tipos de documentos si es necesario
+
+
+            } catch (error) {
+                store.setLoading(false, 'eliminando')
+                console.error('Error al eliminar el tipo de archivo:', error);
+                toast.add({ severity: 'error', summary: 'Error al eliminar', detail: 'No se pudo eliminar el tipo de archivo.', life: 3000 });
+                fetchDocumentTypes(); // Recargar los tipos de documentos si es necesario
+
+            }
+        }
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 <template>
 
 
-    <Dialog v-model:visible="displayAddTypeDialog" :breakpoints="{ '960px': '75vw' }"
-        :style="{ width: '30vw', padding: '0px' }" :modal="true">
+    <Dialog v-model:visible="displayAddTypeDialog" :style="{ width: '450px', }" :modal="true">
         <template #header>
-            <h3>Nuevo Tipo</h3>
+            <h3>Tipos de archivo</h3>
         </template>
 
 
         <div>
-            <p for="type_name">Nombre del Tipo de Documento:</p>
+            <p class="text-xl" style="font-weight: bold;" for="type_name">Nuevo</p>
             <InputText class="col-12" id="type_name" v-model="newTypeName" />
         </div>
 
 
-        <template #footer>
-            <Button label="Agregar" @click="addNewType" />
-        </template>
+        <div class="col-12 p-0" style="display: flex; justify-content: end;">
+
+
+            <Button class="my-4" label="Agregar" @click="addNewType" />
+
+        </div>
+
+
+
+        <p class="text-xl my-4" style="font-weight: bold;" for="type_name">Editar exixtentes</p>
+
+
+        <div class="my-2 col-12 p-0" v-for="tipo in documentsDropValues" :key="tipo.type_id">
+            <div class="col-12 p-0" style="display: flex; gap: 1rem; justify-content: space-between;">
+                <InputText class="col-11" v-model="tipo.type_name" @blur="updateFileType(tipo)" />
+                <Button rounded
+                    style="aspect-ratio: 1 / 1; width: 3rem; height: 3rem; display: flex; justify-content: center;"
+                    severity="danger" text class="pi-button-rounded" @click="deleteFileType(tipo.id)">
+                    <i class="fa-solid fa-trash-can text-2xl"></i>
+                </Button>
+            </div>
+        </div>
+
+        <div>
+
+        </div>
+
+
+
+
     </Dialog>
 
     <Toast />
@@ -416,7 +527,8 @@ const createNewSite = async () => {
 
 
                 <div class="col-12 p-0" style="display: flex; justify-content: end;">
-                    <div class="mt-4 col-12 md:col-6 xl:col-4 p-0" style="display: flex;max-width: 35rem; justify-content: end; gap: 1rem;">
+                    <div class="mt-4 col-12 md:col-6 xl:col-4 p-0"
+                        style="display: flex;max-width: 35rem; justify-content: end; gap: 1rem;">
 
                         <Button size="small "
                             style="width: 100%;font-weight: bold;display: flex;align-items: center;justify-content: center; "
@@ -538,15 +650,13 @@ const createNewSite = async () => {
 
             </DataTable>
 
-            <Dialog class="p-0" :closable="true" style="max-width: 500px;"
-                :header="` CARGAR ${currentdocument ? currentdocument.document_type : ''} PARA ${currentSite.site_name}`"
-                v-model:visible="display" :breakpoints="{ '960px': '75vw' }" :style="{ width: '30vw', padding: '0px' }"
-                :modal="true">
+            <Dialog class="p-0" :closable="true" :header="` CARGAR PARA ${currentSite.site_name}`"
+                v-model:visible="display" :style="{ width: '5000px' }" :modal="true">
 
 
                 <input ref="fileInput" type="file" @change="handleFileChange" style="display: none;">
 
-                <div class="col-12 p-0" style="max-width: ;">
+                <div class="col-12 p-0" style="">
                     <label for="position">FECHA DE RENOVACION</label>
 
                     <Calendar id="entry_date" style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
@@ -587,19 +697,19 @@ const createNewSite = async () => {
 
 
             <Dialog :header="` CARGAR ${currentdocument ? currentdocument : ''} PARA ${currentSite.site_name}`"
-                v-model:visible="display2" :breakpoints="{ '960px': '75vw' }"
-                :style="{ width: '50vw', padding: '50p0x' }" :modal="true">
+                v-model:visible="display2" :style="{ width: '450px', }" :modal="true">
 
 
-                <div class="grid" style="display: flex; padding: 0; margin: 0;">
-                    <div class="col-12 xl:col-6">
+                <div class="grid" style="">
+                    <div class="col-12">
                         <label for="position">TIPO DE DOCUMENTO</label>
-                        <Dropdown v-model.trim="documentType" :options="documentsDropValues" placeholder=""
-                            required="true" :class="{ 'p-invalid': submitted }" style="width: 100%;margin: 20px 0 ;" />
+                        <Dropdown v-model.trim="documentType" :options="documentsDropValues" optionLabel="type_name"
+                            placeholder="" required="true" :class="{ 'p-invalid': submitted }"
+                            style="width: 100%;margin: 20px 0 ;" />
                     </div>
 
 
-                    <div class="col-12 xl:col-6">
+                    <div class="col-12">
                         <label for="position">FECHA DE RENOVACION</label>
 
                         <Calendar id="entry_date" style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
@@ -616,10 +726,10 @@ const createNewSite = async () => {
                     antes de envirlo` : '' }}
                 </p>
                 <!-- <img src="@/images/document_image.jpg" class="shadow-2" style="width: 20%;" @click="cambiar" /> -->
-                <div style="display: flex; justify-content: space-between;">
-                    <Button label="Seleccionar documento" style="width: 40%; background-color: var(--primary-color);"
+                <div class="" style="display: flex; justify-content: space-between;gap: 1rem; flex-direction: column;">
+                    <Button class="" severity="help" label="Seleccionar documento" style="width:100%;"
                         @click="$refs.fileInput.click();" />
-                    <Button label="Enviar" style="width: 40%;background-color: var(--primary-color);"
+                    <Button label="Enviar" style="width:100%;" severity="success"
                         @click="upload(file, documentType, currentSite.site_id)" />
                     <!-- {{ documentRenovationDate }} -->
                 </div>
@@ -649,8 +759,7 @@ const createNewSite = async () => {
     </Dock> -->
 
 
-    <Dialog v-model:visible="displayNewSiteDialog" :breakpoints="{ '960px': '75vw' }"
-        :style="{ width: '30vw', padding: '0px' }" :modal="true">
+    <Dialog v-model:visible="displayNewSiteDialog" :style="{ width: '450px', padding: '0px' }" :modal="true">
         <template #header>
             <h3>Nueva Sede</h3>
         </template>
