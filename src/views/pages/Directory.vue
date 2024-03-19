@@ -2,91 +2,92 @@
 
 
     <Dialog header="Agregar nueva aplicación" v-model:visible="isApplicationDialogVisible" modal
-        :style="{ width: '50vw' }">
-        <div class="field">
+    :style="{ width: '450px' }">
+        <div class="field col-12 pb-0 px-0">
             <label for="appName">Nombre de la aplicación</label>
-            <InputText id="appName" v-model="applicationData.name" />
+            <InputText class="col-12" id="appName" v-model="applicationData.name" />
         </div>
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="username">Nombre de usuario</label>
-            <InputText id="username" v-model="applicationData.username" />
+            <InputText class="col-12" id="username" v-model="applicationData.username" />
         </div>
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="password">Contraseña</label>
-            <InputText id="password" type="password" v-model="applicationData.password" />
+            <InputText class="col-12" id="password" type="password" v-model="applicationData.password" />
         </div>
-        <Button label="Agregar" @click="addApplication" />
+        <Button label="Agregar" severity="success" @click="addApplication" />
     </Dialog>
 
-    <Dialog header="Agregar nueva página web" v-model:visible="isWebPageDialogVisible" modal :style="{ width: '50vw' }">
-        <div class="field">
+    <Dialog header="Agregar nueva página web" v-model:visible="isWebPageDialogVisible" modal :style="{ width: '450px' }">
+        <div class="field col-12 pb-0 px-0">
             <label for="pageName">Nombre de la página</label>
-            <InputText id="pageName" v-model="webPageData.page" />
+            <InputText class="col-12" id="pageName" v-model="webPageData.page" />
         </div>
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="username">Nombre de usuario</label>
-            <InputText id="username" v-model="webPageData.username" />
+            <InputText class="col-12" id="username" v-model="webPageData.username" />
         </div>
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="password">Contraseña</label>
-            <InputText id="password" type="password" v-model="webPageData.password" />
+            <InputText class="col-12" id="password" type="password" v-model="webPageData.password" />
         </div>
-        <Button label="Agregar" @click="addWebPage" />
+        <Button label="Agregar" severity="success" @click="addWebPage" />
     </Dialog>
 
 
 
 
-    <Dialog header="Agregar nuevo datáfono" v-model:visible="isDataphoneDialogVisible" modal :style="{ width: '50vw' }">
-        <div class="field">
+    <Dialog header="Agregar nuevo datáfono" v-model:visible="isDataphoneDialogVisible" modal :style="{ width: '450px' }">
+        <div class="field col-12 pb-0 px-0">
             <label for="uniqueCode">Código único</label>
-            <InputText id="uniqueCode" v-model="dataphoneData.unique_code" />
+            <InputText class="col-12" id="uniqueCode" v-model="dataphoneData.unique_code" />
         </div>
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="externalCode">Código externo</label>
-            <InputText id="externalCode" v-model="dataphoneData.external_code" />
+            <InputText class="col-12" id="externalCode" v-model="dataphoneData.external_code" />
         </div>
-        <Button label="Agregar" @click="addDataphone" />
+        <Button label="Agregar" severity="success" @click="addDataphone" />
     </Dialog>
 
-    <Dialog header="Agregar nueva red WiFi" v-model:visible="isWifiDialogVisible" modal :style="{ width: '50vw' }">
-        <div class="field">
+    <Dialog header="Agregar nueva red WiFi" v-model:visible="isWifiDialogVisible" modal :style="{ width: '450px' }">
+        <div class="field col-12 pb-0 px-0">
             <label for="wifiUsername">Nombre de usuario</label>
-            <InputText id="wifiUsername" v-model="wifiData.username" />
+            <InputText class="col-12" id="wifiUsername" v-model="wifiData.username" />
         </div>
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="wifiPassword">Contraseña</label>
-            <InputText id="wifiPassword" v-model="wifiData.password" type="password" />
+            <InputText class="col-12" id="wifiPassword" v-model="wifiData.password" type="password" />
         </div>
-        <Button label="Agregar" @click="addWifiNetwork" />
+        <Button label="Agregar" severity="success" @click="addWifiNetwork" />
     </Dialog>
 
 
 
-    <Dialog header="Agregar nueva cámara" v-model:visible="isCameraDialogVisible" modal :style="{ width: '50vw' }"
+    <Dialog header="Agregar nueva cámara" v-model:visible="isCameraDialogVisible" modal :style="{ width: '450px' }"
         :closable="true" :showHeader="true">
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="username">Nombre de usuario</label>
-            <InputText id="username" v-model="cameraData.username" />
+            <InputText class="col-12" id="username" v-model="cameraData.username" />
         </div>
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="password">Contraseña</label>
-            <InputText id="password" v-model="cameraData.password" />
+            <InputText class="col-12" id="password" v-model="cameraData.password" />
         </div>
-        <Button label="Agregar" @click="addCamera" />
+        <Button label="Agregar" severity="success" @click="addCamera" />
     </Dialog>
 
 
-    <Dialog header="Agregar nueva caja fuerte" v-model:visible="isSafeBoxDialogVisible" modal :style="{ width: '50vw' }">
-        <div class="field">
+    <Dialog header="Agregar nueva caja fuerte" v-model:visible="isSafeBoxDialogVisible" modal
+    :style="{ width: '450px' }">
+        <div class="field col-12 pb-0 px-0">
             <label for="boxName">Nombre de la caja</label>
-            <InputText id="boxName" v-model="safeBoxData.boxName" />
+            <InputText class="col-12" id="boxName" v-model="safeBoxData.boxName" />
         </div>
-        <div class="field">
+        <div class="field col-12 pb-0 px-0">
             <label for="password">Contraseña</label>
-            <InputText id="password" v-model="safeBoxData.password" type="password" />
+            <InputText class="col-12" id="password" v-model="safeBoxData.password" type="password" />
         </div>
-        <Button label="Agregar" @click="addSafeBox" />
+        <Button label="Agregar" severity="success" @click="addSafeBox" />
     </Dialog>
 
 
@@ -102,7 +103,7 @@
 
 
 
-    <div class="col-12 mx-auto md:shadow-3 my-4 md:p-3" style="max-width: 600px; border-radius: 1rem;">
+    <div class="col-12 mx-auto md:shadow-3 my-4 md:p-3 p-0" style="max-width: 600px; border-radius: 1rem;">
 
 
         <!-- {{ directories }} -->
@@ -115,34 +116,35 @@
             </Dropdown>
 
             <div class="col-12 p-0 my-5 ">
-              
-
-                <img class="img-profile-add p-0" style="width: 100%; border-radius: 1rem;  object-fit: cover; border-radius: 1rem; aspect-ratio: 4 / 2;background-color: #84e4ff;"
-            :src="urlsite_photo ? urlsite_photo : `${URI}/read-product-image/600/site-${store.currentSite.site_id}`"
-            alt="">
-        <div class="field col-12 mt-6 mb-6 p-0" style="display: flex;justify-content: end;gap: 1rem;"> 
-            <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" style="display: none;">
-            <Button severity="info" class="" style="width: min-content;"
-                                @click="$refs.fileInput.click();">
-                                <i class="fa-solid fa-camera"></i>
-
-                            </Button>
 
 
-                            <Button v-if="file" severity="help" class="" style="width: min-content;"
-                                @click="() => {urlsite_photo = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`; file = ''}">
-                                <i class="fa-solid fa-spinner"></i>
+                <img class="img-profile-add p-0"
+                    style="width: 100%; border-radius: 1rem;  object-fit: cover; border-radius: 1rem; aspect-ratio: 4 / 3;background-color: #84e4ff;"
+                    :src="urlsite_photo ? urlsite_photo : `${URI}/read-product-image/600/site-${store.currentSite.site_id}`"
+                    alt="">
+                <div class="field col-12 pb-0 px-0 col-12 mt-2 mb-6 p-0" style="display: flex;justify-content: end;gap: 1rem;">
+                    <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange"
+                        style="display: none;">
+                    <Button severity="info" class="" style="width: min-content;" @click="$refs.fileInput.click();">
+                        <i class="fa-solid fa-camera"></i>
 
-                            </Button>
+                    </Button>
 
-                            <Button v-if="file" severity="success" class="" style="width: min-content;"
-                                @click="uploadUsersite_photo(file,store.currentSite.site_id)">
-                                <i class="fa-solid fa-floppy-disk"></i>
 
-                            </Button>
+                    <Button v-if="file" severity="help" class="" style="width: min-content;"
+                        @click="() => { urlsite_photo = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`; file = '' }">
+                        <i class="fa-solid fa-spinner"></i>
 
-        </div>
-        
+                    </Button>
+
+                    <Button v-if="file" severity="success" class="" style="width: min-content;"
+                        @click="uploadUsersite_photo(file, store.currentSite.site_id)">
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                    </Button>
+
+                </div>
+
 
 
             </div>
@@ -192,12 +194,13 @@
                 </div>
 
 
-                <div class="col-12  mt-4 mb-1 col-12" style="background-color: #f6f7c1;border-radius: 0.5rem;position: relative">
+                <div class="col-12  mt-4 mb-1 col-12"
+                    style="background-color: #f6f7c1;border-radius: 0.5rem;position: relative">
 
 
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
                         <p style="font-weight: bold;"><i class="fa-solid fa-video mr-3"></i> CAMARAS</p>
-                        <Button @click="isCameraDialogVisible = true" class="p-0" size="small" rounded
+                        <Button @click="isCameraDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
                             severity="warning">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
@@ -206,8 +209,8 @@
 
 
                     <div v-for="(item, index) in directories.cameras" :key="index" class="my-0 col-12 py-0" style="">
-                        <Button  size="small" style="position: absolute;right:     1rem; " icon="pi pi-trash" 
-                                    class="p-button-rounded p-button-danger p-0" @click="confirmDeleteCamera(item.camera_id)" />
+                        <Button  text style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" 
+                            class="p-button-rounded p-button-danger p-0 text-2xl text-2xl" @click="confirmDeleteCamera(item.camera_id)" />
 
                         <div style="display: flex; align-items: center; gap: 1rem;">
                             <div class="p-0">
@@ -247,71 +250,75 @@
                 </div>
 
 
-            
 
-                <div class="col-12  mt-4 mb-1 col-12" style="background-color: #84e4ff;position: relative;border-radius: 0.5rem;">
+
+                <div class="col-12  mt-4 mb-1 col-12"
+                    style="background-color: #84e4ff;position: relative;border-radius: 0.5rem;">
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-video mr-3"></i> CAJAS FUERTES</p>
-                        <Button @click="isSafeBoxDialogVisible = true" class="p-0" size="small" rounded
+                        <p style="font-weight: bold;"><i class="fa-solid fa-shield mr-3"></i> CAJAS FUERTES</p>
+                        <Button @click="isSafeBoxDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
                             severity="warning">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
                     </div>
 
                     <div style="overflow-x: auto;">
-                    <div v-for="(item, index) in directories.safe_boxes" :key="index" class="my-0 col-12 py-0" style="">
+                        <div v-for="(item, index) in directories.safe_boxes" :key="index" class="my-0 col-12 py-0"
+                            style="">
 
-                        <Button size="small" style="position: absolute;right:     1rem; " icon="pi pi-trash" 
-                                    class="p-button-rounded p-button-danger p-0" @click="confirmDeleteSafeBox(item.safe_box_id)" />
+                            <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
+                                class="p-button-rounded p-button-danger p-0 text-2xl"
+                                @click="confirmDeleteSafeBox(item.safe_box_id)" />
 
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Usuario {{ index + 1 }}:</p>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="p-0">
+                                    <p style="font-weight: bold; min-width: 10rem;">Usuario {{ index + 1 }}:</p>
+                                </div>
+
+
+
+                                <div v-if="!item.isLink" class="" style="min-width: max-content;">
+                                    {{ item.box_name }}
+                                </div>
+
                             </div>
 
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="p-0">
+                                    <p style="font-weight: bold; min-width: 10rem;">Clave {{ index + 1 }}:</p>
+                                </div>
 
 
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.box_name }}
+
+                                <div v-if="!item.isLink" class="" style="min-width: max-content;">
+                                    {{ item.password }}
+                                </div>
+
                             </div>
+
+                            <Divider class="p-0 m-1"></Divider>
+
+
+
+
+
 
                         </div>
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Clave {{ index + 1 }}:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.password }}
-                            </div>
-
-                        </div>
-
-                        <Divider class="p-0 m-1"></Divider>
-
-
-
-
-
-
-                    </div>
 
                     </div>
                 </div>
 
 
-      
 
 
 
 
-                <div class="col-12  mt-4 mb-1 col-12" style="background-color: #d0f5be;position: relative;border-radius: 0.5rem;">
+
+                <div class="col-12  mt-4 mb-1 col-12"
+                    style="background-color: #d0f5be;position: relative;border-radius: 0.5rem;">
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-video mr-3"></i> WIFI'S</p>
-                        <Button @click="isWifiDialogVisible = true" class="p-0" size="small" rounded
+                        <p style="font-weight: bold;"><i class="fa-solid fa-wifi mr-3   "></i> WIFI'S</p>
+                        <Button @click="isWifiDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
                             severity="warning">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
@@ -319,11 +326,12 @@
 
                     <div style="overflow-x: auto; ">
 
-                        
-                        <div style="" v-for="(item, index) in directories.wifi_networks" :key="index" class="my-0 col-12 py-0">
 
-                            <Button size="small" style="position: absolute;right:     1rem; " icon="pi pi-trash" 
-                                    class="p-button-rounded p-button-danger p-0" @click="confirmDeleteWifi(item.wifi_id)" />
+                        <div style="" v-for="(item, index) in directories.wifi_networks" :key="index"
+                            class="my-0 col-12 py-0">
+
+                            <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
+                                class="p-button-rounded p-button-danger p-0 text-2xl" @click="confirmDeleteWifi(item.wifi_id)" />
 
 
                             <div style="display: flex;align-items: center; gap: 1rem;">
@@ -336,13 +344,13 @@
                                 <div v-if="!item.isLink" class="" style="min-width: max-content;">
                                     {{ item.username }}
                                 </div>
-                                
 
-                               
+
+
 
                             </div>
 
-                            
+
 
                             <div style="display: flex; align-items: center; gap: 1rem;">
                                 <div class="p-0">
@@ -372,18 +380,20 @@
 
 
 
-                <div class="col-12  mt-4 mb-1 col-12" style="background-color: #e7ceff; position: relative;border-radius: 0.5rem;">
+                <div class="col-12  mt-4 mb-1 col-12"
+                    style="background-color: #e7ceff; position: relative;border-radius: 0.5rem;">
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-video mr-3"></i> DATAFONOS</p>
-                        <Button @click="isDataphoneDialogVisible = true" class="p-0" size="small" rounded
+                        <p style="font-weight: bold;"><i class="fa-regular fa-credit-card mr-3"></i> DATAFONOS</p>
+                        <Button @click="isDataphoneDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
                             severity="warning">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
                     </div>
                     <div v-for="(item, index) in directories.dataphones" :key="index" class="my-0 col-12 py-0" style="">
 
-                        <Button size="small" style="position: absolute;right:     1rem; " icon="pi pi-trash" 
-                                    class="p-button-rounded p-button-danger p-0" @click="confirmDeleteDataphone(item.dataphone_id)" />
+                        <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
+                            class="p-button-rounded p-button-danger p-0 text-2xl"
+                            @click="confirmDeleteDataphone(item.dataphone_id)" />
 
 
 
@@ -427,11 +437,11 @@
                 <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: rgb(237 120 85 / 43%);border-radius: 0.5rem;position: relative">
 
-               
+
 
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-video mr-3"></i> PAGINAS WEB</p>
-                        <Button @click="isWebPageDialogVisible = true" class="p-0" size="small" rounded
+                        <p style="font-weight: bold;"><i class="fa-solid fa-paper-plane mr-3"></i> PAGINAS WEB</p>
+                        <Button @click="isWebPageDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
                             severity="warning">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
@@ -439,10 +449,11 @@
 
 
                     <div v-for="(item, index) in directories.web_pages" :key="index" class="my-0 col-12 py-0" style="">
-                        <Button size="small" style="position: absolute;right:     1rem; " icon="pi pi-trash" 
-                                    class="p-button-rounded p-button-danger p-0"  @click="confirmDeleteWebPage(item.web_page_id)" />
+                        <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
+                            class="p-button-rounded p-button-danger p-0 text-2xl"
+                            @click="confirmDeleteWebPage(item.web_page_id)" />
 
-                                    <!-- {{ item }} -->
+                        <!-- {{ item }} -->
                         <div style="display: flex; align-items: center; gap: 1rem;">
                             <div class="p-0">
                                 <p style="font-weight: bold; min-width: 10rem;">Nombre :</p>
@@ -497,12 +508,13 @@
 
 
 
-                <div class="col-12  mt-4 mb-1 col-12" style="background-color: #ddedea;border-radius: 0.5rem;position: relative">
+                <div class="col-12  mt-4 mb-1 col-12"
+                    style="background-color: #ddedea;border-radius: 0.5rem;position: relative">
 
 
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-video mr-3"></i> APLICACIONES</p>
-                        <Button @click="isApplicationDialogVisible = true" class="p-0" size="small" rounded
+                        <p style="font-weight: bold;"><i class="fa-brands fa-app-store-ios mr-3"></i>APLICACIONES</p>
+                        <Button @click="isApplicationDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
                             severity="warning">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
@@ -512,8 +524,9 @@
                     <div v-for="(item, index) in directories.applications " :key="index" class="my-0 col-12 py-0"
                         style="">
 
-                        <Button size="small" style="position: absolute;right:     1rem; " icon="pi pi-trash" 
-                                    class="p-button-rounded p-button-danger p-0" @click="confirmDeleteApplication(item.application_id)" />
+                        <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
+                            class="p-button-rounded p-button-danger p-0 text-2xl"
+                            @click="confirmDeleteApplication(item.application_id)" />
 
                         <div style="display: flex; align-items: center; gap: 1rem;">
                             <div class="p-0">
@@ -636,6 +649,8 @@ const confirmDeleteWifi = (wifiId) => {
 };
 
 const deleteWifi = (wifiId) => {
+    store2.setLoading(true,'borrando')
+
     const apiUrl = `${URI}/site/${store.currentSite.site_id}/wifi-network/${wifiId}`;
 
     fetch(apiUrl, {
@@ -646,49 +661,66 @@ const deleteWifi = (wifiId) => {
     })
         .then(response => {
             if (!response.ok) {
+                store2.setLoading(false,'borrando')
+
                 throw new Error('Network response was not ok');
+
             }
             return response.json();
         })
         .then(() => {
+            store2.setLoading(false,'borrando')
+
             // Actualizar la lista de redes Wi-Fi
             siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
         })
         .catch((error) => {
+            store2.setLoading(false,'borrando')
+
             console.error('Error:', error);
         });
 };
 
 
 const confirmDeleteSafeBox = (safeBoxId) => {
-  // Mostrar diálogo de confirmación
-  if (confirm('¿Estás seguro de que quieres eliminar esta caja fuerte?')) {
-    deleteSafeBox(safeBoxId);
-  }
+    // Mostrar diálogo de confirmación
+    if (confirm('¿Estás seguro de que quieres eliminar esta caja fuerte?')) {
+        deleteSafeBox(safeBoxId);
+    }
 };
 
 const deleteSafeBox = (safeBoxId) => {
-  const apiUrl = `${URI}/site/${store.currentSite.site_id}/safe-box/${safeBoxId}`;
 
-  fetch(apiUrl, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(() => {
-    // Actualizar la lista de cajas fuertes
-    siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+
+    store2.setLoading(true,'borrando')
+
+    const apiUrl = `${URI}/site/${store.currentSite.site_id}/safe-box/${safeBoxId}`;
+
+    fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                store2.setLoading(false,'enviando')
+
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(() => {
+            store2.setLoading(false,'enviando')
+
+            // Actualizar la lista de cajas fuertes
+            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
+        })
+        .catch((error) => {
+            store2.setLoading(false,'enviando')
+
+            console.error('Error:', error);
+        });
 };
 
 
@@ -703,6 +735,8 @@ const cameraData = ref({
 
 
 const addCamera = () => {
+
+    store2.setLoading(true,'enviando')
     if (!cameraData.value.username || !cameraData.value.password) {
         alert('Por favor, completa todos los campos.');
         return;
@@ -728,17 +762,24 @@ const addCamera = () => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+            store2.setLoading(false,'enviando')
+
             return response.json();
+
         })
         .then(data => {
             console.log('Success:', data);
             // Manejar la lógica post-envío aquí
             isCameraDialogVisible.value = false;
             siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
+            store2.setLoading(false,'enviando')
+
 
             // Cerrar el diálogo y resetear el formulario
         })
         .catch((error) => {
+            store2.setLoading(false,'enviando')
+
             console.error('Error:', error);
             // Manejar errores aquí
         });
@@ -748,34 +789,45 @@ const addCamera = () => {
 
 
 const confirmDeleteDataphone = (dataphoneId) => {
-  // Mostrar diálogo de confirmación
-  if (confirm('¿Estás seguro de que quieres eliminar este datáfono?')) {
-    deleteDataphone(dataphoneId);
-  }
+    // Mostrar diálogo de confirmación
+    if (confirm('¿Estás seguro de que quieres eliminar este datáfono?')) {
+        deleteDataphone(dataphoneId);
+    }
 };
 
 const deleteDataphone = (dataphoneId) => {
-  const apiUrl = `${URI}/site/${store.currentSite.site_id}/dataphone/${dataphoneId}`;
+    store2.setLoading(true,'borrando')
 
-  fetch(apiUrl, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(() => {
-    // Actualizar la lista de datáfonos
-    siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    const apiUrl = `${URI}/site/${store.currentSite.site_id}/dataphone/${dataphoneId}`;
+
+    fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+
+                store2.setLoading(false,'borrando')
+
+
+                throw new Error('Network response was not ok');
+                
+            }
+            return response.json();
+        })
+        .then(() => {
+            store2.setLoading(false,'enviando')
+
+            // Actualizar la lista de datáfonos
+            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
+        })
+        .catch((error) => {
+            store2.setLoading(false,'enviando')
+
+            console.error('Error:', error);
+        });
 };
 
 
@@ -789,32 +841,38 @@ const safeBoxData = ref({
 
 
 const confirmDeleteApplication = (applicationId) => {
-  if (confirm('¿Estás seguro de que quieres eliminar esta aplicación?')) {
-    deleteApplication(applicationId);
-  }
+    if (confirm('¿Estás seguro de que quieres eliminar esta aplicación?')) {
+        deleteApplication(applicationId);
+    }
 };
 
 const deleteApplication = (applicationId) => {
-  const apiUrl = `${URI}/site/${store.currentSite.site_id}/application/${applicationId}`;
+    store2.setLoading(true,'borrando')
 
-  fetch(apiUrl, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(() => {
-    siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    const apiUrl = `${URI}/site/${store.currentSite.site_id}/application/${applicationId}`;
+
+    fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+                store2.setLoading(false,'enviando')
+
+            return response.json();
+        })
+        .then(() => {
+            store2.setLoading(false,'enviando')
+
+            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 };
 const file = ref(null)
 const urlsite_photo = ref("")
@@ -834,6 +892,9 @@ const handleFileChange = (event) => {
 
 
 const addSafeBox = () => {
+
+    store2.setLoading(true,'enviando')
+
     if (!safeBoxData.value.boxName || !safeBoxData.value.password) {
         alert('Por favor, completa todos los campos.');
         return;
@@ -855,12 +916,16 @@ const addSafeBox = () => {
         body: JSON.stringify(payload),
     })
         .then(response => {
+            store2.setLoading(false,'enviando')
+
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
+            store2.setLoading(false,'enviando')
+
             console.log('Success:', data);
             siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
             isSafeBoxDialogVisible.value = false;
@@ -871,6 +936,8 @@ const addSafeBox = () => {
             // Actualizar la UI o estado según sea necesario
         })
         .catch((error) => {
+            store2.setLoading(false,'enviando')
+
             console.error('Error:', error);
             // Manejar errores aquí
         });
@@ -889,6 +956,9 @@ const wifiData = ref({
 
 
 const addWifiNetwork = () => {
+
+    store2.setLoading(true,'enviando')
+
     if (!wifiData.value.username || !wifiData.value.password) {
         alert('Por favor, completa todos los campos.');
         return;
@@ -911,11 +981,16 @@ const addWifiNetwork = () => {
     })
         .then(response => {
             if (!response.ok) {
+                store2.setLoading(false,'enviando')
+
                 throw new Error('Network response was not ok');
             }
             return response.json();
+            
         })
         .then(data => {
+            store2.setLoading(false,'enviando')
+
             console.log('Success:', data);
             isWifiDialogVisible.value = false;
             wifiData.value.username = '';
@@ -924,6 +999,8 @@ const addWifiNetwork = () => {
 
         })
         .catch((error) => {
+            store2.setLoading(false,'enviando')
+
             console.error('Error:', error);
         });
 
@@ -933,32 +1010,41 @@ const addWifiNetwork = () => {
 
 
 const confirmDeleteWebPage = (webPageId) => {
-  if (confirm('¿Estás seguro de que quieres eliminar esta página web?')) {
-    deleteWebPage(webPageId);
-  }
+    if (confirm('¿Estás seguro de que quieres eliminar esta página web?')) {
+        deleteWebPage(webPageId);
+    }
 };
 
 const deleteWebPage = (webPageId) => {
-  const apiUrl = `${URI}/site/${store.currentSite.site_id}/web-page/${webPageId}`;
 
-  fetch(apiUrl, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(() => {
-    siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    store2.setLoading(true,'borrando')
+
+    const apiUrl = `${URI}/site/${store.currentSite.site_id}/web-page/${webPageId}`;
+
+    fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                store2.setLoading(false,'borrando')
+
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(() => {
+            store2.setLoading(false,'borrando')
+
+            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
+        })
+        .catch((error) => {
+            store2.setLoading(false,'borrando')
+
+            console.error('Error:', error);
+        });
 };
 
 const isDataphoneDialogVisible = ref(false);
@@ -969,6 +1055,9 @@ const dataphoneData = ref({
 
 
 const addDataphone = () => {
+
+    store2.setLoading(true,'enviando')
+
     if (!dataphoneData.value.unique_code) {
         alert('Por favor, completa todos los campos.');
         return;
@@ -991,17 +1080,23 @@ const addDataphone = () => {
     })
         .then(response => {
             if (!response.ok) {
+                store2.setLoading(false,'borrando')
+
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
+            store2.setLoading(false,'borrando')
+
             console.log('Success:', data);
             isDataphoneDialogVisible.value = false;
             siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
 
         })
         .catch((error) => {
+            store2.setLoading(false,'borrando')
+
             console.error('Error:', error);
         });
 
@@ -1011,34 +1106,40 @@ const addDataphone = () => {
 
 
 const confirmDeleteCamera = (cameraId) => {
-  // Mostrar diálogo de confirmación
-  if (confirm('¿Estás seguro de que quieres eliminar esta cámara?')) {
-    deleteCamera(cameraId);
-  }
+    // Mostrar diálogo de confirmación
+    if (confirm('¿Estás seguro de que quieres eliminar esta cámara?')) {
+        deleteCamera(cameraId);
+    }
 };
 
 const deleteCamera = (cameraId) => {
-  const apiUrl = `${URI}/site/${store.currentSite.site_id}/camera/${cameraId}`;
+    store2.setLoading(true,'borrando')
 
-  fetch(apiUrl, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(() => {
-    // Actualizar la lista de cámaras
-    siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    const apiUrl = `${URI}/site/${store.currentSite.site_id}/camera/${cameraId}`;
+
+    fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                store2.setLoading(false,'enviando')
+
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(() => {
+            store2.setLoading(false,'enviando')
+
+            // Actualizar la lista de cámaras
+            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 };
 
 
@@ -1051,6 +1152,9 @@ const webPageData = ref({
 
 
 const addWebPage = () => {
+
+    store2.setLoading(true,'enviando')
+
     if (!webPageData.value.page || !webPageData.value.username || !webPageData.value.password) {
         alert('Por favor, completa todos los campos.');
         return;
@@ -1073,18 +1177,25 @@ const addWebPage = () => {
         body: JSON.stringify(payload),
     })
         .then(response => {
+
             if (!response.ok) {
+                store2.setLoading(false,'borrando')
+
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
+            store2.setLoading(false,'borrando')
+
             console.log('Success:', data);
             isWebPageDialogVisible.value = false;
             siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
 
         })
         .catch((error) => {
+            store2.setLoading(false,'borrando')
+
             console.error('Error:', error);
         });
 
@@ -1102,6 +1213,9 @@ const applicationData = ref({
 });
 
 const addApplication = () => {
+
+    store2.setLoading(true,'enviando')
+
     if (!applicationData.value.name || !applicationData.value.username || !applicationData.value.password) {
         alert('Por favor, completa todos los campos.');
         return;
@@ -1124,18 +1238,24 @@ const addApplication = () => {
         body: JSON.stringify(payload),
     })
         .then(response => {
+            store2.setLoading(false,'borrando')
+
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
+            store2.setLoading(false,'borrando')
+
             console.log('Success:', data);
             isApplicationDialogVisible.value = false;
             siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
 
         })
         .catch((error) => {
+            store2.setLoading(false,'borrando')
+
             console.error('Error:', error);
         });
 
@@ -1173,40 +1293,40 @@ onMounted(async () => {
 
 
 
-function uploadUsersite_photo(site_photo,id) {
+function uploadUsersite_photo(site_photo, id) {
     // URL del servidor donde deseas enviar el PDF
     const serverURL = `${URI}/upload-product-image/site-${id}`;
-    store2.setLoading(true,'sibiendo imagen')
-  
+    store2.setLoading(true, 'sibiendo imagen')
+
     // Crear un objeto FormData para enviar el archivo
     const formData = new FormData();
     formData.append('file', site_photo);
-    
-  
+
+
     // Realizar una solicitud POST al servidor
     fetch(serverURL, {
-      method: 'POST',
-      body: formData,
+        method: 'POST',
+        body: formData,
     })
-      .then((response) => {
-        if (response.ok) {
-          // La carga fue exitosa, realiza alguna acción si es necesario
-          console.log('Archivo photo cargado con éxito');
-          file.value = ''
-          store2.setLoading(false,'sibiendo imagen')
+        .then((response) => {
+            if (response.ok) {
+                // La carga fue exitosa, realiza alguna acción si es necesario
+                console.log('Archivo photo cargado con éxito');
+                file.value = ''
+                store2.setLoading(false, 'sibiendo imagen')
 
-        } else {
-          console.error('Error al cargar foto de perfil:', response.status, response.statusText);
-          store2.setLoading(false,'sibiendo imagen')
+            } else {
+                console.error('Error al cargar foto de perfil:', response.status, response.statusText);
+                store2.setLoading(false, 'sibiendo imagen')
 
-        }
-      })
-      .catch((error) => {
-        console.error('Error en la solicitud:', error);
-        store2.setLoading(false,'sibiendo imagen')
+            }
+        })
+        .catch((error) => {
+            console.error('Error en la solicitud:', error);
+            store2.setLoading(false, 'sibiendo imagen')
 
-      });
-  }
+        });
+}
 
 
 
@@ -1219,7 +1339,7 @@ watch(() => store.currentSite, (newVal) => {
     store2.setLoading(true, `cargando información de ${newVal.site_name}`);
     store2.setLoading(false);
     siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-    urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`; 
+    urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`;
     file.value = ''
 
     // Establece un temporizador para cambiar el estado de carga a false después de 1 segundo
@@ -1256,5 +1376,7 @@ p {
 }
 
 
-*{transition: all ease .5s;}
+* {
+    transition: all ease .5s;
+}
 </style>
