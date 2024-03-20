@@ -21,7 +21,9 @@ import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 import InputText from 'primevue/inputtext';
 import Divider from 'primevue/divider';
+import { useDirectoryStore } from '../../store/directorio';
 
+const store2 = useDirectoryStore()
 const confirm = useConfirm();
 
 const displayAddTypeDialog = ref(false);
@@ -171,8 +173,10 @@ const uploadPDFInfo = async (data) => {
 
 const getSiteDocumentInfo = async () => {
     try {
+
+        const site_id = store2?.currentSite?.site_id || 1
         // Construye la URL con los parámetros
-        const url = `${URI}/get-site-documents-info/${route.params.site_id}`;
+        const url = `${URI}/get-site-documents-info/${site_id}`;
 
         // Realiza la solicitud GET
         const response = await fetch(url);
@@ -219,7 +223,7 @@ const updatePDFInfo = async (datos) => {
 
 
 onMounted(() => {
-    // getSiteDocumentInfo()
+    getSiteDocumentInfo()
     store.setLoading(true)
     store.setLoading(false)
     fetchDocumentTypes();

@@ -8,15 +8,19 @@ import ShowFiles from '@/views/pages/ShowFiles.vue'
 import {siteService} from '@/service/siteService.js'
 // /home/ludi/projects/salchimonster/salchimonster_frontend/src/views/pages/ShowUser.vue
 // import { ref, onBeforeMount } from 'vue';
-
+import { useDirectoryStore } from '../../store/directorio';
 
 // import { useRouter } from 'vue-router';
 // import Router from '@/router/index.js';
 const sites = ref([])
-
+const store = useDirectoryStore()
 onMounted( () => {
 
-siteService.getSites().then(data => sites.value = data)
+siteService.getSites().then(data => {
+    sites.value = data
+    if(!store.currentSite?.site_id)
+    store.setSite(data[0])
+} )
 
 })
 
@@ -82,6 +86,7 @@ watch( () => route.params.site_id, () => {
 const navigateToSite = (siteData) => {
     localStorage.setItem('currentSiteFiles', JSON.stringify(siteData));
     router.push(`/site/${siteData.site_id}/documentos`);
+    store.setSite(siteData)
 };
 </script>
 
@@ -95,7 +100,8 @@ const navigateToSite = (siteData) => {
 
         <div style="display: flex; align-items: center;gap: 1rem;">
            
-        <p class="p-0" style="min-width: max-content;text-transform: uppercase;" > {{ currentSite.site_name }} 
+        <p class="p-0" style="min-width: max-content;text-transform: uppercase;" > {{ store.currentSite.site_name }}
+            
         </p>
         </div>
 
@@ -105,6 +111,8 @@ const navigateToSite = (siteData) => {
 
 
     <div class=" mb-5 m-auto  " style="width: 100%;height: 100%;display: flex;max-width: 1024px;"> 
+
+        <!-- {{ store }} -->
             <div class="p-3" style="display: flex;width: 100%; overflow-x: auto;gap: 1rem; ">
                 <div class="p-1" v-for="site in sites"  style="display: flex;flex-direction: column; justify-content: center; align-items: center;" :style="route.params.site_id == site.site_id? 'box-shadow:0 6px 0 red':' 6px solid red'">
                     <div @click="navigateToSite(site)" style="cursor: pointer;display: flex;flex-direction: column; align-items: center;" >
