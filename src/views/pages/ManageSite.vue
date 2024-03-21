@@ -135,12 +135,12 @@ const navigateToSite = (siteData) => {
 
 
             <RouterLink :to="`/site/${route.params.site_id}/documentos`" style="width: 100%">
-                <Button size="small" class=" mr-3 p-button-help center   " style="font-weight: bold;width: 100%"> DOCUMENTOS</Button>
+                <Button size="small" class=" mr-3 p-button-help center   " style="font-weight: bold;width: 100%" label="DOCUMENTOS"> </Button>
 
             </RouterLink>
 
             <RouterLink :to="`/site/${route.params.site_id}/recibos`" style="width: 100%">
-                <Button size="small" class="p-button-warning" style="font-weight: bold;width: 100%"> RECIBOS</Button>
+                <Button size="small" class="p-button-warning" style="font-weight: bold;width: 100%" label="RECIBOS"> </Button>
             </RouterLink>
 
         </div>

@@ -59,6 +59,11 @@ async function fetchAndUpdateRoles() {
                     label: 'Directorio ', icon: 'fa-solid fa-folder', to: '/directorio',
 
                 },
+
+                {
+                    label: 'Auditorias ', icon: 'fa-solid fa-folder', to: '/auditorias/lista',
+
+                },
                 
 
 

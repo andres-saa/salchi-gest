@@ -110,6 +110,34 @@ const router = createRouter({
                   name: 'dotacion',
                   component: () => import('@/views/pages/Dotacion.vue')
               },
+
+              {
+                path: '/auditorias',
+                name: 'auditorias',
+                component: () => import('@/views/pages/audit.vue'),
+                children:[
+                  {
+                    path: '/auditorias/lista',
+                    name: 'auditorias-list',
+                    component: () => import('@/views/pages/listAudit.vue')
+                },
+                {
+                  path: '/auditorias/nueva',
+                  name: '/auditorias-nueva',
+                  component: () => import('@/views/pages/newAudit.vue')
+              },
+              {
+                path: '/auditorias/checklist',
+                name: '/auditorias-checklist',
+                component: () => import('@/views/pages/checklist.vue')
+            },
+  
+    
+
+                ]
+            },
+
+              
               {
                 path: '/conectividad',
                 name: 'conectividad',

@@ -66,7 +66,7 @@
 
 
 
-        <template #header style="z-index:200 ; background-color: red;" >
+        <template #header  >
             <div class="grid col-12 m-0 p-0 gap-3 text-center" style="">
                 <Button class="col" style="height: 2.5rem; min-width: max-content;" @click="dialogVisible = true"  severity="success"><i :class="PrimeIcons.UPLOAD"
                         class="pr-3 "></i> Nuevo archivo</Button>
@@ -87,14 +87,28 @@
             <div class="grid col-12 p-0 gap-3 my-4 m-0">
                 <Dropdown style="height: 3rem; text-justify: center;" class="col-12 lg:col-5 p-0" optionLabel="area_name"
                     v-model="area" :options="areas" placeholder="Area de la empresa" />
-                <Dropdown style="height: 3rem; text-justify: center;" class="col-12 lg:col-5 p-0" v-model="type"
+                <Dropdown style="height: 3rem; text-justify: center;" class="col-12 lg:col-4 p-0" v-model="type"
                     optionLabel="type_name" :options="types" placeholder="Tipo de archivo" />
             
-                    <div class="col p-0" style="display: flex; justify-content: end; width: 100%;">
+                    <div class="col p-0" style="display: flex; justify-content: end; width: 100%; gap:1rem">
+
+
+
+<Button  @click="clean" icon="fa-solid fa-broom text-2xl"
+                    style="height: 3rem; border-radius: 50%; aspect-ratio: 1/1; display: flex;align-items: center; justify-content: center;"
+                    class="  text-center text-4xl" severity="danger" size="small"> </Button>
+
+
                         <Button  @click="getfiles"
                     style="height: 3rem; border-radius: 50%; aspect-ratio: 1/1; display: flex;align-items: center; justify-content: center;"
-                    class="  text-center" severity="help" size="small"> <i :class="PrimeIcons.SEARCH"></i></Button>
+                    class="  text-center text-2xl" severity="help" size="small" icon="text-2xl pi pi-search"></Button>
+
+
+                    
+
                     </div>
+
+               
               
             </div>
 
@@ -241,6 +255,8 @@ import {useReportesStore} from '@/store/reportes.js'
 const store = useReportesStore()
 
 
+
+
 // import { onBeforeMount } from 'vue'
 import { useToast } from 'primevue/usetoast';
 // import { PrimeIcons } from 'primevue/api';
@@ -284,19 +300,25 @@ const resetDeleteForm = () => {
 const loadCombinedOptions = async () => {
 
 
-
     await getArchivedFiles().then(data => archived_files.value = data)
     await getAreaFiles().then(data => {
-        areas.value = data
+        areas.value = [{ id_area: 'all', area_name: 'Todas las areas' }, ...data];
     } )
     await getTypeFiles().then(data => {
-        types.value = data
+        types.value = [{ id_type: 'all', type_name: 'Todos los tipos' }, ...data];
     } )
+
     combinedOptions.value = [
         ...areas.value.map(area => ({ id: area.id_area, name: area.area_name, type: 'area' })),
         ...types.value.map(type => ({ id: type.id_type, name: type.type_name, type: 'type' })),
     ];
 };
+
+
+const clean = () => {
+    area.value = areas.value.find(a => a.id_area === 'all');
+    type.value = types.value.find(t => t.id_type === 'all');
+}
 
 const deleteSelectedItem = async () => {
     if (!selectedToDelete.value) return;
@@ -669,29 +691,34 @@ async function getTypeFiles() {
 
 
 onMounted(() => {
-    // getCapacitacion().then(data => capacitacion.value = data)
-    loadCombinedOptions()
-
-})
-
+    
+    // Example of adding "all" option, adjust based on your actual data fetching
+    areas.value = [{ id_area: 'all', area_name: 'Todas las areas' }, ...areas.value];
+    types.value = [{ id_type: 'all', type_name: 'Todos los tipos' }, ...types.value];
+    area.value = areas.value.find(a => a.id_area === 'all');
+    type.value = types.value.find(t => t.id_type === 'all');
+    loadCombinedOptions();
+});
 
 
 async function getAreaFilesByAreaId() {
+
+    console.log(3)
 
     store.setLoading(true, 'cargando archivos')
 
     if (!area.value) {
         store.setLoading(false, 'cargando archivos')
-
         return
-
     }
 
     try {
         const response = await fetch(`${URI}/archived-files/area/${area.value.id_area}`);
+
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
             store.setLoading(false, 'cargando archivos')
+
+            throw new Error(`HTTP error! Status: ${response.status}`);
 
         }
 
@@ -699,12 +726,10 @@ async function getAreaFilesByAreaId() {
       
         store.setLoading(false, 'cargando archivos')
 
-
         return data
 
     } catch (error) {
         store.setLoading(false, 'cargando archivos')
-
         console.error('Error al obtener usuarios agrupados por sede:', error);
     }
 }
@@ -770,14 +795,17 @@ async function getAreaFilesByTypeIdAndAresId() {
 
     }
 }
+
 const getfiles = () => {
-    if (area.value && type.value) {
-        getAreaFilesByTypeIdAndAresId().then(data => archived_files.value = data)
-    } else if (!area.value && type.value) {
-        getAreaFilesByAreaId().then(data => archived_files.value = data)
-    } else if (area.value && !type.value) {
-        getAreaFilesByTypeId().then(data => archived_files.value = data)
-    } else getArchivedFiles()
+    if (area.value && type.value && area.value?.id_area !== 'all' && type.value?.id_type !== 'all') {
+        getAreaFilesByTypeIdAndAresId().then(data => archived_files.value = data);
+    } else if (area.value?.id_area === 'all' && type.value?.id_type !== 'all') {
+        getAreaFilesByTypeId().then(data => archived_files.value = data);
+    } else if (area.value?.id_area !== 'all' && type.value?.id_type === 'all') {
+        getAreaFilesByAreaId().then(data => archived_files.value = data);
+    } else {
+        loadCombinedOptions(); // Or another function to fetch all files without filters
+    }
 }
 
 

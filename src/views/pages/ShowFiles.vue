@@ -22,7 +22,6 @@ import { useToast } from "primevue/usetoast";
 import InputText from 'primevue/inputtext';
 import Divider from 'primevue/divider';
 import { useDirectoryStore } from '../../store/directorio';
-
 const store2 = useDirectoryStore()
 const confirm = useConfirm();
 
@@ -150,6 +149,12 @@ const performDeletion = async (document) => {
 };
 
 const uploadPDFInfo = async (data) => {
+
+    if(!file.value){
+        alert('seleccione un archivo')
+        return
+    }
+
     let Method = "post"
     const queryUrl = `${URI}/site-document/`
     const requestOptions = {
@@ -194,6 +199,12 @@ const getSiteDocumentInfo = async () => {
 };
 
 const updatePDFInfo = async (datos) => {
+
+    if(!documentRenovationDate.value){
+        alert('la recha de renovacion es obligatoria')
+        return 
+    }
+       
     let Method = "put";
     const data = { ...datos }
     const queryUrl = `${URI}/site-document/${data.document_id}`;
@@ -278,6 +289,20 @@ const upload = (file, document_type, site_name) => {
     // const existe = curentSiteDocuments.value.some(objeto => objeto.document_type == documentType.value);
     // console.log(documents,documentType.value)
     // console.log(existe)
+            if(!documentRenovationDate.value){
+            alert('la fecha de renovacion es obligatoria')
+            return 
+        }
+
+            if(!documentType.value?.type_name){
+            alert('debe elegir un tipo de archivo')
+            return 
+        }
+
+        if(!file){
+            alert('debe subir un  archivo')
+            return 
+        }
 
     const data = {
         "document_name": `${currentSite.value.site_name} ${documentType.value.type_name}`,
@@ -286,7 +311,11 @@ const upload = (file, document_type, site_name) => {
         "site_id": route.params.site_id
     }
 
+    store.setLoading(true,'enviando')
+
     uploadPDFInfo(data).then(data => {
+        store.setLoading(false,'enviando')
+
         console.log(data)
 
         uploadPDF(file, data.document_id, documentType.value.type_name)
@@ -297,13 +326,19 @@ const upload = (file, document_type, site_name) => {
     })
     toast.add({ severity: 'success', summary: `hecho`, detail: '', life: 3000 })
     close()
+    store.setLoading(false,'enviando')
+
 
 
 };
 
 const update = (file, data) => {
-    // const existe = documents.value.some(objeto => objeto.document_type == documentType.value);
-    console.log(documents, documentType.value)
+
+    if(!documentRenovationDate.value){
+            alert('la fecha de renovecion es obligatoria')
+            return 
+        }
+
 
     if (4) {
         const i = {
@@ -654,8 +689,8 @@ const deleteFileType = async (typeId) => {
 
             </DataTable>
 
-            <Dialog class="p-0" :closable="true" :header="` CARGAR PARA ${currentSite.site_name}`"
-                v-model:visible="display" :style="{ width: '5000px' }" :modal="true">
+            <Dialog class="p-0" :closable="true" :header="` RENOVAR ${currentdocument?.document_type} PARA ${currentSite.site_name?.toUpperCase()}`"
+                v-model:visible="display" :style="{ width: '500px' }" :modal="true">
 
 
                 <input ref="fileInput" type="file" @change="handleFileChange" style="display: none;">
@@ -677,12 +712,12 @@ const deleteFileType = async (typeId) => {
                 <div class="grid" style="display: flex; justify-content: space-between;">
 
                     <div class="col-12 xl:col-6">
-                        <Button label="Seleccionar documento" class="col-12"
-                            style=" background-color: var(--primary-color);" @click="$refs.fileInput.click();" />
+                        <Button severity="help" label="Seleccionar documento" class="col-12"
+                            style="" @click="$refs.fileInput.click();" />
                     </div>
 
                     <div class="col-12 xl:col-6">
-                        <Button class="col-12" label="Enviar" style="background-color: var(--primary-color);"
+                        <Button class="col-12" severity="success" label="Enviar"
                             @click="update(file, currentdocument)" />
 
                     </div>
@@ -700,7 +735,7 @@ const deleteFileType = async (typeId) => {
             <!-- <Button label="Show" icon="pi pi-external-link" style="width: auto" @click="open" /> -->
 
 
-            <Dialog :header="` CARGAR ${currentdocument ? currentdocument : ''} PARA ${currentSite.site_name}`"
+            <Dialog :header="` CARGAR ${documentType?.type_name || ''} PARA ${currentSite?.site_name?.toUpperCase()}`"
                 v-model:visible="display2" :style="{ width: '450px', }" :modal="true">
 
 
