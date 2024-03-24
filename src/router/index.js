@@ -131,7 +131,8 @@ const router = createRouter({
                 name: '/auditorias-checklist',
                 component: () => import('@/views/pages/checklist.vue')
             },
-  
+
+            
     
 
                 ]
@@ -143,6 +144,13 @@ const router = createRouter({
                 name: 'conectividad',
                 component: () => import('@/views/pages/conectividad.vue')
             },
+
+            {
+              path: '/horarios-trabajo',
+              name: '/horarios-trabajo',
+              component: () => import('@/views/pages/work_schedule.vue')
+          },
+
 
 
               {

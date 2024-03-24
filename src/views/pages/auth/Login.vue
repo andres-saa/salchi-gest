@@ -20,6 +20,10 @@
   import { ref } from 'vue';
   import { URI } from '../../../service/conection';
   import router from '@/router/index'
+  import {loginStore} from '@/store/user.js'
+
+  const store = loginStore()
+
   export default {
     setup() {
       const credentials = ref({ username: '', password: '' });
@@ -43,8 +47,10 @@
           }
   
           const data = await response.json();
+          store.setUserData(data)
           localStorage.setItem('token', data.access_token);
           router.push('/actualizar-datos')
+
           // Redireccionar a la página de inicio o donde sea necesario
         } catch (error) {
           console.error(error);

@@ -1,7 +1,7 @@
 <template>
 
 <Transition name="loading">
-    <div v-if="store.loading.visible" class="col-12" v style="display: flex;flex-direction: column; pointer-events: none; align-items: center; justify-content: center; position: fixed;z-index: 10000;left: 0;top: 0;backdrop-filter:blur(5px); height: 90vh;background-color: rgba(255, 255, 255, 0.537);">
+    <div v-if="store.loading.visible" class="col-12" v style="display: flex;flex-direction: column; align-items: center; justify-content: center; position: fixed;z-index: 10000;left: 0;top: 0;backdrop-filter:blur(5px); height: 90vh;background-color: rgba(255, 255, 255, 0.537);">
 
 
 <div class="p-5" style="height: min-content;display: flex;flex-direction: column;align-items: center;justify-content: center;

@@ -60,16 +60,32 @@ async function fetchAndUpdateRoles() {
 
                 },
 
+
+            ]
+        },
+                
+        {
+            label: 'CALIDAD Y CONTROL',
+            roles: roles.value['Gestion Humana'],
+            items: [
+ 
+
                 {
                     label: 'Auditorias ', icon: 'fa-solid fa-folder', to: '/auditorias/lista',
 
                 },
+                {
+                    label: 'Horario y Turnos ', icon: 'fa-solid fa-folder', to: '/horarios-trabajo',
+
+                },
+                
                 
 
 
 
             ]
         },
+
 
         {
             label: 'ENTREGAS',
@@ -84,6 +100,7 @@ async function fetchAndUpdateRoles() {
 
             ]
         },
+
 
         {
             label: 'CELEBRACIONES', icon: 'pi pi-fw pi-home', to: '/cumples',
