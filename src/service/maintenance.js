@@ -124,6 +124,30 @@ const equipmentService = {
         }
     },
 
+    async getSitesWithAllEquipmentByNames(equipmentNames) {
+        loading.setLoading(true, 'cargando sitios con todos los equipos por nombres');
+        try {
+            const response = await fetch(`${URI}/equipment/sites-with-all-by-names`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify( equipmentNames ),
+            });
+            if (!response.ok) {
+                throw new Error('Error al obtener los sitios');
+            }
+            const data = await response.json();
+            loading.setLoading(false, 'cargando sitios con todos los equipos por nombres');
+            return data;
+        } catch (error) {
+            loading.setLoading(false, 'cargando sitios con todos los equipos por nombres');
+            console.error('Error al cargar sitios con todos los equipos por nombres:', error);
+            return [];
+        }
+    },
+    
+
     async deleteEquipment(equipmentId) {
         loading.setLoading(true, 'eliminando equipo');
         try {

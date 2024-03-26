@@ -291,8 +291,8 @@ watch(
     console.log('Equipos cambiados', newEquipmentIds);
     if (newEquipmentIds.length > 0) {
       const temp_equipment = [...newMaintenance.value.equipment_ids]
-      const ids = temp_equipment.map(e => e.equipment_id)
-      siteOptions.value = await equipmentService.getSitesWithAllEquipment(ids);
+      const names = temp_equipment.map(e => e.name)
+      siteOptions.value = await equipmentService.getSitesWithAllEquipmentByNames(names);
     } else {
       siteOptions.value = [];
     }
