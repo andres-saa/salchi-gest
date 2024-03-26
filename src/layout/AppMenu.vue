@@ -66,7 +66,7 @@ async function fetchAndUpdateRoles() {
                 
         {
             label: 'CALIDAD Y CONTROL',
-            roles: roles.value['Gestion Humana'],
+            roles: roles.value['Calidad y control'],
             items: [
  
 
@@ -76,6 +76,10 @@ async function fetchAndUpdateRoles() {
                 },
                 {
                     label: 'Horario y Turnos ', icon: 'fa-solid fa-folder', to: '/horarios-trabajo',
+
+                },
+                {
+                    label: 'Mantenimientos ', icon: 'fa-solid fa-folder', to: '/maintenance/equipment',
 
                 },
                 

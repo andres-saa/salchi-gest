@@ -4,14 +4,14 @@ import { jwtDecode } from "jwt-decode";
 
 
 
-export const loginStore = defineStore('user', {
+export const maintenanceStore = defineStore('maintance', {
    
     persist: {
        
-                key: 'user', // La clave bajo la cual se almacenará tu estado en el storage
+                key: 'maintance', // La clave bajo la cual se almacenará tu estado en el storage
                 storage: localStorage,
                 paths:[
-                    'userData'
+                    'currentSite'
                     ]
 
         
@@ -20,15 +20,15 @@ export const loginStore = defineStore('user', {
 
 
         return {
-            userData:{}
+            currentSite:{},
+          
             
         }
     },
 
     getters: {
         
-        rawUserData(){
-          return  jwtDecode(this.userData.access_token)}
+    
         
     },
 
@@ -36,8 +36,8 @@ export const loginStore = defineStore('user', {
 
     actions: {
 
-        setUserData(user){
-            this.userData=user
+        setCurrentSite(site){
+            this.currentSite=site
         }
        
     },
