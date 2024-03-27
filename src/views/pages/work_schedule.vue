@@ -1,271 +1,257 @@
-  <template>
+<template>
+  <Dialog v-model:visible="showUserDialog" modal style="width: 20rem">
+      <h3>{{ selectedUser.name }}</h3>
 
+      <div v-if="selectedUser" class="user-info" style="display: flex; flex-direction: column; align-items: center">
+          <img
+              class="shadow-3 p-1"
+              :src="`${URI}/read-product-image/300/employer-${selectedUser.dni}`"
+              @error="onImageError(selectedUser.gender, $event)"
+              alt="Foto del empleado"
+              style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover"
+          />
 
-
-
-<Dialog v-model:visible="showUserDialog" modal style="width: 20rem;">
-    <h3>{{ selectedUser.name }}</h3>
-
-  
-  <div v-if="selectedUser" class="user-info" style="display: flex; flex-direction: column; align-items: center;">
-    <img class="shadow-3 p-1" :src="`${URI}/read-product-image/300/employer-${selectedUser.dni}`" @error="onImageError(selectedUser.gender, $event)" alt="Foto del empleado" style="width: 100px; height: 100px; border-radius: 50%;object-fit: cover;">
-    
-
-    <div class="col-12">
-      <p> <b>Nombre:</b> {{ selectedUser.name }}</p>
-    <p><b>Cargo:</b>  {{ selectedUser.position }}</p>
-    <p><b>Telefono:</b>  {{ selectedUser.phone }}</p>
-    <p> <b>Contrato</b>  {{ selectedUser.contract_type?.toLowerCase() }}</p>
-    <!-- <p>Hora de Llegada: {{ new Date(selectedUser.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+          <div class="col-12">
+              <p><b>Nombre:</b> {{ selectedUser.name }}</p>
+              <p><b>Cargo:</b> {{ selectedUser.position }}</p>
+              <p><b>Telefono:</b> {{ selectedUser.phone }}</p>
+              <p><b>Contrato</b> {{ selectedUser.contract_type?.toLowerCase() }}</p>
+              <!-- <p>Hora de Llegada: {{ new Date(selectedUser.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
     <p>Hora de Salida: {{ new Date(selectedUser.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
     <p>Horas Trabajadas: {{ selectedUser.hoursWorked.toFixed(2) }} hrs</p>
     <p>Tipo de Contrato: {{ selectedUser.contract_type?.toLowerCase() }}</p> -->
-    </div>
-    
-
-  </div>
-  
-  <template #footer>
-    <Button label="Cerrar" @click="showUserDialog = false" />
-  </template>
-</Dialog>
-
-
-
-
-<Dialog v-model:visible="showDateRangeDialog" modal closable>
-    
-
-    <div class=""> 
-      <div class="col-12 p-0 m-0">
-        <Button class="col-12 " severity="danger" text label="Esta semana" @click="setThisWeek"></Button>
+          </div>
       </div>
-      <div class="col-12 p-0 m-0">
-        <Button class=" col-12  " severity="help" text label="Semana pasada" @click="setLastWeek"></Button>
-      </div>
-      <div class="col-12 p-0">
-        <Button class="col-12" severity="warning" text label="Este mes" @click="setThisMonth"></Button>
-      </div>
-      <div class="col-12 p-0">
-        <Button class="col-12" severity="primary" text label="Mes pasado" @click="setLastMonth"></Button>
-      </div>
-    </div>
 
-    <p>Desde:</p>
-    <Calendar class="col-12" v-model="tempStartDate" showIcon></Calendar>
-
-    <p>Hasta:</p>
-    <Calendar class="col-12" v-model="tempEndDate" showIcon></Calendar>
-
- 
-
-    <template #footer>
-      <Button severity="danger" label="Cancelar" @click="closeDateRangeDialog" class="p-button-text" />
-      <Button severity="success" label="Aceptar" @click="applyDateRange" />
-    </template>
+      <template #footer>
+          <Button label="Cerrar" @click="showUserDialog = false" />
+      </template>
   </Dialog>
 
-<!-- {{ roles['Horaios de trabajo admin'] }}  -->
+  <Dialog v-model:visible="showDateRangeDialog" modal closable>
+      <div class="">
+          <div class="col-12 p-0 m-0">
+              <Button class="col-12" severity="danger" text label="Esta semana" @click="setThisWeek"></Button>
+          </div>
+          <div class="col-12 p-0 m-0">
+              <Button class="col-12" severity="help" text label="Semana pasada" @click="setLastWeek"></Button>
+          </div>
+          <div class="col-12 p-0">
+              <Button class="col-12" severity="warning" text label="Este mes" @click="setThisMonth"></Button>
+          </div>
+          <div class="col-12 p-0">
+              <Button class="col-12" severity="primary" text label="Mes pasado" @click="setLastMonth"></Button>
+          </div>
+      </div>
 
-<!-- {{ loginData }} -->
+      <p>Desde:</p>
+      <Calendar class="col-12" v-model="tempStartDate" showIcon></Calendar>
 
-<Dialog v-model:visible="showDeleteWorkDayDialog" modal style="width: 350px" header="Confirmar eliminación" :closable="false">
-  <div class="confirmation-content">
-    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-    <span>¿Estás seguro de que quieres eliminar este día de trabajo y todos sus registros?</span>
-  </div>
-  <template #footer>
-    <Button label="No" icon="pi pi-times" class="p-button-text" @click="showDeleteWorkDayDialog = false" />
-    <Button label="Sí" icon="pi pi-check" class="p-button" @click="deleteWorkDay" />
-  </template>
-</Dialog>
+      <p>Hasta:</p>
+      <Calendar class="col-12" v-model="tempEndDate" showIcon></Calendar>
 
-
-<Dialog v-model:visible="showDeleteDialog" modal style="width: 350px" header="Confirmar eliminación" :closable="false">
-    <div class="confirmation-content">
-      <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-      <span>¿Estás seguro de que quieres eliminar este registro?</span>
-    </div>
-    <template #footer>
-      <Button label="No" icon="pi pi-times" class="p-button-text" @click="() => showDeleteDialog = false" />
-      <Button label="Sí" icon="pi pi-check" class="p-button" @click="deleteRecord" />
-    </template>
+      <template #footer>
+          <Button severity="danger" label="Cancelar" @click="closeDateRangeDialog" class="p-button-text" />
+          <Button severity="success" label="Aceptar" @click="applyDateRange" />
+      </template>
   </Dialog>
 
+  <!-- {{ roles['Horaios de trabajo admin'] }}  -->
 
-<div style="" class="p-0 m-0"  >
+  <!-- {{ loginData }} -->
 
-  <Dialog v-model:visible="showNewDayDialog" style="width: 22rem" modal closeOnEscape  @close="showNewDayDialog = false">
-
-      <h3>Nuevo dia</h3>
-
-    <Calendar class="my-4" v-model="newWorkDayDate" showIcon></Calendar>
-
-    <Dropdown class="col-12 p-0" disabled v-model="selectedSite" :options="sites" optionLabel="site_name" placeholder="Select a site"></Dropdown>
-    <template #footer>
-      <Button label="cancelar" @click="showNewDayDialog = false" class="p-button-danger" />
-      <Button label="Agregar" @click="addNewWorkDay" class="p-button-success" />
-    </template>
+  <Dialog v-model:visible="showDeleteWorkDayDialog" modal style="width: 350px" header="Confirmar eliminación" :closable="false">
+      <div class="confirmation-content">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+          <span>¿Estás seguro de que quieres eliminar este día de trabajo y todos sus registros?</span>
+      </div>
+      <template #footer>
+          <Button label="No" icon="pi pi-times" class="p-button-text" @click="showDeleteWorkDayDialog = false" />
+          <Button label="Sí" icon="pi pi-check" class="p-button" @click="deleteWorkDay" />
+      </template>
   </Dialog>
 
+  <Dialog v-model:visible="showDeleteDialog" modal style="width: 350px" header="Confirmar eliminación" :closable="false">
+      <div class="confirmation-content">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+          <span>¿Estás seguro de que quieres eliminar este registro?</span>
+      </div>
+      <template #footer>
+          <Button label="No" icon="pi pi-times" class="p-button-text" @click="() => (showDeleteDialog = false)" />
+          <Button label="Sí" icon="pi pi-check" class="p-button" @click="deleteRecord" />
+      </template>
+  </Dialog>
 
-<div class="col-12 p-0 m-0">
+  <div style="" class="p-0 m-0">
+      <Dialog v-model:visible="showNewDayDialog" style="width: 22rem" modal closeOnEscape @close="showNewDayDialog = false">
+          <h3>Nuevo dia</h3>
 
+          <Calendar class="my-4" v-model="newWorkDayDate" showIcon></Calendar>
 
-  <div class="grid p-0 mx-auto " style=" max-width: 700px;">
+          <Dropdown class="col-12 p-0" disabled v-model="selectedSite" :options="sites" optionLabel="site_name" placeholder="Select a site"></Dropdown>
+          <template #footer>
+              <Button label="cancelar" @click="showNewDayDialog = false" class="p-button-danger" />
+              <Button label="Agregar" @click="addNewWorkDay" class="p-button-success" />
+          </template>
+      </Dialog>
 
+      <div class="col-12 p-0 m-0 mb-8" >
+          <div class="grid p-0 mx-auto" >
+              <div class="col-12 md:col-5 py-2" style="height: 4rem">
+                  <Dropdown :disabled="!roles['Horarios de trabajo admin']?.includes(loginData?.rawUserData?.rol)" style="height: 100%" class="col-12 p-0 m-0" v-model="currentSite" :options="sites" optionLabel="site_name"></Dropdown>
+              </div>
+              <!-- <div class="col-3"> <Calendar class="col-12 p-0 m-0" v-model="start_date"></Calendar></div> -->
+              <div class="col-12 md:col-5 py-2" style="height: 4rem"><InputText style="height: 100%" class="col-12 text-center m-0" readonly v-model="formattedDateRange" @click="openDateRangeDialog" /></div>
 
-    <div class="col-12 md:col-5  py-2" style="height: 4rem"> <Dropdown  :disabled="!roles['Horarios de trabajo admin']?.includes(loginData?.rawUserData?.rol)" style="height: 100%;" class="col-12 p-0 m-0" v-model="currentSite" :options="sites" optionLabel="site_name" ></Dropdown></div>
-      <!-- <div class="col-3"> <Calendar class="col-12 p-0 m-0" v-model="start_date"></Calendar></div> -->
-      <div class="col-12 md:col-5  py-2" style="height: 4rem"> <InputText style="height: 100%;" class="col-12 text-center m-0" readonly v-model="formattedDateRange" @click="openDateRangeDialog" /> </div>
-  
-      <div class="col-12 md:col-2  py-2 md:mb-8 " style="display: flex;height: 4rem; justify-content: end;"><Button severity="help" rounded class="mb-3" icon="pi pi-search" @click="fetchWorkDays" /></div>
-   
-  
-   </div>
+              <div class="col-12 md:col-2 py-2 " style="display: flex; height: 4rem; justify-content: end"><Button severity="help" rounded class="mb-3" icon="pi pi-search" @click="fetchWorkDays" /></div>
+          </div>
+      </div>
 
+      <div class="grid">
+        <div class="col-2" style="height: 80vh;overflow-y:auto ;">
 
-</div>
+          
+<div class=" p-0" style="display: flex; justify-content: center">
 
-
-
-
-
-
-
-
-
-<p class="p-3 text-2xl text-center" style="font-weight: bold;color: black;text-transform: uppercase;"> <i class="fa-solid fa-folder-open"></i>
-        Empleados de {{ currentSite?.site_name }}</p>
-        
-
-
-<div class="col-12 p-0" style="display: flex; justify-content: center;">
-<div style="display: flex; gap: 1rem; overflow-x: auto;" class="pb-3 m-auto">
-  <div v-for="user in users" :key="user.id" draggable="true"
-      style="display: flex; flex-direction: column; align-items: center; "
-      @dragstart="handleDragStart(user)">
-      <img @click="openUserDialog(user)" class="shadow-4 mb-3 p-1" :src="`${URI}/read-product-image/96/employer-${user.dni}`" alt="user.name"
- @error="onImageError(user.gender, $event)"
- style="width: 4rem;object-fit: cover; height: 4rem; border-radius: 50%;" />
-    <p class="my-0 py-0" style="min-width: max-content; font-weight: bold;text-transform: uppercase;">
-      {{ user.name.split(' ').slice(0, 2).join(' ') }}
-    </p>
-    <span class="my-0 py-0" style="min-width: min-content ;text-transform: uppercase;text-align: center;">
-      {{ user.position }}
-    </span>
-    
+  <div style="display: flex; gap: 1rem;flex-direction: column" class="pb-3 m-auto">
+      <div v-for="user in users" :key="user.id" draggable="true" style="display: flex; flex-direction: column; align-items: center" @dragstart="handleDragStart(user)">
+          <img
+              @click="openUserDialog(user)"
+              class="shadow-2 mb-3 p-1"
+              :src="`${URI}/read-product-image/96/employer-${user.dni}`"
+              alt="user.name"
+              @error="onImageError(user.gender, $event)"
+              style="width: 4rem; object-fit: cover; height: 4rem; border-radius: 50%"
+          />
+          <p class="my-0 py-0" style="min-width: max-content; font-weight: bold; text-transform: uppercase">
+              {{ user.name.split(' ').slice(0, 2).join(' ') }}
+          </p>
+          <span class="my-0 py-0" style="min-width: min-content; text-transform: uppercase; text-align: center">
+              {{ user.position }}
+          </span>
+      </div>
   </div>
 </div>
+        </div>
+        <div class="col-10" style="height: 80vh;overflow-y:auto ; "> 
+
+
+<div class="col-12 p-0" style="display: flex; justify-content: end">
+  <Button class="mb-3" icon="pi pi-plus" severity="info" label="Nuevo dia" @click="showNewDayDialog = true" />
 </div>
 
-<p  class="p-3 text-2xl text-center my-2" style="font-weight: bold;color: black;text-transform: uppercase;"> <i class="fa-solid fa-folder-open"></i>
-        Calendario de trabajo {{ currentSite?.site_name }}</p>
+<div class="col-12 pb-6" style="">
+  <div style="display: flex; gap: 3rem;flex-direction: column;">
+      <div class="" v-for="workDay in workDays" :key="workDay.id" style="position: relative;">
+        <div style="overflow-x: auto;">
+          <Button style="position: absolute; right: -1rem; top: -1rem" icon="pi pi-trash text-2xl " class="p-button-rounded p-button-danger shadow-5" @click="confirmDeleteWorkDay(workDay.id)"></Button>
 
-
-
-
-
-<div class="col-12 p-0" style="display: flex;justify-content: end;">
-  <Button class="mb-3" icon="pi pi-plus" severity="info" label="Nuevo día" @click="showNewDayDialog = true" />
-
-</div>
-
-<div  class="col-12 pb-6" style="overflow-x: auto;">
-<div style="display: flex; gap: 3rem;">
-  <div class="" v-for="workDay in workDays" :key="workDay.id" style="position: relative;">
-
-    <Button style="position: absolute;right: -1rem;top: -1rem;"  icon="pi pi-trash text-2xl " class="p-button-rounded p-button-danger shadow-5"  @click="confirmDeleteWorkDay(workDay.id)"></Button>
-
-  
-    <div style="max-width: 39rem; min-width: min-content; background-color: #F4F1D6">
-      
-      
-      <div class="p-2 shadow-4" :style="{ 'background-color': getDayColor(workDay.date), color: 'white', 'border-radius': '0.5rem 0.5rem 0 0', 'display': 'flex', 'align-items': 'center', 'justify-content': 'space-beetwen' }">
-
-        
-        <p  class="py-0 px-4 text-center col-12 text-xl" style="font-weight: bold; text-shadow: 0 0 3px black;text-transform: uppercase;">
+<div style="min-width: max-content; background-color: #f4f1d6">
+  <div class="p-2 shadow-2" :style="{ 'background-color': getDayColor(workDay.date), color: 'white', 'border-radius': '0.5rem 0.5rem 0 0', display: 'flex', 'align-items': 'center', 'justify-content': 'space-beetwen' }">
+      <p class="py-0 px-4 text-center col-12 text-xl" style="font-weight: bold; text-shadow: 0 0 3px black; text-transform: uppercase">
           {{ workDay.date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Bogota' }) }}
           <!-- {{ workDay.da }} -->
-</p>
+      </p>
+  </div>
+
+  <div
+      class="shadow-5 p-5"
+      style="min-height: 15rem; border-radius: 0 0 0.5rem 0.5rem; display: flex;overflow-x: auto; flex-wrap: wrap; align-items: flex-start; gap: 2rem; justify-content: start; padding: 10px"
+      @dragover.prevent
+      @drop="handleDrop(workDay)"
+  >
+      <div class="shadow-2 p-3" v-for="user in workDay.users" :key="user.id" style="text-align: center; width: 10rem; aspect-ratio: 1 / 1; background-color: white; position: relative; border-radius: 0.5rem">
+          <p class="py-0 my-0" style="min-width: max-content; font-weight: bold; text-transform: uppercase">
+              {{ user.name.split(' ').slice(0, 1).join(' ') }}
+              `
+          </p>
+          <p class="py-0 my-0 text-sm" style="min-width: max-content; text-transform: uppercase">
+              {{ user.position.slice(0, 15) }}
+          </p>
+          <img
+              class="shadow-2 mb-3 p-1"
+              @click="openUserDialog(user)"
+              :src="`${URI}/read-product-image/96/employer-${user.dni}`"
+              alt="user.name"
+              @error="onImageError(user.gender, $event)"
+              style="width: 4rem; object-fit: cover; height: 4rem; border-radius: 50%"
+          />
+          <div v-if="!user.rest">
+              <p class="py-0 my-0">De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+              <p class="py-0 my-0">A: {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+              <p class="py-0 my-0">por: {{ user.hoursWorked.toFixed(2) }} hrs</p>
+              <p class="py-0 my-0">
+                  <b>{{ user.contract_type?.toLowerCase().slice(0, 13) }}</b>
+              </p>
+              <!-- {{ user }} -->
+          </div>
+
+
+          <div v-else>
+            
+
+              <p class="py-0 my-0">
+                  <b style="color: green;">.</b>
+              </p>
+              <p class="py-0 my-0">
+                  <b style="color: green;">.</b>
+              </p>
+              
+              <p class="py-0 my-0">
+                  <b>{{ user.contract_type?.toLowerCase().slice(0, 13) }}</b>
+              </p>
+              
+          </div>
+
+          <Button size="small" style="position: absolute; top: -1rem; right: -1rem" icon="pi pi-trash text-2xl" class="p-button-rounded p-button-danger shadow-3" @click="confirmDelete(user.id)"></Button>
+
+          <!-- <div size="small" style="background-color: red;width: 2rem;height: 2rem; position: absolute; bottom: -1rem; right: -1rem" icon="pi pi-trash text-2xl" class="p-button-rounded p-button-danger shadow-3" @click="confirmDelete(user.id)"></div> -->
+
       </div>
-
-      <div class="shadow-5 p-5" style="min-height: 15rem; border-radius: 0 0 0.5rem 0.5rem; display: flex; flex-wrap: wrap; align-items: flex-start;gap: 2rem; justify-content: space-around; padding: 10px;"
-          @dragover.prevent @drop="handleDrop(workDay)">
-        <div class="shadow-4 p-3 " v-for="user in workDay.users" :key="user.id" style="text-align: center;width: 10rem; aspect-ratio: 1  / 1; background-color: white;position:relative; border-radius: 0.5rem">
-
-          <p class="py-0 my-0" style="min-width: max-content; font-weight: bold;text-transform: uppercase;">
-            {{ user.name.split(' ').slice(0, 1).join(' ') }}
-          </p>
-          <p class="py-0 my-0 text-sm" style="min-width: max-content;text-transform: uppercase;">
-            {{ user.position.slice(0,15 )}}
-          </p>
-          <img class="shadow-4 mb-3 p-1" @click="openUserDialog(user)" :src="`${URI}/read-product-image/96/employer-${user.dni}`" alt="user.name"
- @error="onImageError(user.gender, $event)"
- style="width: 4rem;object-fit: cover; height: 4rem; border-radius: 50%;" />
-          <p class="py-0 my-0">De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
-          <p class="py-0 my-0">A:  {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
-          <p class="py-0 my-0">por: {{ user.hoursWorked.toFixed(2) }} hrs</p>
-          <p class="py-0 my-0"><b>{{ user.contract_type?.toLowerCase().slice(0,13) }}</b></p>
-          <Button  size="small" style="position: absolute;top:-1rem;right: -1rem; " icon="pi pi-trash text-2xl" class="p-button-rounded p-button-danger shadow-3" @click="confirmDelete(user.id)"></Button>
+  </div>
+</div>
+        </div>
+          
+      </div>
+      `
+  </div>
+</div>
 
         </div>
       </div>
-    </div>
+
+
+
+
+      <Dialog v-model:visible="showCalendar" style="width: 20rem" :modal="true">
+          <template #header> . </template>
+
+          <h5 class="" style="text-transform: uppercase">Cuantas horas trabajo {{ currentUser.name }}?</h5>
+
+          <p>Hora de llegada:</p>
+          <Calendar v-model="arrivalTime" showIcon iconDisplay="input" timeOnly hourFormat="12">
+              <template #inputicon="{ clickCallback }">
+                  <InputIcon class="pi pi-clock cursor-pointer" @click="clickCallback" />
+              </template>
+          </Calendar>
+
+          <p>Hora de salida:</p>
+          <Calendar v-model="departureTime" showIcon iconDisplay="input" timeOnly hourFormat="12">
+              <template #inputicon="{ clickCallback }">
+                  <InputIcon class="pi pi-clock cursor-pointer" @click="clickCallback" />
+              </template>
+          </Calendar>
+
+          <template #footer>
+              <div class="col-12 p-0" style="display: flex; justify-content: end">
+                 
+
+                  <Button severity="success" label="Aceptar" @click="saveTimes" />
+              </div>
+          </template>
+      </Dialog>
   </div>
-</div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<Dialog v-model:visible="showCalendar"  style="width: 20rem" :modal="true" >
-<template #header>
-  .
 </template>
-
-<h5 class="" style="text-transform: uppercase;">Cuantas horas trabajo {{ currentUser.name }}?</h5>
-
-
-<p>Hora de llegada:</p>
-<Calendar v-model="arrivalTime" showIcon iconDisplay="input" timeOnly hourFormat="12">
-  <template #inputicon="{ clickCallback }">
-    <InputIcon class="pi pi-clock cursor-pointer" @click="clickCallback" />
-  </template>
-</Calendar>
-
-<p>Hora de salida:</p>
-<Calendar v-model="departureTime" showIcon iconDisplay="input" timeOnly hourFormat="12">
-  <template #inputicon="{ clickCallback }">
-    <InputIcon class="pi pi-clock cursor-pointer" @click="clickCallback" />
-  </template>
-</Calendar>
-
-<template #footer>
-  <Button label="Aceptar" @click="saveTimes" />
-</template>
-</Dialog>
-</div>
-
-
-  </template>
 
   <script setup>
   import { ref, onMounted, computed, watch } from 'vue';
@@ -543,7 +529,10 @@ onMounted(async () => {
   sites.value = await siteService.getSites();
   currentSite.value = sites.value.filter(s => s.site_id == loginData.rawUserData.site_id)[0];
   selectedSite.value = sites.value.filter(s => s.site_id == loginData.rawUserData.site_id)[0];
-  users.value = await userService.getUsersBySiteId(loginData.rawUserData.site_id);
+  const tempUsers =  await userService.getUsersBySiteId(loginData.rawUserData.site_id);
+    users.value = tempUsers.filter(u => u.status == 'activo')
+  setThisWeek()
+  fetchWorkDays()
 
   // Obtiene los días de trabajo con sus registros...
   const workDaysResponse = await fetch(`${URI}/work_days_with_records`);
@@ -554,9 +543,12 @@ onMounted(async () => {
 
 
 watch(currentSite, async( newval) => {
-  users.value = await userService.getUsersBySiteId(newval.site_id);
+  const tempUsers =  await userService.getUsersBySiteId(newval.site_id);
+    users.value = tempUsers.filter(u => u.status == 'activo')
   selectedSite.value = newval
   // alert('cambio')
+  setThisWeek()
+  fetchWorkDays()
 
 })
 
@@ -719,8 +711,9 @@ const addNewWorkDay = async () => {
   </script>
 
   <style scoped>
-  img{
-    object-fit: cover
-  }
+img {
+    object-fit: cover;
+    background-color: white;
+}
   /* Añade estilos según sea necesario */
   </style>

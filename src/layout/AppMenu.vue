@@ -75,7 +75,12 @@ async function fetchAndUpdateRoles() {
 
                 },
                 {
-                    label: 'Horario y Turnos ', icon: 'fa-solid fa-folder', to: '/horarios-trabajo',
+                    label: 'Registrar horas ', icon: 'fa-solid fa-folder', to: '/horarios-trabajo',
+
+                },
+
+                {
+                    label: 'Configurar turnos ', icon: 'fa-solid fa-folder', to: '/turnos-trabajo',
 
                 },
                 {
@@ -183,6 +188,10 @@ async function fetchAndUpdateRoles() {
 
                 {
                     label: 'Planeacíon Estrategica ', icon: 'fa-solid fa-dumbbell', to: '/mas-cerca-de-ti',
+
+                },
+                {
+                    label: 'Mis Turnos ', icon: 'fa-solid fa-dumbbell', to: '/turnos-trabajo-empleados',
 
                 },
                 {

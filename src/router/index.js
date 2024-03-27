@@ -151,6 +151,24 @@ const router = createRouter({
           component: () => import('@/views/pages/work_schedule.vue')
         },
 
+        {
+          path: '/horarios-trabajo',
+          name: '/horarios-trabajo',
+          component: () => import('@/views/pages/work_schedule.vue')
+        },
+
+        {
+          path: '/turnos-trabajo',
+          name: '/turnos-trabajo',
+          component: () => import('@/views/pages/shift_work_schedule.vue')
+        },
+
+        {
+          path: '/turnos-trabajo-empleados',
+          name: '/turnos-trabajo-empleados',
+          component: () => import('@/views/pages/user_shift_work_schedule.vue')
+        },
+
 
 
         {

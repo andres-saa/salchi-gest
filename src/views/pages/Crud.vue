@@ -547,6 +547,28 @@ const asignDropValueToEdit = (user) => {
     console.log(user)
 }
 
+
+
+const deleteUser = async (userId) => {
+    const confirmation = confirm("¿Estás seguro de que quieres eliminar este usuario?");
+    if (confirmation) {
+        try {
+            const response = await fetch(`${URI}/employer/${userId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error(`Error al eliminar el usuario: ${response.statusText}`);
+            }
+            toast.add({ severity: 'success', summary: 'Usuario eliminado', detail: 'El usuario ha sido eliminado con éxito.', life: 3000 });
+            // Actualizar la lista de usuarios
+            getUsers().then(data => users.value = data);
+        } catch (error) {
+            console.error('Error al eliminar el usuario:', error);
+            toast.add({ severity: 'error', summary: 'Error al eliminar', detail: 'Hubo un problema al eliminar el usuario. es posible que sea un jefe', life: 3000 });
+        }
+    }
+};
+
 const editProduct = (editUser) => {
 
     asignDropValueToEdit(editUser)
@@ -1011,6 +1033,7 @@ const verIMagen = (dni) => {
 <template>
 
 
+<ConfirmDialog></ConfirmDialog>
 
     <!-- <Loading tittle="CARGANDO USUARIOS" v-if="charging"></Loading> -->
 
@@ -1449,6 +1472,10 @@ const verIMagen = (dni) => {
                             ;">
                                 <Button style="width: 2rem; aspect-ratio: 1 / 1;margin: auto; border-radius: 10rem;"
                                     icon="pi pi-pencil" class=" p-button-warning " @click="editProduct(user.data)" />
+
+                                    <Button style="width: 2rem; aspect-ratio: 1 / 1;margin: auto; border-radius: 10rem;"
+        icon="pi pi-trash" class="p-button-danger" @click="deleteUser(user.data.id)" />
+
                             </div>
 
 
