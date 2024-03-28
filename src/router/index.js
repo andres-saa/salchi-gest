@@ -165,7 +165,7 @@ const router = createRouter({
 
         {
           path: '/turnos-trabajo-empleados',
-          name: '/turnos-trabajo-empleados',
+          name: 'turnos-trabajo-empleados',
           component: () => import('@/views/pages/user_shift_work_schedule.vue')
         },
 

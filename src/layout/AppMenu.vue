@@ -131,14 +131,28 @@ async function fetchAndUpdateRoles() {
                     label: 'Documentos', icon: 'fa-solid fa-book', to: '/site/1/documentos',
 
                 },
-                {
-                    label: 'Gestion de guias', icon: 'fa-solid fa-book', to: '/guias',
-
-                },
+                
 
  
             ]
         },
+
+        {
+            label: 'GUIAS',
+            roles: roles.value.Guias,
+            items: [
+   
+            {
+                    label: 'Gestion de guias', icon: 'fa-solid fa-book', to: '/guias',
+
+                },
+                
+
+ 
+            ]
+        },
+
+
 
         {
             label: 'CERTIFICADOS',

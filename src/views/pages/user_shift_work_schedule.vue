@@ -51,80 +51,91 @@
         <p class="p-3 text-2xl text-center my-2" style="font-weight: bold; color: black; text-transform: uppercase"><i class="fa-solid fa-folder-open"></i> Calendario de trabajo {{ currentSite?.site_name }}</p>
 
 
-        <div class="col-12 pb-6 " >
-            <div class="grid">
-                <div class="col-12" v-for="workDay in workDays" :key="workDay.id" style="position: relative">
-                    <!-- <Button style="position: absolute; right: -1rem; top: -1rem" icon="pi pi-trash text-2xl " class="p-button-rounded p-button-danger shadow-5" @click="confirmDeleteWorkDay(workDay.id)"></Button> -->
-
-                    <div style=" background-color: #f4f1d6">
-                        <div class="p-2 shadow-2" :style="{ 'background-color': getDayColor(workDay.date), color: 'white', 'border-radius': '0.5rem 0.5rem 0 0', display: 'flex', 'align-items': 'center', 'justify-content': 'space-beetwen' }">
-                            <p class="py-0 px-4 text-center col-12 text-xl" style="font-weight: bold; text-shadow: 0 0 3px black; text-transform: uppercase">
-                                {{ workDay.date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Bogota' }) }}
-                                <!-- {{ workDay.da }} -->
-                            </p>
-                        </div>
-
-                        <div
-                            class="shadow-5 p-5"
-                            style="min-height: 15rem;background-color: ; border-radius: 0 0 0.5rem 0.5rem; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 2rem; justify-content: start; padding: 10px"
-                           
-                        >
-                            <div class="shadow-2 p-3" v-for="user in workDay.users" :key="user.id" style="color: black;text-align: center;width: 10rem; aspect-ratio: 1 / 1;  position: relative; border-radius: 0.5rem" :style="user.rest? 'background-color: #68cc497a;  ' : 'background-color: white;' ">
-                                <p class="py-0 my-0" style="min-width: max-content; font-weight: bold; text-transform: uppercase">
-                                    {{ user.name.split(' ').slice(0, 1).join(' ') }}
-                                    `
+        <div class="col-12 pb-6" style="">
+                    <div style="display: flex; gap: 0rem; flex-direction: column">
+                        <div class="p-0 m-0" v-for="workDay in workDays" :key="workDay.id" style="position: relative">
+                            <div class=" shadow-2" :style="{ 'background-color': getDayColor(workDay.date), color: 'white', 'border-radius': '0.5rem 0.5rem 0 0', display: 'flex', 'align-items': 'center', 'justify-content': 'space-beetwen' }">
+                                <p class="py-0 px-4 text-center col-12 m-0 p-0 text" style="font-weight: bold; text-shadow: 0 0 3px black; text-transform: uppercase">
+                                    {{ workDay.date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Bogota' }) }}
+                                    <!-- {{ workDay.da }} -->
                                 </p>
-                                <p class="py-0 my-0 text-sm" style="min-width: max-content; text-transform: uppercase">
-                                    {{ user.position.slice(0, 15) }}
-                                </p>
-                                <img
-                                    class="shadow-2 mb-3 p-1"
-                                    @click="openUserDialog(user)"
-                                    :src="`${URI}/read-product-image/96/employer-${user.dni}`"
-                                    alt="user.name"
-                                    @error="onImageError(user.gender, $event)"
-                                    style="width: 4rem; object-fit: cover; height: 4rem; border-radius: 50%"
-                                />
-                                <div v-if="!user.rest">
-                                    <p class="py-0 my-0">De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
-                                    <p class="py-0 my-0">A: {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
-                                    <p class="py-0 my-0">por: {{ user.hoursWorked.toFixed(2) }} hrs</p>
-                                    <p class="py-0 my-0">
-                                        <b>{{ user.contract_type?.toLowerCase().slice(0, 13) }}</b>
-                                    </p>
-                                    <!-- {{ user }} -->
+                            </div>
+                            <div style="overflow-x: auto;" >
+                                <Button style="position: absolute; right: -1rem; top: -1rem" icon="pi pi-trash text-2xl " class="p-button-rounded p-button-danger shadow-5" @click="confirmDeleteWorkDay(workDay.id)"></Button>
+
+                                <div style="min-width: max-content; ">
+                                    <div
+                                        class="shadow-5  p-3 m-0 p-4"
+                                        style=" border-radius: 0 0 0.5rem 0.5rem; display: flex; overflow-x: auto; flex-wrap: wrap; align-items: flex-start; gap: 2rem; justify-content: start; padding: 10px"
+                                        @dragover.prevent
+                                        @drop="handleDrop(workDay)"
+                                    >
+                                        <div
+                                            class="shadow-2 p-3"
+                                            v-for="user in workDay.users"
+                                            :key="user.id"
+                                            style="text-align: center; width: 7rem; aspect-ratio: 1 / 1; background-color: white; color: black; position: relative; border-radius: 0.5rem"
+                                            :style="user.rest ? 'box-shadow:0 0 10px green !important ' : 'background-color: white;'"
+                                        >
+                                            <p class="py-0 my-0 text-sm" style="min-width: max-content; font-weight: bold; text-transform: uppercase">
+                                                {{ user.name.split(' ').slice(0, 1).join(' ') }}
+                                                
+                                            </p>
+                                            <!-- <p class="py-0 my-0 text-sm" style="min-width: max-content; text-transform: uppercase">
+                                                {{ user.position.slice(0, 15) }}
+                                            </p> -->
+                                            <img
+                                                class="shadow-2  p-1"
+                                                @click="openUserDialog(user)"
+                                                :src="`${URI}/read-product-image/96/employer-${user.dni}`"
+                                                alt="user.name"
+                                                @error="onImageError(user.gender, $event)"
+                                                style="width: 3rem; object-fit: cover; height: 3rem; border-radius: 50%"
+                                            />
+                                            <div class="text-sm" v-if="!user.rest">
+                                                <!-- <p class="py-0 my-0">De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+                                                <p class="py-0 my-0">A: {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+                                                <p class="py-0 my-0">por: {{ user.hoursWorked.toFixed(2) }} hrs</p> -->
+                                                <p class="py-0 my-0">
+                                                    <b>{{ user.contract_type?.toLowerCase().split(" ").slice(0, 2).join(" ") }}</b>
+                                                    
+                                                </p>
+
+                                                <p class="py-0 my-0">
+                                                    {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).split(':')[0]  }}
+                                                    - {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).split(':')[0] }}
+                                                    
+                                                </p>
+                                                <!-- {{ user }} -->
+                                            </div>
+
+                                            <div class="text-sm" v-else>
+                                                <!-- <p class="py-0 my-0">
+                                                    <b style="color: green">.</b>
+                                                </p>
+                                                <p class="py-0 my-0">
+                                                    <b style="color: green">.</b>
+                                                </p> -->
+                                                <p class="py-0 my-0">
+                                                    <b>{{ user.contract_type?.toLowerCase().slice(0, 13) }}</b>
+                                                </p>
+                                                <p class="py-0 my-0">
+                                                    <b style="color: green">DESCANSA</b>
+                                                </p>
+                                                
+                                            </div>
+
+                                            <div v-if="getUserId() == user.id" style="position: absolute;background-color: green; border-radius: 50%; width: 1.5rem;height: 1.5rem; top: -0.5rem; right: -0.5rem; font-weight: bold;"   icon="pi pi-times fw-bold" class="p-button-rounded p-button-danger p-0 texto-parpadeante" ></div>
+
+                                            <!-- <div size="small" style="background-color: red;width: 2rem;height: 2rem; position: absolute; bottom: -1rem; right: -1rem" icon="pi pi-trash text-2xl" class="p-button-rounded p-button-danger shadow-3" @click="confirmDelete(user.id)"></div> -->
+                                        </div>
+                                    </div>
                                 </div>
-
-
-                                <div v-else>
-                                  
-
-                                    <p class="py-0 my-0">
-                                        <b style="color: green;">.</b>
-                                    </p>
-                                    <p class="py-0 my-0">
-                                        <b style="color: green;">.</b>
-                                    </p>
-                                    <p class="py-0 my-0">
-                                        <b style="color: green;">DESCANSA</b>
-                                    </p>
-                                    <p class="py-0 my-0">
-                                        <b>{{ user.contract_type?.toLowerCase().slice(0, 13) }}</b>
-                                    </p>
-                                    
-                                </div>
-
-                                <!-- <Button size="small" style="position: absolute; top: -1rem; right: -1rem" icon="pi pi-trash text-2xl" class="p-button-rounded p-button-danger shadow-3" @click="confirmDelete(user.id)"></Button> -->
-
-                                <!-- <div size="small" style="background-color: red;width: 2rem;height: 2rem; position: absolute; bottom: -1rem; right: -1rem" icon="pi pi-trash text-2xl" class="p-button-rounded p-button-danger shadow-3" @click="confirmDelete(user.id)"></div> -->
-
                             </div>
                         </div>
+                        `
                     </div>
                 </div>
-                `
-            </div>
-        </div>
 
         <Dialog v-model:visible="showCalendar" style="width: 20rem" :modal="true">
             <template #header> . </template>
@@ -167,6 +178,7 @@ import { loginStore } from '../../store/user';
 import { roles } from '../../service/roles';
 
 import { subDays, startOfWeek, endOfWeek, subMonths, startOfMonth, endOfMonth, format, setWeek } from 'date-fns';
+import { getUserId } from '../../service/valoresReactivosCompartidos.js';
 
 const showUserDialog = ref(false);
 const selectedUser = ref(null);
@@ -549,5 +561,18 @@ img {
     background-color: white;
 }
 /* Añade estilos según sea necesario */
+
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+
+.texto-parpadeante {
+  animation: blinker .5s linear infinite;
+}
+
 </style>
   
