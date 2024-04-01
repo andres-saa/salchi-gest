@@ -1,61 +1,74 @@
 <template>
     <div v-if="true">
-        <Dialog v-model:visible="showUserDialog" modal style="width: 20rem">
-            <h3>{{ selectedUser.name }}</h3>
+        <Dialog v-model:visible="showUserDialog" modal style="width: 30rem">
+        <h4>{{ selectedUser.name }}</h4>
 
-            <div v-if="selectedUser" class="user-info" style="display: flex; flex-direction: column; align-items: center">
-                <img
-                    class="shadow-3 p-1"
-                    :src="`${URI}/read-product-image/300/employer-${selectedUser.dni}`"
-                    @error="onImageError(selectedUser.gender, $event)"
-                    alt="Foto del empleado"
-                    style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover"
-                />
+        <div v-if="selectedUser" class="user-info" style="display: flex; flex-direction: column; align-items: center">
+            <img
+                class="shadow-3 "
+                :src="`${URI}/read-product-image/300/employer-${selectedUser.dni}`"
+                @error="onImageError(selectedUser.gender, $event)"
+                alt="Foto del empleado"
+                style="width: 100%;aspect-ratio: 1 / 1; border-radius: 0.5rem; object-fit: cover"
+            />
 
-                <div class="col-12">
-                    <p><b>Nombre:</b> {{ selectedUser.name }}</p>
-                    <p><b>Cargo:</b> {{ selectedUser.position }}</p>
-                    <p><b>Telefono:</b> {{ selectedUser.phone }}</p>
-                    <p><b>Contrato</b> {{ selectedUser.contract_type?.toLowerCase() }}</p>
-                    <!-- <p>Hora de Llegada: {{ new Date(selectedUser.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
-    <p>Hora de Salida: {{ new Date(selectedUser.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
-    <p>Horas Trabajadas: {{ selectedUser.hoursWorked.toFixed(2) }} hrs</p>
-    <p>Tipo de Contrato: {{ selectedUser.contract_type?.toLowerCase() }}</p> -->
-                </div>
+            <div class="col-12 p-0 mt-4">
+                
+<div v-if="selectedUser.arrivalTime && selectedUser.departureTime">
+    <p v-if="!selectedUser.rest" class=" p-0 my-1 "><b> Desde: </b>{{ new Date(selectedUser.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+                <p v-if="!selectedUser.rest" class="p-0 my-1 "><b> Hasta: </b> {{ new Date(selectedUser.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+                <p v-else  class="p-0 my-1 text-xl" style="color: green;"> <b> Descansa </b> </p>
+</div>
+                <p class="p-0 my-1 "><b>Cargo:</b> {{ selectedUser.position }}</p>
+                <p class="p-0 my-1 "><b>Telefono:</b> {{ selectedUser.phone }}</p>
+                <p class="p-0 my-1 "><b>Contrato</b> {{ selectedUser.contract_type?.toLowerCase() }}</p>
+
+                <!-- <p>Hora de Llegada: {{ new Date(selectedUser.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+      <p>Hora de Salida: {{ new Date(selectedUser.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+      <p>Horas Trabajadas: {{ selectedUser.hoursWorked.toFixed(2) }} hrs</p>
+      <p>Tipo de Contrato: {{ selectedUser.contract_type?.toLowerCase() }}</p> -->
             </div>
+        </div>
 
-            <template #footer>
-                <Button label="Cerrar" @click="showUserDialog = false" />
-            </template>
-        </Dialog>
+        <template #footer>
+            <Button label="Cerrar" @click="showUserDialog = false" />
+        </template>
+    </Dialog>
 
-        <Dialog v-model:visible="showDateRangeDialog" modal closable>
-            <div class="">
-                <div class="col-12 p-0 m-0">
-                    <Button class="col-12" severity="danger" text label="Esta semana" @click="setThisWeek"></Button>
-                </div>
-                <div class="col-12 p-0 m-0">
-                    <Button class="col-12" severity="help" text label="Semana pasada" @click="setLastWeek"></Button>
-                </div>
-                <div class="col-12 p-0">
-                    <Button class="col-12" severity="warning" text label="Este mes" @click="setThisMonth"></Button>
-                </div>
-                <div class="col-12 p-0">
-                    <Button class="col-12" severity="primary" text label="Mes pasado" @click="setLastMonth"></Button>
-                </div>
+    <Dialog v-model:visible="showDateRangeDialog" modal closable>
+        <div class="">
+
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="success"  label="Semana entrante" @click="setNextWeek"></Button>
             </div>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="secondary"  label="Dentro de 2 semanas" @click="setInTwoWeeks"></Button>
+            </div>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12 p-1" severity="danger"  label="Esta semana" @click="setThisWeek"></Button>
+            </div>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="help"  label="Semana pasada" @click="setLastWeek"></Button>
+            </div>
+            <div class="col-12 p-0 my-2">
+                <Button class="col-12  p-1" severity="warning"  label="Este mes" @click="setThisMonth"></Button>
+            </div>
+            <div class="col-12 p-0 my-2">
+                <Button class="col-12  p-1" severity="primary"  label="Mes pasado" @click="setLastMonth"></Button>
+            </div>
+        </div>
 
-            <p>Desde:</p>
-            <Calendar class="col-12" v-model="tempStartDate" showIcon></Calendar>
+        <p class="col-12 m-0 p-0 py-2">Desde:</p>
+        <Calendar class="col-12 m-0 p-0" v-model="tempStartDate" showIcon></Calendar>
 
-            <p>Hasta:</p>
-            <Calendar class="col-12" v-model="tempEndDate" showIcon></Calendar>
+        <p class="col-12 m-0 p-0 py-2">Hasta:</p>
+        <Calendar class="col-12 m-0 p-0" v-model="tempEndDate" showIcon></Calendar>
 
-            <template #footer>
-                <Button severity="danger" label="Cancelar" @click="closeDateRangeDialog" class="p-button-text" />
-                <Button severity="success" label="Aceptar" @click="applyDateRange" />
-            </template>
-        </Dialog>
+        <template #footer>
+            <Button severity="danger" label="Cancelar" @click="closeDateRangeDialog" class="p-button-text" />
+            <Button severity="success" label="Aceptar" @click="applyDateRange" />
+        </template>
+    </Dialog>
 
         <!-- {{ roles['Horaios de trabajo admin'] }}  -->
 
@@ -99,7 +112,7 @@
             <div class="col-12 p-0 m-0 mb-8">
                 <div class="grid p-0 mx-auto">
                     <div class="col-12 md:col-5 py-2" style="height: 4rem">
-                        <Dropdown :disabled="!roles['Horarios de trabajo admin']?.includes(loginData?.rawUserData?.rol)" style="height: 100%" class="col-12 p-0 m-0" v-model="currentSite" :options="sites" optionLabel="site_name"></Dropdown>
+                        <Dropdown :disabled="!roles['Horarios de trabajo admin']?.includes(loginData?.rawUserData?.rol) && getUserId()!=1104" style="height: 100%" class="col-12 p-0 m-0" v-model="currentSite" :options="sites" optionLabel="site_name"></Dropdown>
                     </div>
                     <!-- <div class="col-3"> <Calendar class="col-12 p-0 m-0" v-model="start_date"></Calendar></div> -->
                     <div class="col-12 md:col-5 py-2" style="height: 4rem"><InputText style="height: 100%" class="col-12 text-center m-0" readonly v-model="formattedDateRange" @click="openDateRangeDialog" /></div>
@@ -112,7 +125,7 @@
             <div class="col-2 p-0" style="height: 80vh; overflow-y: auto">
                 <div class="p-0 text-sm" style="display: flex; justify-content: center">
                     <div style="display: flex; gap: 1rem; flex-direction: column" class="pb-3 m-auto">
-                        <div v-for="user in users" :key="user.id" draggable="true" style="display: flex; flex-direction: column; align-items: center" @dragstart="handleDragStart(user)">
+                        <div  @click="openUserDialog(user)" v-for="user in users" :key="user.id" draggable="true" style="display: flex; flex-direction: column; align-items: center" @dragstart="handleDragStart(user)">
                             <img
                                 @click="openUserDialog(user)"
                                 class="shadow-2 p-1"
@@ -133,7 +146,7 @@
             </div>
             <div class="col-10" style="height: 80vh; overflow-y: auto">
                 <div class="col-12 p-0" style="display: flex; justify-content: end">
-                    <Button class="mb-3" icon="pi pi-plus" severity="info" label="Nueva semana" @click="showNewDayDialog = true" />
+                    <Button class="mb-3" icon="pi pi-plus" severity="info" label="Nuevo dia" @click="showNewDayDialog = true" />
                 </div>
 
                 <div class="col-12 pb-6" style="">
@@ -155,22 +168,21 @@
                                         @dragover.prevent
                                         @drop="handleDrop(workDay)"
                                     >
-                                        <div
-                                            class="shadow-2 p-3"
+                                    <div
+                                            class="shadow-2 p-2"
                                             v-for="user in workDay.users"
                                             :key="user.id"
                                             style="text-align: center; width: 7rem; aspect-ratio: 1 / 1; background-color: white; color: black; position: relative; border-radius: 0.5rem"
-                                            :style="user.rest ? 'background-color: #68cc497a;  ' : 'background-color: white;'"
+                                            :style="user.rest ? 'outline:2px solid green;  ' : 'background-color: white;'"
                                         >
                                             <p class="py-0 my-0 text-sm" style="min-width: max-content; font-weight: bold; text-transform: uppercase">
                                                 {{ user.name.split(' ').slice(0, 1).join(' ') }}
-                                                
                                             </p>
                                             <!-- <p class="py-0 my-0 text-sm" style="min-width: max-content; text-transform: uppercase">
                                                 {{ user.position.slice(0, 15) }}
                                             </p> -->
                                             <img
-                                                class="shadow-2  p-1"
+                                                class="shadow-2 p-1"
                                                 @click="openUserDialog(user)"
                                                 :src="`${URI}/read-product-image/96/employer-${user.dni}`"
                                                 alt="user.name"
@@ -181,15 +193,14 @@
                                                 <!-- <p class="py-0 my-0">De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
                                                 <p class="py-0 my-0">A: {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
                                                 <p class="py-0 my-0">por: {{ user.hoursWorked.toFixed(2) }} hrs</p> -->
-                                                <p class="py-0 my-0">
+                                                <!-- <p class="py-0 my-0">
                                                     <b>{{ user.contract_type?.toLowerCase().slice(0, 13) }}</b>
                                                     
-                                                </p>
+                                                </p> -->
 
-                                                <p class="py-0 my-0">
-                                                    {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).split(':')[0]  }}
-                                                    - {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).split(':')[0] }}
-                                                    
+                                                <p class="py-0 my-0 text-sm text-center">
+                                                    De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }} A:
+                                                    {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}
                                                 </p>
                                                 <!-- {{ user }} -->
                                             </div>
@@ -207,10 +218,14 @@
                                                 <p class="py-0 my-0">
                                                     <b style="color: green">DESCANSA</b>
                                                 </p>
-                                                
                                             </div>
 
-                                            <Button  style="position: absolute; top: -1rem; right: -1rem; font-weight: bold;"  text icon="pi pi-times " class="p-button-rounded p-button-danger " @click="confirmDelete(user.id)"></Button>
+                                            <Button
+                                                style="position: absolute; width: 1.5rem; height: 1.5rem; top: -0.5rem; right: -0.5rem; font-weight: bold"
+                                                icon="pi pi-times fw-bold"
+                                                class="p-button-rounded p-button-danger p-0"
+                                                @click="confirmDelete(user.id)"
+                                            ></Button>
 
                                             <!-- <div size="small" style="background-color: red;width: 2rem;height: 2rem; position: absolute; bottom: -1rem; right: -1rem" icon="pi pi-trash text-2xl" class="p-button-rounded p-button-danger shadow-3" @click="confirmDelete(user.id)"></div> -->
                                         </div>
@@ -266,6 +281,7 @@ import { loginStore } from '../../store/user';
 import { roles } from '../../service/roles';
 
 import { subDays, startOfWeek, endOfWeek, subMonths, startOfMonth, endOfMonth, format } from 'date-fns';
+import { getUserDni, getUserId } from '../../service/valoresReactivosCompartidos';
 
 const showUserDialog = ref(false);
 const selectedUser = ref(null);
@@ -274,6 +290,14 @@ const openUserDialog = (user) => {
     selectedUser.value = user;
     showUserDialog.value = true;
 };
+
+
+
+
+const selectedSite = ref(null);
+const showNewDayDialog = ref(false);
+const newWorkDayDate = ref(new Date());
+
 
 const showDateRangeDialog = ref(false);
 const tempStartDate = ref(new Date());
@@ -322,6 +346,17 @@ const setThisWeek = () => {
     tempEndDate.value = endOfWeek(now, { weekStartsOn: 1 });
     applyDateRange(); // Llama a la función que aplica el rango y cierra el diálogo.
 };
+
+
+// watch(selectedSite, (new_site) => {
+//     if (getUserId() == 1104 && (new_site.site_name?.toLowerCase() != 'kennedy' || new_site.site_id?.toLowerCase() != 'montes' )){
+//         alert('not')
+//         return
+        
+//     }
+// })
+
+
 
 const setLastWeek = () => {
     const now = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -430,9 +465,7 @@ const onImageError = (gender, event) => {
     event.target.src = genderImages[genderKey] || genderImages.default;
 };
 
-const selectedSite = ref(null);
-const showNewDayDialog = ref(false);
-const newWorkDayDate = ref(new Date());
+const cambioInicial = true
 
 onMounted(async () => {
     // Carga inicial de sitios y usuarios...
@@ -444,20 +477,50 @@ onMounted(async () => {
     setThisWeek();
     fetchWorkDays();
 
-    // Obtiene los días de trabajo con sus registros...
-    const workDaysResponse = await fetch(`${URI}/work_days_with_records`);
+
+
 });
 
-watch(currentSite, async (newval) => {
+watch(currentSite, async (newval,oldVal) => {
+
+        
+    if (getUserId() == 1104 && (currentSite.value.site_name?.toLowerCase() != 'kennedy' && currentSite.value.site_name?.toLowerCase() != 'montes' ) ){
+        alert('No tienes permiso para administrar esta sede')
+        currentSite.value = oldVal
+        return
+        
+
+    } else{
     const tempUsers = await userService.getUsersBySiteId(newval.site_id);
     users.value = tempUsers.filter((u) => u.status == 'activo');
     selectedSite.value = newval;
     // alert('cambio')
     setThisWeek();
     fetchWorkDays();
+    }
+
+  
+    
+
+
 });
 
+
+
 const fetchWorkDays = async () => {
+
+
+    
+    if (getUserId() == 1104 && (currentSite.value.site_name?.toLowerCase() != 'kennedy' && currentSite.value.site_name?.toLowerCase() != 'montes' ) ){
+        // alert('not')
+        
+        return
+        
+
+    }
+
+
+
     store.setLoading(true, 'cargando horario');
     if (!currentSite.value || !start_date.value || !end_date.value) {
         alert('Please select a site and date range.');
@@ -543,6 +606,25 @@ const addNewWorkDay = async () => {
         store.setLoading(false, 'guardando');
     }
 };
+
+
+
+const setNextWeek = () => {
+    const now = new Date();
+    const nextWeekStartDate = new Date(now.setDate(now.getDate() + (7 - now.getDay()) + 1));
+    tempStartDate.value = startOfWeek(nextWeekStartDate, { weekStartsOn: 1 });
+    tempEndDate.value = endOfWeek(nextWeekStartDate, { weekStartsOn: 1 });
+    applyDateRange();
+};
+
+const setInTwoWeeks = () => {
+    const now = new Date();
+    const inTwoWeeksStartDate = new Date(now.setDate(now.getDate() + (7 - now.getDay()) + 8));
+    tempStartDate.value = startOfWeek(inTwoWeeksStartDate, { weekStartsOn: 1 });
+    tempEndDate.value = endOfWeek(inTwoWeeksStartDate, { weekStartsOn: 1 });
+    applyDateRange();
+};
+
 
 const handleDragStart = (user) => {
     currentUser.value = user;

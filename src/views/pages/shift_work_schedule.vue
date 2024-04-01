@@ -1,21 +1,27 @@
 <template>
-    <Dialog v-model:visible="showUserDialog" modal style="width: 20rem">
-        <h3>{{ selectedUser.name }}</h3>
+          <Dialog v-model:visible="showUserDialog" modal style="width: 30rem">
+        <h4>{{ selectedUser.name }}</h4>
 
         <div v-if="selectedUser" class="user-info" style="display: flex; flex-direction: column; align-items: center">
             <img
-                class="shadow-3 p-1"
+                class="shadow-3 "
                 :src="`${URI}/read-product-image/300/employer-${selectedUser.dni}`"
                 @error="onImageError(selectedUser.gender, $event)"
                 alt="Foto del empleado"
-                style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover"
+                style="width: 100%;aspect-ratio: 1 / 1; border-radius: 0.5rem; object-fit: cover"
             />
 
-            <div class="col-12">
-                <p><b>Nombre:</b> {{ selectedUser.name }}</p>
-                <p><b>Cargo:</b> {{ selectedUser.position }}</p>
-                <p><b>Telefono:</b> {{ selectedUser.phone }}</p>
-                <p><b>Contrato</b> {{ selectedUser.contract_type?.toLowerCase() }}</p>
+            <div class="col-12 p-0 mt-4">
+                
+<div v-if="selectedUser.arrivalTime && selectedUser.departureTime">
+    <p v-if="!selectedUser.rest" class=" p-0 my-1 "><b> Desde: </b>{{ new Date(selectedUser.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+                <p v-if="!selectedUser.rest" class="p-0 my-1 "><b> Hasta: </b> {{ new Date(selectedUser.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
+                <p v-else  class="p-0 my-1 text-xl" style="color: green;"> <b> Descansa </b> </p>
+</div>
+                <p class="p-0 my-1 "><b>Cargo:</b> {{ selectedUser.position }}</p>
+                <p class="p-0 my-1 "><b>Telefono:</b> {{ selectedUser.phone }}</p>
+                <p class="p-0 my-1 "><b>Contrato</b> {{ selectedUser.contract_type?.toLowerCase() }}</p>
+
                 <!-- <p>Hora de Llegada: {{ new Date(selectedUser.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
       <p>Hora de Salida: {{ new Date(selectedUser.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
       <p>Horas Trabajadas: {{ selectedUser.hoursWorked.toFixed(2) }} hrs</p>
@@ -30,25 +36,32 @@
 
     <Dialog v-model:visible="showDateRangeDialog" modal closable>
         <div class="">
-            <div class="col-12 p-0 m-0">
-                <Button class="col-12" severity="danger" text label="Esta semana" @click="setThisWeek"></Button>
+
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="success"  label="Semana entrante" @click="setNextWeek"></Button>
             </div>
-            <div class="col-12 p-0 m-0">
-                <Button class="col-12" severity="help" text label="Semana pasada" @click="setLastWeek"></Button>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="secondary"  label="Dentro de 2 semanas" @click="setInTwoWeeks"></Button>
             </div>
-            <div class="col-12 p-0">
-                <Button class="col-12" severity="warning" text label="Este mes" @click="setThisMonth"></Button>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12 p-1" severity="danger"  label="Esta semana" @click="setThisWeek"></Button>
             </div>
-            <div class="col-12 p-0">
-                <Button class="col-12" severity="primary" text label="Mes pasado" @click="setLastMonth"></Button>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="help"  label="Semana pasada" @click="setLastWeek"></Button>
+            </div>
+            <div class="col-12 p-0 my-2">
+                <Button class="col-12  p-1" severity="warning"  label="Este mes" @click="setThisMonth"></Button>
+            </div>
+            <div class="col-12 p-0 my-2">
+                <Button class="col-12  p-1" severity="primary"  label="Mes pasado" @click="setLastMonth"></Button>
             </div>
         </div>
 
-        <p>Desde:</p>
-        <Calendar class="col-12" v-model="tempStartDate" showIcon></Calendar>
+        <p class="col-12 m-0 p-0 py-2">Desde:</p>
+        <Calendar class="col-12 m-0 p-0" v-model="tempStartDate" showIcon></Calendar>
 
-        <p>Hasta:</p>
-        <Calendar class="col-12" v-model="tempEndDate" showIcon></Calendar>
+        <p class="col-12 m-0 p-0 py-2">Hasta:</p>
+        <Calendar class="col-12 m-0 p-0" v-model="tempEndDate" showIcon></Calendar>
 
         <template #footer>
             <Button severity="danger" label="Cancelar" @click="closeDateRangeDialog" class="p-button-text" />
@@ -82,22 +95,22 @@
         </template>
     </Dialog>
     <Dialog v-model:visible="showNewDayDialog" style="width: 22rem" modal closeOnEscape @close="showNewDayDialog = false">
-            <h3>Nueva semana</h3>
+        <h3>Nueva semana</h3>
 
-            <Calendar class="my-4" v-model="newWorkDayDate" showIcon></Calendar>
+        <Calendar class="my-4" v-model="newWorkDayDate" showIcon></Calendar>
 
-            <Dropdown class="col-12 p-0" disabled v-model="selectedSite" :options="sites" optionLabel="site_name" placeholder="Select a site"></Dropdown>
-            <template #footer>
-                <Button label="cancelar" @click="showNewDayDialog = false" class="p-button-danger" />
-                <Button label="Agregar" @click="addNewWorkDay" class="p-button-success" />
-            </template>
-        </Dialog>
+        <Dropdown class="col-12 p-0" disabled v-model="selectedSite" :options="sites" optionLabel="site_name" placeholder="Select a site"></Dropdown>
+        <template #footer>
+            <Button label="cancelar" @click="showNewDayDialog = false" class="p-button-danger" />
+            <Button label="Agregar" @click="addNewWorkDay(newWorkDayDate)" class="p-button-success" />
+        </template>
+    </Dialog>
 
     <div style="" class="p-0 m-0 col-12">
         <div class="col-12 p-0 m-0 mb-8">
             <div class="grid p-0 mx-auto">
                 <div class="col-12 md:col-5 py-2" style="height: 4rem">
-                    <Dropdown :disabled="!roles['Horarios de trabajo admin']?.includes(loginData?.rawUserData?.rol)" style="height: 100%" class="col-12 p-0 m-0" v-model="currentSite" :options="sites" optionLabel="site_name"></Dropdown>
+                    <Dropdown :disabled="!roles['Horarios de trabajo admin']?.includes(loginData?.rawUserData?.rol) && getUserId()!=1104" style="height: 100%" class="col-12 p-0 m-0" v-model="currentSite" :options="sites" optionLabel="site_name"></Dropdown>
                 </div>
                 <!-- <div class="col-3"> <Calendar class="col-12 p-0 m-0" v-model="start_date"></Calendar></div> -->
                 <div class="col-12 md:col-5 py-2" style="height: 4rem"><InputText style="height: 100%" class="col-12 text-center m-0" readonly v-model="formattedDateRange" @click="openDateRangeDialog" /></div>
@@ -130,31 +143,31 @@
                 </div>
             </div>
             <div class="col-10" style="height: 80vh; overflow-y: auto">
-                <div class="col-12 p-0" style="display: flex; justify-content: end">
+                <!-- <div class="col-12 p-0" style="display: flex; justify-content: end">
                     <Button class="mb-3" icon="pi pi-plus" severity="info" label="Nueva semana" @click="showNewDayDialog = true" />
-                </div>
+                </div> -->
 
                 <div class="col-12 pb-6" style="">
                     <div style="display: flex; gap: 0rem; flex-direction: column">
                         <div class="p-0 m-0" v-for="workDay in workDays" :key="workDay.id" style="position: relative">
-                            <div class=" shadow-2" :style="{ 'background-color': getDayColor(workDay.date), color: 'white', 'border-radius': '0.5rem 0.5rem 0 0', display: 'flex', 'align-items': 'center', 'justify-content': 'space-beetwen' }">
+                            <div class="shadow-2" :style="{ 'background-color': getDayColor(workDay.date), color: 'white', 'border-radius': '0.5rem 0.5rem 0 0', display: 'flex', 'align-items': 'center', 'justify-content': 'space-beetwen' }">
                                 <p class="py-0 px-4 text-center col-12 m-0 p-0 text" style="font-weight: bold; text-shadow: 0 0 3px black; text-transform: uppercase">
                                     {{ workDay.date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Bogota' }) }}
                                     <!-- {{ workDay.da }} -->
                                 </p>
                             </div>
-                            <div style="overflow-x: auto;" >
+                            <div style="overflow-x: auto">
                                 <Button style="position: absolute; right: -1rem; top: -1rem" icon="pi pi-trash text-2xl " class="p-button-rounded p-button-danger shadow-5" @click="confirmDeleteWorkDay(workDay.id)"></Button>
 
-                                <div style="min-width: max-content; ">
+                                <div style="min-width: max-content">
                                     <div
-                                        class="shadow-5  p-3 m-0 p-4"
-                                        style=" border-radius: 0 0 0.5rem 0.5rem; display: flex; overflow-x: auto; flex-wrap: wrap; align-items: flex-start; gap: 2rem; justify-content: start; padding: 10px"
+                                        class="shadow-5 p-3 m-0 p-4"
+                                        style="border-radius: 0 0 0.5rem 0.5rem; display: flex; overflow-x: auto; flex-wrap: wrap; align-items: flex-start; gap: 2rem; justify-content: start; padding: 10px"
                                         @dragover.prevent
                                         @drop="handleDrop(workDay)"
                                     >
                                         <div
-                                            class="shadow-2 p-3"
+                                            class="shadow-2 p-2"
                                             v-for="user in workDay.users"
                                             :key="user.id"
                                             style="text-align: center; width: 7rem; aspect-ratio: 1 / 1; background-color: white; color: black; position: relative; border-radius: 0.5rem"
@@ -162,13 +175,12 @@
                                         >
                                             <p class="py-0 my-0 text-sm" style="min-width: max-content; font-weight: bold; text-transform: uppercase">
                                                 {{ user.name.split(' ').slice(0, 1).join(' ') }}
-                                                
                                             </p>
                                             <!-- <p class="py-0 my-0 text-sm" style="min-width: max-content; text-transform: uppercase">
                                                 {{ user.position.slice(0, 15) }}
                                             </p> -->
                                             <img
-                                                class="shadow-2  p-1"
+                                                class="shadow-2 p-1"
                                                 @click="openUserDialog(user)"
                                                 :src="`${URI}/read-product-image/96/employer-${user.dni}`"
                                                 alt="user.name"
@@ -179,15 +191,14 @@
                                                 <!-- <p class="py-0 my-0">De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
                                                 <p class="py-0 my-0">A: {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
                                                 <p class="py-0 my-0">por: {{ user.hoursWorked.toFixed(2) }} hrs</p> -->
-                                                <p class="py-0 my-0">
+                                                <!-- <p class="py-0 my-0">
                                                     <b>{{ user.contract_type?.toLowerCase().slice(0, 13) }}</b>
                                                     
-                                                </p>
+                                                </p> -->
 
-                                                <p class="py-0 my-0">
-                                                    {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).split(':')[0]  }}
-                                                    - {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).split(':')[0] }}
-                                                    
+                                                <p class="py-0 my-0 text-sm text-center">
+                                                    De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }} A:
+                                                    {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}
                                                 </p>
                                                 <!-- {{ user }} -->
                                             </div>
@@ -205,10 +216,14 @@
                                                 <p class="py-0 my-0">
                                                     <b style="color: green">DESCANSA</b>
                                                 </p>
-                                                
                                             </div>
 
-                                            <Button  style="position: absolute;width: 1.5rem;height: 1.5rem; top: -1rem; right: -1rem; font-weight: bold;"   icon="pi pi-times fw-bold" class="p-button-rounded p-button-danger p-0 " @click="confirmDelete(user.id)"></Button>
+                                            <Button
+                                                style="position: absolute; width: 1.5rem; height: 1.5rem; top: -0.5rem; right: -0.5rem; font-weight: bold"
+                                                icon="pi pi-times fw-bold"
+                                                class="p-button-rounded p-button-danger p-0"
+                                                @click="confirmDelete(user.id)"
+                                            ></Button>
 
                                             <!-- <div size="small" style="background-color: red;width: 2rem;height: 2rem; position: absolute; bottom: -1rem; right: -1rem" icon="pi pi-trash text-2xl" class="p-button-rounded p-button-danger shadow-3" @click="confirmDelete(user.id)"></div> -->
                                         </div>
@@ -261,7 +276,7 @@ import { useReportesStore } from '../../store/reportes';
 import { siteService } from '../../service/siteService.js';
 import { loginStore } from '../../store/user';
 import { roles } from '../../service/roles';
-
+import { getUserId } from '../../service/valoresReactivosCompartidos';
 import { subDays, startOfWeek, endOfWeek, subMonths, startOfMonth, endOfMonth, format, setWeek } from 'date-fns';
 
 const showUserDialog = ref(false);
@@ -306,10 +321,12 @@ const closeDateRangeDialog = () => {
     showDateRangeDialog.value = false;
 };
 
-const applyDateRange = () => {
+const applyDateRange = async() => {
     start_date.value = tempStartDate.value;
     end_date.value = tempEndDate.value;
     showDateRangeDialog.value = false;
+    await addNewWorkDay(start_date.value);
+
     fetchWorkDays(); // Llama a la función que realiza la búsqueda.
 };
 
@@ -432,6 +449,7 @@ const showNewDayDialog = ref(false);
 const newWorkDayDate = ref(new Date());
 
 onMounted(async () => {
+    
     // Carga inicial de sitios y usuarios...
     sites.value = await siteService.getSites();
     currentSite.value = sites.value.filter((s) => s.site_id == loginData.rawUserData.site_id)[0];
@@ -442,21 +460,72 @@ onMounted(async () => {
 
     // Obtiene los días de trabajo con sus registros...
     const workDaysResponse = await fetch(`${URI}/shift_work_days_with_records`);
+
+    const now = new Date();
+    await addNewWorkDay(now);
+    
+
+    // Obtiene los días de trabajo con sus registros para la semana actual...
+    await fetchWorkDays();
 });
 
-watch(currentSite, async (newval) => {
+
+
+const setNextWeek = async() => {
+    const now = new Date();
+    const nextWeekStartDate = new Date(now.setDate(now.getDate() + (7 - now.getDay()) + 1));
+    tempStartDate.value = startOfWeek(nextWeekStartDate, { weekStartsOn: 1 });
+    tempEndDate.value = endOfWeek(nextWeekStartDate, { weekStartsOn: 1 });
+
+    applyDateRange();
+};
+
+const setInTwoWeeks = async() => {
+    const now = new Date();
+    const inTwoWeeksStartDate = new Date(now.setDate(now.getDate() + (7 - now.getDay()) + 8));
+    tempStartDate.value = startOfWeek(inTwoWeeksStartDate, { weekStartsOn: 1 });
+    tempEndDate.value = endOfWeek(inTwoWeeksStartDate, { weekStartsOn: 1 });
+
+    applyDateRange();
+};
+
+
+
+
+watch(currentSite, async (newval,oldVal) => {
+
+    if (getUserId() == 1104 && (currentSite.value.site_name?.toLowerCase() != 'kennedy' && currentSite.value.site_name?.toLowerCase() != 'montes' ) ){
+        alert('No tienes permiso para administrar esta sede')
+        currentSite.value = oldVal
+        return
+    } else {
     const tempUsers = await userService.getUsersBySiteId(newval.site_id);
     users.value = tempUsers.filter((u) => u.status == 'activo');
     selectedSite.value = newval;
     setThisWeek();
     fetchWorkDays();
+    await addNewWorkDay(now);
+
+    const now = new Date();
+    }
+
     // alert('cambio')
 });
 
 const fetchWorkDays = async () => {
+
+    if (getUserId() == 1104 && (currentSite.value.site_name?.toLowerCase() != 'kennedy' && currentSite.value.site_name?.toLowerCase() != 'montes' ) ){
+        // alert('not')
+        
+        return
+        
+
+    }
+
+
     store.setLoading(true, 'cargando horario');
     if (!currentSite.value || !start_date.value || !end_date.value) {
-        alert('Please select a site and date range.');
+        alert('No olvide seleccionar una sede y un rango de fechas');
         return;
     }
 
@@ -504,17 +573,10 @@ const fetchWorkDays = async () => {
     }
 };
 
-const addNewWorkDay = async () => {
-    showNewDayDialog.value = false;
+async function addNewWorkDay(date) {
+    if (!selectedSite.value) return;
 
-    store.setLoading(true, 'guardando');
-    if (!selectedSite.value || !newWorkDayDate.value) {
-        alert('Please select a site and date.');
-        return;
-    }
-
-    let date = new Date(newWorkDayDate.value.getTime());
-    const dateInUTC = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    let dateInUTC = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
 
     const response = await fetch(`${URI}/shift_work_days`, {
         method: 'POST',
@@ -523,23 +585,13 @@ const addNewWorkDay = async () => {
     });
 
     if (response.ok) {
-        const newWorkDay = await response.json();
-        newWorkDay.date = new Date(newWorkDay.date);
-        newWorkDay.date.setDate(newWorkDay.date.getDate() + 1);
-        store.setLoading(false, 'guardando');
-        // workDays.value.push(newWorkDay);
+        // Opcional: Actualizar la interfaz con el nuevo día laboral
         fetchWorkDays();
     } else {
-        // Handling the specific error when a workday is already registered
-        const errorResponse = await response.json();
-        if (errorResponse.detail && errorResponse.detail === 'El día con el mismo site_id ya está registrado.') {
-            alert('Este dia ya esta registrado para esta sede');
-        } else {
-            alert('Failed to add new workday');
-        }
-        store.setLoading(false, 'guardando');
+        // Manejo de error
+        console.error('Error al agregar un nuevo día laboral', await response.text());
     }
-};
+}
 
 const handleDragStart = (user) => {
     currentUser.value = user;
@@ -626,11 +678,11 @@ const saveRest = async () => {
         body: JSON.stringify(record)
     });
 
-    const newUser = {...currentUser.value}
+    const newUser = { ...currentUser.value };
     // Actualiza la interfaz de usuario con los nuevos datos
     newUser.arrivalTime = arrivalTime.value;
     newUser.departureTime = departureTime.value;
-    newUser.hoursWorked = (departureTime.value - arrivalTime.value) / 3600000; 
+    newUser.hoursWorked = (departureTime.value - arrivalTime.value) / 3600000;
     newUser.rest = true;
     currentDay.value.users.push(newUser);
 

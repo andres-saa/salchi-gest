@@ -2,25 +2,32 @@
 
 <Dialog v-model:visible="showDateRangeDialog" modal closable>
         <div class="">
-            <div class="col-12 p-0 m-0">
-                <Button class="col-12" severity="danger" text label="Esta semana" @click="setThisWeek"></Button>
+
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="success"  label="Semana entrante" @click="setNextWeek"></Button>
             </div>
-            <div class="col-12 p-0 m-0">
-                <Button class="col-12" severity="help" text label="Semana pasada" @click="setLastWeek"></Button>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="secondary"  label="Dentro de 2 semanas" @click="setInTwoWeeks"></Button>
             </div>
-            <div class="col-12 p-0">
-                <Button class="col-12" severity="warning" text label="Este mes" @click="setThisMonth"></Button>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12 p-1" severity="danger"  label="Esta semana" @click="setThisWeek"></Button>
             </div>
-            <div class="col-12 p-0">
-                <Button class="col-12" severity="primary" text label="Mes pasado" @click="setLastMonth"></Button>
+            <div class="col-12 p-0 m-0 my-2">
+                <Button class="col-12  p-1" severity="help"  label="Semana pasada" @click="setLastWeek"></Button>
+            </div>
+            <div class="col-12 p-0 my-2">
+                <Button class="col-12  p-1" severity="warning"  label="Este mes" @click="setThisMonth"></Button>
+            </div>
+            <div class="col-12 p-0 my-2">
+                <Button class="col-12  p-1" severity="primary"  label="Mes pasado" @click="setLastMonth"></Button>
             </div>
         </div>
 
-        <p>Desde:</p>
-        <Calendar class="col-12" v-model="tempStartDate" showIcon></Calendar>
+        <p class="col-12 m-0 p-0 py-2">Desde:</p>
+        <Calendar class="col-12 m-0 p-0" v-model="tempStartDate" showIcon></Calendar>
 
-        <p>Hasta:</p>
-        <Calendar class="col-12" v-model="tempEndDate" showIcon></Calendar>
+        <p class="col-12 m-0 p-0 py-2">Hasta:</p>
+        <Calendar class="col-12 m-0 p-0" v-model="tempEndDate" showIcon></Calendar>
 
         <template #footer>
             <Button severity="danger" label="Cancelar" @click="closeDateRangeDialog" class="p-button-text" />
@@ -61,7 +68,6 @@
                                 </p>
                             </div>
                             <div style="overflow-x: auto;" >
-                                <Button style="position: absolute; right: -1rem; top: -1rem" icon="pi pi-trash text-2xl " class="p-button-rounded p-button-danger shadow-5" @click="confirmDeleteWorkDay(workDay.id)"></Button>
 
                                 <div style="min-width: max-content; ">
                                     <div
@@ -71,7 +77,7 @@
                                         @drop="handleDrop(workDay)"
                                     >
                                         <div
-                                            class="shadow-2 p-3"
+                                            class="shadow-2 p-2"
                                             v-for="user in workDay.users"
                                             :key="user.id"
                                             style="text-align: center; width: 7rem; aspect-ratio: 1 / 1; background-color: white; color: black; position: relative; border-radius: 0.5rem"
@@ -101,10 +107,9 @@
                                                     
                                                 </p>
 
-                                                <p class="py-0 my-0">
-                                                    {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).split(':')[0]  }}
-                                                    - {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).split(':')[0] }}
-                                                    
+                                                <p class="py-0 my-0 text-sm text-center">
+                                                    De: {{ new Date(user.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }} A:
+                                                    {{ new Date(user.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}
                                                 </p>
                                                 <!-- {{ user }} -->
                                             </div>
@@ -116,6 +121,9 @@
                                                 <p class="py-0 my-0">
                                                     <b style="color: green">.</b>
                                                 </p> -->
+                                                <p style="opacity: 0;" class="py-0 my-0 text-sm text-center">
+                                                    .
+                                                </p>
                                                 <p class="py-0 my-0">
                                                     <b>{{ user.contract_type?.toLowerCase().slice(0, 13) }}</b>
                                                 </p>
@@ -318,6 +326,26 @@ const dayColors = {
     Saturday: '#10B981',
     Sunday: '#EC4899'
 };
+
+
+
+const setNextWeek = () => {
+    const now = new Date();
+    const nextWeekStartDate = new Date(now.setDate(now.getDate() + (7 - now.getDay()) + 1));
+    tempStartDate.value = startOfWeek(nextWeekStartDate, { weekStartsOn: 1 });
+    tempEndDate.value = endOfWeek(nextWeekStartDate, { weekStartsOn: 1 });
+    applyDateRange();
+};
+
+const setInTwoWeeks = () => {
+    const now = new Date();
+    const inTwoWeeksStartDate = new Date(now.setDate(now.getDate() + (7 - now.getDay()) + 8));
+    tempStartDate.value = startOfWeek(inTwoWeeksStartDate, { weekStartsOn: 1 });
+    tempEndDate.value = endOfWeek(inTwoWeeksStartDate, { weekStartsOn: 1 });
+    applyDateRange();
+};
+
+
 
 const getDayColor = (date) => {
     if (!(date instanceof Date)) {
