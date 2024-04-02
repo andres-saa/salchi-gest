@@ -81,7 +81,7 @@ const cerrar = () => {
 </script>
 
 <template>
-    <div class="layout-topbar" style="background-color:   rgba(0, 1, 22, 0.939); ">
+    <div class="layout-topbar" style="background-color:   rgba(0, 1, 22, 1); ">
         <router-link to="/" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
             <!-- <span>SAKAI</span> -->

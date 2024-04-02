@@ -1,0 +1,1 @@
+import{_ as s,o as t,c as e,a as o}from"./index-3d82eed8.js";const a="/assets/SAMOVAR-bf26fe1a.jpg",c={},_={class:"col-12",style:{"max-width":"1024px",margin:"auto"}},n=o("img",{class:"m-auto",style:{width:"100%"},src:a,alt:""},null,-1),r=[n];function i(l,d){return t(),e("div",_,r)}const f=s(c,[["render",i]]);export{f as default};

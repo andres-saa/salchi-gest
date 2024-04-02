@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as s,a as o}from"./index-3d82eed8.js";const a="/assets/nevera doble-a5d6a05c.jpg",c={},n={class:"col-12",style:{"max-width":"1024px",margin:"auto"}},r=o("img",{class:"m-auto",style:{width:"100%","object-fit":"contain"},src:a,alt:""},null,-1),_=[r];function i(l,d){return t(),s("div",n,_)}const f=e(c,[["render",i]]);export{f as default};

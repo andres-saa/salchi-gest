@@ -16,6 +16,11 @@ const router = createRouter({
           component: () => import('@/views/pages/home.vue'),
         },
         {
+          path: '/informacion-empresarial',
+          name: 'informacion-empresarial',
+          component: () => import('@/views/pages/infoSalchi.vue'),
+        },
+        {
           path: '/tienda-menu',
           name: 'menuTienda',
           component: () => import('@/views/pages/tienda/MenuTienda.vue'),
@@ -183,16 +188,40 @@ const router = createRouter({
           name: 'directory',
           component: () => import('@/views/pages/Directory.vue')
         },
-        {
-          path: '/guias-user',
-          name: 'guias-user',
-          component: () => import('@/views/pages/GuiasUsers.vue')
-        },
+        // {
+        //   path: '/guias-user',
+        //   name: 'guias-user',
+        //   component: () => import('@/views/pages/GuiasUsers.vue')
+        // },
         {
           path: '/cumples',
           name: 'cumples',
           component: () => import('@/views/pages/cumples.vue')
         },
+        {
+          path: '/cucharas',
+          name: 'cucharas',
+          component: () => import('@/views/pages/importante/recetarioCucharas.vue')
+        },
+
+        {
+          path: '/samovar',
+          name: 'samovar',
+          component: () => import('@/views/pages/importante/samovar.vue')
+        },
+
+        {
+          path: '/nevera-doble',
+          name: 'nevera-doble',
+          component: () => import('@/views/pages/importante/neveraDoble.vue')
+        },
+
+        {
+          path: '/nevera-triple',
+          name: 'nevera-triple',
+          component: () => import('@/views/pages/importante/neveraTriple.vue')
+        },
+
         {
           path: '/mas-cerca-de-ti',
           name: 'gestion',

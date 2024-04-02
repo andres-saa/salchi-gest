@@ -217,6 +217,10 @@ async function fetchAndUpdateRoles() {
                     label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-simple', to: '/desempeno',
 
                 },
+                {
+                    label: 'Un verdadero Monstruo', icon: 'fa-solid fa-chart-simple', to: '/informacion-empresarial',
+
+                },
 
 
 
@@ -230,10 +234,10 @@ async function fetchAndUpdateRoles() {
             roles: roles.value.todos,
             items: [
 
-            {
-                    label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user',
+            // {
+            //         label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user',
 
-                },
+            //     },
                
                 {
                     label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
@@ -243,6 +247,32 @@ async function fetchAndUpdateRoles() {
                     label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones',
 
                 },
+                {
+                    label: 'Principal', icon: 'fa-solid fa-envelope',
+                    items:[
+                                    {
+                                label: 'Recetario cucharas', icon: 'fa-solid fa-calendar', to: '/cucharas',
+
+                                },
+                                {
+                                    label: 'Org. SAMOVAR', icon: 'fa-solid fa-envelope', to: '/samovar',
+
+                                },
+                                {
+                                    label: 'Org. Nevera doble ', icon: 'fa-solid fa-envelope', to: '/nevera-doble',
+
+                                },
+                                {
+                                    label: 'Org. Nevera triple', icon: 'fa-solid fa-envelope', to: '/nevera-triple',
+
+                                },
+
+                            ]
+                        
+                        }
+
+                ,
+                
 
             ]
         },
