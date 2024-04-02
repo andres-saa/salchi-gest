@@ -1,0 +1,1 @@
+import{c8 as t,ca as a}from"./index-13dbe25d.js";const r=t("user",{persist:{key:"user",storage:localStorage,paths:["userData"]},state:()=>({userData:{}}),getters:{rawUserData(){return a(this.userData.access_token)}},actions:{setUserData(e){this.userData=e}}});export{r as l};

@@ -1,6 +1,13 @@
 <template>
     <div class=" m-0 p-0 md:p-4">
 
+        <Dialog v-model:visible="deletionDialogVisible" header="Confirmar eliminación" :style="{ width: '30rem' }" :modal="true">
+    <p>¿Estás seguro de que quieres eliminar este checklist?</p>
+    <div class="flex justify-content-end">
+        <Button label="No" @click="deletionDialogVisible = false" class="p-button-text" />
+        <Button label="Sí" @click="deleteChecklist" class="p-button-danger" />
+    </div>
+</Dialog>
 <!-- {{ checklist }} -->
         <!-- {{ audits }} -->
         <DataTable  :value="checklist" tableStyle="min-width: 50rem" class="p-0" 
@@ -56,34 +63,18 @@
 
 
 
-            <Column class="p-0 m-0" field="inventoryStatus" header="Mas detalles" style="min-width:7rem;">
-                <template #body="slotProps">
-                    <Button @click="openCheckList(slotProps.data.checklist_id)" text severity="help">
-                        <i
-                            class="fa-solid fa-eye text-2xl"></i><!-- <Tag :value="slotProps.data.inventoryStatus" :severity="getStatusLabel(slotProps.data.inventoryStatus)" /> -->
+            <Column class="p-0 m-0" field="inventoryStatus" header="Acciones" style="min-width:9rem;">
+    <template #body="slotProps">
+        <!-- Botón para más detalles -->
+        <Button @click="openCheckList(slotProps.data.checklist_id)" text severity="help">
+            <i class="fa-solid fa-eye text-2xl"></i>
+        </Button>
+        <!-- Botón para eliminar -->
+        <Button @click="confirmDeletion(slotProps.data.checklist_id)" text rounded icon="fa-solid fa-trash text-2xl" class="p-button-danger" />
+    </template>
+</Column>
 
-                    </Button>
-                </template>
-            </Column>
 
-
-            <!-- <Column field="price" header="Price">
-                <template #body="slotProps">
-                    {{ formatCurrency(slotProps.data.price) }}
-                </template>
-            </Column>
-            <Column field="category" header="Category"></Column>
-            <Column field="rating" header="Reviews">
-                <template #body="slotProps">
-                    <Rating :modelValue="slotProps.data.rating" readonly :cancel="false" />
-                </template>
-            </Column>
-            <Column header="Status">
-                <template #body="slotProps">
-                    <Tag :value="slotProps.data.inventoryStatus" :severity="getSeverity(slotProps.data)" />
-                </template>
-            </Column> -->
-            <!-- <template #footer> In total there are {{ products ? products.length : 0 }} products. </template> -->
         </DataTable>
     </div>
 
@@ -231,6 +222,42 @@ const openCheckList = (checklist_id) => {
 
 }
 
+
+
+const deletionDialogVisible = ref(false);
+const checklistToDelete = ref(null);
+
+const confirmDeletion = (checklistId) => {
+    checklistToDelete.value = checklistId;
+    deletionDialogVisible.value = true;
+};
+
+const deleteChecklist = async () => {
+    const url = `${URI}/checklist/${checklistToDelete.value}`; // Ajusta la URL según tu API
+    const requestOptions = {
+        method: 'DELETE'
+    };
+
+    try {
+        const response = await fetch(url, requestOptions);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        console.log('Checklist eliminado con éxito');
+        deletionDialogVisible.value = false;
+        // Actualizar la lista de checklists
+        Auditservice.getChecklist().then(data => {
+            checklist.value = Array.isArray(data) ? data : [];
+        });
+    } catch (error) {
+        console.error('Error al eliminar el checklist:', error);
+        deletionDialogVisible.value = false;
+        alert("Error al eliminar el checklist, ya esta siendo utilizado en una auditoria")
+        // Manejo de errores, por ejemplo, mostrar un mensaje al usuario
+    }
+};
+
+
 onMounted(() => {
     Auditservice.getAudits().then(data => audits.value = data);
     Auditservice.getChecklist().then(data => {
@@ -277,6 +304,31 @@ const removeItem = (group, index) => {
 };
 
 const saveChecklist = async () => {
+    // Validación del nombre del checklist
+    if (!newChecklist.value.name.trim()) {
+        alert('El nombre del checklist no puede estar vacío.');
+        return;
+    }
+
+    // Validación de la existencia de al menos un grupo
+    if (newChecklist.value.groups.length === 0) {
+        alert('Debe haber al menos un grupo.');
+        return;
+    }
+
+    // Validación de los nombres de los grupos y la existencia de al menos un item en cada grupo
+    for (const group of newChecklist.value.groups) {
+        if (!group.name.trim()) {
+            alert('Todos los grupos deben tener un nombre.');
+            return;
+        }
+        if (group.items.length === 0) {
+            alert('Todos los grupos deben tener al menos un ítem.');
+            return;
+        }
+    }
+
+    // Continúa con la lógica para guardar el checklist
     const url = `${URI}/checklists-with-groups-and-items`; // Asegúrate de que URI esté definido correctamente
     const requestOptions = {
         method: 'POST',
@@ -285,8 +337,7 @@ const saveChecklist = async () => {
     };
 
     try {
-            store.setLoading(true, 'guardando')
-
+        store.setLoading(true, 'guardando');
         const response = await fetch(url, requestOptions);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -294,21 +345,17 @@ const saveChecklist = async () => {
         const data = await response.json();
         console.log('Checklist guardado con éxito:', data);
         createChecklistDialogVisible.value = false;
-            Auditservice.getChecklist().then(data => {
-        // Aquí se realiza la comprobación
-        checklist.value = Array.isArray(data) ? data : [];
-            store.setLoading(false, 'guardando')
-
-    });
-
-        // Aquí podrías actualizar tu UI o estado para reflejar la adición del nuevo checklist
+        Auditservice.getChecklist().then(data => {
+            checklist.value = Array.isArray(data) ? data : [];
+            store.setLoading(false, 'guardando');
+        });
     } catch (error) {
         console.error('Error al guardar el checklist:', error);
-            store.setLoading(false, 'guardando')
-
+        store.setLoading(false, 'guardando');
         // Manejo de errores, por ejemplo, mostrar un mensaje al usuario
     }
 };
+
 
 
 const cancelChecklistCreation = () => {

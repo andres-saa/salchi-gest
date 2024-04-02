@@ -53,13 +53,19 @@
 
 
 
-            <Column class="p-0 m-0" field="inventoryStatus" header="ver" sortable style="">
+            <Column class="p-0 m-0" field="inventoryStatus" header="Acciones" sortable style="">
                 <template #body="slotProps">
-                    <Button @click="seeAudit(slotProps.data)" text severity="help">
+                    <div style="display: flex;">
+                        <Button @click="seeAudit(slotProps.data)" text severity="help">
                         <i
                             class="fa-solid fa-eye text-2xl"></i><!-- <Tag :value="slotProps.data.inventoryStatus" :severity="getStatusLabel(slotProps.data.inventoryStatus)" /> -->
 
                     </Button>
+
+                    <Button @click="deleteAudit(slotProps.data)" text icon="fa-solid fa-trash text-2xl" class="p-button-danger" />
+
+                    </div>
+                   
                 </template>
             </Column>
 
@@ -196,5 +202,40 @@ onMounted(() => {
     Auditservice.getAudits().then(data => audits.value = data)
 
 })
+
+
+
+
+
+
+
+const deleteAudit = (audit) => {
+    if (confirm(`Are you sure you want to delete the audit with ID: ${audit.id}?`)) {
+        const deleteUrl = `${URI}/audits/${audit.id}`; // Construct the URL for deletion
+
+        fetch(deleteUrl, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                // Handle response errors
+                throw new Error(`HTTP error! status: ${response.status}`);
+            } else {
+                // Successful deletion
+                // Remove the audit from the local state to update the UI
+                const index = audits.value.findIndex(a => a.id === audit.id);
+                if (index !== -1) {
+                    audits.value.splice(index, 1);
+                }
+                console.log(`Audit with ID: ${audit.id} has been successfully deleted.`);
+            }
+        })
+        .catch(error => {
+            // Handle any errors that occurred during the fetch
+            console.error('Error deleting audit:', error);
+        });
+    }
+};
+
 
 </script>
