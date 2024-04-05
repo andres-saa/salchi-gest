@@ -875,7 +875,8 @@ const deleteApplication = (applicationId) => {
         });
 };
 const file = ref(null)
-const urlsite_photo = ref("")
+
+const urlsite_photo = ref()
 
 const handleFileChange = (event) => {
     // Accede al archivo seleccionado a través del objeto de evento

@@ -42,6 +42,28 @@ async function fetchAndUpdateRoles() {
                 }]
         },
 
+        // {
+        //     label: 'INVENTARIO',
+        //     roles: roles.value.todos,
+        //     items: [
+
+        //     // {
+        //     //         label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user',
+
+        //     //     },
+               
+        //         {
+        //             label: 'Ingredientes', icon: 'fa-solid fa-calendar', to: '/ingredients',
+
+        //         },
+        //         {
+        //             label: 'Recetas', icon: 'fa-solid fa-envelope', to: '/recipes',
+
+        //         }
+                
+        //     ]
+        // },
+ 
 
         {
             label: 'RECURSOS HUMANOS',
@@ -255,17 +277,21 @@ async function fetchAndUpdateRoles() {
 
                                 },
                                 {
-                                    label: 'Org. SAMOVAR', icon: 'fa-solid fa-envelope', to: '/samovar',
+                                    label: 'Organizacion', icon: 'fa-solid fa-envelope', to: '/samovar',
 
                                 },
                                 {
-                                    label: 'Org. Nevera doble ', icon: 'fa-solid fa-envelope', to: '/nevera-doble',
+                                    label: 'inventario', icon: 'fa-solid fa-envelope', to: '/inventory',
 
                                 },
-                                {
-                                    label: 'Org. Nevera triple', icon: 'fa-solid fa-envelope', to: '/nevera-triple',
+                                // {
+                                //     label: 'Org. Nevera doble ', icon: 'fa-solid fa-envelope', to: '/nevera-doble',
 
-                                },
+                                // },
+                                // {
+                                //     label: 'Org. Nevera triple', icon: 'fa-solid fa-envelope', to: '/nevera-triple',
+
+                                // },
 
                             ]
                         
@@ -276,6 +302,9 @@ async function fetchAndUpdateRoles() {
 
             ]
         },
+
+
+     
 
 
         {

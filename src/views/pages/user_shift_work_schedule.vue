@@ -499,13 +499,7 @@ const saveTimes = async () => {
         return;
     }
 
-    if (arrivalTime.value.getTime() >= departureTime.value.getTime()) {
-        alert('La hora de llegada no puede ser mayor o igual a la hora de salida.');
-        store.setLoading(false, 'cargando');
-        showCalendar.value = true;
-
-        return;
-    }
+   
 
     // Formateando las horas para enviar solo la parte de la hora
     let formattedStartTime = arrivalTime.value.toISOString().split('T')[1].slice(0, 8);

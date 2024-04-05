@@ -215,6 +215,27 @@ const router = createRouter({
           name: 'nevera-doble',
           component: () => import('@/views/pages/importante/neveraDoble.vue')
         },
+        {
+          path: '/ingredients',
+          name: 'ingredients',
+          component: () => import('@/views/pages/inventory/ingredients.vue')
+        },
+
+        {
+          path: '/recipes',
+          name: 'recipes',
+          component: () => import('@/views/pages/inventory/recipes.vue'),
+        },
+
+
+        {
+          path: '/recipe-data-sheet/:recipe_id',
+          name: 'recipe-data-sheet',
+          component: () => import('@/views/pages/inventory/recipeDataSheet.vue'),
+        },
+
+
+
 
         {
           path: '/nevera-triple',

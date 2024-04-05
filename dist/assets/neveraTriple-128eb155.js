@@ -1,1 +1,0 @@
-import{_ as e,o as t,c as s,a as o}from"./index-3d82eed8.js";const c="/assets/nevera triple-ed74debb.jpeg",a={},n={class:"col-12",style:{"max-width":"1024px",margin:"auto"}},r=o("img",{class:"m-auto",style:{width:"100%","object-fit":"contain"},src:c,alt:""},null,-1),_=[r];function i(l,d){return t(),s("div",n,_)}const p=e(a,[["render",i]]);export{p as default};

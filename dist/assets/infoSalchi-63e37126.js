@@ -1,0 +1,1 @@
+import{o as e,c as t,F as n,b as r,a}from"./index-6af777e5.js";const o={style:{"max-width":"900px",margin:"auto"}},c=["src"],d={__name:"infoSalchi",setup(i){return(l,_)=>(e(),t("div",null,[(e(),t(n,null,r([1,2,3,4],s=>a("div",o,[a("img",{style:{width:"100%"},src:`/images/info/${s}.jpeg`,alt:""},null,8,c)])),64))]))}};export{d as default};

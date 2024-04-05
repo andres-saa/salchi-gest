@@ -83,7 +83,7 @@ const cerrar = () => {
 <template>
     <div class="layout-topbar" style="background-color:   rgba(0, 1, 22, 1); ">
         <router-link to="/" class="layout-topbar-logo">
-            <img :src="logoUrl" alt="logo" />
+            <img style="height: 1.5rem;" src="/images/logo.png" alt="logo" />
             <!-- <span>SAKAI</span> -->
            <span class="pl-4 text-sm text-white">{{ getUserRole() }}</span> 
         </router-link>
