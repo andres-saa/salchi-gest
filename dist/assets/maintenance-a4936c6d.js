@@ -1,0 +1,1 @@
+import{a7 as e}from"./index-bcd56096.js";const a=e("maintance",{persist:{key:"maintance",storage:localStorage,paths:["currentSite"]},state:()=>({currentSite:{}}),getters:{},actions:{setCurrentSite(t){this.currentSite=t}}});export{a as m};

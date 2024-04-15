@@ -401,6 +401,11 @@ const router = createRouter({
           component: () => import('@/views/pages/clima.vue')
         },
         {
+          path: '/retiro',
+          name: 'retiro',
+          component: () => import('@/views/pages/retiro.vue')
+        },
+        {
           path: '/desempeno',
           name: 'desempeno',
           component: () => import('@/views/pages/desempeno.vue')

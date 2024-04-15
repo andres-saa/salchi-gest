@@ -227,6 +227,11 @@ async function fetchAndUpdateRoles() {
 
                 },
                 {
+                    label: 'Un verdadero Monstruo', icon: 'fa-solid fa-chart-simple', to: '/informacion-empresarial',
+
+                },
+
+                {
                     label: 'Mis Turnos ', icon: 'fa-solid fa-dumbbell', to: '/turnos-trabajo-empleados',
 
                 },
@@ -234,16 +239,17 @@ async function fetchAndUpdateRoles() {
                     label: 'Evaluación clima organizacional ', icon: 'fa-solid fa-umbrella', to: '/clima',
 
                 },
+                
 
                 {
                     label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-simple', to: '/desempeno',
 
                 },
                 {
-                    label: 'Un verdadero Monstruo', icon: 'fa-solid fa-chart-simple', to: '/informacion-empresarial',
+                    label: 'Encuesta de retiro ', icon: 'fa-solid fa-umbrella', to: '/retiro',
 
                 },
-
+                
 
 
 
