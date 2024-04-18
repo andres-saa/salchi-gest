@@ -24,21 +24,31 @@ const router = createRouter({
           path: '/tienda-menu',
           name: 'menuTienda',
           component: () => import('@/views/pages/tienda/MenuTienda.vue'),
-          children: [
-            {
-              path: '/tienda-menu/:adicionales',
-              name: 'tienda-adicionales',
-              component: () => import('@/views/pages/tienda/sesionAdicionales.vue')
-            },
-            {
-              path: '/tienda-menu/productos/:sesion',
-              name: 'tienda-productos',
-              component: () => import('@/views/pages/tienda/sesion.vue')
-            },
+          children:[
+              {
+                path: 'productos/:menu_name/:category_id',
+                name: 'sesion',
+                component: () => import('@/views/pages/tienda/sesion.vue')
+                // meta: { requireMenu: true },
+                // meta: { requiresAuth: true },
+              },
 
+              {
+                path: 'productos/adicionales',
+                name: 'adicionales',
+                component: () => import('@/views/pages/tienda/adicionales.vue')
+                // meta: { requireMenu: true },
+                // meta: { requiresAuth: true },
+              },
+              // {
+              //     path: '/tienda-menu/productos/:sesion',
+              //     name: 'tienda-productos',
+              //     component: () => import('@/views/pages/tienda/sesion.vue')
+              // },
+              
 
           ]
-        },
+      },
 
         {
           path: '/domicilios/',

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import ProductService from '@/service/ProductService';
+// import ProductService from '@/service/ProductService';
 import { URI } from "@/service/conection.js"
 import { useRouter } from 'vue-router';
 import router from '@/router';
@@ -60,10 +60,10 @@ const sortKey = ref(null);
 const sortOrder = ref(null);
 const sortField = ref(null);
 
-const productService = new ProductService();
+// const productService = new ProductService();
 
 onMounted(() => {
-    productService.getProductsSmall().then((data) => (dataviewValue.value = data));
+    // productService.getProductsSmall().then((data) => (dataviewValue.value = data));
     getSites()
 
     getUsers().then(data => users.value = data)

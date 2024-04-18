@@ -12,7 +12,7 @@
 
 <script setup>
 import TarjetaMenu from '../../../components/TarjetaMenu.vue';
-import BarraCategorias from '../../../components/BarraCategorias.vue'
+import BarraCategorias from '../../../components/BarraCategoriasd.vue'
 
 
 

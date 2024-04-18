@@ -1,12 +1,31 @@
 <template>
-    <div class="" style="display: flex; overflow-x: auto; position: sticky; z-index: 999; top: 4rem; background-color: rgb(255, 255, 255); box-shadow: 0 0 1rem rgba(0, 0, 0, 0.337);">
-        <div v-for="section in categories" :key="section.category_id" class="p-1" >
-            <button @click="navigateToCategory(section.category_name)" :class="checkSelected(section.category_name) ? 'selected menu-button' : 'menu-button'" class="p-2 text-lg"  style="font-weight: 500; text-transform: uppercase;">
-                {{ section.category_name }}
+
+    <div style="position: sticky;top: 3rem; z-index: 999; background-color: white;" class=" shadow-3 d-flex p lg:justify-content-center align-items-center mb-5 p-0 md:p-0 m-0">
+       
+       
+        <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; left: -0.5rem;z-index: 99;height: 100%;width: 1.7rem; border-radius: 0;" severity="help"  icon="pi pi-angle-left text-2xl"></Button>
+
+
+        <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; right: -0.5rem;z-index: 99;height: 100%; width: 1.7rem; border-radius: none;" severity="help"  icon="pi pi-angle-right text-2xl"></Button>
+
+        <div class=" align-items-center  p-0 md:p-1"
+        style="overflow-x: auto;display: flex;  background-color: rgba(255, 255, 255, 0.913)">
+
+        
+
+        <div v-for="section in categories" :key="section.id" class="p-1">
+            <button @click="navigateToCategory(section.category_name,section.category_id)"
+                :class="checkSelected(section) ? 'selected menu-button' : 'menu-button'"
+                class="p-2 text-lg titulo" style="font-weight: 400; text-transform: uppercase;min-width: max-content;">
+                <span class="text-lg" style="min-width: max-content;">{{ section.category_name }}</span>
             </button>
         </div>
     </div>
+    </div>
     
+<!-- {{ gategori }} -->
+
+<!-- {{ categories }} -->
 </template>
 
 
@@ -16,38 +35,35 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import router from '@/router/index.js';
-import { URI } from '@/service/conection';
 import { useRoute } from 'vue-router';
+import { categoriesService } from '../service/restaurant/categoriesService'
 
-const route = useRoute()
+ 
+
 const categories = ref([]);
-const ruta = ref(router.currentRoute);
-// const route = useRoute();
 
-const getCategories = async () => {
-    try {
-        let response = await fetch(`${URI}/categories`);
-        let data = await response.json();
-        categories.value = data;
-    } catch (error) {
-        console.error('Error fetching data: ', error);
+
+const navigateToCategory = (categoryName,category_id) => {
+    if(category_id >= 1000){
+        router.push('/tienda-menu/productos/adicionales')
+    } else{
+        router.push({ name: 'sesion', params: { menu_name: categoryName, category_id:category_id } });
     }
-}
-
-const navigateToCategory = (categoryName) => {
-    router.push({ name: 'sesion', params: { menu_name: categoryName }});
 };
 
-onMounted(getCategories);
+
+onMounted(async () => {
+    categories.value = await categoriesService.getCategories()});
 
 
 const checkSelected = (section) => {
     const route = useRoute(); // Asegúrate de que tienes acceso a useRoute aquí
-    return route.path.includes(section); // Verifica si el path actual contiene la cadena section
+    return route.params.category_id == section.category_id; // Verifica si el path actual contiene la cadena section
 };
+
+
+
 </script>
-
-
 
 
 <style scoped>
@@ -56,7 +72,15 @@ const checkSelected = (section) => {
     border: none;
     background-color: transparent;
     font-size: 20px;
-    padding: 0 20px;    
+    padding: 0 20px;
+}
+
+* {
+    text-transform: lowercase;
+}
+
+*::first-letter {
+    text-transform: uppercase;
 }
 
 .menu-button {
@@ -66,62 +90,43 @@ const checkSelected = (section) => {
     border: none;
     font-size: 20px;
     outline: none;
-    /* transition: all  0.3s; */
-    /* font-weight: bold; */
+
 }
 
 .menu-button:hover {
-    /* box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5); */
-    /* transform: scale(1.1); */
-    /* border-bottom:  2px red; */
-    /* color: var(--primary-color); */
-    /* padding:; */
+
     cursor: pointer;
 
 
 }
-*:focus{
+
+*:focus {
     outline: none;
 }
 
-::-webkit-scrollbar {
-  width: 12px;
-  display: none;
 
-
-   /* Ancho de la barra de desplazamiento */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
+.titulo {
+    text-transform: lowercase;
 }
 
-/* Estilo del pulgar de la barra de desplazamiento */
-/* WebKit (Chrome, Safari) */
-::-webkit-scrollbar-thumb {
-
-  background-color: white; /* Color del pulgar de la barra de desplazamiento */
-  border-radius: 6px; /* Radio de esquinas del pulgar */
-  transform: translateY(40px);
-  /* padding: 50px; */
-  /* display: none; */
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
 }
 
 .selected {
-    /* color: var(--primary-color); */
     box-shadow: 0 0.5rem var(--primary-color);
-    /* padding: 1rem; */
-    /* font-weight: bold; */
-
 
 }
-
 .col-12 {
     width: 100vw;
     /* position: absolute; */
     left: 0;
     padding: 1.5rem;
-}</style>
+}
+</style>

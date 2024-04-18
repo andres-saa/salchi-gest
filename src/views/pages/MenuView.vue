@@ -54,7 +54,7 @@ import { ableMenu } from '../../service/menuOptions';
 import { formatoPesosColombianos } from '../../service/formatoPesos';
 import CarouselBanner from '../../components/CarouselBanner.vue'
 import sesion from './sesion.vue';
-import BarraCategorias from '../../components/BarraCategorias.vue';
+import BarraCategorias from '../../components/BarraCategoriasd.vue';
 
 
 import {ref} from 'vue'

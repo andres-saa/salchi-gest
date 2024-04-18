@@ -230,7 +230,7 @@ async function fetchAndUpdateRoles() {
                     label: 'Un verdadero Monstruo', icon: 'fa-solid fa-chart-simple', to: '/informacion-empresarial',
 
                 },
-
+                
                 {
                     label: 'Mis Turnos ', icon: 'fa-solid fa-dumbbell', to: '/turnos-trabajo-empleados',
 
