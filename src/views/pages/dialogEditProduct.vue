@@ -91,12 +91,20 @@ const adicionales = ref([]);
 
 // Función para actualizar el estado de los items en `adicionales` basado en `currentAditions`
 const updateAdicionalesStatus = () => {
+    // Asegurar que adicionales está completo y listo para ser procesado
+    if (!adicionales.value || adicionales.value.length === 0) return;
+
+    // Recorrer cada grupo de adicionales
     Object.entries(adicionales.value).forEach(([grupo, items]) => {
         items.forEach(item => {
-            const match = currentAditions.value.find(addition =>
-                addition.aditional_item_name.toLowerCase() === item.item_name.toLowerCase()
+            // Buscar coincidencia en currentAditions
+            const match = currentAditions.value.some(addition => 
+                addition.items.some(aditional => 
+                    aditional.aditional_item_name.toLowerCase() === item.item_name.toLowerCase()
+                )
             );
-            item.status = !!match; // Establecer verdadero si hay coincidencia, de lo contrario falso
+            // Establecer el estado basado en la existencia de la coincidencia
+            item.status = match;
         });
     });
 };
