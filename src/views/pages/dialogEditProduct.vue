@@ -101,6 +101,8 @@ const updateAdicionalesStatus = () => {
             const match = currentAditions.value.some(addition => 
                 addition.items.some(aditional => 
                     aditional.aditional_item_name.toLowerCase() === item.item_name.toLowerCase()
+                    && aditional.aditional_item_price === item.item_price &&
+                    aditional.aditional_item_type_name === item.type_name
                 )
             );
             // Establecer el estado basado en la existencia de la coincidencia
