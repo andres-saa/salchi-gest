@@ -288,9 +288,9 @@ worksheet["!cols"] = [
 
 
 const workbook = XLSX.utils.book_new();
-XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
+XLSX.utils.book_append_sheet(workbook, worksheet, "ventas");
 
-XLSX.writeFile(workbook, "Base de datos empleados Salchimonster.xlsx");
+XLSX.writeFile(workbook, "reporte de ventas salchimonster");
 
 
 
