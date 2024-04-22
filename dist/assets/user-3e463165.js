@@ -1,0 +1,1 @@
+import{s as t,V as s}from"./index-da6d24f6.js";const r=t("user",{persist:{key:"user",storage:localStorage,paths:["userData"]},state:()=>({userData:{}}),getters:{rawUserData(){return s(this.userData.access_token)}},actions:{setUserData(e){this.userData=e}}});export{r as l};

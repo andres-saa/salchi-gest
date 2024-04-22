@@ -2,7 +2,7 @@
 
 import { FilterMatchMode } from 'primevue/api';
 import { ref, onMounted, onBeforeMount } from 'vue';
-import ProductService from '@/service/ProductService';
+// import ProductService from '@/service/ProductService';
 import { useToast } from 'primevue/usetoast';
 import { URI } from './conection';
 import { roles } from './roles';

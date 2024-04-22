@@ -32,71 +32,67 @@
             <template>
                 
             </template>
-            <Column field="order_id" header="Id" class="p-0" headerStyle="max-width:4rem; width:4rem">
+            <Column field="order_id" header="Id" class="p-0" headerStyle="max-width:8rem; width:10rem">
             
                 <template #body="slotProps">
+                 <P style="min-width: max-content;">
                     {{slotProps.data.order_id}}
-                    <!-- <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="w-6rem border-round" /> -->
+                 </P>   
                 </template>
             </Column>
-            <!-- <Column header="Image">
-                <template #body="slotProps">
-                    <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="w-6rem border-round" />
-                </template>
-            </Column> -->
             <Column field="total_price" header="Monto" class="p-0" headerStyle="max-width:10rem; width:5rem">
                 <template #body="slotProps">
-                    <!-- {{ formatCurrency(slotProps.data.price) }} -->
-                    {{ formatToColombianPeso(slotProps.data.total_price)  }}
+             
+                    {{ formatToColombianPeso(slotProps.data.total_order_price)  }}
                 </template>
             </Column>
 
+
+                
+      
+
             <Column field="site_name" header="Sede" class="p-0" headerStyle="max-width:6rem; width:6rem">
                 <template #body="slotProps">
-                    <!-- {{ formatCurrency(slotProps.data.price) }} -->
+                   
                     {{ formatToColombianPeso(slotProps.data.site_name)  }}
                 </template>
             </Column>
 
+
+        
             <Column field="status.timestamp" class="p-0" header="Fecha y hora" headerStyle="width:10rem; min-width:8rem ">
                 <template #body="slotProps">
-                    <!-- {{ formatCurrency(slotProps.data.price) }} -->
-                    {{ slotProps.data.status.timestamp}}
+           
+                    {{ slotProps.data.latest_status_timestamp?.split('T')[0]}} 
+                    {{ slotProps.data.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':')}}
                 </template>
             </Column>
 
+                 
             <Column class="p-0" v-if="store.order_status == 'cancelada'" headerStyle="width:30rem; max-width:40rem; " field="status.reazon" header="Motivo">
                 <template #body="slotProps">
-                    <!-- {{ formatCurrency(slotProps.data.price) }} -->
-                   <span class="motivo">{{ slotProps.data.status.reazon?.toLowerCase()}}.</span> 
+                
+                   <span class="motivo">{{ slotProps.data.reason?.toLowerCase()}}.</span> 
                 </template>
             </Column>
 
-
-            <!-- <Column  field="category" header=""></Column> -->
-            <!-- <Column field="rating" header="Reviews">
-                <template #body="slotProps">
-                    <Rating :modelValue="slotProps.data.order_id" readonly :cancel="false" />
-                </template>
-            </Column> -->
+         
             <Column header="Status" class="p-0"> 
                 <template #body="slotProps">
-                    <Tag :value="slotProps.data.status?.status" :severity="getSeverity(slotProps.data?.status?.status)" />
+                    <Tag :value="slotProps.data.current_status" :severity="getSeverity(slotProps.data?.current_status)" />
                 </template>
             </Column>
 
-
+        
             <Column class="p-0" header="" frozen alignFrozen="right" headerStyle="width:0.5rem; max-width:0.5rem ">
                 <template #body="slotProps">
                     <Button style="width: min-content;" @click="store.setVisibleOrder(true,slotProps.data)" text ><i class="text-2xl  p-0" :class="PrimeIcons.EYE"></i></Button>
                 </template>
             </Column>
-            <!-- <template #footer> In total there are {{ products ? products.length : 0 }} products. </template> -->
         </DataTable>
 
 
 
-    <!-- <Button  severity="success" @click="exportCSV"> Descargar reporte</Button> -->
 
     <OrderDialog>
 
@@ -194,17 +190,17 @@ const exportCSV = async() => {
     const data = datosFiltrados.map(order => ({
     // "Id": order.id,
     "Orden No": order.order_id,
-    "Monto":order.total_price,
+    "Monto":order.total_order_price,
     "Sede":order.site_name,
-    "Fecha":order.status.timestamp?.split(" ")[0],
-    "Hora":order.status.timestamp?.split(" ")[1],
-    "Estado":order.status.status,
+    "Fecha":order.latest_status_timestamp?.split('T')[0],
+    "Hora":order.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':'),
+    "Estado":order.current_status,
     "Domicilio":order.delivery_price,
     "Metodo de pago":order.payment_method,
-    "razon de la cancelacion":order.status?.reazon || 'es una orden enviada',
-    "Nombre del usuario":order.user_data?.user_name,
-    "telefono del usuario":order.user_data?.user_phone,
-    "direccion del usuario":order.user_data?.user_address
+    "razon de la cancelacion":order.reason || 'es una orden enviada',
+    "Nombre del usuario":order.user_name,
+    "telefono del usuario":order.user_phone,
+    "direccion del usuario":order.user_address
     
     
 

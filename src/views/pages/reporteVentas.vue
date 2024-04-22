@@ -84,7 +84,7 @@
         </Button>
     </RouterLink>
    </div>
-   <div class="p-0" style="display: flex;align-items: center;background-color: rgba(245, 222, 179, 0); ">
+   <!-- <div class="p-0" style="display: flex;align-items: center;background-color: rgba(245, 222, 179, 0); ">
     
           <Button size="medium"   class="text-md px-0 py-0 mx-0 text-l btn-ocultar" text @click="store.toogleVisibleNotifications" :severity="store.visibleNotifications? 'danger': 'success'"  rounded style="font-weight: bold; ">
             <span>
@@ -92,15 +92,10 @@
             </span>
         
         </Button>  
-        
-        <!-- <span>ooodssss</span> -->
-           
 
-            <!-- {{ ruta.fullPath }} -->
-            
         
    </div>
-       
+        -->
 
     
 </div>
@@ -140,9 +135,7 @@
     </div>
     
 
-    <transition name="noti">
-    <RepNotificaciones></RepNotificaciones>
-    </transition>
+ 
 
     </div>
 
