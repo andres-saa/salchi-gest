@@ -290,7 +290,7 @@ worksheet["!cols"] = [
 const workbook = XLSX.utils.book_new();
 XLSX.utils.book_append_sheet(workbook, worksheet, "ventas");
 
-XLSX.writeFile(workbook, "reporte de ventas salchimonster");
+XLSX.writeFile(workbook, "reporte de ventas salchimonster.xlsx");
 
 
 
