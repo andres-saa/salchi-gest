@@ -1,194 +1,84 @@
 <template>
-    <div class="col-12 m-auto px-0"
-        style="max-width: 900px;display: ;align-items: center;justify-content: center; flex-direction: column; ">
-        
-        
-        
 
-        <p class="text-4xl lg:text-6xl   col-12 text-center" style="font-weight: bold;width: auto; "> Accesos rápidos</p>
-
-<div class="col-12 grid  p-2 mx-auto " style="box-shadow: 0 0 10px #00000033 ;border-radius: 0.5rem;">
+<div class="aux-back"  style="background-color: blue; background-image: url('/images/bg-ipad.jpg');background-size: cover;  width: 100vw; object-fit: contain; position: fixed;top: 0;bottom: 0;left: 0;">
+    
+</div> 
 
 
+    <div class="ipad-container col-12 shadow-3 p-0  " style="max-width: 900px;">
+
+
+        <div class="ipad-screen "
+            style=" ">
+
+
+            <div class="bg"
+                style="">
+            </div>
+
+
+            <div class="px-3 py-1 m-0 text-xl barra"
+                style="position: absolute;background-color: rgba(0, 0, 0, 0.5); z-index: 99;width: 100%;  justify-content: space-between; align-items: center; font-weight: bold;">
+
+                <p class="p-0  m-0" style="color: white;">sm <i class="fa-solid fa-wifi"></i></p>
+                <p class="p-0 m-0" style="color: white;"> {{ new Date().toLocaleTimeString() }}</p>
+                <p class="p-0 m-0" style="color: white;"><i class="fa-solid fa-battery-half"></i></p>
+
+            </div>
+
+
+            <div class="grid  mx-0 mt-4 p-2" style="z-index: 99;align-items: start;">
+
+                <div class=" col-4  p-0 md:col-3 xl:col-2 px-2 item" v-for="menu in menus"
+                    style="display: flex; transition: .2s all ease; flex-direction: column; justify-content: center; align-items: center;">
+                    <div class="p-0 md:p-3  " outlined style="border: none;">
+
+                        <a class="" v-if="menu.a" :href="menu.to">
+                            <Button  class="p-0 " style="background-color: transparent;border: none;">
+                                <img class="m-0 p-3" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
+                            </Button>
+                        </a>
+
+                        <router-link v-else  :to="menu.to">
+                            <Button  class="p-0" style="background-color: transparent;border: none;">
+                                <img class="m-0 p-3" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
+                            </Button>
+                        </router-link>
 
 
 
 
-    <div class="lg:col-4 col-6  p-0 " v-for="menu in menus" >
-
-        <div class="p-2 m-0">
-            <RouterLink :to="menu.to">
-                <Button class="text-xl m-auto"
-                    style="display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: 500;aspect-ratio: 4 / 3;min-width: 120px; border-radius: 5%; background-color: rgb(255, 211, 211);">
-
-                    <span class="text-lg lg:text-xl p-3 col-12"
-                        style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px rgba(0, 0, 0, 0.359);">
-                        {{ menu.nombre }}
-                    </span>
-
-
-                    <div style="width: 100%;height: 100%; object-fit: ; position: absolute;" class="imagen p-0">
-                        <img class="imagen p-0" :src="menu.imagen" alt=""
-                            style="height: 100%;width: 100%; object-fit: cover;">
 
                     </div>
 
+                    <span class="texto-apps text-sm md:text-xl" style="text-align: center; z-index: 99; color: white; text-shadow: 
+      -1px -1px 0 #000,  
+       1px -1px 0 #000,
+      -1px  1px 0 #000,
+       1px  1px 0 #000;">{{
+        menu.name }}</span>
 
-                </Button>
-            </RouterLink>
+
+                </div>
+
+            </div>
+
 
         </div>
+
     </div>
 
 
 
-</div>
-
- 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <p class="text-4xl lg:text-6xl   col-12 text-center" style="font-weight: bold;width: auto; "> Novedades</p>
+    <Dock class="dock" :model="items" style="">
+                    <template #item="{ item }">
+                        <a v-tooltip.top="item.label" href="#" class="p-dock-link">
+                            <img :alt="item.label" :src="item.icon" style="width: 100%" />
+                        </a>
+                    </template>
+                </Dock>
 
 
-
-
-        <div class="col-12  mb-3" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);border-radius: 0.5rem;">
-            <RouterLink to="mas-cerca-de-ti">
-                <Button class=" p-0 "
-                    style=" display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; background-color: rgb(255, 255, 255);">
-
-                    <!-- <span class="text-3xl  p-3 col-12" style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px black;">
-                                Encuesta clima organizacional 
-                            </span> -->
-
-
-                    <div style=" position: ;" class=" p-0 col-12">
-                        <img class=" p-0" alt="" src="/images/estrategia.png"
-                            style="height: 100%;width: 100%;border-radius: 0.5rem; object-fit: cover;">
-
-                    </div>
-
-                    <div class="pl-6 text-2xl" style="display: flex; align-items: center; width: 10rem; height: 3rem;right: 0; top: 0; background-color: red;color: white; position: absolute;z-index: 100;border-radius: 0 0   0 10rem;
-                           ">
-                        Nuevo
-                    </div>
-
-
-                    <div class="pl-3 text-2xl" style="display: flex; align-items: center;justify-content: center; width: 10rem; height: 2rem;right: 0; bottom: 0; background-color: rgb(255, 255, 255);outline: 10px solid rgb(255, 255, 255); color: white; position: absolute;z-index: 100;border-radius: 10rem 0 0   0;
-                           ">
-                        <img style="width: 100%; object-fit: contain;height: 100%;" class="p-0" src="/images/forms.png"
-                            alt="">
-                    </div>
-
-
-
-
-
-
-                </Button>
-            </RouterLink>
-               
-            </div>
-
-
-
-
-
-        <a class="col-12 p-1" href="https://forms.gle/mr7CD1sWT6C2NRKi8">
-
-            <div class="col-12 p-3 mb-3" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);border-radius: 0.5rem;">
-                <Button class=" p-0 "
-                    style=" display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.808);border: none; font-weight: bold; background-color: rgb(255, 255, 255);">
-
-                    <!-- <span class="text-3xl  p-3 col-12" style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px black;">
-                                Encuesta clima organizacional 
-                            </span> -->
-
-
-                    <div style=" position: ;" class=" p-0 col-12">
-                        <img class=" p-0" alt="" src="/images/clima.jpg"
-                            style="height: 100%;width: 100%;border-radius: 0.5rem; object-fit: cover;">
-
-                    </div>
-
-                    <div class="pl-6 text-2xl" style="display: flex; align-items: center; width: 10rem; height: 3rem;right: 0; top: 0; background-color: red;color: white; position: absolute;z-index: 100;border-radius: 0 0   0 10rem;
-                           ">
-                        Nuevo
-                    </div>
-
-
-                    <div class="pl-3 text-2xl" style="display: flex; align-items: center;justify-content: center; width: 10rem; height: 2rem;right: 0; bottom: 0; background-color: rgb(255, 255, 255);outline: 10px solid rgb(255, 255, 255); color: white; position: absolute;z-index: 100;border-radius: 10rem 0 0   0;
-                           ">
-                        <img style="width: 100%; object-fit: contain;height: 100%;" class="p-0" src="/images/forms.png"
-                            alt="">
-                    </div>
-
-
-
-
-
-
-                </Button>
-            </div>
-        </a>
-
-        <a class="col-12 p-2 " href="https://forms.gle/ke3scHagtJp8UQD5A">
-
-<div class="col-12 p-3" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); border-radius: 0.5rem;">
-    <Button class=" p-0 "
-        style=" display: flex;justify-content: center;width: 100%; align-items: center; color: rgba(0, 0, 0, 0.2);border: none; font-weight: bold; background-color: rgb(255, 255, 255);">
-
-        <!-- <span class="text-3xl  p-3 col-12" style="height: auto; position: absolute; z-index: 100;color: rgb(255, 255, 255); text-shadow: 0 0 5px black;">
-                    Encuesta clima organizacional 
-                </span> -->
-
-
-        <div style=" position: ;" class=" p-0 col-12">
-            <img class=" p-0" alt="" src="/images/desemp.jpg"
-                style="height: 100%;width: 100%;border-radius: 0.5rem; object-fit: cover;">
-
-        </div>
-
-        <div class="pl-6 text-2xl" style="display: flex; align-items: center; width: 10rem; height: 3rem;right: 0; top: 0; background-color: red;color: white; position: absolute;z-index: 100;border-radius: 0 0   0 10rem;
-               ">
-            Nuevo
-        </div>
-
-
-        <div class="pl-3 text-2xl" style="display: flex; align-items: center;justify-content: center; width: 10rem; height: 2rem;right: 0; bottom: 0; background-color: rgb(255, 255, 255);outline: 10px solid rgb(255, 255, 255); color: white; position: absolute;z-index: 100;border-radius: 10rem 0 0   0;
-               ">
-            <img style="width: 100%; object-fit: contain;height: 100%;" class="p-0" src="/images/forms.png"
-                alt="">
-        </div>
-
-
-
-
-
-
-    </Button>
-</div>
-</a>
-
-
-
-
-
-    </div>
 </template>
 
 
@@ -196,51 +86,134 @@
 
 
 <script setup>
+import { ref } from 'vue';
+
+const items = ref([
+    {
+        label: 'Finder',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/finder.svg",
+        command: () => {
+            displayFinder.value = true;
+        }
+    },
+    {
+        label: 'Terminal',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/terminal.svg",
+        command: () => {
+            displayTerminal.value = true;
+        }
+    },
+    {
+        label: 'App Store',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/appstore.svg",
+        command: () => {
+            toast.add({ severity: 'error', summary: 'An unexpected error occurred while signing in.', detail: 'UNTRUSTED_CERT_TITLE', group: 'tc', life: 3000 });
+        }
+    },
+    {
+        label: 'Safari',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/safari.svg",
+        command: () => {
+            toast.add({ severity: 'warn', summary: 'Safari has stopped working', group: 'tc', life: 3000 });
+        }
+    },
+    {
+        label: 'Photos',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/photos.svg",
+        command: () => {
+            displayPhotos.value = true;
+        }
+    },
+    {
+        label: 'GitHub',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/github.svg",
+    },
+    {
+        label: 'Trash',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/trash.png",
+        command: () => {
+            toast.add({ severity: 'info', summary: 'Empty Trash', life: 3000 });
+        }
+    }
+]);
 
 
 const menus = [
     {
-        nombre: 'Descargar certificado laboral',
+        name: 'Certificado laboral',
         to: '/certificado-laboral',
-        imagen: "/images/certificado.webp"
+        imagen: "/images/icons/certify.png"
     },
 
     {
-        nombre: 'Invitaciones a capacitaciones',
+        name: 'Capacitaciones',
         to: 'capacitaciones-invitaciones',
-        imagen: "/images/certificado.webp"
+        imagen: "/images/icons/capacitation.png"
     },
 
     {
-        nombre: 'Estado de mis permisos',
+        name: 'Mis permisos',
         to: '/mis-permisos',
-        imagen: "/images/certificado.webp"
+        imagen: "/images/icons/permission.png"
     },
     {
-        nombre: 'Actualizar mis datos',
+        name: 'Actualizar mis datos',
         to: '/actualizar-datos',
-        imagen: "/images/actualizar.webp"
+        imagen: "/images/icons/data.png"
     },
     {
-        nombre: 'Solicitar permiso general',
+        name: 'Solicitar permiso general',
         to: '/permiso',
-        imagen: "/images/permiso.jpg"
+        imagen: "/images/icons/general.png"
     },
     {
-        nombre: 'Solicitar permiso por licencia',
+        name: 'Solicitar permiso por licencia',
         to: '/permiso-licencia',
-        imagen: "/images/licencia.avif"
+        imagen: "/images/icons/licencia.png"
     },
     {
-        nombre: 'Solicitar vacaciones',
+        name: 'Solicitar vacaciones',
         to: '/permiso-vacaciones',
-        imagen: "/images/vacaciones.jpg"
+        imagen: "/images/icons/vacaciones.png"
     },
     {
-        nombre: 'Mi carnet digital',
+        name: 'Mi carnet digital',
         to: '/mi-carnet',
-        imagen: "/images/vacaciones.jpg"
+        imagen: "/images/icons/carnet.png"
     },
+
+    {
+        name: 'Un verdadero Monstruo',
+        to: '/informacion-empresarial',
+        imagen: "/images/icons/monster.png"
+    },
+
+    {
+        name: 'Mis turnos',
+        to: '/turnos-trabajo-empleados',
+        imagen: "/images/icons/turno.png"
+    },
+    {
+        name: 'Facebook Salchimonster',
+        to: 'https://www.facebook.com/salchimonsterr',
+        imagen: "/images/icons/facebook.webp",
+        a:true
+    },
+    {
+        name: 'Instagram Salchimonster',
+        to: 'https://www.instagram.com/salchimonsterr/',
+        imagen: "/images/icons/insta.webp",
+        a:true
+    },
+
+    {
+        name: 'Youtube salchimonster',
+        to: 'https://www.youtube.com/@Salchimonster/videos',
+        imagen: "/images/icons/youtube.png",
+        a:true
+    },
+
+
 
 ]
 
@@ -265,6 +238,11 @@ const menus = [
 
 }
 
+.bg{
+    background-image: url('/images/bg-ipad.jpg'); background-size: cover; width: 100%; object-fit: cover; height: 100%;z-index:0; top: 0; left: 0;opacity: 1; background-size: cover;
+}
+
+
 Button img {
     transition: all .3s ease;
     /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.208); */
@@ -280,4 +258,83 @@ Button img {
 Button img:hover {
     /* transform: scale(1.03); */
 
-}</style>
+}
+
+.ipad-container {
+    /* aspect-ratio: 4/5; */
+    border-radius: 1rem;
+    /* max-width: 1080px; */
+    height: max-content;
+    /* max-height: 1920px; */
+    /* background-color: rgb(255, 255, 255); */
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    /* border: 1rem solid black; */
+    box-shadow: 0 0 10px;
+    margin: auto;
+}
+
+
+.ipad-screen {
+    border-radius: 0.5rem;
+
+}
+
+.barra{
+    display: flex;
+}
+
+.ipad-screen{
+    width: 100%; position: relative;display: flex;flex-direction: column; align-items: center; justify-content: space-between;background-color:transparent;height: 100%;
+    box-shadow: 0 0 20px rgb(0, 56, 188) ; border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+@media (max-width: 600px) {
+    .texto-apps {
+        font-size: 0.8rem;
+        /* Tamaño de letra reducido para pantallas pequeñas */
+    }
+
+    .ipad-container {
+        border: none;
+        box-shadow: none;
+        height: 80vh;
+        padding: 3rem;
+        margin-top: 3rem;
+        border-radius: none;
+
+
+    }
+    .dock{
+        display: none;
+    }
+
+    .ipad-screen {
+        border-radius: 0;
+    }
+
+    .bg{
+        position: fixed;
+        /* display: none; */
+        bottom: 0;
+        height: 100%;
+    }
+    .barra{
+        /* display: none; */
+    }
+    .aux-back{
+        display: inline;
+    }
+    
+
+
+}
+
+.item:hover{
+    transform: scale(1.1);
+   
+}
+</style>

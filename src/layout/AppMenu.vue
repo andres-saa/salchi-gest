@@ -33,7 +33,7 @@ async function fetchAndUpdateRoles() {
                 {
                     label: 'Tienda', icon: 'fa-solid fa-cart-shopping',
                     items: [
-                        { label: 'Menu', icon: ' fa-solid fa-burger', to: '/tienda-menu/' },
+                        { label: 'Menu', icon: ' fa-solid fa-burger', to: '/tienda-menu/productos/SALCHIPAPAS/3' },
                         { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
                         { label: 'Conectividad', icon: ' fa-solid fa-truck-fast', to: '/conectividad/' },
                         { label: 'Reportes de ventas', icon: ' fa-solid fa-chart-line', to: '/reporte-ventas/valor-ventas/' },
@@ -286,10 +286,10 @@ async function fetchAndUpdateRoles() {
                                     label: 'Organizacion', icon: 'fa-solid fa-envelope', to: '/samovar',
 
                                 },
-                                {
-                                    label: 'inventario', icon: 'fa-solid fa-envelope', to: '/inventory',
+                                // {
+                                //     label: 'inventario', icon: 'fa-solid fa-envelope', to: '/inventory',
 
-                                },
+                                // },
                                 // {
                                 //     label: 'Org. Nevera doble ', icon: 'fa-solid fa-envelope', to: '/nevera-doble',
 

@@ -167,7 +167,7 @@ const selectedGroupIds = ref(["todos"]); // "todos" es un valor especial para ma
 
 import { useReportesStore } from '../../store/reportes';
 const store = useReportesStore()
-// const charging = ref(true)
+const charging = ref(true)
 
 // Función modificada para obtener los grupos de cargos y sus cargos correspondientes
 const getRoleGroups = async () => {

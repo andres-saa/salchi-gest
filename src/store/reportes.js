@@ -496,7 +496,7 @@ export const useReportesStore = defineStore('reportes', {
                         visible:visibleValue,
                         tittle: visibleValue == false? 'cargando' : tittleValue
                         }
-                }, 500);
+                }, 0);
             }else
             this.loading = {
             visible:visibleValue,

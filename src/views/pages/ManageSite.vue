@@ -127,7 +127,7 @@ const navigateToSite = (siteData) => {
             </div>
 
 
-    <div 
+    <!-- <div 
         style="z-index: 99; max-width: 1024px;  display: flex;; align-items: center; justify-content: space-between; "
         class="col-12  p-0 m-auto">
 
@@ -149,7 +149,7 @@ const navigateToSite = (siteData) => {
 
 
 
-    </div>
+    </div> -->
     <div class="grid m-auto p-0 col-12" style="max-width: 1024px;">
 
         <img v-if="!$route.path.includes('recibos') && !$route.path.includes('documentos')" class="col-12"

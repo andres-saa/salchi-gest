@@ -179,126 +179,46 @@ const obtenerDatosFiltrados = async () => {
 }; 
 
 
- 
-
 
 const exportCSV = async() => {
-
-
-
     const datosFiltrados = await obtenerDatosFiltrados();
     const data = datosFiltrados.map(order => ({
-    // "Id": order.id,
-    "Orden No": order.order_id,
-    "Monto":order.total_order_price,
-    "Sede":order.site_name,
-    "Fecha":order.latest_status_timestamp?.split('T')[0],
-    "Hora":order.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':'),
-    "Estado":order.current_status,
-    "Domicilio":order.delivery_price,
-    "Metodo de pago":order.payment_method,
-    "razon de la cancelacion":order.reason || 'es una orden enviada',
-    "Nombre del usuario":order.user_name,
-    "telefono del usuario":order.user_phone,
-    "direccion del usuario":order.user_address
-    
-    
+        "Orden No": order.order_id,
+        "Monto": order.total_order_price,
+        "Sede": order.site_name,
+        "Fecha": order.latest_status_timestamp?.split('T')[0],
+        "Hora": order.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':'),
+        "Estado": order.current_status,
+        "Responsable": order.responsible ? `cancelada por ${order.responsible}` : 'no aplica',
+        "razon de la cancelacion": order.reason || 'no aplica',
+        "Domicilio": order.delivery_price,
+        "Metodo de pago": order.payment_method,
+        "Nombre del usuario": order.user_name,
+        "telefono del usuario": order.user_phone,
+        "direccion del usuario": order.user_address
+    }));
 
-    // "Nombre": order.name,
-    // "Documento": order.dni,
-    // "Direccion": order.address,
-    // "Cargo": order.position,
-    // "Sede": order.site_name,
-    // "Estado": order.status,
-    // "Género": order.gender,
-    // "Fecha de Nacimiento": order.birth_date?.toString() || '',
-    // "Teléfono": order.phone,
-    // "Correo Electrónico": order.email,
-    // "Fecha de Ingreso": order.entry_date?.toString() || '',
-    // "Fecha de Salida": order.exit_date?.toString() || '',
-    // "Motivo de Salida": order.exit_reason,
-    // "Autorización de Datos": order.authorization_data == true ? 'si' : 'no',
-    // "País de Nacimiento": order.birth_country,
-    // "Departamento de Nacimiento": order.birth_department,
-    // "Ciudad de Nacimiento": order.birth_city,
-    // "Tipo de Sangre": order.blood_type,
-    // "Estado Civil": order.marital_status,
-    // "Nivel de Educación": order.education_level,
-    // "Tipo de Contrato": order.contract_type,
-    // "EPS": order.eps,
-    // "Fondo de Pensión": order.pension_fund,
-    // "Fondo de Cesantías": order.severance_fund,
-    // "Tiene Hijos": order.has_children == true ? 'si' : 'no',
-    // "Tipo de Vivienda": order.housing_type,
-    // "Tiene Vehiculo": order.has_vehicle == true ? 'si' : 'no',
-    // "Tipo de Vehiculo": order.vehicle_type,
-    // "Tamaño del Hogar": order.household_size,
-    // "Contacto de Emergencia": order.emergency_contact,
-    // "Talla de Camisa": order.shirt_size,
-    // "Talla de Pantalón": order.jeans_sweater_size,
-    // "Certificado de Manejo de Alimentos": order.food_handling_certificate == true ? 'si' : 'no',
-    // "Número de Certificado de Manejo de Alimentos": order.food_handling_certificate_number,
-    // "Salario": order.salary,
-    // "Comentarios/Notas": order.comments_notes
-    // Agrega aquí otros campos si es necesario
-}));
+    const worksheet = XLSX.utils.json_to_sheet(data);
 
+    // Calcular el ancho máximo de cada columna
+    const colWidths = data.reduce((widths, row) => {
+        Object.keys(row).forEach((key, i) => {
+            const contentLength = row[key]?.toString().length || 0;
+            widths[i] = Math.max(widths[i] || 10, contentLength);
+        });
+        return widths;
+    }, []);
 
-const worksheet = XLSX.utils.json_to_sheet(data);
-worksheet["!cols"] = [
-    { wch: Math.max(8, "Id".length) },
-    { wch: Math.max(10, "Monto".length) },
-    { wch: Math.max(12, "Sede".length) },
-    { wch: Math.max(10, "Fecha".length) },
-    { wch: Math.max(5, "Hora".length) },
-    { wch: Math.max(10, "Estado".length) },
-    { wch: Math.max(5, "Domicilio".length) },
-    { wch: Math.max(25, "Metodo de pago".length) },
-    { wch: Math.max(40, "Fecha de Nacimiento".length) },
-    { wch: Math.max(20, "Teléfono".length) },
-    { wch: Math.max(10, "Correo Electrónico".length) },
-    { wch: Math.max(40, "Fecha de Ingreso".length) },
-    { wch: Math.max(15, "Fecha de Salida".length) },
-    { wch: Math.max(18, "Motivo de Salida".length) },
-    { wch: Math.max(25, "Autorización de Datos".length) },
-    { wch: Math.max(20, "País de Nacimiento".length) },
-    { wch: Math.max(25, "Departamento de Nacimiento".length) },
-    { wch: Math.max(20, "Ciudad de Nacimiento".length) },
-    { wch: Math.max(15, "Tipo de Sangre".length) },
-    { wch: Math.max(15, "Estado Civil".length) },
-    { wch: Math.max(20, "Nivel de Educación".length) },
-    { wch: Math.max(18, "Tipo de Contrato".length) },
-    { wch: Math.max(20, "EPS".length) },
-    { wch: Math.max(18, "Fondo de Pensión".length) },
-    { wch: Math.max(18, "Fondo de Cesantías".length) },
-    { wch: Math.max(12, "Tiene Hijos".length) },
-    { wch: Math.max(18, "Tipo de Vivienda".length) },
-    { wch: Math.max(16, "Tiene Vehiculo".length) },
-    { wch: Math.max(18, "Tipo de Vehiculo".length) },
-    { wch: Math.max(18, "Tamaño del Hogar".length) },
-    { wch: Math.max(22, "Contacto de Emergencia".length) },
-    { wch: Math.max(15, "Talla de Camisa".length) },
-    { wch: Math.max(18, "Talla de Pantalón".length) },
-    { wch: Math.max(35, "Certificado de Manejo de Alimentos".length) },
-    { wch: Math.max(40, "Número de Certificado de Manejo de Alimentos".length) },
-    { wch: Math.max(10, "Salario".length) },
-    { wch: Math.max(20, "Comentarios/Notas".length) }]
+    worksheet["!cols"] = colWidths.map(maxWidth => ({
+        wch: maxWidth
+    }));
 
-
-
-
-const workbook = XLSX.utils.book_new();
-XLSX.utils.book_append_sheet(workbook, worksheet, "ventas");
-
-XLSX.writeFile(workbook, "reporte de ventas salchimonster.xlsx");
-
-
-
-
-
-
-
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "ventas");
+    XLSX.writeFile(workbook, "reporte de ventas salchimonster.xlsx");
 };
+
+
 
 
 

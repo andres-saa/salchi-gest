@@ -1,5 +1,5 @@
 <template>
-    <div v-if="true">
+    <div v-if="true" >
         <Dialog v-model:visible="showUserDialog" modal style="width: 30rem">
         <h4>{{ selectedUser.name }}</h4>
 
@@ -121,8 +121,8 @@
                 </div>
             </div>
 
-            <div class="grid">
-            <div class="col-2 p-0" style="height: 80vh; overflow-y: auto">
+            <div class="grid px-4">
+            <div class="col-2 p-0" style="height: 80vh;max-width: min-content; overflow-y: auto">
                 <div class="p-0 text-sm" style="display: flex; justify-content: center">
                     <div style="display: flex; gap: 1rem; flex-direction: column" class="pb-3 m-auto">
                         <div  @click="openUserDialog(user)" v-for="user in users" :key="user.id" draggable="true" style="display: flex; flex-direction: column; align-items: center" @dragstart="handleDragStart(user)">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-10" style="height: 80vh; overflow-y: auto">
+            <div class="col" style="height: 80vh; overflow-y: auto">
                 <div class="col-12 p-0" style="display: flex; justify-content: end">
                     <Button class="mb-3" icon="pi pi-plus" severity="info" label="Nuevo dia" @click="showNewDayDialog = true" />
                 </div>

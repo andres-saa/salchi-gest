@@ -1,9 +1,6 @@
 <template>
 
-<p  class="mb-2 my-5 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize;">
-    <i class="fa-solid fa-person-chalkboard"></i>
-      Gestion de guias
-    </p>
+
 
 
 
@@ -51,7 +48,7 @@
 
     <!-- <p class="col-12 text-center text-xl p-0 mb-5" style="font-weight: bold;">Asi lo hacemos en salchimonster</p> -->
 
-    <DataTable class="card mb-4  my-3 md:shadow-5 md:p-5"  
+    <DataTable class="card mb-4  my-3 md:shadow-3 md:p-5"  
         style=" max-width: 1024px;border: none; margin: auto    ; padding: 0;" ref="dt"
         :value="archived_files" v-model:selection="selectedFiles" dataKey="id" :paginator="true" :rows="10"
         :filters="filters"
@@ -62,7 +59,10 @@
 
 
 
-
+       <p  class="mb-2 my-5 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize;">
+    <i class="fa-solid fa-person-chalkboard"></i>
+      Gestion de guias
+    </p>
 
 
 
@@ -870,7 +870,7 @@ const route = useRoute()
 <style scoped>
 
 
-*{text-transform: lowercase;}
+*{text-transform: uppercase;}
 
 Button{
     /* text-transform: uppercase; */

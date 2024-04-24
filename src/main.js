@@ -107,7 +107,16 @@ import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
 
+import { registerSW } from 'virtual:pwa-register';
 
+const updateSW = registerSW({
+  onNeedRefresh() {
+    // Mostrar una notificación de que se necesita un refresco
+  },
+  onOfflineReady() {
+    // Mostrar una notificación de que la PWA puede funcionar offline
+  },
+});
 
 // Vue.filter('formatCurrency', function (value) {
 //     const number = parseFloat(value);

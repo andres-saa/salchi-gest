@@ -103,7 +103,7 @@
 
 
 
-    <div class="col-12 mx-auto md:shadow-3 my-4 md:p-3 p-0" style="max-width: 600px; border-radius: 1rem;">
+    <div class="col-12 mx-auto md:shadow-3 py-6 md:p-3 p-0 px-2 mb-8" style="max-width: 900px; background-color: white; border-radius: 0.5rem;">
 
 
         <!-- {{ directories }} -->
@@ -111,6 +111,7 @@
             Directorio</p>
 
         <div class="p-0" style="overflow: hidden;">
+            <!-- <span> <b> SEDE</b></span> -->
             <Dropdown v-model="store.currentSite" :options="sites" optionLabel="site_name" style="max-width: 30rem;"
                 class="col-12 p-0 md:col-4 md:m-3 " placeholder="Sede">
             </Dropdown>
@@ -119,7 +120,7 @@
 
 
                 <img class="img-profile-add p-0"
-                    style="width: 100%; border-radius: 1rem;  object-fit: cover; border-radius: 1rem; aspect-ratio: 4 / 3;background-color: #84e4ff;"
+                    style="width: 100%; border-radius: 0.5rem;  object-fit: cover; border-radius: 0.5rem; aspect-ratio: 4 / 2;background-color: #84e4ff;"
                     :src="urlsite_photo ? urlsite_photo : `${URI}/read-product-image/600/site-${store.currentSite.site_id}`"
                     alt="">
                 <div class="field col-12 pb-0 px-0 col-12 mt-2 mb-6 p-0" style="display: flex;justify-content: end;gap: 1rem;">
@@ -876,7 +877,7 @@ const deleteApplication = (applicationId) => {
 };
 const file = ref(null)
 
-const urlsite_photo = ref()
+const urlsite_photo = ref('')
 
 const handleFileChange = (event) => {
     // Accede al archivo seleccionado a través del objeto de evento
@@ -1289,7 +1290,8 @@ onMounted(async () => {
 
     }
 
-    urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`; file = ''
+    urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`; 
+    file.value = ''
 })
 
 

@@ -106,7 +106,7 @@
         </template>
     </Dialog>
 
-    <div style="" class="p-0 m-0 col-12">
+    <div style="" class="px-2 m-0 col-12">
         <div class="col-12 p-0 m-0 mb-8">
             <div class="grid p-0 mx-auto">
                 <div class="col-12 md:col-5 py-2" style="height: 4rem">
@@ -119,8 +119,8 @@
             </div>
         </div>
 
-        <div class="grid">
-            <div class="col-2 p-0" style="height: 80vh; overflow-y: auto">
+        <div class="grid" style=" margin: auto;">
+            <div class="col-2 p-0" style="height: 80vh;max-width: min-content; overflow-y: auto">
                 <div class="p-0 text-sm" style="display: flex; justify-content: center">
                     <div style="display: flex; gap: 1rem; flex-direction: column" class="pb-3 m-auto">
                         <div v-for="user in users" :key="user.id" draggable="true" style="display: flex; flex-direction: column; align-items: center" @dragstart="handleDragStart(user)">
@@ -142,7 +142,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-10" style="height: 80vh; overflow-y: auto">
+            <div class="col" style="height: 80vh; overflow-y: auto">
                 <!-- <div class="col-12 p-0" style="display: flex; justify-content: end">
                     <Button class="mb-3" icon="pi pi-plus" severity="info" label="Nueva semana" @click="showNewDayDialog = true" />
                 </div> -->
@@ -237,7 +237,10 @@
             </div>
         </div>
 
-        <Dialog v-model:visible="showCalendar" style="width: 20rem" :modal="true">
+    </div>
+
+    
+    <Dialog v-model:visible="showCalendar" style="width: 20rem" :modal="true">
             <template #header> . </template>
 
             <h5 class="" style="text-transform: uppercase">Cuantas horas trabajo {{ currentUser.name }}?</h5>
@@ -264,7 +267,6 @@
                 </div>
             </template>
         </Dialog>
-    </div>
 </template>
   
     <script setup>
@@ -504,9 +506,10 @@ watch(currentSite, async (newval,oldVal) => {
     selectedSite.value = newval;
     setThisWeek();
     fetchWorkDays();
+    const now = new Date();
     await addNewWorkDay(now);
 
-    const now = new Date();
+   
     }
 
     // alert('cambio')

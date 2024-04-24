@@ -1,5 +1,5 @@
 <template>
-    <div class="p-0 m-auto" style="max-width: 1280px">
+    <div class="p-0 mx-auto my-3 shadow-4 p-4" style="max-width: 1024px;background-color: white;border-radius: 0.5rem;min-height: 80vh;">
         <p class="mb-2 my-1 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize">
             <i class="fa-solid fa-person-chalkboard"></i>
             Mantenimientos
@@ -12,19 +12,19 @@
         <div class="grid p-0 mx-0 mt-6 col-12 xl:col-8 md:col-10 my-4 p-1" style="">
 
             <div class="col-12 md:px-2 lg:px-3 md:col-4 py-0 my-2 p-0" style="display: flex; align-items: center;">
-                <span class=" p-0 col-2 mr-4"><b>SEDE</b> </span>
+                <span class=" p-0 col-2 mr-4 pl-0"><b>SEDE</b> </span>
                 <Dropdown v-model="store.currentSite" class="col-9 p-0" :options="sites" optionLabel="site_name"> </Dropdown>
             </div>
 
 
             <div class="col-12 md:px-2 lg:px-3 md:col-4 py-0 my-2 p-0">
                 <router-link to="/maintenance/equipment">
-                    <Button :outlined="!ruta.fullPath.includes('equipment')" severity="warning" style="width: 100%" class="" label="equipos"></Button>
+                    <Button :outlined="!ruta.fullPath.includes('equipment')" severity="warning" style="width: 100%" class="" label="Equipos"></Button>
                 </router-link>
             </div>
             <div class="col-12 md:px-2 lg:px-3 md:col-4 py-0 my-2 p-0">
                 <router-link to="/maintenance/maintance-list">
-                    <Button :outlined="!ruta.fullPath.includes('maintance-list')" severity="help" style="width: 100%" class="" label="mantenimientos"></Button>
+                    <Button :outlined="!ruta.fullPath.includes('maintance-list')" severity="help" style="width: 100%" class="" label="Mantenimientos"></Button>
                 </router-link>
             </div>
         </div>

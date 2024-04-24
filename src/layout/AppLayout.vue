@@ -16,7 +16,7 @@ watch(isSidebarActive, (newVal) => {
         bindOutsideClickListener();
     } else {
         unbindOutsideClickListener();
-    }
+    } 
 });
 
 const containerClass = computed(() => {
@@ -66,76 +66,23 @@ const isOutsideClicked = (event) => {
             <app-sidebar></app-sidebar>
         </div>
 
-        <div class="layout-main-container " >
-<!-- 
-            <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 9999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);">
+        <div class="layout-main-container px-0" >
 
-</div>
-
-<div style="background-color: red; height: 200vh;position: fixed;top: -10%;left: 100%; z-index: 9999; width: 100vw;box-shadow: -10px 0 15px rgba(0, 0, 0, 0.15);">
-
-</div> -->
 
             <div class="layout-main p-0" style="position: relative;">
-                <!-- <div style="background-color: red; height: 200vh;position: fixed;top: -10%;right: 100%; z-index: 999; width: 100vw;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);"></div> -->
-
-                <loading class="col-12" style=" z-index: 9;position: fixed;height: 100vh;top: 0;"></loading>
-
-                <transition name="fade">
+  
                     
                     <router-view class="p-0"></router-view>
 
-                </transition>
+             
             </div>
             
         </div>
-        <!-- <app-footer class="my-4"></app-footer> -->
-        <!-- <app-config></app-config> -->
-        <!-- <div class="layout-mask"></div> -->
+
     </div>
 </template>
 
 <style lang="scss" scoped>
-
-.fade-enter-active,.fade-leave-active {
-  transition: all ease  .3s;
-  
-}
-
-
-
-/* .fade-enter-to  {
-  opacity: 0;
-  transform: translateX(20rem);
- 
-} */
-
-
-/* .fade-leave-from  {
-  opacity: 1;
-  transform: translateY(20rem);
-
-} */
- /*
-*/
-
- .fade-enter-from {
-  opacity: 1;
-  transform: translateY(10vh);
-//   filter: blur(10px);
-  /* filter: blur(0); */
-  
-}
-
-
-
-.fade-enter-to {
-  opacity: 1;
-  /* filter: blur(0); */
-  /* transform: translateY(0); */
-
-  
-} 
 
 
 

@@ -1,10 +1,8 @@
 <template>
 
-    <div class="col-12" style="height:80vh; display:flex; align-items: center; justify-content: center;overflow-x: auto;">
         
         <!-- <Button @click="productDialog = true" class="p-button-danger" style="z-index: 99; position: absolute;border: none; ; font-weight: bold"> ACTUALIZAR MIS DATOS</Button> -->
-        <img class=""  style="width: 900px; max-width: 900px;height: 100%;object-fit: cover;" src="/images/actualizar.webp" alt="">
-    </div>
+        <img class=""  style=" position:absolute;width: 100vw;top: -3rem;left: 0; height: 100vh;object-fit: cover;" src="/images/bg-ipad.jpg" alt="">
 
 
    <Toast/>

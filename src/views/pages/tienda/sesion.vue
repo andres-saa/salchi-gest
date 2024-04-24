@@ -1,21 +1,26 @@
 <template>
     
 
-    <div class="grid p-1 pb-8" style="max-width: 1024px;margin: auto;" >
-    
-    
-    
-    <p class="text-center text-3xl col-12" style="font-weight: bold;display: flex;gap: 1rem;align-items: center;">
+
+
+     <p class="text-center text-3xl col-12" style="font-weight: bold;display: flex;gap: 1rem;align-items: center;">
       <div style="width: 100%;height: 5px; background-color: #ff6200">
     
       </div>
-     <span class="text-3xl" style="min-width: max-content;"> {{ route.params.menu_name }} DE  {{ siteStore.site.site_name }}</span> 
+
+     <span class="text-3xl" style="width: min-content;"> <p style="min-width: max-content;">{{ route.params.menu_name }} DE</p>  {{ siteStore.site.site_name }}</span> 
     
         <div style="width: 100%;height: 5px; background-color:#ff6200">
     
     </div>
         
     </p>
+
+    <div v-if="!noProducts" class="grid p-1 pb-8" style="max-width: 1024px;margin: auto;" >
+    
+    
+    
+   
     
     
         <div v-for="(product, index) in products" :key="product.id" class=" col-12 md:col-4 lg:col-3 sm:col-6">
@@ -28,6 +33,10 @@
     
     </div>
     
+
+    <p style="font-weight: bold;" class="text-4xl text-center my-8 p-0" v-else>
+        Selecciona una sede y una categoria.
+    </p>
     
 
     
@@ -44,7 +53,7 @@ import { nextTick } from 'vue'
 const siteStore = useSitesStore()
 const route = useRoute()
 const products = ref([])
-
+const noProducts = ref (false)
 
 
 onMounted( async () => {
@@ -53,8 +62,12 @@ onMounted( async () => {
 
 
 const getProducts = async()=> {
-    const category_id = route.params.category_id
-    const site_id = siteStore.site.site_id; 
+    let category_id = route.params.category_id
+    let site_id = siteStore.site.site_id;
+    if( !category_id || !site_id) {
+        noProducts.value = true
+        return
+    }
     products.value = await productService.getProductsByCategorySite(category_id,site_id)
 }
 

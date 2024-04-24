@@ -1,16 +1,23 @@
 <template>
-  <div style="display: flex; height: 90vh;" class="p-5">
-      <form class="col-12 md:col-6 lg:col-4 xl:col-3 m-auto p-" @submit.prevent="login" 
-            style="display: flex; border-radius: 1rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.389); 
+  <div  style="display: flex;position: relative; background-size: cover;  height: 100vh; width: 100vw; overflow: hidden;" class="p-0 fondo" >
+
+    <!-- <div style="background-image: url('/images/login-bg.jpg');transform: scale(2); filter: blur(5px); background-size: cover;background-position-y: -14rem; height: 100vh; width: 100vw; position: absolute;z-index: -1;">
+
+    </div> -->
+      <form class="col-12  m-auto"  @submit.prevent="login" 
+            style="max-width: min-content;  display: flex; border-radius: 0.5rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.389); 
             display: flex; flex-direction: column; background-color: rgb(255, 255, 255); 
             align-items: center;">
           <img src="/images/logo.png" alt="" style="width: 48px;" class="m-3">
           <p class="text-2xl" style="font-weight: bold;">Iniciar sesión</p>
-          <InputText class="my-3  " v-model="credentials.username" type="text" 
+       
+            <InputText class="my-3  m-0" v-model="credentials.username" type="text" 
                      placeholder="identificación" style="width: 100%;" />
-          <Password class="my-3 col-12 p-0 " v-model="credentials.password" placeholder="Clave" 
-                    toggleMask style="width: ;" />
-          <Button class="my-3 " type="submit" style=""><span class="text-center m-auto"> Iniciar Sesion </span></Button>
+         
+          
+          <Password class="" toggleMask   v-model="credentials.password" placeholder="Clave" 
+                      />
+          <Button size="samll"  style="width: 100%;background-color: rgb(255, 98, 0); border: none;" label="Iniciar sesion" class="my-3 " type="submit" ></Button>
       </form>
   </div>
 </template>
@@ -62,3 +69,19 @@
   };
   </script>
   
+  <style scoped>
+  
+  .fondo::before{
+    content: '';
+    height: 120vh;
+    width: 120vw;
+    top: 0;
+    left: -2rem;
+    position: absolute;
+    z-index: -1;
+    background-size: contain;
+    filter: blur(10px);
+  
+    background-image: url('https://backend.salchimonster.com/read-product-image/600/site-4');
+  }
+  </style>

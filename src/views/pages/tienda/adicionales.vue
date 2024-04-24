@@ -1,10 +1,10 @@
 <template>
     <div class="m-auto" style="max-width: 1024px;">
-        <p class="text-center text-3xl col-12" style="font-weight: bold;min-width: max-content; display: flex; gap: 1rem; align-items: center;">
-            <div style="width: 100%; height: 5px;min-width: max-content; background-color: #ff6200"></div>
-              <span style="min-width: max-content;"> ADICIONALES DE {{ siteStore.site.site_name }} </span>  
-            <div style="width: 100%; height: 5px; background-color: #ff6200"></div>
-        </p>
+        <p class="text-center text-3xl" style="font-weight: bold; display: flex; gap: 1rem; align-items: center;">
+    <div style="width: 100%; height: 5px; min-width: max-content; background-color: #ff6200;"></div>
+    <span style="min-width: max-content; width: auto;">ADICIONALES DE {{ siteStore.site.site_name }}</span>  
+    <div style="width: 100%; height: 5px; min-width: max-content; background-color: #ff6200;"></div>
+</p>
     </div>
 
     <div class="m-auto col-12" style="max-width: 600px;" v-for="(items, grupo) in adicionales" :key="grupo">
@@ -29,9 +29,9 @@
             </template>
             
             </Column>
-            <Column class="py-0 pl-4" header="Estado" headerStyle="width:1rem">
+            <Column style="" class="p-0 pl-4" header="" headerStyle="width:min-content;max-width:min-content;">
                 <template #body="adicion">
-                    <InputSwitch v-model="adicion.data.status" @change="updateStatus(adicion.data.aditional_item_instance_id, adicion.data.status)" />
+                    <InputSwitch class="p-0 m-0" v-model="adicion.data.status" @change="updateStatus(adicion.data.aditional_item_instance_id, adicion.data.status)" />
                 </template>
             </Column>
         </DataTable>

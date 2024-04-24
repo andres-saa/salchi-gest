@@ -10,7 +10,7 @@ import { URI } from '../../service/conection';
 // import { getUsers, } from '@/service/userServices'
 // import { URI } from "@/service/conection.js" 
 // import { getSiteDocument } from '../../service/dropDownAux';
-import ProductService from '@/service/ProductService';
+// import ProductService from '@/service/ProductService';
 // import { ref, onMounted } from 'vue';
 // import { useToast } from 'primevue/usetoast';
 import { uploadPDF } from '@/service/sendFileService.js'
@@ -576,8 +576,8 @@ const deleteFileType = async (typeId) => {
                             <i class="fa-solid fa-file mr-2  text-2xl "></i>
 
                         </Button>
-                        <Button size="small "
-                            style="width:100%;font-weight: bold;display: flex;align-items: center;justify-content: center; "
+                        <Button size="small " ico
+                            style="width:100%;font-weight: bold;display: flex;align-items: center; justify-content: center; "
                             rounded class=" p-button-warning  py-2" @click="openNewSiteDialog">
                             <i class="fa-solid fa-plus mr-2 text-2xl "></i>
                             <i class="fa-solid fa-house mr-2 text-2xl "></i>

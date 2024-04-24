@@ -56,17 +56,14 @@
   </Dialog>
 
 
-  <div class="col-12 p-0 " style="display: flex; justify-content: end;">
-    <Button label="Agendar" @click="openCreate" icon="pi pi-calendar-plus" class="p-button-success" />
 
 
-  </div>
-
-
-        <DataTable stripedRows  class="card mb-4  my-3 md:shadow-5 md:p-5"  
+        <DataTable stripedRows  class=" mb-4 mx-3 mt-6 "  
             style="border: none; margin: auto    ; padding: 0;" ref="dt"
             :value="maintenances"  dataKey="id" :paginator="true" :rows="10"
             :filters="filters"
+            scrollable
+            responsiveLayout="scroll"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 100]"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} archivos" 
@@ -75,7 +72,12 @@
     
     
     
-    
+           <div class="col-12 p-0 mb-4" style="display: flex; justify-content: end;">
+    <Button label="Agendar" @click="openCreate" icon="pi pi-calendar-plus" class="p-button-success" />
+
+
+  </div>
+
     
     
             <!-- <template #header  >
@@ -89,7 +91,7 @@
                
             </template>
      -->
-            <Column class="p-2 px-5" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column>
+            <!-- <Column class="p-2 px-5" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column> -->
     
             <Column class="p-2 px-5" field="id" header="Id" :sortable="true"
                 headerStyle="width:min-content; min-width:min-content; ">
@@ -289,7 +291,7 @@ watch(
   () => newMaintenance.value.equipment_ids,
   async (newEquipmentIds, oldEquipmentIds) => {
     console.log('Equipos cambiados', newEquipmentIds);
-    if (newEquipmentIds.length > 0) {
+    if (newEquipmentIds?.length > 0) {
       const temp_equipment = [...newMaintenance.value.equipment_ids]
       const names = temp_equipment.map(e => e.name)
       siteOptions.value = await equipmentService.getSitesWithAllEquipmentByNames(names);
@@ -514,7 +516,15 @@ const getSiteName = (siteId) => {
 
 
 
+watch(() => store.currentSite.site_id, () => {
 
+
+  if (store.currentSite.site_id){
+    loadEquipment(store.currentSite.site_id)
+  }
+
+
+}, {deep:true})
 
 
 

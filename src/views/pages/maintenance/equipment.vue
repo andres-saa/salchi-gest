@@ -7,7 +7,7 @@
         <ConfirmDialog style="max-width: 30rem;" />
 
         <div style="display: flex;justify-content: end">
-            <Button label="Agregar Equipo" severity="success" @click="showDialog = true" icon="pi pi-plus" class="mb-2 my-5"></Button>
+            <Button label="Agregar Equipo" severity="success" @click="showDialog = true" icon="pi pi-plus" class=" mb-4"></Button>
         </div>
         <Dialog style="width: 30rem;" v-model:visible="showDialog" header="Agregar 
         
@@ -54,8 +54,8 @@
 
                 <div style=";position: relative;" class="col-6 md:p-3 md:col-4 lg:col-3 xl:col-2 x p-2 " v-for="equipo in equipment">
                 
-                    <div class="card shadow-3 p-2" style="position: relative;height: 100%;overflow: hidden; ">
-                        <img style="width: 100%; aspect-ratio: 4 / 4;object-fit: cover;border-radius: 0.5rem;" :src="`${URI}/read-product-image/300/${equipo.name}-${equipo.brand}`" alt="">
+                    <div class=" shadow-3 p-2" style="position: relative;height: 100%;overflow: hidden;border-radius: 0.3rem; ">
+                        <img style="width: 100%; aspect-ratio: 4 / 4;object-fit: cover;border-radius: 0.3rem;" :src="`${URI}/read-product-image/300/${equipo.name}-${equipo.brand}`" alt="">
                         <p class="py-0 my-0 text-sm"><b>Nombre:</b> </p>
                         <p>{{ equipo.name }}</p>
 
@@ -64,7 +64,7 @@
 
                         
                     </div>
-                    <Button  size="small" @click="confirmDelete(equipo.equipment_id,$event)" class="shadow-4" rounded severity="danger" icon="pi pi-trash  shadow-3 text-xl" style="position: absolute; top: 0rem; right: 0rem;"></Button>
+                    <Button  size="small" @click="confirmDelete(equipo.equipment_id,$event)" class="shadow-4 p-3" rounded severity="danger" icon="pi pi-trash p-0 shadow-3 text-xl" style="position: absolute;width: 1rem; height: 1rem; top: 0rem; right: 0rem;"></Button>
 
                 </div>
 
@@ -163,15 +163,15 @@ const addEquipment = async () => {
     loading.setLoading(true, 'Agregando equipo');
 
     await equipmentService.createEquipment(newEquipment.value);
-    equipmentService.uploadImage(`${newEquipment.value.name}-${newEquipment.value.brand}`, file.value)
+    await equipmentService.uploadImage(`${newEquipment.value.name}-${newEquipment.value.brand}`, file.value)
     // equipment.value = await equipmentService.getAllEquipment();
     const temp_equipment = await equipmentService.getEquipmentBySite(store.currentSite.site_id)
     if(temp_equipment){
         equipment.value = temp_equipment
-
     }
 
     loading.setLoading(false, 'Agregando equipo');
     newEquipment.value = { name: '', brand: '', site_ids: [] };
+    location.reload()
 };
 </script>
