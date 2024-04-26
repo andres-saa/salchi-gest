@@ -28,8 +28,52 @@
   import { URI } from '../../../service/conection';
   import router from '@/router/index'
   import {loginStore} from '@/store/user.js'
-
+  import axios from 'axios';
   const store = loginStore()
+
+
+  
+const validateToken = (token) => {
+
+const store = loginStore()
+return axios.get(`${URI}/validate-token`, {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
+.then(response => {
+  // Aquí manejas la respuesta positiva
+  if (response.data.access_token) {
+    store.setUserData(response.data)
+  }
+  return response.data;
+})
+.catch(error => {
+  // Manejo de errores si el token es inválido o expirado
+  console.error("Error durante la validación del token:", error);
+  throw error;
+});
+}
+
+
+const startTokenValidation = () => {
+    const store = loginStore();
+    setInterval(async () => {
+        const token = store.userData.access_token;
+        if (!token) {
+            router.push('/auth/login');
+            return;
+        }
+
+        try {
+            await validateToken(token);
+        } catch (error) {
+            console.error('La sesión ha expirado o el token es inválido:', error);
+            store.userData = {  };
+            router.push('/auth/login');
+        }
+    }, 60000); // 60000 ms = 1 minuto
+};
 
   export default {
     setup() {
@@ -55,7 +99,8 @@
   
           const data = await response.json();
           store.setUserData(data)
-          localStorage.setItem('token', data.access_token);
+          startTokenValidation();
+          // localStorage.setItem('token', data.access_token);
           router.push('/actualizar-datos')
 
           // Redireccionar a la página de inicio o donde sea necesario

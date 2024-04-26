@@ -1,6 +1,7 @@
 import { ref } from "vue";
     
 import {jwtDecode} from 'jwt-decode';
+import {loginStore} from '@/store/user.js'
 
 import { URI } from "./conection";
 const categoryValue = ref()
@@ -35,11 +36,14 @@ const pastelColors = {
     }
 
 const getUserRole = () => {
-    const token = localStorage.getItem('token');
+  
+    const store = loginStore()
+    const token = store.userData.access_token
     if (token) {
     try {
         const decoded = jwtDecode(token);
-        return decoded.rol; // Asegúrate de que 'rol' es la propiedad correcta en tu token
+        return decoded.rol;
+         // Asegúrate de que 'rol' es la propiedad correcta en tu token
     } catch (error) {
         console.error('Error decodificando el token:', error);
         return null;
@@ -49,7 +53,8 @@ const getUserRole = () => {
 }
 
 const getUserDni = () => {
-    const token = localStorage.getItem('token');
+  const store = loginStore()
+  const token = store.userData.access_token
     if (token) {
     try {
         const decoded = jwtDecode(token);
@@ -111,7 +116,8 @@ const getUserBasic = async (id) => {
   },)
 
 const getUserId = () => {
-    const token = localStorage.getItem('token');
+  const store = loginStore()
+  const token = store.userData.access_token
     if (token) {
     try {
         const decoded = jwtDecode(token);

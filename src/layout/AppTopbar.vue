@@ -81,7 +81,7 @@ const cerrar = () => {
 </script>
 
 <template>
-    <div  class="layout-topbar md:px-4" style="background-color:   rgba(0, 1, 22, 1); ">
+    <div  class="layout-topbar md:px-4" style="background-color:   rgba(0, 1, 22, 1);max-width: 100vw; ">
         <router-link to="/" class="layout-topbar-logo">
             <img style="height: 1.5rem;" src="/images/logo.png" alt="logo" />
             <!-- <span>SAKAI</span> -->
@@ -98,10 +98,10 @@ const cerrar = () => {
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
             
-            <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
-                <img style="height: 32px;width: 32px; border-radius: 50%;box-shadow: 2px 2px 5px white; object-fit: cover;" :src="getImageUrl()" alt="">
+            <Button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
+                <img style="height: 32px;width: 32px; border-radius: 50%;border: 2px solid var(--primary-color); object-fit: cover;" :src="getImageUrl()" alt="">
               
-            </button>
+            </Button>
             <!-- <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-user"></i>
                 <span>Profile</span>

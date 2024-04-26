@@ -49,9 +49,9 @@ obtenerRolesYActualizar();
     let rolNormalizado = rol.trim().toLowerCase();
 
     // Normalizar también los roles permitidos
-    let rolesPermitidosNormalizados = rolesPermitidos.map(r => r.trim().toLowerCase());
+    let rolesPermitidosNormalizados = rolesPermitidos?.map(r => r.trim().toLowerCase());
 
-    return rolesPermitidosNormalizados.includes(rolNormalizado);
+    return rolesPermitidosNormalizados?.includes(rolNormalizado);
 }
 
 

@@ -5,15 +5,14 @@ import { onMounted, onBeforeMount, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 
 import ShowFiles from '@/views/pages/ShowFiles.vue'
-import {siteService} from '@/service/siteService.js'
 // /home/ludi/projects/salchimonster/salchimonster_frontend/src/views/pages/ShowUser.vue
 // import { ref, onBeforeMount } from 'vue';
-import { useDirectoryStore } from '../../store/directorio';
+import { useDocumentsStore } from '../../store/documentos';
 
 // import { useRouter } from 'vue-router';
 // import Router from '@/router/index.js';
 const sites = ref([])
-const store = useDirectoryStore()
+const store = useDocumentsStore()
 onMounted( () => {
 
 siteService.getSites().then(data => {
@@ -62,9 +61,12 @@ const loading2 = ref(null);
 const idFrozen = ref(false);
 const products = ref(null);
 const expandedRows = ref([]);
+import { siteService } from '../../service/siteService';
 
-onMounted(() => {
-    getSite(route.params.site_id)
+
+onMounted( async() => {
+    // getSite(route.params.site_id)
+    currentSite.value = await siteService.getSiteById(route.params.site_id)
     // console.log(curentSite)
 });
 

@@ -1,47 +1,56 @@
 <template>
 
-    <div class="m-auto px-3" style="max-width: 900px;">
+    <div class="" style="border-radius: 1rem;">
         <p class="p-3 text-2xl text-center" style="font-weight: bold;"> <i class="fa-solid fa-folder-open"></i>
             Auditorias</p>
 
+        <p class="text-center text-xl p-4" style="color:red;font-weight: bold;">
+            Este apartado se encuentra en desarrollo. favor realizar su auditoria como lo hace de manera habitual
+            cualquier duda contactar con el area de desarrollo y tecnologia lunes a viernes de 4:30 am a 6:00 pm , <br> sabados de 5:00 am a 12:00pm
+            +57 322 689 2988, feliz jornada y  muchas gracias.
+        </p>
 
-        <div class="grid mt-2 ">
 
-            <div class="col-12 md:col-4 lg:col-4 xl:col-3 py-0 my-2">
+        <div class=" " style="display: flex;gap: 1rem;overflow-x: auto; justify-content: center; align-items: center;">
+
+            <div class="">
                 <RouterLink to="/auditorias/lista">
-                    <Button :outlined="!ruta.path.includes('lista')"
-                        style="display: flex; justify-content: center;align-items: center; " severity="help"
-                        size="small" class="col-12  text-xl p-1">
-                        <i class="fa-solid fa-list mr-3 p-0 my-0"></i>
-                        <p class="p-0 m-0">Listado</p>
+                    <Button class="text-xl"  text label="Listado" :style="ruta.path.includes('lista')? 'color:black;' : 'color:gray;'"
+                        style="display: flex;box-shadow: none;  justify-content: center;align-items: center; "
+                      >
+                    
+                       
                     </Button>
                 </RouterLink>
             </div>
 
+            <span class="text-xl">
+                |
+            </span>
 
-
-
-            <div class="col-12 md:col-4 lg:col-4 xl:col-3 py-0 my-2">
+            <div class="">
                 <RouterLink to="/auditorias/nueva">
-                    <Button :outlined="!ruta.path.includes('nueva')"
-                        style="display: flex; justify-content: center;align-items: center; " severity="warning"
-                        size="small" class="col-12  text-xl p-1">
-                        <i class="fa-solid fa-plus mr-3 p-0 my-0"></i>
-                        <p class="p-0 m-0">Nueva</p>
+                    <Button  class="text-xl" text label="Nueva" :style="ruta.path.includes('nueva')? 'color:black;' : 'color:gray;'" :outlined="!ruta.path.includes('nueva')"
+                        style="display: flex;justify-content: center;align-items: center;box-shadow: none; " 
+                       >
+                       
                     </Button>
 
                 </RouterLink>
 
             </div>
 
+            <span class="text-xl">
+                |
+            </span>
+          
 
-            <div class="col-12 md:col-4 lg:col-4 xl:col-3 py-0 my-2">
+            <div class="">
                 <RouterLink to="/auditorias/checklist">
-                    <Button :outlined="!ruta.path.includes('check')"
-                        style="display: flex; justify-content: center;align-items: center; " severity="info"
-                        size="small" class="col-12  text-xl p-1">
-                        <i class="fa-solid fa-plus mr-3 p-0 my-0"></i>
-                        <p class="p-0 m-0">ChekList's</p>
+                    <Button :style="ruta.path.includes('checklist')? 'color:black;' : 'color:gray;'" class="text-xl"  text label="checkList" :outlined="!ruta.path.includes('check')"
+                        style="display: flex;  justify-content: center;align-items: center;box-shadow: none; "
+                       >
+                 
                     </Button>
 
                 </RouterLink>
@@ -58,7 +67,7 @@
         </div>
 
 
-        <div class="col-12 p-0 my-6">
+        <div class="">
             <RouterView>
 
             </RouterView>

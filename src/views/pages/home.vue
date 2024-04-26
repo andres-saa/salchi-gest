@@ -29,19 +29,19 @@
 
             <div class="grid  mx-0 mt-4 p-2" style="z-index: 99;align-items: start;">
 
-                <div class=" col-4  p-0 md:col-3 xl:col-2 px-2 item" v-for="menu in menus"
+                <div class=" col-3  p-0 md:col-3 xl:col-2 px-2 item" v-for="menu in menus"
                     style="display: flex; transition: .2s all ease; flex-direction: column; justify-content: center; align-items: center;">
                     <div class="p-0 md:p-3  " outlined style="border: none;">
 
                         <a class="" v-if="menu.a" :href="menu.to">
                             <Button  class="p-0 " style="background-color: transparent;border: none;">
-                                <img class="m-0 p-3" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
+                                <img class="m-0 p-4" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
                             </Button>
                         </a>
 
                         <router-link v-else  :to="menu.to">
                             <Button  class="p-0" style="background-color: transparent;border: none;">
-                                <img class="m-0 p-3" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
+                                <img class="m-0 p-4" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
                             </Button>
                         </router-link>
 
@@ -292,7 +292,7 @@ Button img:hover {
     overflow: hidden;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1200px) {
     .texto-apps {
         font-size: 0.8rem;
         /* Tamaño de letra reducido para pantallas pequeñas */
@@ -301,7 +301,7 @@ Button img:hover {
     .ipad-container {
         border: none;
         box-shadow: none;
-        height: 80vh;
+        /* height: 90vh; */
         padding: 3rem;
         margin-top: 3rem;
         border-radius: none;

@@ -19,6 +19,15 @@ const Auditservice = {
         }
     },
 
+    async getCoordinators() {
+        try {
+            const response = await axios.get(`${URI}/audits-coordinators`);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    },
+
     async getChecklistWithItems(checklist_id) {
         try {
             const response = await axios.get(`${URI}/checklists/${checklist_id}`);

@@ -1,6 +1,41 @@
 <template>
 
 
+    <!-- Botón para abrir el diálogo de actualización -->
+
+
+    <!-- Diálogo de actualización -->
+    <Dialog header="Actualizar datos de la sede" v-model:visible="isUpdateDialogVisible" :modal="true" :style="{ width: '500px' }">
+
+            <p class="m-0" for="siteName">Nombre de la sede</p>
+            <InputText class="mb-3" style="width: 100%;" id="siteName" v-model="updateData.site_name" />
+ 
+
+            <p class="m-0" for="siteAddress">Dirección</p>
+            <InputText class="mb-3" style="width: 100%;" id="siteAddress" v-model="updateData.site_address" />
+ 
+
+            <p class="m-0" for="sitePhone">Teléfono</p>
+            <InputText class="mb-3" style="width: 100%;" id="sitePhone" v-model="updateData.site_phone" />
+
+
+            <p class="m-0" for="emailAddress">Correo electrónico</p>
+            <InputText class="mb-3" style="width: 100%;" id="emailAddress" v-model="updateData.email_address" />
+
+
+            <p class="m-0" for="whatsappLink">Enlace de WhatsApp</p>
+            <InputText class="mb-3" style="width: 100%;" id="whatsappLink" v-model="updateData.wsp_link" />
+
+
+            <p class="m-0" for="mapsLink">Enlace de maps</p>
+            <InputText class="mb-3" style="width: 100%;" id="mapsLink" v-model="updateData.maps" />
+
+            <div class="col-12 p-0" style="display: flex; justify-content: end;">
+                <Button class="mt-4" label="Guardar cambios" @click="updateSite" severity="success" />
+            </div>
+    </Dialog>
+
+
     <Dialog header="Agregar nueva aplicación" v-model:visible="isApplicationDialogVisible" modal
     :style="{ width: '450px' }">
         <div class="field col-12 pb-0 px-0">
@@ -113,7 +148,7 @@
         <div class="p-0" style="overflow: hidden;">
             <!-- <span> <b> SEDE</b></span> -->
             <Dropdown v-model="store.currentSite" :options="sites" optionLabel="site_name" style="max-width: 30rem;"
-                class="col-12 p-0 md:col-4 md:m-3 " placeholder="Sede">
+                class="col-12 p-0 " placeholder="Sede">
             </Dropdown>
 
             <div class="col-12 p-0 my-5 ">
@@ -124,12 +159,14 @@
                     :src="urlsite_photo ? urlsite_photo : `${URI}/read-product-image/600/site-${store.currentSite.site_id}`"
                     alt="">
                 <div class="field col-12 pb-0 px-0 col-12 mt-2 mb-6 p-0" style="display: flex;justify-content: end;gap: 1rem;">
+                    
                     <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange"
                         style="display: none;">
                     <Button severity="info" class="" style="width: min-content;" @click="$refs.fileInput.click();">
                         <i class="fa-solid fa-camera"></i>
 
                     </Button>
+
 
 
                     <Button v-if="file" severity="help" class="" style="width: min-content;"
@@ -187,12 +224,19 @@
 
 
                 </div>
-                <div class="col-12 p-0 my-4" style="display: flex;justify-content: start;align-items: center;">
+                
+
+                <div class="col-12 p-1 my-4" style="display: flex;gap: 1rem; justify-content: start;align-items: center;">
+
+                    
+                    <Button severity="help" style="height: min-content; min-width: max-content;" label="Actualizar informacion basica" @click="isUpdateDialogVisible = true" />
 
                     <div style="background-color: #a855f7; height: 0.3rem;border-radius: 0 1rem 1rem 0; width: 100%;">
 
                     </div>
+                    
                 </div>
+                
 
 
                 <div class="col-12  mt-4 mb-1 col-12"
@@ -635,11 +679,52 @@ const sites = ref()
 import { useDirectoryStore } from '../../store/directorio';
 import { useReportesStore } from '../../store/reportes';
 import { PrimeIcons } from 'primevue/api';
+const store = useDirectoryStore()
+const selectedSite = ref(store.currentSite)
+
+
 const store2 = useReportesStore()
+import axios from 'axios';
+
+
+onMounted(() => {
+    updateData.value = { ...store.currentSite }  // Suponiendo que 'store.currentSite' contiene los datos actuales de la sede
+})
+
+// Función para actualizar los datos de la sede
+const updateSite = () => {
+    const apiUrl = `${URI}/site/${store.currentSite.site_id}`
+    axios.put(apiUrl, updateData.value)
+        .then(response => {
+            console.log('Actualización exitosa:', response.data)
+            isUpdateDialogVisible.value = false
+            // Actualizar los datos en el frontend si es necesario
+            store.currentSite = { ...updateData.value }
+        })
+        .catch(error => {
+            console.error('Error en la actualización:', error.response.data)
+        })
+}
+
+
+const isUpdateDialogVisible = ref(false)
+const updateData = ref({
+    site_name: '',
+    site_address: '',
+    site_phone: '',
+    email_address: '',
+    wsp_link: '',
+    maps: ''
+})
 
 
 
 
+watch(() => store.currentSite, (newSite, oldSite) => {
+    if (newSite !== oldSite) {
+        updateData.value = { ...newSite }  // Asume que 'newSite' contiene los datos actualizados de la sede
+    }
+}, { deep: true, immediate: true })
 
 const confirmDeleteWifi = (wifiId) => {
     // Mostrar diálogo de confirmación
@@ -1276,9 +1361,6 @@ const infoItems = [
     { label: 'Link de WhatsApp', value: 'wsp_link', isLink: true },
     { label: 'Link de Maps', value: 'maps', isLink: true }
 ]
-
-const store = useDirectoryStore()
-const selectedSite = ref(store.currentSite)
 
 
 onMounted(async () => {

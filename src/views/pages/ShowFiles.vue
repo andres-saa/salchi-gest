@@ -21,8 +21,9 @@ import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 import InputText from 'primevue/inputtext';
 import Divider from 'primevue/divider';
-import { useDirectoryStore } from '../../store/directorio';
-const store2 = useDirectoryStore()
+import { useDocumentsStore } from '../../store/documentos';
+
+const store2 = useDocumentsStore()
 const confirm = useConfirm();
 
 const displayAddTypeDialog = ref(false);

@@ -12,7 +12,7 @@
   --surface-f:#ffffff;
   --text-color:#4b5563;
   --text-color-secondary:#6b7280;
-  --primary-color:#6366F1;
+  --primary-color:#ff6200;
   --primary-color-text:#ffffff;
   --surface-0: #ffffff;
   --surface-50: #f9fafb;
@@ -303,7 +303,6 @@
 
   .p-component-overlay {
     background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
     transition-duration: 0.2s;
   }
 

@@ -2,7 +2,12 @@ import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router
 import AppLayout from '@/layout/AppLayout.vue';
 import { roles } from '../service/roles';
 import { getUserRole } from '../service/valoresReactivosCompartidos';
-import { jwtDecode } from 'jwt-decode';// import { roles } from '../service/roles';
+import { jwtDecode } from 'jwt-decode';
+import {loginStore} from '@/store/user.js'
+import axios from 'axios';
+import { URI } from '../service/conection';
+
+// import { roles } from '../service/roles';
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -634,14 +639,48 @@ const router = createRouter({
 });
 
 
-router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token');
 
+
+
+const validateToken = (token) => {
+
+  const store = loginStore()
+  return axios.get(`${URI}/validate-token`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(response => {
+    // Aquí manejas la respuesta positiva
+    if (response.data.access_token) {
+      store.setUserData(response.data)
+    }
+    return response.data;
+  })
+  .catch(error => {
+    // Manejo de errores si el token es inválido o expirado
+    console.error("Error durante la validación del token:", error);
+    throw error;
+  });
+}
+
+
+
+
+router.beforeEach(async(to, from, next) => {
+  const store = loginStore()
+  const token = store.userData.access_token
+  const validToken = await validateToken(token)
+  
   // Verifica si hay un token
-  if (!token) {
+  if (!token || !validToken.access_token ) {
     // Si la ruta actual no es la de login, redirige al login
-    if (to.path !== '/auth/login') {
+    if (to.path !== '/auth/login' ) {
+
+      
       next({ path: '/auth/login' });
+
+
     } else {
       next(); // Si ya está en la página de login, continúa
     }
