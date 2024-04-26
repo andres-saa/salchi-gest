@@ -1,29 +1,28 @@
 <template>
 
     <!-- {{ totalList.length }} -->
-<div class="md:justify-content-center mb-4 rounded-pill shadow-3 mx-auto py-0 px-6 my-4" style="background-color: white; display: flex;overflow-x: auto; align-items: center; max-width: min-content;">
-    <span class="px-4" style="font-weight: bold;">
+<div class="grid shadow-3 mx-2 py-0 px-0 md:px-6 my-4" style="align-items: center; border-radius: 0.5rem;
+" >
+    <span class="px-4 col" style="font-weight: bold; ">
         CALIDOMETRO
     </span>
 
-    <span class="px-4" style="font-weight: bold;gap:0.5rem; align-items: center;display: flex;">
+    <span class="px-4 col p-0" style="font-weight: bold;gap:0.5rem; align-items: center;display: flex;justify-content: space-between;">
         <span class="p-0 m-0"> SEDES</span>
         
         <InputSwitch v-model="calidometoSedes" class="p-0 m-0"></InputSwitch>
     </span>
 
-    <span class="px-4" style="font-weight: bold;gap: 0.5rem; align-items: center;display: flex;">
+
+    <span class="px-4 col" style="font-weight: bold;gap: 0.5rem; align-items: center;display: flex;justify-content: space-between;">
         <span class="p-0 m-0"> COORDINADORES</span>
         
         <InputSwitch v-model="calidometroCoordinatos" class="p-0 m-0"></InputSwitch>
     </span>
 
-    <span class="text-xl">
-        |
-    </span>
-   
+ 
     
-    <span style="display: flex;align-items: center;">
+    <span class="col p-0" style="display: flex;align-items: center; justify-content: space-between;">
         <span class="px-4" style="font-weight: bold;">
         VISTA
     </span>
@@ -31,16 +30,14 @@
     </span>
 
 
-    <span class="text-xl">
-        |
-    </span>
+ 
 
-    <span style="display: flex;align-items: center;">
+    <span class="col p-0" style="display: flex;align-items: center;">
         <span class="px-4" style="font-weight: bold;">
         COLUMNAS
     </span>
 
-        <MultiSelect placeholder="Columnas" :options="columns"  v-model="selectedColums" style="max-width: 0rem;box-shadow: none; background-color:transparent;border: none;font-weight: bold;"/>
+        <MultiSelect placeholder="Columnas" :options="columns"  v-model="selectedColums" style="max-width: 10rem;box-shadow: none; background-color:transparent;border: none;font-weight: bold;"/>
     </span>
   
 

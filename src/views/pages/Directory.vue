@@ -5,7 +5,7 @@
 
 
     <!-- Diálogo de actualización -->
-    <Dialog header="Actualizar datos de la sede" v-model:visible="isUpdateDialogVisible" :modal="true" :style="{ width: '500px' }">
+    <Dialog class="mx-2" header="Actualizar datos de la sede" v-model:visible="isUpdateDialogVisible" :modal="true" :style="{ width: '500px' }">
 
             <p class="m-0" for="siteName">Nombre de la sede</p>
             <InputText class="mb-3" style="width: 100%;" id="siteName" v-model="updateData.site_name" />
