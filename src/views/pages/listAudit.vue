@@ -1,7 +1,7 @@
 <template>
 
     <!-- {{ totalList.length }} -->
-<div class="grid shadow-3 mx-2 py-0 px-0 md:px-6 my-4" style="align-items: center; border-radius: 0.5rem;
+<div class="grid shadow-3 mx-2 py-0 px-0 md:px-1 my-4" style="align-items: center; border-radius: 0.5rem;
 " >
     <span class="px-4 col" style="font-weight: bold; ">
         CALIDOMETRO
@@ -32,12 +32,12 @@
 
  
 
-    <span class="col p-0" style="display: flex;align-items: center;">
+    <span class="col p-0 justify-content-space-between md:justify-content-start" style="display: flex;align-items: center;">
         <span class="px-4" style="font-weight: bold;">
         COLUMNAS
     </span>
 
-        <MultiSelect placeholder="Columnas" :options="columns"  v-model="selectedColums" style="max-width: 10rem;box-shadow: none; background-color:transparent;border: none;font-weight: bold;"/>
+        <MultiSelect placeholder="Columnas" :options="columns"  v-model="selectedColums" style="max-width: 10rem;box-shadow: none; background-color:transparent;border: none;font-weight: bold;text-transform: uppercase;"/>
     </span>
   
 
