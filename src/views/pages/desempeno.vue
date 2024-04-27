@@ -4,7 +4,7 @@
         Cargando encuesta, por favor espera...
        </p> 
     </div>
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe4rmqQpEXoWw0_eJTAnXnosHK9OK8fwsWjKfpjBPbFR9I65g/viewform?embedded=true" 
+    <iframe style="margin-top: 3rem;" src="https://docs.google.com/forms/d/e/1FAIpQLSe4rmqQpEXoWw0_eJTAnXnosHK9OK8fwsWjKfpjBPbFR9I65g/viewform?embedded=true" 
             width="100%" 
             height="6169" 
             frameborder="0" 

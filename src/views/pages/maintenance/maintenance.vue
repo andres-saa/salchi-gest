@@ -1,5 +1,5 @@
 <template>
-    <div class="p-0 mx-auto my-3 shadow-4 p-4" style="max-width: 1024px;background-color: white;border-radius: 0.5rem;min-height: 80vh;">
+    <div class="p-0 mx-auto  shadow-4 p-4 mb-8" style="max-width: 1024px;min-height: calc(100vh - 15rem); margin-top: 6rem; background-color: white;border-radius: 0.5rem;">
         <p class="mb-2 my-1 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize">
             <i class="fa-solid fa-person-chalkboard"></i>
             Mantenimientos

@@ -22,6 +22,7 @@ import { useToast } from "primevue/usetoast";
 import InputText from 'primevue/inputtext';
 import Divider from 'primevue/divider';
 import { useDocumentsStore } from '../../store/documentos';
+import { siteService } from '../../service/siteService';
 
 const store2 = useDocumentsStore()
 const confirm = useConfirm();
@@ -180,7 +181,7 @@ const uploadPDFInfo = async (data) => {
 const getSiteDocumentInfo = async () => {
     try {
 
-        const site_id = store2?.currentSite?.site_id || 1
+        const site_id = store2?.currentSite?.site_id || route.params.site_id
         // Construye la URL con los parámetros
         const url = `${URI}/get-site-documents-info/${site_id}`;
 
@@ -193,6 +194,8 @@ const getSiteDocumentInfo = async () => {
 
         const data = await response.json();
         curentSiteDocuments.value = data
+
+
 
     } catch (error) {
         console.error('Error al enviar la solicitud:', error);
@@ -234,7 +237,9 @@ const updatePDFInfo = async (datos) => {
 
 
 
-onMounted(() => {
+onMounted(async() => {
+    const site_id = store2?.currentSite?.site_id || route.params.site_id
+    store2.currentSite= await siteService.getSiteById(site_id)
     getSiteDocumentInfo()
     store.setLoading(true)
     store.setLoading(false)
@@ -551,19 +556,19 @@ const deleteFileType = async (typeId) => {
     </Dialog>
 
     <Toast />
-    <div class="col-12 p-0 m-auto" style="">
+    <div class="col-12 p-0 mx-auto" style=" margin-top: 0rem;">
 
         <Toast />
         <ConfirmPopup></ConfirmPopup>
 
 
-        <div class="">
+        
 
-            <DataTable ref="dt" :value="curentSiteDocuments" dataKey="id" :paginator="true" :rows="10"
+            <DataTable stripedRows="" ref="dt" :value="curentSiteDocuments" dataKey="id" :paginator="true" :rows="10"
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                 :rowsPerPageOptions="[5, 10, 25]"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                responsiveLayout="scroll" :frozenValue="lockedCustomers">
+                responsiveLayout="scroll">
 
 
                 <div class="col-12 p-0" style="display: flex; justify-content: end;">
@@ -620,7 +625,7 @@ const deleteFileType = async (typeId) => {
 
 
 
-                <Column class="" field="name" header="Tipo" :sortable="true"
+                <Column class="p-0" field="name" header="Tipo" :sortable="true"
                     headerStyle="width:20rem; min-width:max-content; ">
                     <template #body="user">
                         <p style="min-width: max-content;">
@@ -649,7 +654,7 @@ const deleteFileType = async (typeId) => {
                     </template>
                 </Column>
 
-                <Column style="" class="py-0" header="Acciones" fieldheaderStyle="width:10rem; min-width:max-content"
+                <Column style="" class="py-0" 
                     frozen alignFrozen="right">
                     <template #body="user">
 
@@ -781,22 +786,7 @@ const deleteFileType = async (typeId) => {
 
 
         </div>
-    </div>
 
-
-
-
-    <!-- 
-
-    <Dock :model="[1, 2, 4]">
-        <template #item="{ item }">
-            <a v-tooltip.top="item" href="#" class="p-dock-link" @click="onDockItemClick($event, item)">
-                <img :alt="item"
-                    src="https://lh3.googleusercontent.com/p/AF1QipNacg4X8DwsUhEkQ9a-VMWg6RUgCX-NdrrExueh=s680-w680-h510"
-                    style="width: 100%" />
-            </a>
-        </template>
-    </Dock> -->
 
 
     <Dialog v-model:visible="displayNewSiteDialog" :style="{ width: '450px', padding: '0px' }" :modal="true">

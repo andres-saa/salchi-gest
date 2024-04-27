@@ -22,10 +22,7 @@
                 <p class="p-0 my-1 "><b>Telefono:</b> {{ selectedUser.phone }}</p>
                 <p class="p-0 my-1 "><b>Contrato</b> {{ selectedUser.contract_type?.toLowerCase() }}</p>
 
-                <!-- <p>Hora de Llegada: {{ new Date(selectedUser.arrivalTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
-      <p>Hora de Salida: {{ new Date(selectedUser.departureTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) }}</p>
-      <p>Horas Trabajadas: {{ selectedUser.hoursWorked.toFixed(2) }} hrs</p>
-      <p>Tipo de Contrato: {{ selectedUser.contract_type?.toLowerCase() }}</p> -->
+
             </div>
         </div>
 
@@ -106,7 +103,7 @@
         </template>
     </Dialog>
 
-    <div style="" class="px-2 m-0 col-12">
+    <div style="margin-top: 6rem;" class="px-2 mx-0 col-12">
         <div class="col-12 p-0 m-0 mb-8">
             <div class="grid p-0 mx-auto">
                 <div class="col-12 md:col-5 py-2" style="height: 4rem">
@@ -143,10 +140,6 @@
                 </div>
             </div>
             <div class="col" style="height: 80vh; overflow-y: auto">
-                <!-- <div class="col-12 p-0" style="display: flex; justify-content: end">
-                    <Button class="mb-3" icon="pi pi-plus" severity="info" label="Nueva semana" @click="showNewDayDialog = true" />
-                </div> -->
-
                 <div class="col-12 pb-6" style="">
                     <div style="display: flex; gap: 0rem; flex-direction: column">
                         <div class="p-0 m-0" v-for="workDay in workDays" :key="workDay.id" style="position: relative">

@@ -1,0 +1,1 @@
+import{x as t}from"./index-9a92106e.js";const e=t("product",{persist:{key:"product",storage:localStorage,paths:[]},state:()=>({currentProductToEdit:{},visibles:{dialogEditProduct:!1}}),getters:{},actions:{}});export{e as u};

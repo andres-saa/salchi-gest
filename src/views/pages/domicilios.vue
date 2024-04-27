@@ -1,6 +1,9 @@
 <template>
 
-<p  class="my-4 text-4xl text-center px-4" style="font-weight: bold;">
+
+<div class="col-12 p-2">
+
+    <p  class=" text-4xl text-center px-4" style="font-weight: bold; margin-top: 6rem;">
     <i class="fa-solid fa-truck-arrow-right"></i>
        Domicilios
     </p>
@@ -54,6 +57,9 @@
     <RouterView>
 
     </RouterView>
+</div>
+
+
 </div>
 
 </template>

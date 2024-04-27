@@ -12,7 +12,7 @@ export const useDocumentsStore = defineStore('documentos', {
                 key: 'documentos', // La clave bajo la cual se almacenará tu estado en el storage
                 storage: localStorage,
                 paths:[
-                    'currentSite'
+                    // 'currentSite'
                     ]
 
         

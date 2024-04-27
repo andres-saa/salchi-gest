@@ -2100,8 +2100,8 @@
 
   .p-button.p-button-help, .p-buttonset.p-button-help > .p-button, .p-splitbutton.p-button-help > .p-button {
     color: #ffffff;
-    background: #A855F7;
-    border: 1px solid #A855F7;
+    background: #000;
+    border: none;
   }
   .p-button.p-button-help:enabled:hover, .p-buttonset.p-button-help > .p-button:enabled:hover, .p-splitbutton.p-button-help > .p-button:enabled:hover {
     background: #9333EA;

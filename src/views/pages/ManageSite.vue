@@ -94,7 +94,7 @@ const navigateToSite = (siteData) => {
 
 <template>
 
-<div class=" m-auto md:p-5 md:shadow-5" style="max-width: 1024px;">
+<div class=" mx-auto md:p-5 md:shadow-5 px-2    " style="max-width: 1024px; margin-top: 3rem; min-height:calc(100vh - 9rem);">
     <div class=" text-4xl text-center col-12 m-auto p-0"
         style="font-weight: bold; display: flex;align-items: center; gap: 1rem;max-width: 1024px;">
 

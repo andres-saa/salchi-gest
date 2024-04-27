@@ -1,17 +1,18 @@
 <template>
-  <div class="  m-2 m-auto ">
+  <div class="  mx-2 mx-auto " style="margin-top: 6rem;">
 
 
     
 
     <p class="text-2xl lg:text-3xl text-center my-4 mt-8 " style="font-weight: bold;">Solicitar Vacaciones </p>
-    <span class=" mb-6 col-12" style="display: flex; height: auto;">
+    <span class=" mb-3 col-12 p-3" style="display: flex;justify-content: space-between; gap: 1rem; height: auto;">
 
 
-      <InputNumber v-model="usrDni" :disabled="getUserRole()?.toLowerCase() != 'gerente'" class="mr-5"
+      <InputNumber  v-model="usrDni" :disabled="getUserRole()?.toLowerCase() != 'gerente'" class="text-center m-0"
         style="width: 100%;" placeholder="Cedula del empleado"></InputNumber>
-      <Button style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;"
-        @click="getUser(usrDni)"><span style="color: white;">Buscar</span></Button>
+
+      <Button class="" severity="help" style="color:white;font-weight: bold;min-width: 3rem;" icon="pi pi-search" rounded
+        @click="getUser(usrDni)"></Button>
 
 
 
@@ -37,7 +38,7 @@
 
 
       <h6 class="text-center p-2 m-0 mb-5 col-12"
-        style="border-radius: 2rem; font-weight: bold; background-color: var(--gray-200);">INFORMACIÓN DEL EMPLEADO</h6>
+        style="border-radius: .0rem; font-weight: bold; background-color: var(--gray-200);">INFORMACIÓN DEL EMPLEADO</h6>
 
       <div class=" px-0 grid" style="display: ;">
         <h6 class="col-6 m-0  text-left text-md">NOMBRE</h6>
@@ -45,7 +46,7 @@
       </div>
 
 
-      <div class=" px-0 grid p-0 " style="display: ; border-radius: 2rem; "
+      <div class=" px-0 grid p-0 " style="display: ; border-radius: .0rem; "
         :style="user?.status?.toLowerCase().split(' ')[0] == 'activo' ? 'background-color:rgb(193, 255, 100);' : 'background-color: rgb(255, 132, 132);'">
         <h6 class="col-6 m-0  py-2 text-left">ESTADO</h6>
         <h6 class="col-6 m-0  py-2 text-right" style="font-weight: 300;min-width: max-content;">{{ user.status }}</h6>
@@ -67,7 +68,7 @@
         <h6 class="col-6 m-0  text-right" style="font-weight: 300;">{{ user.position }}</h6>
       </div>
 
-      <h6 class="text-center p-2 mb-5" style=" border-radius: 2rem;font-weight: bold; background-color: var(--gray-200)">
+      <h6 class="text-center p-2 mb-5" style=" border-radius: .0rem;font-weight: bold; background-color: var(--gray-200)">
         DETALLES ADICIONALES</h6>
 
 
@@ -104,7 +105,7 @@
 
 
         <h6 class="text-center p-2 m-0 my-5 col-12"
-        style="border-radius: 2rem; font-weight: bold; background-color: var(--gray-200);">OBSERVACIONES</h6>
+        style="border-radius: .0rem; font-weight: bold; background-color: var(--gray-200);">OBSERVACIONES</h6>
 
         
         <h6 class="  col-12">
@@ -289,7 +290,7 @@
 
 
     <div v-if="!user.dni" class="col-12">
-      <img src="/images/vacaciones.jpg" alt="" srcset="" style="width: 100%;height: 50vh;object-fit: cover; border-radius: 1rem;">
+      <img src="/images/vacaciones.jpg" alt="" srcset="" style="width: 100%;height: 50vh;object-fit: cover; border-radius: 0.5rem;">
     </div>
  
 

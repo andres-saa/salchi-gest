@@ -1039,7 +1039,7 @@ const verIMagen = (dni) => {
 
 
 
-    <div class="grid   m-0 p-0 ">
+    <div class="grid   mx-0 xl:mx-4 p-0 " style="margin-top: 3rem;">
 
         <Dialog class="p-0 " v-model:visible="visibleImage" modal header="Foto de Perfil" :style="{ width: '30rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw', 'padding': 0 }">
@@ -1106,6 +1106,7 @@ const verIMagen = (dni) => {
 
                 <DataTable ref="dt" :value="users" v-model:selection="selectedProducts" dataKey="id" :paginator="true"
                     :rows="10" :filters="filters"
+                    stripedRows
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25, 100]"
                     currentPageReportTemplate="Mostrando {first} to {last} de {totalRecords} empleados"

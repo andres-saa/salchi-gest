@@ -78,6 +78,7 @@
             :paginator="true" :rows="10" :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 100]"
+            stripedRows
             currentPageReportTemplate="Mostrando {first} to {last} de {totalRecords} Auditorias"
             responsiveLayout="scroll" scrollable>
             <template #header>
@@ -137,7 +138,7 @@
 
             <Column v-if="selectedColums.includes('Checklists Realizados')" class="py-2 m-0" field="rating" header="Checklists Realizados"  style="min-width:50rem">
                 <template #body="slotProps">
-                    <div style="display: grid; grid-template-columns: auto auto auto auto auto;" >
+                    <div style="" >
                         <span  class="" v-for="(audit, index) in slotProps.data.audits" style="min-width: max-content;">
                         <span class="mr-4 text-sm" style="min-width: max-content;"> <b>{{ index + 1  }}.  </b>{{ audit.checklist_name }} <i class="pi pi-check"></i>  </span>   
                         </span>
@@ -148,7 +149,7 @@
             
             <Column v-if="selectedColums.includes('Checklists Faltantes')" class="py-2 m-0" field="rating" header="Checklists Faltantes"  style="min-width:50rem">
                 <template #body="slotProps">
-                    <div style="display: grid; grid-template-columns: auto auto auto auto auto;" >
+                    <div style="" >
                         <span  class="" v-for="(audit, index) in slotProps.data.audits" style="min-width: max-content;">
                         <span class="mr-4 text-sm" style="min-width: max-content;"> <b>{{ index + 1  }}.  </b>{{ audit.checklist_name }} <i class="pi pi-times"></i>  </span>   
                         </span>
@@ -157,7 +158,7 @@
             </Column>
      
 
-            <Column  class="p-0 m-0" field="inventoryStatus" frozen  alignFrozen="right" header="Acciones" sortable style="">
+            <Column  class="p-0 m-0" field="inventoryStatus" frozen  alignFrozen="right"  sortable style="">
                 <template #body="slotProps">
                     <div style="display: flex;">
                         <Button @click="seeAudit(slotProps.data.audits[0])" text severity="help">
@@ -197,6 +198,7 @@
             :paginator="true" :rows="10" :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 100]"
+            stripedRows
             currentPageReportTemplate="Mostrando {first} to {last} de {totalRecords} Auditorias"
             responsiveLayout="scroll" scrollable>
             <template #header>
@@ -239,14 +241,14 @@
 
             <Column class="p-0 m-0" field="rating" header="Calificacion" sortable style="min-width:12rem">
                 <template #body="slotProps">
-                    <Rating :modelValue="slotProps.data.score" />
+                    <Rating :cancel="false" :modelValue="slotProps.data.score" />
 
                 </template>
             </Column>
 
 
 
-            <Column class="p-0 m-0" field="inventoryStatus" header="Acciones" sortable style="">
+            <Column class="p-0 m-0" field="inventoryStatus" sortable style="">
                 <template #body="slotProps">
                     <div style="display: flex;">
                         <Button @click="seeAuditIndividual(slotProps.data)" text severity="help">

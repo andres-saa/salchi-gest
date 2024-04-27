@@ -1,10 +1,7 @@
 <template>
-    <!-- {{ store.salesReport }} -->
-    <div v-for="orden in store.salesReport.total_sales?.orders_info">
-    <!-- {{ orden }} -->
-    </div>
 
-    <Button size="small" class="py-2"  severity="success" @click="exportCSV"> <i class="pr-3 " :class="PrimeIcons.DOWNLOAD" ></i> Descargar reporte</Button>
+
+    <Button size="small" class="py-2"  severity="success" @click="exportCSV"> <i class="pr-3 m-0 " :class="PrimeIcons.DOWNLOAD" ></i> Descargar reporte</Button>
 
     <div class="flex flex-wrap align-items-center justify-content-between gap-2 my-5 pl-0 ml-0">
                     <span class="text-l p-0  text-900 font-bold">Ordenes {{ store.order_status }}s entre {{ store.formatDate(store.dateRange.startDate)  }} y {{ store.formatDate(store.dateRange.endDate)  }} </span>
@@ -20,19 +17,20 @@
 
 
         <DataTable paginator  :value="store.salesReport.total_sales.orders_info" tableStyle="min-width: 50rem"
-        
+                
         
         :rows="10" :filters="filters"
                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                   :rowsPerPageOptions="[5, 10, 25,100]"
+                    stripedRows=""
                   currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} ordenes"
-                  responsiveLayout="scroll" scrollable scroll-height="62vh">
+                  responsiveLayout="scroll" scrollable >
 
                   
             <template>
                 
             </template>
-            <Column field="order_id" header="Id" class="p-0" headerStyle="max-width:8rem; width:10rem">
+            <Column field="order_id" header="Id" class="py-0" headerStyle="width:12rem;min-width:6rem">
             
                 <template #body="slotProps">
                  <P style="min-width: max-content;">
@@ -40,7 +38,7 @@
                  </P>   
                 </template>
             </Column>
-            <Column field="total_price" header="Monto" class="p-0" headerStyle="max-width:10rem; width:5rem">
+            <Column field="total_price" header="Monto" class="py-0" headerStyle="min-width:max-content; width:5rem">
                 <template #body="slotProps">
              
                     {{ formatToColombianPeso(slotProps.data.total_order_price)  }}
@@ -51,7 +49,7 @@
                 
       
 
-            <Column field="site_name" header="Sede" class="p-0" headerStyle="max-width:6rem; width:6rem">
+            <Column field="site_name" header="Sede" class="py-0" headerStyle="min-width:max-content; width:6rem">
                 <template #body="slotProps">
                    
                     {{ formatToColombianPeso(slotProps.data.site_name)  }}
@@ -60,7 +58,7 @@
 
 
         
-            <Column field="status.timestamp" class="p-0" header="Fecha y hora" headerStyle="width:10rem; min-width:8rem ">
+            <Column field="status.timestamp" class="px-1 py-0" header="Fecha" headerStyle="width:50rem; min-width:10rem ">
                 <template #body="slotProps">
            
                     {{ slotProps.data.latest_status_timestamp?.split('T')[0]}} 
@@ -68,27 +66,110 @@
                 </template>
             </Column>
 
+            <Column field="status.timestamp" class="px-1 py-0" header="Hora" headerStyle="width:50rem; min-width:max-content ">
+                <template #body="slotProps">
+           
+                    <!-- {{ slotProps.data.latest_status_timestamp?.split('T')[0]}}  -->
+                    {{ slotProps.data.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':')}}
+                </template>
+            </Column>
+
+            
+            <Column field="status.timestamp" class="px-1 py-0" header="Domicilio" headerStyle="width:6rem; min-width:max-content">
+                <template #body="slotProps">
+           
+                    ${{ slotProps.data.delivery_price}} 
+                   
+                </template>
+            </Column>
+
+
+            <Column field="status.timestamp" class="px-1 py-0" header="Metodo de pago" headerStyle="width:10rem; min-width:12rem">
+                <template #body="slotProps">
+           
+                    ${{ slotProps.data.payment_method}} 
+                   
+                </template>
+            </Column>
+
+            <Column field="status.timestamp" class="px-1 py-0" header="Nombre del usuario" headerStyle="width:12rem; min-width:13rem ">
+                <template #body="slotProps">
+           
+                    {{ slotProps.data.user_name .slice(0,40)}} 
+                   
+                </template>
+            </Column>
+
+
+            <Column field="status.timestamp" class="px-1 py-0" header="Telefono del usuario" headerStyle="width:12rem; min-width:11rem ">
+                <template #body="slotProps">
+           
+                    {{ slotProps.data.user_phone}} 
+                   
+                </template>
+            </Column>
+
+
+            <Column field="status.timestamp" class="px-1 py-0" header="Direccion del usuario" headerStyle="width:12rem; min-width:30rem ">
+                <template #body="slotProps">
+           
+                    {{ slotProps.data.user_address}} 
+                   
+                </template>
+            </Column>
+
                  
-            <Column class="p-0" v-if="store.order_status == 'cancelada'" headerStyle="width:30rem; max-width:40rem; " field="status.reazon" header="Motivo">
+
+            <Column class="px-1 py-0" v-if="store.order_status == 'cancelada'" headerStyle="width:20rem; min-width:8rem; " field="status.reazon" header="Responsable">
+                <template #body="slotProps">
+                
+                   <span class="motivo">{{ slotProps.data.responsible?.toLowerCase()}}.</span> 
+                </template>
+            </Column>
+
+
+
+            <Column class="px-1 py-0" v-if="store.order_status == 'cancelada'" headerStyle="width:30rem;min-width:40rem; " field="status.reazon" header="Motivo">
                 <template #body="slotProps">
                 
                    <span class="motivo">{{ slotProps.data.reason?.toLowerCase()}}.</span> 
                 </template>
             </Column>
 
+
+  
+
+            
+
          
-            <Column header="Status" class="p-0"> 
+            <Column header="Status" class="px-1 py-0"> 
                 <template #body="slotProps">
                     <Tag :value="slotProps.data.current_status" :severity="getSeverity(slotProps.data?.current_status)" />
                 </template>
             </Column>
+            
 
         
-            <Column class="p-0" header="" frozen alignFrozen="right" headerStyle="width:0.5rem; max-width:0.5rem ">
+            <Column class="px-1 py-0" header="" frozen alignFrozen="right" headerStyle="width:0.5rem; max-width:0.5rem ">
                 <template #body="slotProps">
                     <Button style="width: min-content;" @click="store.setVisibleOrder(true,slotProps.data)" text ><i class="text-2xl  p-0" :class="PrimeIcons.EYE"></i></Button>
                 </template>
             </Column>
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
         </DataTable>
 
 

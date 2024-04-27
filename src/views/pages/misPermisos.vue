@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 m-auto p-0"> 
+    <div class="col-12 mx-auto p-0" style="margin-top: 6rem;"> 
 
       <p  class="mb-2 text-4xl text-center px-4" style="font-weight: bold; text-transform: capitalize;">
       <i class="fa-solid fa-person-walking-luggage"></i>

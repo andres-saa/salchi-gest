@@ -9,7 +9,7 @@
 
     <div class="m-auto col-12" style="max-width: 600px;" v-for="(items, grupo) in adicionales" :key="grupo">
         <p class="text-center text-2xl" style="font-weight: bold;text-transform: capitalize;">{{ grupo }}</p>
-        <DataTable :value="items">
+        <DataTable stripedRows :value="items">
             <Column style="text-transform: capitalize;" class="p-0" field="aditional_item_name" header="Nombre">
             
                 <template #body="adicion">

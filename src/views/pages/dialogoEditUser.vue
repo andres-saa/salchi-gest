@@ -6,17 +6,20 @@
 
 
    <Toast/>
-    <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Actualizar mis datos" :modal="true"
+    <Dialog  v-model:visible="productDialog" :style="{ width: '450px' }" header="Actualizar mis datos" :modal="true"
         class="p-fluid m-2">
 
+        <div class="content" >
+
+      
 
         <img class="img-profile-add" style="width: 100%;; object-fit: contain;border-radius: 1rem;"
             :src="urlPhotoProfile ? urlPhotoProfile : `${URI}/read-product-image/600/employer-${currentUser.dni}`"
             alt="">
-        <div class="field col-12 mt-6 mb-6 p-0">
+        <div class="field col-12 mt-6 mb-6 p-0" style="display: flex; justify-content: end;">
             <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" style="display: none;">
-            <Button  label="Seleccionar foto de perfil" class=" m-0"
-                style="width: 100%; background-color: var(--primary-color);" @click="$refs.fileInput.click();" />
+            <Button  label="Seleccionar foto de perfil" class=""
+                style=" background-color: var(--primary-color);" @click="$refs.fileInput.click();" />
 
         </div>
 
@@ -394,6 +397,11 @@
                             <InputNumber id="quantity" v-model="user.id" integeronly />
                         </div>
                     </div> -->
+
+
+
+        </div>
+
         <template #footer>
             <Button label="Salir" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
             <Button label="Guardar" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
@@ -693,3 +701,29 @@ onMounted(() => {
 
 
 </script>
+
+
+<style scoped>
+
+.content::-webkit-scrollbar {
+    width: 8px;
+    height: auto;
+    background-color: rgb(0, 31, 116);
+    border-radius: 1rem;
+    margin: 2px; /* o cualquier otro valor para definir el ancho de la barra de desplazamiento */
+}
+/* El track (o la pista) de la barra de desplazamiento */
+.content::-webkit-scrollbar-track {
+    background:rgb(0 1 22);
+    margin: 2px;
+    padding: 2px;
+     /* Color de fondo de la pista */
+}
+
+/* El handle (o el control deslizante) de la barra de desplazamiento */
+.content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    margin: 2px; /* Color de fondo del deslizador */
+}
+</style>

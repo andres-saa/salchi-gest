@@ -3,12 +3,12 @@
 
     <div class="container p-shadow col-12" style="border-radius: 0.5rem;height: 100%;position: relative;">
 
-        <div style="display: flex; position: absolute; right: -1rem; top: -1rem; gap: 0.5rem;">
-            <Button @click="store.visibles.dialogEditProduct = true" severity="danger" style=" right: 0;top: 0;" rounded
+        <div style="display: flex; position: absolute; right: -1rem; top: -1rem; gap: 0.2rem;">
+            <Button @click="store.visibles.dialogEditProduct = true" severity="danger" style=" width: 2rem;height: 2rem; right: 0;top: 0;" rounded
                 icon="pi pi-times"></Button>
 
 
-            <Button @click="prepareToEdit(props.product)" severity="warning" style="font-weight: bold; right: 0;top: 0;" rounded
+            <Button @click="prepareToEdit(props.product)" severity="warning" style="font-weight: bold;width: 2rem;height: 2rem;  right: 0;top: 0;" rounded
                 icon="pi pi-pencil"></Button>
 
         </div>
@@ -27,13 +27,13 @@
         <div class="texto" style="">
             <div style="display: flex;gap: 1rem; height: 100%; flex-direction: column;justify-content: space-between;">
 
-                <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: grid;grid-template-columns: auto auto; width: 100%; justify-content: space-between; align-items: center;">
                     <span>
                         <b style="text-transform: uppercase;">
                             {{ props.product.product_name }}
                         </b>
                     </span>
-                    <Button text style="color: black;" icon="pi pi-ellipsis-v p-0 text-xl" />
+                    <Button class="elipsis" text style="color: black;" icon="pi pi-ellipsis-v p-0 text-xl" />
 
 
 
@@ -139,13 +139,20 @@ const imagenError = (Event) => {
     border-radius: 0.5rem 0.5rem 1.4rem 0.6rem;
 }
 
+.elipsis{
+        display: none;
+    }
 /* Responsive adjustments */
 @media (max-width: 576px) {
     .container {
         grid-template-columns: 1fr 2fr;
         width: 100%;
+        
         /* 1:2 ratio for image to details */
         /* Stack elements vertically on smaller screens */
+    }
+    .elipsis{
+        display: inline;
     }
 
     .imagen,
@@ -177,7 +184,7 @@ const imagenError = (Event) => {
 
 
 .p-shadow {
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
 }
 
 /* Add additional styles for buttons, text, etc., as needed */

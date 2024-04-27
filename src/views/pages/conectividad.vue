@@ -1,5 +1,5 @@
 <template>
-    <div  class="card p-4 col-12 xl:col-4 mt-3 m-0 notificaciones"  :style="store.visibleNotifications? 'transform:scaleX(100%)':'transform:scaleX(100%);'" >
+    <div style="margin-top: 6rem;"  class="card p-2 col-12 xl:col-4  m-0 notificaciones"  :style="store.visibleNotifications? 'transform:scaleX(100%)':'transform:scaleX(100%);'" >
     <div class=""  >
         <div  class="flex align-items-center justify-content-between mb-4">
             <h5>Notificaciones</h5>

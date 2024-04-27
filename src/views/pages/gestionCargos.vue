@@ -6,22 +6,9 @@
 
 
 
-<div class="col-12" v-if="charging" style="display: flex;flex-direction: column; pointer-events: none; align-items: center; justify-content: center; position: fixed;z-index: 1000;left: 0;top: 0; height: 100%;background-color: rgba(0, 0, 0, 0.5);">
 
 
-    <p class="text-3xl" style="font-weight: bold; color: white; text-shadow: 0 0 10px rgba(0, 0, 0, 0.551);">BUSCANDO CARGOS</p>
-    <div style="display: flex;">
-
-        
-            <ProgressSpinner  style="width: 100px; height: 100px" strokeWidth="4" fill="var(--surface-ground)"
-            animationDuration=".5s" aria-label="Custom ProgressSpinner" />
-    
-        </div>
-</div>
-
-
-
-<Dialog v-model:visible="visibleModify" modal header="Seleccion de Cargos para el grupo" :style="{ width: '50rem',height:'80vh' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+<Dialog class="mx-2" v-model:visible="visibleModify" modal header="Seleccion de Cargos para el grupo" :style="{ width: '50rem',height:'80vh' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     
     <div style="display: flex;" class="grid pt-6">
         <div v-for=" cargo in roles" style="display: flex;" class="col-12 p-0">
@@ -66,34 +53,39 @@
 
 
 
-<div class="col-12 p-0 m-auto" style="max-width: 900px; display: flex;gap: 1rem; align-items: center;">
-                    <!-- <p style="font-weight: bold;" class=" text-xl px-1 m-0">Cargos </p>  -->
-                    <Button severity="success" style="font-weight: bold;" @click="openNewRol = true">Crear nuevo cargo</Button>
-                </div>
 
 
 
-    <div >
+
+    <div class="mx-auto px-2" style="max-width: 700px;">
 
 
         
+        <div class="col-12 p-0  p-0" style="max-width: 900px; margin-top: 6rem; display: flex;gap: 1rem; align-items: center;justify-content:end;">
+                    <!-- <p style="font-weight: bold;" class=" text-xl px-1 m-0">Cargos </p>  -->
+                    <Button severity="help" style="font-weight: bold;" @click="openNewRol = true">Crear nuevo cargo</Button>
+                </div>
         <!-- Grupos de Cargos y sus Cargos Correspondientes -->
-        <div  v-for="(group, index) in roleGroups" :key="group.id" class="my-6 m-auto" style="max-width: 900px; border-radius: 1rem; box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);">
-            <div class="p-5" style="display: flex; gap: 1rem; align-items: center;">
+        <div  v-for="(group, index) in roleGroups" :key="group.id" class="my-6 m-auto shadow-2 px-2" style=" border-radius: 0.5rem; border: 1px solid;">
+            <div class="p-2" style="display: flex; gap: 1rem; align-items: center;">
                 <p class="text-2xl p-0 m-0" style="font-weight: bold; text-transform: capitalize;">{{ index + 1 }}. Grupo {{ group.group_name }}
                 </p>
                 
                
                 <!-- <Button text class="m-0 text-2xl" style="font-weight: bold;" size="small">Agregar Cargo al Grupo</Button> -->
 
+
+                
             </div>
 
 
 
-            <div class="mx-5 my-0 p-5" style="border-radius: 0.5rem;background-color: rgba(252, 155, 0, 0.105); display:  1rem; align-items: center;">
+            
+            <div class="mx-2 mt-2 p-3 " style="border-radius: 0.3rem;background-color: rgba(0, 0, 0, 0.1);color: black;border: px solid; align-items: center;">
                 
 
-                <p class="text-xl p-0 m-0" style="font-weight: bold;">Description de las funciones del Grupo:
+                
+                <p class=" text-xl p-0 m-0" style="font-weight: bold;">Description de las funciones del Grupo:
                 </p>
 
                 <p class="text-sm md:text-lg p-0 m-0"> {{ group.description }}      </p>
@@ -106,12 +98,12 @@
 
 
 
-            <div class="grid col-12 p-6">
+            <div class="grid  px-0 mx-2">
 
 
-                <div class="col-12 p-0 mb-6" style="display: flex;gap: 1rem; align-items: center;">
-                    <p style="font-weight: bold;" class=" text-xl px-1 m-0">Cargos </p> 
-                    <Button severity="warning" style="font-weight: bold;" @click="openRoleModificationDialog(group)">Modificar</Button>
+                <div class="col-12 p-0 my-6" style="display: flex;gap: 1rem; align-items: center;">
+                    <p style="font-weight: bold;" class=" text-xl px-0 m-0">Cargos </p> 
+                    <Button severity="danger" style="font-weight: bold;" @click="openRoleModificationDialog(group)">Modificar</Button>
                 </div>
                 
                 <div v-for="(role, rIndex) in group.roles" :key="role.id" class="col-12 md:col-6 p-1 text-sm lg:text-lg">

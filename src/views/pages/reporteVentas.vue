@@ -6,7 +6,7 @@
     </Transition> -->
 
 
-    <div class="col-12  m-auto" style="position: relative; max-width: 1366px;" cls>
+    <div class="col-12 px-3 md:px-4 mx-auto" style="position: relative; max-width: 1366px; margin-top: 6rem;" >
        
    
             <div class="  grid " style=" background-color:rgba(250, 250, 250, 0);">
@@ -34,8 +34,8 @@
                     
 
 
-                    <div class="col-12 md:col-1 md:p-0" style="display: flex; align-items: center; justify-content: end;">
-                        <Button severity="info" class="text-center p-0 col-12  md:p-0"   style="height: 3rem;width:min-content;aspect-ratio:  1 / 1;border-radius: 50%; display: flex;justify-content:center ; " @click="store.fetchSalesReport"> <i :class="PrimeIcons.SEARCH" style="padding: 0.2rem;"></i></Button>
+                    <div class="col-12 md:col-1 md:p-0" style="display: flex; align-items: center; justify-content: start;">
+                        <Button icon="pi pi-search" severity="help" class="text-center p-0 col-12  md:p-0"   style="height: 2.5rem;width:min-content;aspect-ratio:  1 / 1;font-weight: bold; border-radius: 50%; display: flex;justify-content:center ; " @click="store.fetchSalesReport"></Button>
                     </div>
                     
 
@@ -54,7 +54,11 @@
 
 
 
-    <div class="contenedor mt-5" style="position: sticky;top: 0.8rem;z-index: 99;">
+<p class="text-3xl px-0 mx-0 my-6 pb-0" style="font-weight: bold;"> <i class="fa-solid fa-chart-simple"></i> Vision General</p>
+
+
+
+    <div class="contenedor mt-5" style="position: sticky;top: 3rem;z-index: 99;">
 
 
 
@@ -66,14 +70,14 @@
 
 
 
-<span class="text-3xl mt-8 ml-3" style="font-weight: bold;"> <i class="fa-solid fa-chart-simple"></i> Vision General</span>
 
-<div class="col-12 px-3 py-0 my-3 p-2" style="overflow-x:auto; background-color: #fafafa;">
+<div class="col-12 px-0 py-0 my-0 p-0" style="overflow-x:auto; background-color: #fafafa;">
     <div class="px-0 mx-0" style="width: max-content; background-color:#fafafa; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">
-   <div v-for="boton in menus">
+   <div v-for="boton in menus" style="background-color: ;">
+
 
     <RouterLink :to="boton.to" >
-        <Button  size="medium" :style="ruta.fullPath == boton.to? 'box-shadow: 0 4px 0 #ff6200;color:#000;font-weight:bold;':''" class="text-md px-0 py-2 my-3 mx-0" text   severity="secondary" style=" border-radius: 0;">
+        <Button  size="medium" :style="ruta.fullPath == boton.to? 'box-shadow: 0 4px 0 #ff6200;color:#000;font-weight:bold;':''" class="text-md px-0 pt-2 pb-4 my-0 mx-0" text   severity="secondary" style=" border-radius: 0;">
             
             <i class="mr-2" :class="boton.icon"></i>
             {{ boton.name }}
@@ -107,25 +111,12 @@
 
     
 
-    <div class="app" style="position: ;">
-       
-
-        <!-- <Button style="position: sticky; top:2rem;right: 2rem;"> <i :class="PrimeIcons.ARROW_LEFT"></i> </Button> -->
-
-
-      
-
-
-
-
-
-
-    </div>
+  
 
 
     <div class="grid p-0 m-0"> 
     
-    <div class="" :class="store.visibleNotifications? 'col-9':'col-12'">
+    <div class="p-0" :class="store.visibleNotifications? 'col-9':'col-12'">
     
     <transition name="fade">
         <RouterView>

@@ -7,9 +7,9 @@
     <!-- {{ horario }} -->
 
     <!-- {{ horario }} -->
-    <div class=" p-0" style=" border-radius: 1rem;">
+    <div class=" p-0 " style=" border-radius: 1rem; background-color: red;">
         <!-- <Button @click="enableEditing" size="small" class="m-3" outlined style="font-weight: bold;border-radius: 0.5rem;">Modificar</Button> -->
-        <DataTable ref="dt" class="" :value="horario" dataKey="id" style="border: 1rem;overflow: hidden;" :rows="7"
+        <DataTable stripedRowss ref="dt" class="" :value="horario" dataKey="id" style="border: 1rem;overflow: hidden;" :rows="7"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 100]"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} scheldules" responsiveLayout="scroll"
@@ -18,11 +18,11 @@
 
             <!-- <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen></Column> -->
 
-            <Column  class="p-0" field="day_of_week" header="Dia" 
+            <Column  style="max-width: 3rem;" class="p-0" field="day_of_week" header="Dia" 
             headerStyle="width:1rem; min-width:1rem;">
                 <template #body="scheldule">
                     
-                    <span class="p-1">{{ dias[scheldule.data.day_of_week - 1]?.slice(0,3) }}</span>
+                    <span class="m-0">{{ dias[scheldule.data.day_of_week - 1] }}</span>
 
                 </template>
             </Column>
@@ -55,7 +55,7 @@
      
 
     </div>
-    <div  class="col-12 px-1" style="display: flex;position: relative; align-items: center;gap: 1rem; justify-content: end;gap: 0.5rem;">
+    <div  class="col-12 px-1" style="display: flex;position: relative;background-color: ; align-items: center;gap: 1rem; justify-content: end;gap: 0.5rem;">
 
         <Button  :severity="isEditing? 'help' : 'info'" @click=" enableEditing" size="small" class=""  style="transition: all  .5s;min-width:max-content ;align-items: ; font-weight: bold;border-radius: 0.5rem;"> 
             
@@ -192,4 +192,5 @@ const dias = ref([ "Domingo","Lunes", "Martes", "Miercoles", "Jueves", "Viernes"
   width: 0;
 }
 
+*{}
 </style>

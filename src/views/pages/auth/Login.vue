@@ -120,12 +120,12 @@ const startTokenValidation = () => {
     content: '';
     height: 120vh;
     width: 120vw;
-    top: 0;
+    top: -2rem;
     left: -2rem;
     position: absolute;
     z-index: -1;
     background-size: contain;
-    filter: blur(10px);
+    filter: blur(7px);
   
     background-image: url('https://backend.salchimonster.com/read-product-image/600/site-4');
   }

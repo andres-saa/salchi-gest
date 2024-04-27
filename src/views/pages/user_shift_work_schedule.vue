@@ -41,7 +41,7 @@
 
 
   
-    <div style="" class="p-0 m-0">
+    <div class="p-0 mx-auto" style="margin-top: 3rem;" >
 
 
         <div class="col-12 p-0 m-0">

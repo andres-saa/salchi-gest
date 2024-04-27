@@ -490,6 +490,10 @@ export const useReportesStore = defineStore('reportes', {
             //     return
             // }
 
+            if(this.loading?.visible == true && visibleValue == true) {
+                return
+            }
+
             if(!visibleValue){
                 setTimeout(() => {
                     this.loading = {

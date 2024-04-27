@@ -96,7 +96,7 @@
             </template>
         </Dialog>
 
-        <div style="" class="p-0 m-0">
+        <div style="margin-top: 6rem;" class="p-0 mx-0" >
             <Dialog v-model:visible="showNewDayDialog" style="width: 22rem" modal closeOnEscape @close="showNewDayDialog = false">
                 <h3>Nuevo dia</h3>
 

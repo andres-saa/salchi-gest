@@ -1,67 +1,88 @@
 <template>
 
-<div class="aux-back"  style="background-color: blue; background-image: url('/images/bg-ipad.jpg');background-size: cover;  width: 100vw; object-fit: contain; position: fixed;top: 0;bottom: 0;left: 0;">
+<div class="aux-back"  style="background-color: blue; background-image: url('/images/bg-ipad.jpg');background-size: cover;height: 100vh;  width: 100vw; object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
     
 </div> 
 
-
-    <div class="ipad-container col-12 shadow-3 p-0  " style="max-width: 900px;">
-
-
-        <div class="ipad-screen "
-            style=" ">
+<div style="height: calc(100vh - 6rem); display: flex; align-items: center;">
+    
 
 
-            <div class="bg"
-                style="">
-            </div>
 
+    
+    <div class="ipad-container col-12 shadow-3 p-0  " style="max-width: 800px; ">
 
-            <div class="px-3 py-1 m-0 text-xl barra"
-                style="position: absolute;background-color: rgba(0, 0, 0, 0.5); z-index: 99;width: 100%;  justify-content: space-between; align-items: center; font-weight: bold;">
-
-                <p class="p-0  m-0" style="color: white;">sm <i class="fa-solid fa-wifi"></i></p>
-                <p class="p-0 m-0" style="color: white;"> {{ new Date().toLocaleTimeString() }}</p>
-                <p class="p-0 m-0" style="color: white;"><i class="fa-solid fa-battery-half"></i></p>
+        <div  style="z-index: 99;width: min-content;margin: auto; display: flex;justify-content: center; gap: 1rem; align-items: center;" class="my-2 px-2">
+            
+            <div style="position: relative;width: min-content; height: min-content; display: flex;align-items: center; justify-content: center;">
+                <Knob  v-model="valor" valueTemplate=""></Knob>
+                <img  style="height:3rem; position: absolute; border-radius: 50%;width: 3rem; object-fit: cover;" src="https://static.vecteezy.com/system/resources/previews/018/765/757/original/user-profile-icon-in-flat-style-member-avatar-illustration-on-isolated-background-human-permission-sign-business-concept-vector.jpg" alt="">
 
             </div>
 
-
-            <div class="grid  mx-0 mt-4 p-2" style="z-index: 99;align-items: start;">
-
-                <div class=" col-3  p-0 md:col-3 xl:col-2 px-2 item" v-for="menu in menus"
-                    style="display: flex; transition: .2s all ease; flex-direction: column; justify-content: center; align-items: center;">
-                    <div class="p-0 md:p-3  " outlined style="border: none;">
-
-                        <a class="" v-if="menu.a" :href="menu.to">
-                            <Button  class="p-0 " style="background-color: transparent;border: none;">
-                                <img class="m-0 p-4" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
-                            </Button>
-                        </a>
-
-                        <router-link v-else  :to="menu.to">
-                            <Button  class="p-0" style="background-color: transparent;border: none;">
-                                <img class="m-0 p-4" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
-                            </Button>
-                        </router-link>
+           
+            <div style="display: flex; flex-direction: column;">
+                <span class="text-xl md:text-3xl" style=" color: white;min-width: max-content; font-weight: bold; text-shadow: 
+-1px -1px 0 #000,  
+1px -1px 0 #000,
+-1px  1px 0 #000,
+1px  1px 0 #000;">
 
 
+Andres Felipe Arrechea Saa</span>
+
+<span style=" color: white;font-weight: bold; text-shadow: 
+-1px -1px 0 #000,  
+1px -1px 0 #000,
+-1px  1px 0 #000,
+1px  1px 0 #000;"> Desarrollador web</span>
+            </div>
+
+                
+        </div>
+        
+
+<div class="ipad-screen "
+    style=" ">
 
 
 
-                    </div>
+    <!-- <div class="px-3 py-1 m-0 text-xl barra"
+        style="position: absolute;background-color: rgba(0, 0, 0, 0.5); z-index: 99;width: 100%;  justify-content: space-between; align-items: center; font-weight: bold;">
 
-                    <span class="texto-apps text-sm md:text-xl" style="text-align: center; z-index: 99; color: white; text-shadow: 
-      -1px -1px 0 #000,  
-       1px -1px 0 #000,
-      -1px  1px 0 #000,
-       1px  1px 0 #000;">{{
-        menu.name }}</span>
+        <p class="p-0  m-0" style="color: white;">sm <i class="fa-solid fa-wifi"></i></p>
+        <p class="p-0 m-0" style="color: white;"> {{ new Date().toLocaleTimeString() }}</p>
+        <p class="p-0 m-0" style="color: white;"><i class="fa-solid fa-battery-half"></i></p>
+
+    </div> -->
 
 
-                </div>
+    <div class="grid  mx-0  p-5" style="z-index: 99;align-items: start;">
+
+        <div class=" col-4  p-0 md:col-3 xl:col-2 px-2 item" v-for="menu in menus"
+            style="display: flex; transition: .2s all ease; flex-direction: column; justify-content: center; align-items: center;">
+            <div class="p-0   " outlined style="border: none;">
+
+                <a class="" v-if="menu.a" :href="menu.to">
+                    <Button  class="p-0 " style="background-color: transparent;border: none;">
+                        <img class="m-0 p-4" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
+                    </Button>
+                </a>
+
+                <router-link v-else  :to="menu.to">
+                    <Button  class="p-0" style="background-color: transparent;border: none;">
+                        <img class="m-0 p-4" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
+                    </Button>
+                </router-link>
 
             </div>
+
+            <span class="texto-apps text-sm md:text-l" style="text-align: center; z-index: 99; color: white; text-shadow: 
+-1px -1px 0 #000,  
+1px -1px 0 #000,
+-1px  1px 0 #000,
+1px  1px 0 #000;">{{
+menu.name }}</span>
 
 
         </div>
@@ -69,14 +90,22 @@
     </div>
 
 
+</div>
 
-    <Dock class="dock" :model="items" style="">
+</div>
+</div>
+
+    
+
+
+<!-- 
+    <Dock class="dock" position="right" :model="items" style="">
                     <template #item="{ item }">
                         <a v-tooltip.top="item.label" href="#" class="p-dock-link">
                             <img :alt="item.label" :src="item.icon" style="width: 100%" />
                         </a>
                     </template>
-                </Dock>
+                </Dock> -->
 
 
 </template>
@@ -88,6 +117,8 @@
 <script setup>
 import { ref } from 'vue';
 
+
+const valor = ref(70)
 const items = ref([
     {
         label: 'Finder',
@@ -262,7 +293,7 @@ Button img:hover {
 
 .ipad-container {
     /* aspect-ratio: 4/5; */
-    border-radius: 1rem;
+    /* border-radius: 1rem; */
     /* max-width: 1080px; */
     height: max-content;
     /* max-height: 1920px; */
@@ -272,7 +303,7 @@ Button img:hover {
     align-items: start;
     justify-content: center;
     /* border: 1rem solid black; */
-    box-shadow: 0 0 10px;
+    /* box-shadow: 0 0 10px; */
     margin: auto;
 }
 
@@ -289,10 +320,10 @@ Button img:hover {
 .ipad-screen{
     width: 100%; position: relative;display: flex;flex-direction: column; align-items: center; justify-content: space-between;background-color:transparent;height: 100%;
     box-shadow: 0 0 20px rgb(0, 56, 188) ; border-radius: 0.5rem;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 600px) {
     .texto-apps {
         font-size: 0.8rem;
         /* Tamaño de letra reducido para pantallas pequeñas */
@@ -301,7 +332,7 @@ Button img:hover {
     .ipad-container {
         border: none;
         box-shadow: none;
-        /* height: 90vh; */
+        /* height: 80vh; */
         padding: 3rem;
         margin-top: 3rem;
         border-radius: none;
@@ -314,6 +345,8 @@ Button img:hover {
 
     .ipad-screen {
         border-radius: 0;
+        box-shadow: none;
+
     }
 
     .bg{

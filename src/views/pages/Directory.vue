@@ -138,7 +138,7 @@
 
 
 
-    <div class="col-12 mx-auto md:shadow-3 py-6 md:p-3 p-0 px-2 mb-8" style="max-width: 900px; background-color: white; border-radius: 0.5rem;">
+    <div class="col-12 mx-auto md:shadow-3 py-6 md:p-3 p-0 px-2 mb-8" style="max-width: 700px;margin-top: 3rem; background-color: white; border-radius: 0.5rem;">
 
 
         <!-- {{ directories }} -->
@@ -162,7 +162,7 @@
                     
                     <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange"
                         style="display: none;">
-                    <Button severity="info" class="" style="width: min-content;" @click="$refs.fileInput.click();">
+                    <Button severity="help" class="" style="width: min-content;" @click="$refs.fileInput.click();">
                         <i class="fa-solid fa-camera"></i>
 
                     </Button>
@@ -226,12 +226,12 @@
                 </div>
                 
 
-                <div class="col-12 p-1 my-4" style="display: flex;gap: 1rem; justify-content: start;align-items: center;">
+                <div class="col-12 px-0 my-4" style="display: flex;gap: 1rem; justify-content: start;align-items: center;">
 
                     
                     <Button severity="help" style="height: min-content; min-width: max-content;" label="Actualizar informacion basica" @click="isUpdateDialogVisible = true" />
 
-                    <div style="background-color: #a855f7; height: 0.3rem;border-radius: 0 1rem 1rem 0; width: 100%;">
+                    <div style="background-color: #000; height: 0.3rem;border-radius: 0 1rem 1rem 0; width: 100%;">
 
                     </div>
                     
@@ -245,10 +245,10 @@
 
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
                         <p style="font-weight: bold;"><i class="fa-solid fa-video mr-3"></i> CAMARAS</p>
-                        <Button @click="isCameraDialogVisible = true" class="p-0"  rounded
+                        <Button icon="fa-solid fa-plus text-xl" @click="isCameraDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="warning">
-                            <i class="fa-solid fa-plus text-xl"></i> </Button>
+                            severity="help">
+                             </Button>
                     </div>
 
 
@@ -303,7 +303,7 @@
                         <p style="font-weight: bold;"><i class="fa-solid fa-shield mr-3"></i> CAJAS FUERTES</p>
                         <Button @click="isSafeBoxDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="warning">
+                            severity="help">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
                     </div>
 
@@ -365,7 +365,7 @@
                         <p style="font-weight: bold;"><i class="fa-solid fa-wifi mr-3   "></i> WIFI'S</p>
                         <Button @click="isWifiDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="warning">
+                            severity="help">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
                     </div>
 
@@ -431,7 +431,7 @@
                         <p style="font-weight: bold;"><i class="fa-regular fa-credit-card mr-3"></i> DATAFONOS</p>
                         <Button @click="isDataphoneDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="warning">
+                            severity="help">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
                     </div>
                     <div v-for="(item, index) in directories.dataphones" :key="index" class="my-0 col-12 py-0" style="">
@@ -488,7 +488,7 @@
                         <p style="font-weight: bold;"><i class="fa-solid fa-paper-plane mr-3"></i> PAGINAS WEB</p>
                         <Button @click="isWebPageDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="warning">
+                            severity="help">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
                     </div>
 
@@ -561,7 +561,7 @@
                         <p style="font-weight: bold;"><i class="fa-brands fa-app-store-ios mr-3"></i>APLICACIONES</p>
                         <Button @click="isApplicationDialogVisible = true" class="p-0"  rounded
                             style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="warning">
+                            severity="help">
                             <i class="fa-solid fa-plus text-xl"></i> </Button>
                     </div>
 
@@ -1452,8 +1452,8 @@ watch(() => store.currentSite, (newVal) => {
 
 a {
     text-decoration: none;
-    color: #A855F7;
-    font-weight: 500;
+    /* color: #000000;
+    font-weight: 500; */
 }
 
 p {

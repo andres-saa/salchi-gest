@@ -35,7 +35,7 @@
         <div v-for="(barrio, index) in barriosToAdd" :key="index">
     <div class="my-2" style="width: 100%; display: flex; gap: 1rem;">
         <InputText v-model="barrio.name" placeholder="Nombre del Barrio" />
-        <InputNumber v-model="barrio.delivery_price" placeholder="Precio del Domicilio" />
+        <InputNumber  prefix="$" v-model="barrio.delivery_price" placeholder="Precio del Domicilio" />
         <Button v-if="barriosToAdd.length > 1" text class="p-0" size="small" severity="danger" @click="removeBarrio(index)">
             <i class="text-xl" :class="PrimeIcons.TRASH"></i>
         </Button>
@@ -63,9 +63,12 @@
 
 
 
+        <div class="col-12 p-0 m-0" style="display: flex; justify-content: end; border: none;">
+    <Button style="" raised   severity="help"  size="small" class="  m-0 my-5" label="Nuevo Barrio"
+                            @click="showCreateDialog = true"></Button>
+</div>
 
-
-        <DataTable ref="dt" :value="neighborhoods" v-model:selection="selectedneighborhoods" dataKey="id" :paginator="true"
+        <DataTable stripedRows ref="dt" :value="neighborhoods" v-model:selection="selectedneighborhoods" dataKey="id" :paginator="true"
             :rows="10" :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 100]"
@@ -75,8 +78,7 @@
 
 
 
-                    <Button  severity="help"  size="small" class="  m-0 my-5" label="Nuevo Barrio"
-                            @click="showCreateDialog = true"></Button>
+                 
 
 
 
@@ -116,7 +118,7 @@
                 <template #body="neighborhood">
                     <span class="p-column-title p-0">Code</span>
                
-                    <InputText style="width:100%; border: none;border-right:2px solid rgba(0, 0, 0, 0.1); border-radius: 0;border-radius: 0;" v-model="neighborhood.data.delivery_price"
+                    <InputNumber prefix="$"  style="width:100%; border: none;border-right:2px solid rgba(0, 0, 0, 0.1); border-radius: 0;border-radius: 0;" v-model="neighborhood.data.delivery_price"
                         @update:modelValue="() => update(neighborhood.data)"/>
                 </template>
             </Column>
@@ -456,6 +458,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router';
 import { getUserId } from '@/service/valoresReactivosCompartidos';
 import router from '@/router';
+import InputNumber from 'primevue/inputnumber';
 // import { getUserId } from '@/service/valoresReactivosCompartidos';
 // import { getUsers } from '@/service/userServices'
 // import { siteDropValues } from '@/service/valoresReactivosCompartidos';
@@ -725,10 +728,11 @@ Button {
     justify-content: center;
 }
 
-* {
+input {
     overflow-wrap: break-word;
     white-space: normal;
     overflow: hidden;
+    background: transparent;
 }
 
 .aprobado {

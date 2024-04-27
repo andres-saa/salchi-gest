@@ -1,5 +1,5 @@
 <template>
-    <div cal style="">
+    <div cal style="margin-top: 6rem;">
 
         <div class="shadow-4" style="max-width: 900px;overflow: hidden; border-radius: 1rem; margin: auto;">
             <div v-for=" imagen in [1, 2, 3, 4]">

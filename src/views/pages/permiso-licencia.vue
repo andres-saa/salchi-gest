@@ -1,18 +1,30 @@
 <template>
-  <div class="  m-2 m-auto ">
+  <div class="  mx-0 md:mx-auto " style="margin-top: 6rem;">
 
     <p class="text-2xl lg:text-3xl text-center my-4 mt-8 " style="font-weight: bold;">Solicitar permiso por licencia</p>
-    <span class=" mb-6 col-12" style="display: flex; height: auto;">
 
 
-      <InputNumber v-model="usrDni" :disabled="getUserRole()?.toLowerCase() != 'gerente'" class="mr-5"
-        style="width: 100%;" placeholder="Cedula del empleado"></InputNumber>
-      <Button style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;"
-        @click="getUser(usrDni)"><span style="color: white;">Buscar</span></Button>
+<span class=" mb-3 col-12 p-3" style="display: flex;justify-content: space-between; gap: 1rem; height: auto;">
+
+
+<InputNumber  v-model="usrDni" :disabled="getUserRole()?.toLowerCase() != 'gerente'" class="text-center m-0"
+  style="width: 100%;" placeholder="Cedula del empleado"></InputNumber>
+
+<Button class="" severity="help" style="color:white;font-weight: bold;min-width: 3rem;" icon="pi pi-search" rounded
+  @click="getUser(usrDni)"></Button>
 
 
 
-    </span>
+</span>
+
+
+
+
+
+
+
+
+
     <p v-if="usrDni == null" class="text-1xl m-auto  col-6 p-0" style="color: var(--primary-color);"> Por favor digite el
       numero de decumento del usuario y presione Buscar</p>
 

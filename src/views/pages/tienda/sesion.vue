@@ -16,7 +16,7 @@
         
     </p>
 
-    <div v-if="!noProducts" class="grid p-1 pb-8" style="max-width: 1024px;margin: auto;" >
+    <div v-if="!noProducts" class="grid p-1 pb-8" style="max-width: 900px;margin: auto;" >
     
     
     

@@ -34,7 +34,7 @@
                 <!-- {{ currentAditions }} -->
                 <InputSwitch :modelValue="allSelected(grupo)" @update:modelValue="toggleGroup(grupo, $event)" />
             </p>
-            <DataTable :value="items">
+            <DataTable  stripedRows :value="items">
                 <Column style="text-transform: capitalize;" class="p-0" field="aditional_item_name" header="Nombre">
                     <template #body="adicion">
                         <span style="text-transform: uppercase;"> {{ adicion.data.item_name }} </span>

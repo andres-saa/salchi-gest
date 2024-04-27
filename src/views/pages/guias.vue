@@ -47,9 +47,10 @@
     <!-- {{ capacitacion }} -->
 
     <!-- <p class="col-12 text-center text-xl p-0 mb-5" style="font-weight: bold;">Asi lo hacemos en salchimonster</p> -->
-
-    <DataTable class="card mb-4  my-3 md:shadow-3 md:p-5"  
-        style=" max-width: 1024px;border: none; margin: auto    ; padding: 0;" ref="dt"
+<div  class="md:shadow-3 md:p-5 " style="min-height: calc(100vh - 9rem);background-color: white ;max-width: 1024px;margin: auto;margin-top: 3rem;    ">
+    <DataTable class=" mb-4   "  
+    stripedRows
+        style=" border: none; ; padding: 0;" ref="dt"
         :value="archived_files" v-model:selection="selectedFiles" dataKey="id" :paginator="true" :rows="10"
         :filters="filters"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -200,6 +201,8 @@
 
     </DataTable>
 
+</div>
+    
 
 
     <!-- Diálogo para subir archivo -->

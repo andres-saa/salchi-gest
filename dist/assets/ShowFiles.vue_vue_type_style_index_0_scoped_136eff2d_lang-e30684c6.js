@@ -1,1 +1,0 @@
-import{z as t}from"./index-e74f79b8.js";const o=t("documentos",{persist:{key:"documentos",storage:localStorage,paths:["currentSite"]},state:()=>({currentSite:{}}),getters:{},actions:{setSite(e){this.currentSite=e}}});export{o as u};
