@@ -13,13 +13,13 @@
 
       
 
-        <img class="img-profile-add" style="width: 100%;; object-fit: contain;border-radius: 1rem;"
+        <img class="img-profile-add" style="width: 100%;; object-fit: contain;border-radius: 0.5rem;"
             :src="urlPhotoProfile ? urlPhotoProfile : `${URI}/read-product-image/600/employer-${currentUser.dni}`"
             alt="">
-        <div class="field col-12 mt-6 mb-6 p-0" style="display: flex; justify-content: end;">
+        <div class="field col-12 mt-3 mb-6 p-0" style="display: flex; justify-content: end;">
             <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" style="display: none;">
-            <Button  label="Seleccionar foto de perfil" class=""
-                style=" background-color: var(--primary-color);" @click="$refs.fileInput.click();" />
+            <Button icon="pi pi-camera"  severity="help"  class=""
+                 @click="$refs.fileInput.click();" />
 
         </div>
 

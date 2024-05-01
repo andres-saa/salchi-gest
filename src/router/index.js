@@ -218,6 +218,11 @@ const router = createRouter({
           name: 'cucharas',
           component: () => import('@/views/pages/importante/recetarioCucharas.vue')
         },
+        {
+          path: '/dev-tasks',
+          name: 'dev-tasks',
+          component: () => import('@/views/pages/dev/DevTask.vue')
+        },
 
         {
           path: '/samovar',

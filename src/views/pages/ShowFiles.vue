@@ -650,7 +650,8 @@ const deleteFileType = async (typeId) => {
                     headerStyle="width:5rem; min-width:10rem;">
                     <template #body="user">
                         <!-- <span class="p-column-title">Fecha de Nacimiento</span> -->
-                        {{ user.data.renovation_date }}
+                        {{ user.data.renovation_date?.split('-').reverse().join(' / ') }}
+                        
                     </template>
                 </Column>
 
@@ -704,7 +705,7 @@ const deleteFileType = async (typeId) => {
                 <div class="col-12 p-0" style="">
                     <label for="position">FECHA DE RENOVACION</label>
 
-                    <Calendar id="entry_date" style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
+                    <Calendar id="entry_date" dateFormat="dd/mm/yy"  style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
                         required="true" autofocus />
                 </div>
 
@@ -757,7 +758,7 @@ const deleteFileType = async (typeId) => {
                     <div class="col-12">
                         <label for="position">FECHA DE RENOVACION</label>
 
-                        <Calendar id="entry_date" style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
+                        <Calendar dateFormat="dd/mm/yy" id="entry_date" style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
                             required="true" autofocus />
                     </div>
 

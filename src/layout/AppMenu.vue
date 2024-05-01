@@ -6,8 +6,18 @@ import { getUserRole } from '../service/valoresReactivosCompartidos';
 import { roles, obtenerRolesYActualizar } from '@/service/roles';
 import { PrimeIcons } from 'primevue/api';
 // import { getUserRole } from '../service/valoresReactivosCompartidos';
+import { useDocumentsStore } from '../store/documentos';
+
+const documentStore = useDocumentsStore()
 
 
+const calcSiteDocument  = () => {
+    if (documentStore.currentSite.site_id){
+        return `/site/${site_id}/documentos`
+    } else{
+        return '/site/1/documentos'
+    }
+}
 const model = ref([]);
 
 async function fetchAndUpdateRoles() {
@@ -150,8 +160,7 @@ async function fetchAndUpdateRoles() {
             items: [
    
                 {
-                    label: 'Documentos', icon: 'fa-solid fa-book', to: '/site/1/documentos',
-
+                    label: 'Documentos', icon: 'fa-solid fa-book', to: calcSiteDocument(),
                 },
                 
 
@@ -370,6 +379,7 @@ onBeforeMount(async () => {
 
 
 </script>
+
 
 <template>
     
