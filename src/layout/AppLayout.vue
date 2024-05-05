@@ -66,7 +66,7 @@ const isOutsideClicked = (event) => {
             <app-sidebar></app-sidebar>
         </div>
 
-        <div class="layout-main-container px-0" >
+        <div class="layout-main-container px-0 py-0" >
 
 
             <div class="layout-main p-0" style="position: relative;content:paint;">

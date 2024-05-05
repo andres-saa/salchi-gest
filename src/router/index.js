@@ -1,13 +1,28 @@
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
-import { roles } from '../service/roles';
-import { getUserRole } from '../service/valoresReactivosCompartidos';
+import { useRoleStore } from '../store/rolesStore';
 import { jwtDecode } from 'jwt-decode';
 import {loginStore} from '@/store/user.js'
 import axios from 'axios';
 import { URI } from '../service/conection';
 
 // import { roles } from '../service/roles';
+
+const getRoles = async () => {
+  try {
+      const response = await fetch(`${URI}/formatted-rolegroups`)
+      const groups = await response.json();
+
+      // roles.value = groups;
+      return groups
+  } catch (error) {
+      console.error(error);
+  }
+};
+
+const roles = await getRoles()
+
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -219,9 +234,79 @@ const router = createRouter({
           component: () => import('@/views/pages/importante/recetarioCucharas.vue')
         },
         {
+          path: '/daily-inventory',
+          name: 'daily-inventory',
+          component: () => import('@/views/pages/inventory/dailyInventory/dailyInventory.vue'),
+          
+          children:[
+            {
+              path: '/daily-inventory/daily-inventory-reports',
+              name: 'daily-inventory-reports',
+              meta:{roles: roles['adminTienda'] },
+              component: () => import('@/views/pages/inventory/dailyInventory/dailyInventoryReports.vue')
+            },
+            {
+              path: '/daily-inventory/daily-inventory-my-reports',
+              name: 'daily-inventory-my-reports',
+              meta:{roles: roles['adminTienda'] },
+              component: () => import('@/views/pages/inventory/dailyInventory/dailyInventoryMyReports.vue')
+            },
+            {
+              path: '/daily-inventory/report-inventory',
+              name: 'daily-inventory-report-inventory',
+              meta:{roles: roles['adminTienda'] },
+              component: () => import('@/views/pages/inventory/dailyInventory/reportInventory.vue')
+            },
+              
+              
+            {
+              path: '/daily-inventory/daily-inventory-settings',
+              name: 'daily-inventory-settings',
+              component: () => import('@/views/pages/inventory/dailyInventory/dailyInventorySettings.vue'),
+              children:[
+                {
+                  path: '/daily-inventory/daily-inventory-settings/:sesion/:id',
+                  name: 'daily-inventory-settings-sesion',
+                  component: () => import('@/views/pages/inventory/dailyInventory/dailyInventorySettingsSesion.vue'),   
+                }
+              ]       
+            
+            
+            },
+              
+
+
+
+              {
+                path: '/daily-inventory/daily-inventory-view/:daily_inventory_id',
+                name: 'daily-inventory-view',
+                component: () => import('@/views/pages/inventory/dailyInventory/dailyInventoryView.vue'),            },
+
+          ]
+        },
+        {
           path: '/dev-tasks',
           name: 'dev-tasks',
-          component: () => import('@/views/pages/dev/DevTask.vue')
+          component: () => import('@/views/pages/dev/DevTask.vue'),
+          children:[
+
+            {
+              path: '/dev-tasks/current',
+              name: 'current-dev-tasks',
+              component: () => import('@/views/pages/dev/CurrentDevTasks.vue'),
+            },
+            {
+              path: '/dev-tasks/scheduled',
+              name: 'scheduled-dev-tasks',
+              component: () => import('@/views/pages/dev/ScheduleDevTasks.vue'),
+            },
+            {
+              path: '/dev-tasks/history',
+              name: 'history-dev-tasks',
+              component: () => import('@/views/pages/dev/HistoryDevTasks.vue'),
+            },
+
+          ]
         },
 
         {
@@ -454,7 +539,7 @@ const router = createRouter({
               path: '/mis-permisos/:tipo',
               name: 'mis-permisotipo',
               component: () => import('@/views/pages/miPermisoType.vue'),
-              meta: { roles: roles.value.todos }, // Asignación correcta dentro de 'meta'
+              // meta: { roles: roles.value.todos }, // Asignación correcta dentro de 'meta'
               children: [
                 {
                   path: '/mis-permisos/:tipo/:status',
@@ -473,7 +558,7 @@ const router = createRouter({
           path: '/maintenance',
           name: 'maintenance',
           component: () => import('@/views/pages/maintenance/maintenance.vue'),
-          meta: { roles: roles.value['Calidad y control'] }, // Asignación correcta dentro de 'meta'
+      // Asignación correcta dentro de 'meta'
           children:[
             
             {
@@ -596,7 +681,7 @@ const router = createRouter({
           path: '/pages/crud',
           name: 'crud',
           component: () => import('@/views/pages/Crud.vue'),
-          meta: { roles: roles.value.adminTienda } // Asignación correcta dentro de 'meta'
+
 
         },
         {
@@ -673,47 +758,46 @@ const validateToken = (token) => {
 
 
 router.beforeEach(async(to, from, next) => {
+
+  console.log(to.meta)
   const store = loginStore()
   const token = store.userData.access_token
   const validToken = await validateToken(token)
   
-  // Verifica si hay un token
   if (!token || !validToken.access_token ) {
-    // Si la ruta actual no es la de login, redirige al login
     if (to.path !== '/auth/login' ) {
-
-      
       next({ path: '/auth/login' });
-
-
     } else {
       next(); // Si ya está en la página de login, continúa
     }
   } else {
-    try {
-      const decoded = jwtDecode(token);
 
+    try {
+
+      const decoded = jwtDecode(token);
       if (!decoded || !decoded.rol) {
         console.error("Rol no encontrado en el token");
-        next({ path: '/error' });
+        next({ path: '/login' });
         return;
       }
 
-      const userRole = decoded.rol.trim().toLowerCase();
+      const userRole = decoded.rol?.split(" ").join('').toLowerCase();
+
 
       const isRoleAuthorized = to.matched.some(record => {
         if (!record.meta || !record.meta.roles) {
           return false;
         }
 
-        const routeRoles = record.meta.roles.map(role => role.trim().toLowerCase());
+        const routeRoles = record.meta.roles.map(role => role?.split(" ").join('').toLowerCase());
         return routeRoles.includes(userRole);
       });
 
       if (isRoleAuthorized || !to.matched.some(record => record.meta?.roles)) {
         next(); // Rol permitido o no se requiere control de rol
       } else {
-        next({ path: '/acceso-denegado' }); // Rol no permitido
+        alert(`No tienes permitido entrar aqui`)
+        next('./'); // Rol no permitido
       }
     } catch (error) {
       console.error("Error al decodificar el token:", error);

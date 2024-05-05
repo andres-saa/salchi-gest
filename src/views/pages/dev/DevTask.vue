@@ -6,14 +6,15 @@
                 <ul class="nav_button_list">
                     <li  v-for="button in navButtons">
                         <router-link :to="button.to"> 
-                            <Button severity="help" class="selected" :label="button.name"></Button>    
+                            <Button class="p-0 py-2" severity="help" :class="isRouteActive(button.to)? 'selected' : '' " :label="button.name"></Button>    
                         </router-link>
                     </li>
                 </ul>
             </nav>
 
+         
         </div>
-
+   <routerView/>
 
     </div>
 </template>
@@ -21,23 +22,30 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router'
 
+const routes = useRoute()
 const navButtons = [
     {
         name:'En curso',
-        to:'/'
+        to:'/dev-tasks/current'
     },
     {
         name:'Programadas',
-        to:'/'
+        to:'/dev-tasks/scheduled'
     },
     {
         name:'Historial',
-        to:'/'
+        to:'/dev-tasks/history'
     },
     
-
 ]
+
+const isRouteActive = ( route )  => {
+    return routes.path.includes( route )
+    // console.log(routes)
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -71,21 +79,26 @@ nav{
     list-style: none;
     display: flex;
     /* justify-content: center; */
-    gap: 1rem;
+    gap: 2rem;
     padding: 0;
+    box-shadow:none
 
 }
+
+
 
 Button{
     min-width: max-content;
     background: transparent;
     border: none;
     color: gray;
+    box-shadow:none;
+    border-radius:0;
     
 }
 
 .selected{
-    box-shadow: 0 1rem 0 var(--primary-color);
+    box-shadow: 0 0.3rem 0 var(--primary-color);
     border-radius: 0;
 }
 
