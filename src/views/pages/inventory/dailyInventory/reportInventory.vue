@@ -62,16 +62,17 @@
 
             <div style="align-items:center" class="grid m-0 " v-for="(item, index) in grupo.items" :key="index">
 
-                <div style="text-transform: uppercase; font-weight:bold" class="col-12 my-2 md:col-7 p-0"> {{
+                <div style="text-transform: uppercase; font-weight:bold" class="col-12 my-2 md:col-6 p-0"> {{
                     item.item_name
                     }} <Tag severity="danger">{{ item.unit_measure }}</Tag>
                 </div>
 
-                <div class="col-12 md:col-5 p-0 md:pl-3" style="display: flex;align-items:center;gap:1rem">
-                    <span v-if="item.quantity == null" style="color:red; font-weight:bold">*</span>
-                    <InputNumber   :min="0" :maxFractionDigits="2" v-model="item.quantity"
-                        :suffix="` ${item.unit_measure}`" maxDecimal="5" style="width: 100%;" class="">
+                <div class="col-12 md:col-6 px-0 py-1 md:pl-3" style="display: flex;align-items:center;gap:1rem">
+                    <!-- <span v-if="item.quantity == null" style="color:red; font-weight:bold">*</span> -->
+                    <InputNumber  :useGrouping="false"  showButtons  buttonLayout="horizontal"  :min="0" :maxFractionDigits="2" v-model="item.quantity"
+                        :suffix="` ${item.unit_measure}`" maxDecimal="5" style="width: 100% " class="" :style="item.quantity == null && validating? 'outline:3px solid red;border-radius:0.5rem' : ''" >
                     </InputNumber>
+                   
                 </div>
 
 
@@ -118,7 +119,7 @@ const prepareItemsToSend = (grupo) => {
     ).flat().map(it => {
         return {
             daily_inventory_item_id:it.item_id,
-            quantity:it.quantity || 0,
+            quantity:it.quantity,
             daily_inventory_unit_measure_id:it.unit_measure_id
         }
     })
@@ -131,14 +132,15 @@ const preareInventory = () => {
             "responsible_id": store.rawUserData?.id,
             "site_id": store.rawUserData?.site_id,
         },
-        daily_inventory_items:prepareItemsToSend(groupWithItems.value)
+        daily_inventory_items:prepareItemsToSend([...groupWithItems.value])
     }
 }
 
 
 const openDialog = () => {
     const data = preareInventory()
-    if(data.daily_inventory_items.some(item => !item.quantity)){
+    validating.value = true
+    if(data.daily_inventory_items.some(item => item.quantity === null)){
         alert("Debes llenar todos los espacios")
         return
     }
@@ -159,7 +161,12 @@ const sendInventory = async() => {
 
 
 onMounted(async () => {
-    groupWithItems.value = await dailyInventoryReportsService.getGroupsWithItems()
+    const grupos = await dailyInventoryReportsService.getGroupsWithItems()
+    grupos.map( g => g.items.map( i=> i.quantity = null))
+    groupWithItems.value = grupos
+    console.log(grupos)
+
+
 })
 
 

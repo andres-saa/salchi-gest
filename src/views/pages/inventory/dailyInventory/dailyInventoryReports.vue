@@ -44,22 +44,24 @@
         </div>
     </Dialog>
 
+
+
     <!-- {{ invetnoryDailyReports }} -->
     <div class=" m-auto" style="max-width: 900px;">
         <div class=" m-0 col-12" style="align-items: center;">
 
-           
+
 
             <div class=" p-0  mb-3" style="display: flex;align-items:center">
-                <span class="text-xl mr-2" > <b>Sedes</b></span>
+                <span class="text-xl mr-2"> <b>Sedes</b></span>
                 <MultiSelect style="" display="chip" multiple v-model="selectedSites" optionLabel="site_name"
-                    :options="sites.filter(s => s.site_id != 12 & s.site_id != 13)" class="text-sm multi p-0"
-                   ></MultiSelect>
+                    :options="sites.filter(s => s.site_id != 12 & s.site_id != 13)" class="text-sm multi p-0">
+                </MultiSelect>
             </div>
 
-           
-            <div class="col p-0" style="display: flex; gap:1rem;align-items:center" >
-                <span class="text-xl" > <b>Periodo</b></span>
+
+            <div class="col p-0" style="display: flex; gap:1rem;align-items:center">
+                <span class="text-xl"> <b>Periodo</b></span>
                 <InputText class="" @click="showDateDialog = true" style="height: 2.7rem;"
                     :value="`${formatDate(startDate)}  |  ${formatDate(endDate)}`" placeholder="periodo" />
                 <!-- {{ dateRange }} -->
@@ -70,47 +72,57 @@
             </div>
 
 
+
+
         </div>
+
+        <div class="col-12 px-4" style="display: flex;justify-content:end">
+            <Button severity="help" icon="pi pi-download" label="Descargar todo" @click="downloadAll"></Button>
+
+        </div>
+
     </div>
 
 
-<div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
+    <div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
 
 
-    <DataTable style="max-width: 900px;"  v-model:filters="filters" class="col-12 m-auto" :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
-        <template #header>
-            <div style="display: flex;justify-content:space-between;align-items:center">
-                <span class="text-xl"> Gestionar reportes de inventario</span>
-                <InputText v-model="filters['global'].value" placeholder="Buscar..." />
+        <DataTable style="max-width: 900px;" v-model:filters="filters" class="col-12 m-auto"
+            :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
+            <template #header>
+                <div style="display: flex;justify-content:space-between;align-items:center">
+                    <span class="text-xl"> Gestionar reportes de inventario</span>
+                    <InputText v-model="filters['global'].value" placeholder="Buscar..." />
 
-            </div>
-        </template>
-        <Column class="py-1" field="daily_inventory_id" header="ID"></Column>
-        <Column class="py-1" field="employer_name" header="Responsable"></Column>
-        <Column class="py-1" field="site_name" header="Sede"></Column>
-        <Column class="py-1" field="date" header="Fecha">
-        
-            <template #body="data">
-                {{ formatDateReverse(data.data.date) }}
-
+                </div>
             </template>
+            <Column class="py-1" field="daily_inventory_id" header="ID"></Column>
+            <Column class="py-1" field="employer_name" header="Responsable"></Column>
+            <Column class="py-1" field="site_name" header="Sede"></Column>
+            <Column class="py-1" field="date" header="Fecha">
 
-        </Column>
-        <Column class="py-1" field="date" header="Action">
-            <template #body="data">
+                <template #body="data">
+                    {{ data.data.date?.split('-').reverse().join("-") }}
 
-                <router-link :to="`/daily-inventory/daily-inventory-view/${data.data.daily_inventory_id}`">
-                    <Button text icon="pi pi-eye" />
-                </router-link>
-           
-                <Button severity="success" text icon="pi pi-download" />
+                </template>
+
+            </Column>
+            <Column class="py-1" field="date" header="Action">
+                <template #body="data">
+
+                    <router-link :to="`/daily-inventory/daily-inventory-view/${data.data.daily_inventory_id}`">
+                        <Button text icon="pi pi-eye" />
+                    </router-link>
+
+                    <Button @click="prepareDownload(data.data.daily_inventory_id,data.data.site_name,data.data.date)" severity="success" text
+                        icon="pi pi-download" />
 
 
-            </template>
-        </Column>
-    </DataTable>
+                </template>
+            </Column>
+        </DataTable>
 
-</div>
+    </div>
 
 
 </template>
@@ -122,6 +134,7 @@ import { ref, onMounted } from 'vue'
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { siteService } from '../../../../service/siteService.js'
 import { dailyInventoryReportsService } from '../../../../service/inventory/dailyInventoryService.js'
+import * as XLSX from 'xlsx';
 
 
 import { loginStore } from '../../../../store/user.js'
@@ -203,17 +216,49 @@ function formatDateReverse(dated) {
 }
 
 
-const getFiltered = async() => {
+const getFiltered = async () => {
     const site_ids = selectedSites.value.map(site => site.site_id)
     const user_id = store.rawUserData.id
-    const new_startDate = formatDate(startDate.value) 
-    const new_endDate = formatDate(endDate.value) 
-    invetnoryDailyReports.value = await dailyInventoryReportsService.getAllDailyInventoryReportsFiltered(site_ids,new_startDate,new_endDate)
+    const new_startDate = formatDate(startDate.value)
+    const new_endDate = formatDate(endDate.value)
+    invetnoryDailyReports.value = await dailyInventoryReportsService.getAllDailyInventoryReportsFiltered(site_ids, new_startDate, new_endDate)
 }
 
+const entries = ref([])
+
+const prepareDownload = async (daily_inventory_id,site_name,date) => {
+    entries.value = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(daily_inventory_id)
+
+    const data = entries.value.map(product => ({
+        "Producto": product.item_name,
+        "Cantidad": product.quantity,
+        "Unidad de medida":product.unit_measure
+    }));
+
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    worksheet["!cols"] = [
+        { wch: Math.max(20, "Producto".length) },
+        { wch: Math.max(0, "Cantidad".length) },
+        { wch: Math.max(0, "Unidad de medida".length) }]
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
+
+    XLSX.writeFile(workbook, `Inventario_${site_name}_${date.split('-').reverse().join("-")} .xlsx`);
+
+};
 
 
 
+const downloadAll = async() => {
+
+    const reportes = invetnoryDailyReports.value
+
+    reportes.forEach(reporte => {
+        prepareDownload(reporte.daily_inventory_id,reporte.site_name,reporte.date)
+    });
+
+}
 
 
 </script>

@@ -62,6 +62,10 @@
 
             </div>
 
+            <div class="col-12 px-4" style="display: flex;justify-content:end">
+                <Button severity="help" icon="pi pi-download" label="Descargar todo" @click="downloadAll"></Button>
+    
+            </div>
 
         </div>
     </div>
@@ -84,7 +88,7 @@
         <Column class="py-1" field="site_name" header="Sede"></Column>
         <Column class="py-1" field="date" header="Fecha">
         <template #body="temp">
-            {{ formatDateReverse(temp.data.date)}}
+            {{ temp.data.date.split('-').reverse().join("-")}}
         </template>
         </Column>
         <Column class="py-1" field="date" header="Action">
@@ -94,7 +98,11 @@
                     <Button text icon="pi pi-eye" />
                 </router-link>
            
-                <Button severity="success" text icon="pi pi-download" />
+                <Button @click="prepareDownload(data.data.daily_inventory_id,data.data.site_name,data.data.date)" severity="success" text
+                        icon="pi pi-download" />
+
+
+                    
 
 
             </template>
@@ -114,6 +122,9 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { siteService } from '../../../../service/siteService.js'
 import { dailyInventoryReportsService } from '../../../../service/inventory/dailyInventoryService.js'
 import { loginStore } from '../../../../store/user.js'
+import * as XLSX from 'xlsx';
+
+
 
 const store = loginStore()
 const sites = ref([])
@@ -201,6 +212,43 @@ const getFiltered = async() => {
 }
 
 
+
+
+const entries = ref([])
+
+
+const prepareDownload = async (daily_inventory_id,site_name,date) => {
+    entries.value = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(daily_inventory_id)
+
+    const data = entries.value.map(product => ({
+        "Producto": product.item_name,
+        "Cantidad": product.quantity,
+        "Unidad de medida":product.unit_measure
+    }));
+
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    worksheet["!cols"] = [
+        { wch: Math.max(20, "Producto".length) },
+        { wch: Math.max(0, "Cantidad".length) },
+        { wch: Math.max(0, "Unidad de medida".length) }]
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
+
+    XLSX.writeFile(workbook, `Inventario_${site_name}_${date.split('-').reverse().join("-")} .xlsx`);
+
+};
+
+
+const downloadAll = async() => {
+
+const reportes = invetnoryDailyReports.value
+
+reportes.forEach(reporte => {
+    prepareDownload(reporte.daily_inventory_id,reporte.site_name,reporte.date)
+});
+
+}
 
 
 </script>
