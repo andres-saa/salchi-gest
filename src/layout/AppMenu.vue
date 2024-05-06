@@ -62,10 +62,10 @@ async function fetchAndUpdateRoles() {
 
             //     },
                
-                {
-                    label: 'Ingredientes', icon: 'fa-solid fa-calendar', to: '/ingredients',
+                // {
+                //     label: 'Ingredientes', icon: 'fa-solid fa-calendar', to: '/ingredients',
 
-                },
+                // },
 
                 {
                     label: 'Reportar inventario diario', icon: 'fa-solid fa-calendar', to: '/daily-inventory/report-inventory',
@@ -75,10 +75,10 @@ async function fetchAndUpdateRoles() {
                     label: 'Revisar reportes de inventario', icon: 'fa-solid fa-calendar', to: '/daily-inventory/daily-inventory-reports',
 
                 },
-                {
-                    label: 'Recetas', icon: 'fa-solid fa-envelope', to: '/recipes',
+                // {
+                //     label: 'Recetas', icon: 'fa-solid fa-envelope', to: '/recipes',
 
-                }
+                // }
                 
             ]
         },

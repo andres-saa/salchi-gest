@@ -64,7 +64,7 @@
                     :value="`${formatDate(startDate)}  |  ${formatDate(endDate)}`" placeholder="periodo" />
                 <!-- {{ dateRange }} -->
 
-                <Button icon="pi pi-search" severity="help" class="text-center p-0 col-12  md:p-0"
+                <Button @click="getFiltered" icon="pi pi-search" severity="help" class="text-center p-0 col-12  md:p-0"
                     style="height: 2.5rem;width:min-content;aspect-ratio:  1 / 1;font-weight: bold; border-radius: 50%; display: flex;justify-content:center ; "></Button>
 
             </div>
@@ -88,7 +88,14 @@
         <Column class="py-1" field="daily_inventory_id" header="ID"></Column>
         <Column class="py-1" field="employer_name" header="Responsable"></Column>
         <Column class="py-1" field="site_name" header="Sede"></Column>
-        <Column class="py-1" field="date" header="Fecha"></Column>
+        <Column class="py-1" field="date" header="Fecha">
+        
+            <template #body="data">
+                {{ formatDateReverse(data.data.date) }}
+
+            </template>
+
+        </Column>
         <Column class="py-1" field="date" header="Action">
             <template #body="data">
 
@@ -115,8 +122,13 @@ import { ref, onMounted } from 'vue'
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { siteService } from '../../../../service/siteService.js'
 import { dailyInventoryReportsService } from '../../../../service/inventory/dailyInventoryService.js'
+
+
+import { loginStore } from '../../../../store/user.js'
+
+const store = loginStore()
 const sites = ref([])
-const selectedSites = ref([])
+const selectedSites = ref([{}])
 const showDateDialog = ref(false)
 const TempStartDate = ref(new Date(new Date().setDate(new Date().getDate() - 7)))
 const TempEndDate = ref(new Date());
@@ -159,9 +171,11 @@ const setDateRange = (days) => {
 
 onMounted(async () => {
     sites.value = await siteService.getSites()
-    selectedSites.value = [...sites.value]
+    selectedSites.value = sites.value
     invetnoryDailyReports.value = await dailyInventoryReportsService.getAllDailyInventoryReports()
 })
+
+
 
 
 const initFilters = () => {
@@ -180,8 +194,22 @@ function formatDate(dated) {
     return `${year}-${month}-${day}`;
 }
 
+function formatDateReverse(dated) {
+    const date = new Date(dated)
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${day}-${month}-${year}`;
+}
 
 
+const getFiltered = async() => {
+    const site_ids = selectedSites.value.map(site => site.site_id)
+    const user_id = store.rawUserData.id
+    const new_startDate = formatDate(startDate.value) 
+    const new_endDate = formatDate(endDate.value) 
+    invetnoryDailyReports.value = await dailyInventoryReportsService.getAllDailyInventoryReportsFiltered(site_ids,new_startDate,new_endDate)
+}
 
 
 

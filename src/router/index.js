@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import {loginStore} from '@/store/user.js'
 import axios from 'axios';
 import { URI } from '../service/conection';
-
+import { ref } from 'vue';
 // import { roles } from '../service/roles';
 
 const getRoles = async () => {
@@ -20,8 +20,10 @@ const getRoles = async () => {
   }
 };
 
-const roles = await getRoles()
 
+const roles = ref('') 
+
+roles.value = getRoles()
 
 const router = createRouter({
   history: createWebHistory(),
@@ -237,24 +239,23 @@ const router = createRouter({
           path: '/daily-inventory',
           name: 'daily-inventory',
           component: () => import('@/views/pages/inventory/dailyInventory/dailyInventory.vue'),
-          
           children:[
             {
               path: '/daily-inventory/daily-inventory-reports',
               name: 'daily-inventory-reports',
-              meta:{roles: roles['adminTienda'] },
+              meta:{roles: roles.value['Inventario diario admin'] },
               component: () => import('@/views/pages/inventory/dailyInventory/dailyInventoryReports.vue')
             },
             {
               path: '/daily-inventory/daily-inventory-my-reports',
               name: 'daily-inventory-my-reports',
-              meta:{roles: roles['adminTienda'] },
+              meta:{roles: roles.value['Inventario diario'] },
               component: () => import('@/views/pages/inventory/dailyInventory/dailyInventoryMyReports.vue')
             },
             {
               path: '/daily-inventory/report-inventory',
               name: 'daily-inventory-report-inventory',
-              meta:{roles: roles['adminTienda'] },
+              meta:{roles: roles.value['Inventario diario'] },
               component: () => import('@/views/pages/inventory/dailyInventory/reportInventory.vue')
             },
               
@@ -263,6 +264,7 @@ const router = createRouter({
               path: '/daily-inventory/daily-inventory-settings',
               name: 'daily-inventory-settings',
               component: () => import('@/views/pages/inventory/dailyInventory/dailyInventorySettings.vue'),
+              meta:{roles: roles.value['Inventario diario admin'] },
               children:[
                 {
                   path: '/daily-inventory/daily-inventory-settings/:sesion/:id',
@@ -758,7 +760,6 @@ const validateToken = (token) => {
 
 
 router.beforeEach(async(to, from, next) => {
-
   console.log(to.meta)
   const store = loginStore()
   const token = store.userData.access_token

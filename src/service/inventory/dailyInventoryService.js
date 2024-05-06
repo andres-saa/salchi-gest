@@ -48,6 +48,23 @@ export const dailyInventoryReportsService = {
         }
     },
 
+
+    async getAllDailyInventoryReportsFiltered(site_ids, start_date, end_date) {
+        try {
+            // Asegúrate de que la URL refleja la estructura correcta según la definición del endpoint en tu servidor.
+            const response = await axios.get(`${URI}/all-daily-inventory-report-filtered/${site_ids}/${start_date}/${end_date}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the daily inventory reports:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the daily inventory reports:', error);
+            return null;
+        }
+    },
+
     async getGroupsWithItems() {
         try {
             const response = await axios.get(`${URI}/get_groups_with_items`);

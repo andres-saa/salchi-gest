@@ -82,7 +82,11 @@
         <Column class="py-1" field="daily_inventory_id" header="ID"></Column>
         <Column class="py-1" field="employer_name" header="Responsable"></Column>
         <Column class="py-1" field="site_name" header="Sede"></Column>
-        <Column class="py-1" field="date" header="Fecha"></Column>
+        <Column class="py-1" field="date" header="Fecha">
+        <template #body="temp">
+            {{ formatDateReverse(temp.data.date)}}
+        </template>
+        </Column>
         <Column class="py-1" field="date" header="Action">
             <template #body="data">
 
@@ -176,6 +180,14 @@ function formatDate(dated) {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
+}
+
+function formatDateReverse(dated) {
+    const date = new Date(dated)
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${day}-${month}-${year}`;
 }
 
 

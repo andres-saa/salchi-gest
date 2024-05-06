@@ -6,7 +6,7 @@
 
 
 
-    <div v-if="recipeData.id" class="m-auto md:p-4 md:shadow-3 " style="border-radius: 1rem;">
+    <div v-if="recipeData.id" class="mx-auto md:p-4 md:shadow-3 mt-8" style="border-radius: 1rem;">
 
         <h4 v-if="recipeData.recipe_name" class="text-center mb-6"> <b>
             {{ recipeData.recipe_name }}
@@ -14,8 +14,11 @@
         </b>
     </h4>
 
-        <div class="grid m-0 " style="">
-            <div class="col-12 md:col-6 my-2 ">
+        <div class="grid m-0" style="height:min-content;">
+            <div class="col-6 py-0 px-4" style="height:100%">
+                <img style="width: 100%;height:100%;object-fit:cover;border-radius:0.5rem" class="shadow-4 p-2" :src="`https://backend.salchimonster.com/read-product-image/600/${recipeData.product_name}`" alt="">
+            </div>
+            <div class="col-6 md:col-6 my-2 ">
 
                 <div class="grid md:pr-3 ">
                     <div class="col-12 p-0 " style="display:  flex; border: 1px solid;" v-for="campo in camposIzq">
@@ -26,6 +29,8 @@
                         <div class="p-2 " style="width: 40%; ">
                             {{ recipeData[campo.valor] }}
                         </div>
+                        <InputText v-model="recipeData[campo.valor]">
+                        </InputText>
 
                     </div>
 
@@ -34,30 +39,15 @@
 
             </div>
 
-             <div class="col-12 md:col-6 my-2 ">
-
-                <div class="grid md:pl-3">
-                    <div class="col-12 p-0 " style="display:  flex; border: 1px solid;" v-for="campo in camposDer">
-
-                        <div class="p-2 " style="width: 60%; background-color:yellow; ">
-                            <b>{{ campo.nombre }}</b>
-                        </div>
-                        <div class="p-2 " style="width: 40%; ">
-                            {{ recipeData[campo.valor] }}
-                        </div>
-
-                    </div>
-
-                </div>
-                
-
-            </div>
-
+   
+         
 
 
 
 
         </div>
+
+        
 
 
         <DataTable showGridlines :value="recipeData.ingredient_details" paginator :rows="10" dataKey="id"
@@ -139,6 +129,7 @@
 import { onMounted, ref } from "vue";
 import { recipesService } from "../../../service/inventory/recipesService";
 import { useRoute } from "vue-router";
+import { URI } from '@/service/conection';
 // import Loading from "../../../components/Loading.vue"
 const recipeData = ref([])
 const route = useRoute()
@@ -170,22 +161,16 @@ const camposIzq = ref([
     { nombre: "Número de porciones:", valor: 'portion_number' },
     { nombre: "Tiempo de preparación:", valor: 'preparation_time' },
     { nombre: "Tiempo de cocción:", valor: 'cooking_time' },
-    { nombre: "Temperatura de servicio:", valor: 'service_temperature' }
-]
-)
-
-
-const camposDer = ref(
-    [
-        { nombre: "Precio de venta:", valor: 'selling_price' },
+    { nombre: "Temperatura de servicio:", valor: 'service_temperature' },
+    { nombre: "Precio de venta:", valor: 'selling_price' },
         { nombre: "Impuestos:", valor: 'taxes' },
         { nombre: "peso de venta neto:", valor: 'presentation' },
         { nombre: "Costo total de la receta:", valor: 'preparation_equipment' },
         { nombre: "% Costo de la receta:", valor: 'otro valor' },
         { nombre: "Margen de beneficio neto:", valor: 'otro valor' }
-    ]
-
+]
 )
+
 
 
 
