@@ -1751,18 +1751,18 @@
   }
 
   .p-button {
-    color: #ffffff;
-    background: #6366F1;
-    border: 1px solid #6366F1;
+    color: #000;
+    background: #00000030;
+    border:none;
     padding: 0.75rem 1.25rem;
     font-size: 1rem;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     border-radius: 6px;
   }
   .p-button:enabled:hover {
-    background: #4F46E5;
-    color: #ffffff;
-    border-color: #4F46E5;
+    background: #00000090;
+    color: #000;
+    /* border-color: #4F46E5; */
   }
   .p-button:enabled:active {
     background: #4338CA;
@@ -2613,11 +2613,12 @@
   }
   .p-datatable .p-datatable-header {
     background: #f9fafb;
-    margin-top: 1rem;
+    margin-top: 0rem;
     color: #374151;
-    border: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
     border-width: 1px 0 1px 0;
-    padding: 1rem 0.5rem;
+    padding: 0;
+    padding-bottom: 1rem;
     font-weight: 700;
   }
   .p-datatable .p-datatable-footer {
@@ -2625,7 +2626,7 @@
     color: #374151;
     border: 1px solid #e5e7eb;
     border-width: 0 0 1px 0;
-    padding: 1rem 1rem;
+    padding: 1rem 0rem;
     font-weight: 700;
   }
   .p-datatable .p-datatable-thead > tr > th {

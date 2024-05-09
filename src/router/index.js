@@ -287,6 +287,59 @@ const router = createRouter({
           ]
         },
         {
+          path: '/purchase-order',
+          name: 'purchase-order',
+          component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrder.vue'),
+          children:[
+            {
+              path: '/purchase-order/purchase-order-reports',
+              name: 'purchase-order-reports',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderReports.vue')
+            },
+            {
+              path: '/purchase-order/purchase-order-my-orders',
+              name: 'purchase-order-my-orders',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderMyOrders.vue')
+            },
+            {
+              path: '/purchase-order/generate-purchase-order',
+              name: 'generate-purchase-order/',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderNew.vue')
+            },
+              
+              
+            {
+              path: '/purchase-order/purchase-order-settings',
+              name: 'purchase-order-settings',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettings.vue'),
+              children:[
+                {
+                  path: '/purchase-order/purchase-order-settings/:sesion/:id',
+                  name: 'purchase-order-settings-sesion',
+                  component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettingsSesion.vue'),   
+                }
+              ]       
+            
+            
+            },
+              
+
+
+
+            {
+              path: '/purchase-order/purchase-order-view/:purchase_order_id',
+              name: 'purchase-order-view/',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderView.vue')
+            },
+
+          ]
+        },
+        {
           path: '/dev-tasks',
           name: 'dev-tasks',
           component: () => import('@/views/pages/dev/DevTask.vue'),

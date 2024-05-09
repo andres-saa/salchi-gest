@@ -180,6 +180,8 @@ const setDateRange = (days) => {
         showDateDialog.value = false
 
     }
+
+    getFiltered()
 }
 
 onMounted(async () => {
@@ -238,7 +240,7 @@ const prepareDownload = async (daily_inventory_id,site_name,date) => {
 
     const worksheet = XLSX.utils.json_to_sheet(data);
     worksheet["!cols"] = [
-        { wch: Math.max(20, "Producto".length) },
+        { wch: Math.max(30, "Producto".length) },
         { wch: Math.max(0, "Cantidad".length) },
         { wch: Math.max(0, "Unidad de medida".length) }]
     const workbook = XLSX.utils.book_new();

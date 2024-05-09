@@ -29,40 +29,39 @@
         </template>
     </Dialog>
 
-    <div style="display:flex;flex-direction:column;justify-content:center">
-        <nav  class=" nav-bar mb-2">
-            <ul class="p-2 shadow-2 " style="display:flex;gap:1rem;justify-content:center">
+    <div  style="display:flex;flex-direction:column;justify-content:center;align-items:center">
+        <nav  class=" nav-bar  p-2 " style="width:100%; max-width:1024px">
+            <ul class="p-2  " style="display:flex;gap:1rem;flex-wrap:wrap;">
              
 
-                    <li style="position: relative; display:flex;justify-content:center; align-items:center" class="p-0 " v-for="(item, index) in items" :key="index">
+                    <li style="position: relative; display:flex;justify-content:center; align-items:center;flex-basis:200" class="p-0 " v-for="(item, index) in items" :key="index">
                         
                         <Button @click="navigateToCategory(item.name,item.id)" :disabled="deleting" :class="isActive(item.name)? 'selected': ''"  class="nav-bar--button shadow-2"  :label="item.name"></Button>
 
                         <Button @click="prepareToDelete(item)" v-if="deleting && !isActive(item.name)" size="small" class="m-0 shadow-2"  severity="danger" icon="pi pi-times " style="position: absolute;width:1rem;height:1rem; left:-.5rem; padding:0.7rem;border-radius:50%"></Button>
 
-                       
-                
                     </li>
+                    
 
-               
+       
                 
-                <li class="p-0" style="position: relative;">
+               
+                <li class="p-0" style="display: flex;gap:1rem">
                     <Button  class="nav-bar--button-black m-0 shadow-2" @click="dialogVisible = true" icon="pi pi-plus" ></Button>
-                </li>
 
-                <li class="p-0">
                     <Button  @click="deleting = !deleting" :style="!deleting? 'background-color: red;' : 'background-color: #22c55e;'"  class="nav-bar--button-black m-0 shadow-2" :icon="deleting? 'pi pi-check' : 'pi pi-trash'" ></Button>
                 </li>
             </ul>
         </nav>
 
-        <router-view>
-        </router-view>
+       
 
         <img v-if="routing.path == '/daily-inventory/daily-inventory-settings/'" style="height:60vh;object-fit:contain" src="/images/dailyMan.png" alt="">
     
     </div>
   
+    <router-view >
+    </router-view>
 
 </template>
 
@@ -138,7 +137,7 @@ onMounted(async() =>{
 <style scoped>
 
 .nav-bar--button{
-    border-radius: 2rem;
+    border-radius: 0rem;
     padding: 0.3rem 1rem;
     background-color: rgb(232, 232, 232);
     color: rgb(122, 122, 122);
@@ -152,7 +151,7 @@ button{
     text-transform: capitalize;
 }
 .nav-bar--button-black{
-    border-radius: 2rem;
+    border-radius: 0.5rem;
     padding: 0.3rem 1rem;
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
@@ -166,12 +165,14 @@ button{
 .selected{
     background-color: var(--primary-color);
     color: white;
+    border-radius: 0.3rem;
 }
 .nav-bar{
     overflow-x: auto;
-    display: flex;
-    justify-content: center;
-    border-radius: 1rem;
+    display: grid;
+    
+
+    border-radius: 0.5rem;
 }
 
 li{
@@ -179,7 +180,7 @@ li{
 }
 
 ul{
-    border-radius: 10rem;
+    border-radius: 0.5rem;
 }
 
 </style>

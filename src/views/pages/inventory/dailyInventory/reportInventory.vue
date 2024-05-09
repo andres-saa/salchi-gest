@@ -1,7 +1,7 @@
 <template>
 
 
-    <Dialog style="width: 30rem;" class="m-2" header="Estas seguro Monstruo?" modal v-model:visible="showConfirmDialog">
+    <Dialog :closable="false" style="width: 30rem;" class="m-2" header="Estas seguro Monstruo?" modal v-model:visible="showConfirmDialog">
 
         <span style="color: red;">Esta accion no se puede deshacer luego, piensalo bien.</span> <br> <br>
         Hola,
@@ -19,7 +19,7 @@
         </p>
         <template #footer>
             <div style="display: flex;justify-content:end">
-                <Button @click="showConfirmDialog = false" label="Mejor lo reviso de nuevo!" severity="help"></Button>
+                <Button @click="() => {showConfirmDialog = false; validating = false} " label="Mejor lo reviso de nuevo!" severity="help"></Button>
                 <Button text label="Firmar" @click="sendInventory" severity="danger"></Button>
             </div>
         </template>
@@ -27,7 +27,7 @@
 
 
     <div class="md:mx-auto p-3 md:shadow-2 mb-6"
-        style="max-width:700px;border-radius:0.5rem;min-height:80vh; margin-top:3rem">
+        style="max-width:700px;border-radius:0.5rem;min-height:80vh; margin-top:3rem;background-color:white">
 
         <p class="text-2xl my-3 text-center ">
             <b>
@@ -51,6 +51,12 @@
 
             </b>{{ store.rawUserData?.name.toLowerCase() }}
         </p>
+        <p class="text-xl  py-0 my-0" style="text-transform: capitalize;">
+            <b>
+                sede :
+
+            </b>{{ store.rawUserData?.site_name.toLowerCase() }}
+        </p>
         <!-- {{groupWithItems}} -->
         <div v-for="(grupo, index) in groupWithItems" :key="index">
             <p class="text-center p-1 my-3" style="background-color: #00000020;border-radius:0.2rem">
@@ -62,16 +68,17 @@
 
             <div style="align-items:center" class="grid m-0 " v-for="(item, index) in grupo.items" :key="index">
 
-                <div style="text-transform: uppercase; font-weight:bold" class="col-12 my-2 md:col-6 p-0"> {{
-                    item.item_name
-                    }} <Tag severity="danger">{{ item.unit_measure }}</Tag>
+                <div style="text-transform: uppercase;display:flex;gap:1rem; justify-content:space-between; font-weight:bold" class="col-12 my-2 md:col-8 p-0">
+                    <span>{{
+                        item.item_name
+                       }}</span>  <Tag style="border-radius:0.3rem;" :style="`background-color:${unitMeasureColors[item.unit_measure_id]}`">{{ item.unit_measure }}</Tag>
                 </div>
 
-                <div class="col-12 md:col-6 px-0 py-1 md:pl-3" style="display: flex;align-items:center;gap:1rem">
+                <div class="col-12 md:col-4 px-0 py-1 md:pl-3" style="display: flex;align-items:center;gap:1rem">
                     <!-- <span v-if="item.quantity == null" style="color:red; font-weight:bold">*</span> -->
-                    <InputNumber  :useGrouping="false"  showButtons  buttonLayout="horizontal"  :min="0" :maxFractionDigits="2" v-model="item.quantity"
-                        :suffix="` ${item.unit_measure}`" maxDecimal="5" style="width: 100% " class="" :style="item.quantity == null && validating? 'outline:3px solid red;border-radius:0.5rem' : ''" >
-                    </InputNumber>
+                    <input   @keydown="handleKeydown" type="number"   :useGrouping="false"  showButtons   :min="0" :maxFractionDigits="2" v-model="item.quantity"
+                        :suffix="` ${item.unit_measure}`" maxDecimal="5" style="width: 100%;border-radius:0.3rem; border:2px solid #00000030" class="p-3 md:p-2"  :style="item.quantity == null && validating? 'border:2px solid red;border-radius:0.3rem' : ''" />
+                    
                    
                 </div>
 
@@ -111,7 +118,23 @@ function formatDate(date) {
     return `${day} de ${months[monthIndex]} del ${year}`;
 }
 
-
+const unitMeasureColors = {
+    1: '#FF0000',  // Rojo brillante
+    2: '#FF4500',  // Naranja rojizo
+    3: '#FFD700',  // Oro
+    4: '#FF4500',  // Verde oficina
+    5: '#0000FF',  // Azul fuerte
+    6: '#4B0082',  // Índigo
+    7: '#800080',  // Púrpura
+    8: '#EE82EE',  // Violeta
+    9: '#FFC0CB',  // Rosa
+    10: '#00FFFF', // Aqua
+    11: '#3CB371', // Verde mar medio
+    12: '#00008B', // Azul oscuro
+    13: '#FFA500', // Naranja
+    14: '#A52A2A', // Marrón
+    15: '#FFFF00'  // Amarillo
+};
 
 const prepareItemsToSend = (grupo) => {
     return grupo.map(grupo => grupo).map(item => 
@@ -125,6 +148,25 @@ const prepareItemsToSend = (grupo) => {
     })
 }
 
+
+function handleKeydown(event) {
+  // Comprobar si la tecla presionada es la coma
+  if (event.key === ',') {
+    alert('Por favor usa punto ( . ) para los decimales, gracias');
+    event.preventDefault(); // Prevenir que la tecla tenga efecto en el input
+  }
+}
+const prepareItemsToSendCero = (grupo) => {
+    return grupo.map(grupo => grupo).map(item => 
+        item.items
+    ).flat().map(it => {
+        return {
+            daily_inventory_item_id:it.item_id,
+            quantity:it.quantity  || 0,
+            daily_inventory_unit_measure_id:it.unit_measure_id
+        }
+    })
+}
 
 const preareInventory = () => {
     return {
@@ -151,7 +193,9 @@ const openDialog = () => {
 
 const sendInventory = async() => {
    
+
     const data = preareInventory()
+    data.daily_inventory_items = prepareItemsToSendCero([...groupWithItems.value])
     await dailyInventoryReportsService.InsertDailyInventory(data)
     router.push('/daily-inventory/daily-inventory-my-reports/')
 
@@ -184,5 +228,20 @@ onMounted(async () => {
 border-bottom:1px solid red
 }
 
+
+/* Para Chrome, Safari, y Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para Firefox */
+
+
+/* Opcional: para todos los navegadores, asegurando que no aparezcan las flechas */
+input[type="number"] {
+  appearance: textfield;
+}
 
 </style>

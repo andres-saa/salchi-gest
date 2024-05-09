@@ -17,7 +17,7 @@
           
           <Password class="" toggleMask   v-model="credentials.password" placeholder="Clave" 
                       />
-          <Button size="samll"  style="width: 100%;background-color: rgb(255, 98, 0); border: none;" label="Iniciar sesion" class="my-3 " type="submit" ></Button>
+          <Button size="samll"  style="width: 100%;background-color: rgb(255, 98, 0); border: none;color:#fff" label="Iniciar sesion" class="my-3 " type="submit" ></Button>
       </form>
   </div>
 </template>

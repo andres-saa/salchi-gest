@@ -13,15 +13,20 @@
     <div v-for="(value, key) in agruparPorGroupName(entries)" >
         
         
-        <DataTable style="max-width:50rem"  v-model:filters="filters" class="col-12 mb-4 shadow-2 mt-0 mx-auto" :value=" value" tableStyle="min-width:30rem">
-            <template #header>
-                <div style="display: flex;justify-content:center;align-items:center;">
-                    <span>{{ key }}</span>
-                    <!-- <InputText v-model="filters['global'].value" placeholder="Buscar..." /> -->
-                </div>
-            </template>
+        <DataTable stripedRows style="max-width:50rem" showgridlines  v-model:filters="filters" class="col-12 mb-4 p-2 shadow-2 mt-0 mx-auto" :value=" value" tableStyle="min-width:30rem">
+          <template #header class="p-0">
+         
+                <p class="p-1 m-0 text-center" style="font-weight: bold;background:#00000020">{{ key }}</p>
+                <!-- <InputText v-model="filters['global'].value" placeholder="Buscar..." /> -->
+       
+          </template>
             <Column style="width: 40%;" class="py-1 px-0" field="item_name" header="Nombre"></Column>
-            <Column style="width: 20%;" class="py-1 px-2rem" field="quantity" header="Cantidad"></Column>
+            <Column style="width: 20%;" class="py-1 px-2rem" field="quantity" header="Cantidad">
+            
+                <template #body="data">
+                    {{ data.data.quantity?.toString().replace('.', ',') }}
+                </template>
+            </Column>
             <Column style="width: 400%;" class="py-1 px-0" field="unit_measure" header="Unidad de medida"></Column>
     
         </DataTable>

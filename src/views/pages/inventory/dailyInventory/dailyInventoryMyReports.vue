@@ -74,7 +74,7 @@
 <div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
 
 
-    <DataTable style="max-width: 900px;"  v-model:filters="filters" class="col-12 m-auto" :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
+    <DataTable stripedRows style="max-width: 900px;"  v-model:filters="filters" class="col-12 m-auto" :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
         <template #header>
           
             <div style="display: flex;justify-content:space-between;align-items:center">
@@ -91,7 +91,7 @@
             {{ temp.data.date.split('-').reverse().join("-")}}
         </template>
         </Column>
-        <Column class="py-1" field="date" header="Action">
+        <Column class="py-0" field="date" header="Action">
             <template #body="data">
 
                 <router-link :to="`/daily-inventory/daily-inventory-view/${data.data.daily_inventory_id}`">

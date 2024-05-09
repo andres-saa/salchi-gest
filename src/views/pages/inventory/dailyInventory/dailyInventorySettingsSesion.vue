@@ -40,11 +40,11 @@
                     <span style="text-transform: uppercase;"> {{router.params.sesion}} </span>
                 </div>
             </template>
-            <Column style="width: 10%;" class="py-1 px-0" field="id" header="Id"></Column>
-            <Column style="width: 50%;" class="py-1 px-0" field="item_name" header="Nombre"></Column>
-            <Column style="width: 20%;" class="py-1 px-0" field="unit_of_measure_name" header="Unidad de medida"></Column>
+            <Column style="width: 10%;" class="py-2 px-0" field="id" header="Id"></Column>
+            <Column style="width: 50%;" class="py-2 px-0" field="item_name" header="Nombre"></Column>
+            <Column style="width: 20%;" class="py-2 px-0" field="unit_of_measure_name" header="Unidad de medida"></Column>
 
-            <Column style="width: 20%;" class="py-1 px-0" field="item_name" header="">
+            <Column style="width: 20%;" class="py-2 px-0" field="item_name" header="">
             <template #body="item"  >
                 <div style="display: flex; justify-content:end">
                     <!-- <Button text severity="warning" class="p-0" icon="pi pi-pencil"></Button> -->
@@ -54,11 +54,11 @@
             </template>
             </Column>
 
-            <!-- <Column style="width: 400%;" class="py-1 px-0" field="unit_measure" header="Unidad de medida"></Column> -->
+            <!-- <Column style="width: 400%;" class="py-2 px-0" field="unit_measure" header="Unidad de medida"></Column> -->
             <template #footer> 
 
                 <div class="col-12 p-0" style="display: flex; justify-content:end">
-                    <Button @click="dialogVisible = true" class="" severity="help" style="border-radius: 1rem;padding:0.3rem 0" icon="pi pi-plus"></Button>
+                    <Button @click="dialogVisible = true" class="" severity="help" style="border-radius: 0.5rem;padding:0.3rem 0" icon="pi pi-plus"></Button>
 
                 </div>
             </template>
