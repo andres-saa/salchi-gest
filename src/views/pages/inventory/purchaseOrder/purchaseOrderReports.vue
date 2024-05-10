@@ -48,12 +48,12 @@
 
     <!-- {{ invetnoryDailyReports }} -->
     <div class=" m-auto" style="max-width: 1024px;">
-        <div class=" m-0 col-12" style="align-items: center;">
+        <div class=" m-0 col-12 " style="align-items: center;">
 
 
 
-            <div class=" p-0  mb-3" style="display: flex;align-items:center">
-                <span class="text-xl mr-2"> <b>Sedes</b></span>
+            <div class=" p-0  mb-3" style="display: flex;align-items:center;gap:1rem">
+                <span class="text-xl"> <b>Sedes</b></span>
                 <MultiSelect style="" display="chip" multiple v-model="selectedSites" optionLabel="site_name"
                     :options="sites.filter(s => s.site_id != 12 & s.site_id != 13)" class="text-sm multi p-0">
                 </MultiSelect>
@@ -160,10 +160,10 @@
                             <Button style="height: 2rem;" severity="help" class="p-1" icon="pi pi-eye" />
                         </router-link>
     
-                        <Button style="height: 2rem;" @click="prepareDownload(data.data.daily_inventory_id,data.data.site_name,data.data.date)" severity="success" class="p-1"
+                        <Button style="height: 2rem;" @click="prepareDownload(data.data.purchase_order_id,data.data.site_name,data.data.expedition_date?.split('T')[0])" severity="success" class="p-1"
                             icon="pi pi-download" />
     
-                            <Button style="height: 2rem;" @click="prepareDownload(data.data.daily_inventory_id,data.data.site_name,data.data.date)" severity="warning"  class="p-1"
+                            <Button style="height: 2rem;" severity="warning"  class="p-1"
                             icon="pi pi-history p-0 m-0" />
     
                     </div>
@@ -276,14 +276,13 @@ const getFiltered = async () => {
     const user_id = store.rawUserData.id
     const new_startDate = formatDate(startDate.value)
     const new_endDate = formatDate(endDate.value)
-    invetnoryDailyReports.value = await dailyInventoryReportsService.getAllDailyInventoryReportsFiltered(site_ids, new_startDate, new_endDate)
+    invetnoryDailyReports.value = await purchaseOrderService.getAllpurchaseOrderReportsFiltered(site_ids, new_startDate, new_endDate)
 }
 
 const entries = ref([])
 
-const prepareDownload = async (daily_inventory_id,site_name,date) => {
-    entries.value = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(daily_inventory_id)
-
+const prepareDownload = async (purchase_order_id,site_name,date) => {
+    entries.value = await purchaseOrderService.getpurchaseOrderEntriesBypurchaseOrderID(purchase_order_id)
     const data = entries.value.map(product => ({
         "Producto": product.item_name,
         "Cantidad": product.quantity,
@@ -299,21 +298,23 @@ const prepareDownload = async (daily_inventory_id,site_name,date) => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
 
-    XLSX.writeFile(workbook, `Inventario_${site_name}_${date.split('-').reverse().join("-")} .xlsx`);
+    XLSX.writeFile(workbook, `Orden_de_compra_${site_name}_${date} .xlsx`);
 
 };
 
 
 
+
 const downloadAll = async() => {
 
-    const reportes = invetnoryDailyReports.value
+const reportes = invetnoryDailyReports.value
 
-    reportes.forEach(reporte => {
-        prepareDownload(reporte.daily_inventory_id,reporte.site_name,reporte.date)
-    });
+reportes.forEach(reporte => {
+    prepareDownload(reporte.purchase_order_id,reporte.site_name,reporte.expedition_date?.split('T')[0])
+});
 
 }
+
 
 
 </script>
@@ -321,7 +322,8 @@ const downloadAll = async() => {
 
 <style scoped>
 .multi {
-    width: 90%;
+    width: 100%;
+    max-width: 930px;
 }
 
 @media (max-width:500px) {

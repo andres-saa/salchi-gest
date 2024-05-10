@@ -45,15 +45,15 @@
     </Dialog>
 
     <!-- {{ invetnoryDailyReports }} -->
-    <div class=" m-auto" style="max-width: 900px;">
+    <div class=" m-auto" style="max-width: 1024px;">
         <div class="grid mx-0 mt-4 ">
 
             
             
 
-            <div class="col-12 p-2" style="display: flex; gap:1rem;justify-content:center;align-items:center">
+            <div class="col-12 p-0" style="display: flex; gap:1rem;justify-content:center;align-items:center">
                 <span class="text-xl" > <b>Periodo</b></span>
-                <InputText class="" @click="showDateDialog = true" style="height: 2.7rem;"
+                <InputText class="" @click="showDateDialog = true" style="height: 2.7rem;width:16rem"
                     :value="`${formatDate(startDate)}  |  ${formatDate(endDate)}`" placeholder="periodo" />
                 <!-- {{ dateRange }} -->
 
@@ -62,7 +62,7 @@
 
             </div>
 
-            <div class="col-12 px-4" style="display: flex;justify-content:end">
+            <div class="col-12 px-3" style="display: flex;justify-content:end">
                 <Button severity="help" icon="pi pi-download" label="Descargar todo" @click="downloadAll"></Button>
     
             </div>
@@ -71,15 +71,19 @@
     </div>
 
 
-<div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
+<div class="mt-3 mx-auto" style="min-height:20vh;max-width:1024px; display: flex; justify-content:center;align-items:center">
 
 
-    <DataTable stripedRows style="max-width: 900px;"  v-model:filters="filters" class="col-12 m-auto" :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
+    <DataTable stripedRows style="max-width: 1024px;"  v-model:filters="filters" class="col-12 m-auto" :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
         <template #header>
-          
-            <div style="display: flex;justify-content:space-between;align-items:center">
-                <span class="text-xl"> Mis reportes de inventario</span>
-                <InputText v-model="filters['global'].value" placeholder="Buscar..." />
+            <div class="grid" style="align-items:center">
+                <div class="col-12 md:col-6 p-3"> 
+                    <span  class="text-xl" style="width: 100%;"> Mis reportes de inventario</span>
+                </div>
+                <div class="col-12 md:col-6 p-3"> 
+                    <InputText style="width: 100%;" class="" v-model="filters['global'].value" placeholder="Buscar..." />
+                </div>
+                
 
             </div>
         </template>
@@ -91,20 +95,23 @@
             {{ temp.data.date.split('-').reverse().join("-")}}
         </template>
         </Column>
-        <Column class="py-0" field="date" header="Action">
+        <Column style="max-width: 5rem" class="py-1 px-0 m-0" field="date" header="Action">
             <template #body="data">
 
-                <router-link :to="`/daily-inventory/daily-inventory-view/${data.data.daily_inventory_id}`">
-                    <Button text icon="pi pi-eye" />
-                </router-link>
-           
-                <Button @click="prepareDownload(data.data.daily_inventory_id,data.data.site_name,data.data.date)" severity="success" text
+                <div style="display: flex;gap:0.5rem;">
+                    <router-link :to="`/daily-inventory/daily-inventory-view/${data.data.daily_inventory_id}`">
+                        <Button style="height: 2rem;" severity="help" class="p-1" icon="pi pi-eye" />
+                    </router-link>
+
+                  
+
+
+                        <Button @click="prepareDownload(data.data.daily_inventory_id,data.data.site_name,data.data.date)" style="height: 2rem;color:white; background:var(--primary-color);border:none" class="p-1"
                         icon="pi pi-download" />
 
-
                     
-
-
+                </div>
+                
             </template>
         </Column>
     </DataTable>

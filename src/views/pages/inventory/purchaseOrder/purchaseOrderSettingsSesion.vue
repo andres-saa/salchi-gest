@@ -34,7 +34,7 @@
     </Dialog>
 
     <div class="m-2">
-        <DataTable style="max-width:50rem;border-radius:0.5rem;min-height:70vh"  v-model:filters="filters" class="col-12 shadow-3 my-0 mx-auto" :value=" items" tableStyle="min-width:30rem">
+        <DataTable style="max-width:1000px;border-radius:0.5rem;min-height:70vh"  v-model:filters="filters" class="col-12 shadow-3 my-0 mx-auto" :value=" items" tableStyle="min-width:30rem">
             <template #header>
                 <div style="display: flex;justify-content:center;align-items:center;">
                     <span style="text-transform: uppercase;"> {{router.params.sesion}} </span>
@@ -59,7 +59,7 @@
             <template #footer> 
 
                 <div class="col-12 p-0" style="display: flex; justify-content:end">
-                    <Button @click="dialogVisible = true" class="p-0"  severity="help" style="border-radius: 0.5rem;height:2rem; padding:0.3rem 0" icon="pi pi-plus"></Button>
+                    <Button @click="open" class="p-0"  severity="help" style="border-radius: 0.5rem;height:2rem; padding:0.3rem 0" icon="pi pi-plus"></Button>
 
                 </div>
             </template>
@@ -81,6 +81,7 @@ import {useRoute} from 'vue-router'
 
 
 const prepareToDelete = (item) => {
+    
     currentDelete.value = item
     deleteDialogVisible.value = true
 
@@ -141,6 +142,10 @@ const saveItem = async(item) => {
 initFilters();
 
 
+const open = () => {
+    dialogVisible.value = true
+    refresh()
+}
 
 
 </script>

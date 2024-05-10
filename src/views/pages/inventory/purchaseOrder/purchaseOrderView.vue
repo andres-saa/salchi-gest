@@ -2,7 +2,7 @@
 
 <div >
 
-    <p class="text-center text-2xl" style="font-weight: bold;">Resumen de reporte de inventario diario</p>
+    <p class="text-center text-2xl" style="font-weight: bold;">Resumen de orden de compra</p>
     <div class="header mx-auto px-3 md:px-0 my-5" style=" max-width:50rem;overflow-x:auto" >
         <p class="p-0 m-0" style="width: max-content;"> <b>FECHA DE EXPEDICION: </b>  {{ entries[0]?.date?.split('T')[0]}} </p>
         <p class="p-0 m-0" style="width: max-content;"> <b>HORA DE EXPEDICION: </b>  {{ entries[0]?.date?.split('T')[1]}} </p>

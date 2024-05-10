@@ -36,7 +36,7 @@ export const purchaseOrderService = {
     async getAllMypurchaseOrderReportsFiltered(responsible_id, start_date, end_date) {
         try {
             // Asegúrate de que la URL refleja la estructura correcta según la definición del endpoint en tu servidor.
-            const response = await axios.get(`${URI}/all-daily-inventory-report/${responsible_id}/${start_date}/${end_date}`);
+            const response = await axios.get(`${URI}/all-purchase-orders-filtered/${responsible_id}/${start_date}/${end_date}`);
             if (response.status === 200) {
                 return response.data;
             } else {
@@ -50,10 +50,12 @@ export const purchaseOrderService = {
     },
 
 
+    
+
     async getAllpurchaseOrderReportsFiltered(site_ids, start_date, end_date) {
         try {
             // Asegúrate de que la URL refleja la estructura correcta según la definición del endpoint en tu servidor.
-            const response = await axios.get(`${URI}/all-daily-inventory-report-filtered/${site_ids}/${start_date}/${end_date}`);
+            const response = await axios.get(`${URI}/all-purchase-orders-by-site-filtered/${site_ids}/${start_date}/${end_date}`);
             if (response.status === 200) {
                 return response.data;
             } else {

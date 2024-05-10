@@ -14,6 +14,86 @@
         </template>
     </Dialog>
 
+
+    <Dialog class="mx-2" header="Nueva unidad de medida" style="width: 30rem;" modal v-model:visible="newUnitMeasureDialog">
+
+        <div class="" style="display: flex;flex-direction:column;gap:1rem">
+            <span>Nombre de la unidad de medida</span>
+            <InputText v-model="newUnitMeasure.name"></InputText>
+        </div>
+
+        <template #footer>
+            <div style="display: flex; justify-content:end">
+                <Button @click="newUnitMeasureDialog = false" severity="danger" label="Cerrar"> </Button>
+                <Button @click="saveUnitMearure(newUnitMeasure)" severity="help" label="Guardar"> </Button>
+            </div>
+        </template>
+    </Dialog>
+
+    <Dialog :closable="false" class="mx-2" header="Unidades de medida" style="width: 40rem;" modal v-model:visible="dialogVisibleMeasure">
+
+
+    
+        <DataTable style="max-width:1000px;border-radius:0.5rem;min-height:min-content"  v-model:filters="filters" class="col-12 p-0" :value=" unitMeasures" tableStyle="">
+            <template #header>
+                <div style="display: flex;justify-content:center;align-items:center;">
+                   Unidades de medida
+                </div>
+            </template>
+            <Column style="width: 10%;" class="py-1 px-0" field="id" header="Id">
+            
+                <template #body="data">
+                    {{ data.data.id }}
+
+                </template>
+            </Column>
+
+            <Column style="width: 10%;" class="py-1 px-0" field="id" header="Nombre">
+            
+                <template #body="data">
+                    {{ data.data.name }}
+
+                </template>
+            </Column>
+
+
+            <column style="width: 10%;height:2rem" class="py-1 px-0" >
+            
+                <template #body="item"  >
+                    <div style="display: flex; justify-content:end">
+                        <!-- <Button text severity="warning" class="p-0" icon="pi pi-pencil"></Button> -->
+                        <Button @click="prepareToDeleteMeasure(item.data)" severity="danger" style="height: 2rem;" class="p-0 nav-bar-- m-0 shadow-2" icon="pi pi-trash"></Button>
+                            
+                    </div>
+                 
+                </template>
+    
+            </column>
+
+
+
+            
+            <template #footer> 
+
+                <div class="col-12 p-0" style="display: flex; justify-content:end">
+                    <Button @click="newUnitMeasureDialog = true" class="p-0"  severity="help" style="border-radius: 0.5rem;height:2rem; padding:0.3rem 0" icon="pi pi-plus"></Button>
+                </div>
+            </template>
+        </DataTable>
+
+
+       
+
+
+        <template #footer>
+            <div style="display: flex; justify-content:end">
+                <Button @click="dialogVisibleMeasure = false" severity="danger" label="Cerrar"> </Button>
+            </div>
+        </template>
+    </Dialog>
+
+
+
     <Dialog class="mx-2" header="Borrar grupo" style="width: 30rem;" modal v-model:visible="deleteDialogVisible">
 
         <div class="" style="display: flex;flex-direction:column;gap:1rem">
@@ -28,6 +108,26 @@
             </div>
         </template>
     </Dialog>
+
+
+
+
+    <Dialog class="mx-2" header="Borrar grupo" style="width: 30rem;" modal v-model:visible="deleteDialogUnitMeasure">
+
+        <div class="" style="display: flex;flex-direction:column;gap:1rem">
+            <span>Esta seguro de eliminar La unidad de medida {{ currentDeleteMeasure?.name}} ?</span>
+        
+        </div>
+
+        <template #footer>
+            <div style="display: flex; justify-content:end">
+                <Button @click="deleteDialogUnitMeasure = false" severity="help" label="No"> </Button>
+                <Button @click="disableUnitMeasure(currentDeleteMeasure.id)" severity="danger" label="Borrar"> </Button>
+            </div>
+        </template>
+    </Dialog>
+
+
 
     <div  style="display:flex;flex-direction:column;justify-content:center;align-items:center">
         <nav  class=" nav-bar  p-2 " style="width:100%; max-width:1024px">
@@ -50,6 +150,11 @@
                     <Button  class="nav-bar--button-black m-0 shadow-2" @click="dialogVisible = true" icon="pi pi-plus" ></Button>
 
                     <Button  @click="deleting = !deleting" :style="!deleting? 'background-color: red;' : 'background-color: #22c55e;'"  class="nav-bar--button-black m-0 shadow-2" :icon="deleting? 'pi pi-check' : 'pi pi-trash'" ></Button>
+                </li>
+
+                <li class="p-0" style="display: flex;gap:1rem">
+                    <Button label="Unidades de medida" severity="warning" class="nav-bar--button-primary m-0 shadow-2" @click="dialogVisibleMeasure = true" icon="pi pi-plus" ></Button>
+
                 </li>
             </ul>
         </nav>
@@ -76,16 +181,25 @@ import { onMounted , ref } from 'vue'
 import router from '@/router/index.js';
 
 import {useRoute} from 'vue-router'
+import DailyInventoryReports from '../dailyInventory/dailyInventoryReports.vue';
 const items = ref([])
 const routing = useRoute()
 const dialogVisible = ref(false)
+const dialogVisibleMeasure = ref(false)
 const deleteDialogVisible = ref(false)
 const currentDelete = ref({ })
+const currentDeleteMeasure  = ref({})
+const unitMeasures = ref([])
+const newUnitMeasureDialog = ref(false)
+const deleteDialogUnitMeasure = ref(false)
+const newUnitMeasure = ref({})
 
 
 
 const refresh = async() => {
     items.value = await purchaseOrderService.getpurchaseOrderGroups()
+    unitMeasures.value = await dailyInventoryReportsService.getAllDailyInventoryUnitMeasures()
+
 
 }
 
@@ -97,10 +211,24 @@ const prepareToDelete = (item) => {
 }
 
 
+const prepareToDeleteMeasure = (item) => {
+    currentDeleteMeasure.value = item
+    deleteDialogUnitMeasure.value = true
+
+}
+
+
 
 const disableGroup = async(id) => {
     await purchaseOrderService.disablePurchaseGroupItems(id)
     deleteDialogVisible.value = false
+    refresh()
+}
+ 
+
+const disableUnitMeasure = async(id) => {
+    await dailyInventoryReportsService.disableUnitMeasureInventory(id)
+    deleteDialogUnitMeasure.value = false
     refresh()
 }
  
@@ -123,17 +251,22 @@ const saveGroup = async(data) => {
     refresh()
 }
 
+const saveUnitMearure = async(data) => {
+    await dailyInventoryReportsService.InsertDailyUnitMeasure(data)
+    newUnitMeasureDialog.value = false
+    refresh()
+}
+
+
 const isActive = (sesion) => {
     return routing.params.sesion == sesion
 }
 
+onMounted( async() => {
+    refresh()
+})
 
-onMounted(async() =>{
 
-    await refresh()
-
-}
-)
 </script>
 
 <style scoped>
@@ -160,7 +293,14 @@ button{
     border: none;
 
 }
+.nav-bar--button-primary{
+    border-radius: 0.5rem;
+    padding: 0.3rem 1rem;
+    background-color: var(--primary-color);
+    color: rgb(255, 255, 255);
+    border: none;
 
+}
 
 
 

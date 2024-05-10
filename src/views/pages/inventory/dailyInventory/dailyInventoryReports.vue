@@ -47,22 +47,22 @@
 
 
     <!-- {{ invetnoryDailyReports }} -->
-    <div class=" m-auto" style="max-width: 900px;">
-        <div class=" m-0 col-12" style="align-items: center;">
+    <div class=" m-auto" style="max-width: 1024px;">
+        <div class=" m-0 col-12 p-3" style="align-items: center;">
 
 
 
-            <div class=" p-0  mb-3" style="display: flex;align-items:center">
-                <span class="text-xl mr-2"> <b>Sedes</b></span>
+            <div class=" p-0  mb-3" style="display: flex;gap:1rem;align-items:center;justify-content:start;">
+                <span class="text-xl" style=""> <b>Sedes</b></span>
                 <MultiSelect style="" display="chip" multiple v-model="selectedSites" optionLabel="site_name"
                     :options="sites.filter(s => s.site_id != 12 & s.site_id != 13)" class="text-sm multi p-0">
                 </MultiSelect>
             </div>
 
 
-            <div class="col p-0" style="display: flex; gap:1rem;align-items:center">
+            <div class="col p-0" style="display: flex;justify-content:start; gap:1rem;align-items:center">
                 <span class="text-xl"> <b>Periodo</b></span>
-                <InputText class="" @click="showDateDialog = true" style="height: 2.7rem;"
+                <InputText class="" @click="showDateDialog = true" style="height: 2.7rem;width:16rem"
                     :value="`${formatDate(startDate)}  |  ${formatDate(endDate)}`" placeholder="periodo" />
                 <!-- {{ dateRange }} -->
 
@@ -76,7 +76,7 @@
 
         </div>
 
-        <div class="col-12 px-4" style="display: flex;justify-content:end">
+        <div class="col-12 px-3" style="display: flex;justify-content:end">
             <Button severity="help" icon="pi pi-download" label="Descargar todo" @click="downloadAll"></Button>
 
         </div>
@@ -87,17 +87,29 @@
     <div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
 
 
-        <DataTable style="max-width: 900px;" v-model:filters="filters" class="col-12 m-auto"
+        <DataTable style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
             :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
             <template #header>
-                <div style="display: flex;justify-content:space-between;align-items:center">
-                    <span class="text-xl"> Gestionar reportes de inventario</span>
-                    <InputText v-model="filters['global'].value" placeholder="Buscar..." />
+                <div class="grid" style="align-items:center">
+                    <div class="col-12 md:col-6 p-3"> 
+                        <span  class="text-xl" style="width: 100%;"> Gestionar reportes de inventario</span>
+                    </div>
+                    <div class="col-12 md:col-6 p-3"> 
+                        <InputText style="width: 100%;" class="" v-model="filters['global'].value" placeholder="Buscar..." />
+                    </div>
+                    
 
                 </div>
             </template>
             <Column class="py-1" field="daily_inventory_id" header="ID"></Column>
-            <Column class="py-1" field="employer_name" header="Responsable"></Column>
+            <Column class="py-1" field="employer_name" header="Responsable">
+                <template #body="data">
+                    <div style="text-transform: uppercase;">
+                        {{ data.data.employer_name }}
+
+                    </div>
+                </template>
+            </Column>
             <Column class="py-1" field="site_name" header="Sede"></Column>
             <Column class="py-1" field="date" header="Fecha">
 
@@ -107,17 +119,23 @@
                 </template>
 
             </Column>
-            <Column class="py-1" field="date" header="Action">
+            <Column style="" class="py-1 px-0" field="date" header="Action">
                 <template #body="data">
 
-                    <router-link :to="`/daily-inventory/daily-inventory-view/${data.data.daily_inventory_id}`">
-                        <Button text icon="pi pi-eye" />
-                    </router-link>
-
-                    <Button @click="prepareDownload(data.data.daily_inventory_id,data.data.site_name,data.data.date)" severity="success" text
-                        icon="pi pi-download" />
-
-
+                    <div style="display: flex;gap:0.5rem;">
+                        <router-link :to="`/daily-inventory/daily-inventory-view/${data.data.daily_inventory_id}`">
+                            <Button style="height: 2rem;" severity="help" class="p-1" icon="pi pi-eye" />
+                        </router-link>
+    
+                      
+    
+    
+                            <Button @click="prepareDownload(data.data.daily_inventory_id,data.data.site_name,data.data.date)" style="height: 2rem;background:var(--primary-color);border:none"  severity="success" class="p-1"
+                            icon="pi pi-download" />
+    
+                        
+                    </div>
+                    
                 </template>
             </Column>
         </DataTable>
@@ -268,7 +286,8 @@ const downloadAll = async() => {
 
 <style scoped>
 .multi {
-    width: 90%;
+    width: 100%;
+    max-width: 930px;
 }
 
 @media (max-width:500px) {

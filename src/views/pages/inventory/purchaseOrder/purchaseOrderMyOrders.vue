@@ -45,7 +45,7 @@
     </Dialog>
 
     <!-- {{ invetnoryDailyReports }} -->
-    <div class=" m-auto" style="max-width: 1024;">
+    <div class=" m-auto" style="max-width: 1024px;">
         <div class="grid mx-0 mt-4 ">
             
             
@@ -74,7 +74,7 @@
     <div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
 
 
-        <DataTable style="max-width: 1024;" v-model:filters="filters" class="col-12 m-auto"
+        <DataTable style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
             :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
             <template #header>
                 <div class="grid" style="align-items:center">
@@ -90,7 +90,7 @@
             </template>
             <Column class="py-1" field="purchase_order_id" header="ID"></Column>
             <Column class="py-1" field="employer_name" header="Responsable"></Column>
-            <Column class="py-1" field="site_name" header="Sede"></Column>
+            <Column  class="py-1" field="site_name" header="Sede"></Column>
             <Column  class="py-1" field="date" header="Fecha">
 
                 <template #body="data">
@@ -117,7 +117,7 @@
             <Column class="py-1" field="date" header="Estado">
 
                 <template #body="data">
-                    <Tag severity="danger" style="width: 100%;height:2rem">
+                    <Tag severity="danger" style="width: 100%;height:2rem; min-width:max-content" >
                         {{ data.data.current_status}}
 
                     </Tag>
@@ -148,7 +148,7 @@
                             <Button style="height: 2rem;" severity="help" class="p-1" icon="pi pi-eye" />
                         </router-link>
     
-                        <Button style="height: 2rem;" @click="prepareDownload(data.data.purchase_order_id,data.data.site_name,data.data.date)" severity="success" class="p-1"
+                        <Button style="height: 2rem;" @click="prepareDownload(data.data.purchase_order_id,data.data.site_name,data.data.expedition_date?.split('T')[0])" severity="success" class="p-1"
                             icon="pi pi-download" />
     
                             <Button style="height: 2rem;"  severity="warning"  class="p-1"
@@ -262,7 +262,7 @@ const getFiltered = async() => {
     const user_id = store.rawUserData.id
     const new_startDate = formatDate(startDate.value) 
     const new_endDate = formatDate(endDate.value) 
-    invetnoryDailyReports.value = await dailyInventoryReportsService.getAllMyDailyInventoryReportsFiltered(user_id,new_startDate,new_endDate)
+    invetnoryDailyReports.value = await purchaseOrderService.getAllMypurchaseOrderReportsFiltered(user_id,new_startDate,new_endDate)
 }
 
 
@@ -270,9 +270,8 @@ const getFiltered = async() => {
 const entries = ref([])
 
 
-const prepareDownload = async (daily_inventory_id,site_name,date) => {
-    entries.value = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(daily_inventory_id)
-
+const prepareDownload = async (purchase_order_id,site_name,date) => {
+    entries.value = await purchaseOrderService.getpurchaseOrderEntriesBypurchaseOrderID(purchase_order_id)
     const data = entries.value.map(product => ({
         "Producto": product.item_name,
         "Cantidad": product.quantity,
@@ -282,13 +281,13 @@ const prepareDownload = async (daily_inventory_id,site_name,date) => {
 
     const worksheet = XLSX.utils.json_to_sheet(data);
     worksheet["!cols"] = [
-        { wch: Math.max(20, "Producto".length) },
+        { wch: Math.max(30, "Producto".length) },
         { wch: Math.max(0, "Cantidad".length) },
         { wch: Math.max(0, "Unidad de medida".length) }]
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
 
-    XLSX.writeFile(workbook, `Inventario_${site_name}_${date.split('-').reverse().join("-")} .xlsx`);
+    XLSX.writeFile(workbook, `Orden_de_compra_${site_name}_${date} .xlsx`);
 
 };
 
@@ -298,7 +297,7 @@ const downloadAll = async() => {
 const reportes = invetnoryDailyReports.value
 
 reportes.forEach(reporte => {
-    prepareDownload(reporte.daily_inventory_id,reporte.site_name,reporte.date)
+    prepareDownload(reporte.purchase_order_id,reporte.site_name,reporte.expedition_date?.split('T')[0])
 });
 
 }

@@ -110,6 +110,21 @@ export const dailyInventoryReportsService = {
         }
     },
 
+    async InsertDailyUnitMeasure(unit_measure) {
+        try {
+            const response = await axios.post(`${URI}/insert_unit_measure`,unit_measure);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
 
     async InsertDailyInventory(data) {
         try {
@@ -158,6 +173,22 @@ export const dailyInventoryReportsService = {
             return null;
         }
     },
+
+    async disableUnitMeasureInventory(unit_measure_id) {
+        try {
+            const response = await axios.put(`${URI}/disable_unit_measure/${unit_measure_id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
 
     async disableDailyItemInventory(item_id) {
         try {

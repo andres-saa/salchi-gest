@@ -36,7 +36,7 @@
 
                     <li style="position: relative; display:flex;justify-content:center; align-items:center;flex-basis:200" class="p-0 " v-for="(item, index) in items" :key="index">
                         
-                        <Button @click="navigateToCategory(item.name,item.id)" :disabled="deleting" :class="isActive(item.name)? 'selected': ''"  class="nav-bar--button shadow-2"  :label="item.name"></Button>
+                        <Button style="" @click="navigateToCategory(item.name,item.id)" :disabled="deleting" :class="isActive(item.name)? 'selected': ''"  class="nav-bar--button shadow-2"  :label="item.name"></Button>
 
                         <Button @click="prepareToDelete(item)" v-if="deleting && !isActive(item.name)" size="small" class="m-0 shadow-2"  severity="danger" icon="pi pi-times " style="position: absolute;width:1rem;height:1rem; left:-.5rem; padding:0.7rem;border-radius:50%"></Button>
 
@@ -56,7 +56,7 @@
 
        
 
-        <img v-if="routing.path == '/daily-inventory/daily-inventory-settings/'" style="height:60vh;object-fit:contain" src="/images/dailyMan.png" alt="">
+        <img v-if="routing.path == '/daily-inventory/daily-inventory-settings/'" style="height:60vh;object-fit:contain;width:100%;" src="/images/dailyMan.png" alt="">
     
     </div>
   
@@ -145,6 +145,7 @@ onMounted(async() =>{
     box-shadow: none;
     outline: none;
     min-width: max-content;
+    width: 100%;
 }
 
 button{
@@ -181,6 +182,14 @@ li{
 
 ul{
     border-radius: 0.5rem;
+}
+
+@media (max-width:600px) {
+
+    ul{
+        justify-content:space-between
+    }
+    
 }
 
 </style>
