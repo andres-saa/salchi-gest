@@ -1,41 +1,41 @@
 <template>
 
-<div class="aux-back"  style="background-color: blue; background-image: url('/images/bg-ipad.jpg');background-size: cover;height: 100vh;  width: 100vw; object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
+<div class="aux-back"  style="background-color: white;  object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
     
 </div> 
 
-<div style="height: calc(100vh - 6rem); display: flex; align-items: center;">
+
+<div class="aux-back"  style="background-color: rgb(0, 1, 22);opacity:0.9 ;background-size: cover;height: 100vh;  width: 100vw; object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
+    
+</div> 
+
+
+<div style="height: calc(100vh - 3rem); display: flex;margin-top:2rem; align-items: center;">
     
 
 
 
     
-    <div class="ipad-container col-12 shadow-3 p-0  " style="max-width: 800px; ">
+    <div class="ipad-container col-12   " style="max-width: 800px;border-radius:0.5rem; ">
 
-        <div  style="z-index: 99;width: min-content;margin: auto; display: flex;justify-content: center; gap: 1rem; align-items: center;" class="my-2 px-2">
+        <div  style="z-index: 99; width: min-content; display: flex;justify-content: start; gap: 1rem; align-items: center;" class=" knobi">
             
             <div style="position: relative;width: min-content; height: min-content; display: flex;align-items: center; justify-content: center;">
                 <Knob  v-model="valor" valueTemplate=""></Knob>
-                <img  style="height:3rem; position: absolute; border-radius: 50%;width: 3rem; object-fit: cover;" src="https://static.vecteezy.com/system/resources/previews/018/765/757/original/user-profile-icon-in-flat-style-member-avatar-illustration-on-isolated-background-human-permission-sign-business-concept-vector.jpg" alt="">
+                <img  style="height:3.5rem; position: absolute; border-radius: 50%;width: 3.5rem; object-fit: cover;" :src="`${URI}/read-product-image/96/employer-${store.rawUserData?.dni}`" alt="">
 
             </div>
 
            
-            <div style="display: flex; flex-direction: column;">
-                <span class="text-xl md:text-3xl" style=" color: white;min-width: max-content; font-weight: bold; text-shadow: 
--1px -1px 0 #000,  
-1px -1px 0 #000,
--1px  1px 0 #000,
-1px  1px 0 #000;">
+            <div style="display: flex; flex-direction: column;gap:0.5rem ;   ">
+                <span  class="text-xl md:text-3xl" style=" min-width: max-content;color:white;text-transform:capitalize;  text-shadow: 
+">
 
 
-Andres Felipe Arrechea Saa</span>
+{{store.rawUserData?.name.split(' ').slice(0,3).join(' ').toLowerCase()}}</span>
 
-<span style=" color: white;font-weight: bold; text-shadow: 
--1px -1px 0 #000,  
-1px -1px 0 #000,
--1px  1px 0 #000,
-1px  1px 0 #000;"> Desarrollador web</span>
+<span style=" color:white;text-transform:capitalize;
+"> {{store.rawUserData?.rol.toLowerCase()}}</span>
             </div>
 
                 
@@ -116,9 +116,10 @@ menu.name }}</span>
 
 <script setup>
 import { ref } from 'vue';
-
-
-const valor = ref(70)
+import {URI} from '@/service/conection'
+import { loginStore } from '@/store/user.js'
+const store = loginStore()
+const valor = ref(90)
 const items = ref([
     {
         label: 'Finder',
@@ -269,6 +270,10 @@ const menus = [
 
 }
 
+.knobi{
+    margin: 0 0rem;
+}
+
 .bg{
     background-image: url('/images/bg-ipad.jpg'); background-size: cover; width: 100%; object-fit: cover; height: 100%;z-index:0; top: 0; left: 0;opacity: 1; background-size: cover;
 }
@@ -300,16 +305,22 @@ Button img:hover {
     /* background-color: rgb(255, 255, 255); */
     display: flex;
     flex-direction: column;
+    gap:1rem;
     align-items: start;
     justify-content: center;
+
     /* border: 1rem solid black; */
     /* box-shadow: 0 0 10px; */
     margin: auto;
+ 
 }
+
+
 
 
 .ipad-screen {
     border-radius: 0.5rem;
+    box-shadow: 0 0 10px var(--primary-color) ; border-radius: 0.5rem;
 
 }
 
@@ -319,8 +330,8 @@ Button img:hover {
 
 .ipad-screen{
     width: 100%; position: relative;display: flex;flex-direction: column; align-items: center; justify-content: space-between;background-color:transparent;height: 100%;
-    box-shadow: 0 0 20px rgb(0, 56, 188) ; border-radius: 0.5rem;
-    /* overflow: hidden; */
+   /* box-shadow: 0 0 20px var(--primary-color) ; border-radius: 0.5rem;
+     overflow: hidden; */
 }
 
 @media (max-width: 600px) {
@@ -332,20 +343,23 @@ Button img:hover {
     .ipad-container {
         border: none;
         box-shadow: none;
-        /* height: 80vh; */
-        padding: 3rem;
-        margin-top: 3rem;
-        border-radius: none;
 
 
+        margin-top: 2rem;
+
+
+    }
+
+    .knobi{
+        margin: 1rem;
     }
     .dock{
         display: none;
     }
 
     .ipad-screen {
-        border-radius: 0;
-        box-shadow: none;
+  
+    
 
     }
 

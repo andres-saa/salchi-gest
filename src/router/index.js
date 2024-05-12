@@ -220,6 +220,20 @@ const router = createRouter({
           name: 'directory',
           component: () => import('@/views/pages/Directory.vue')
         },
+        {
+          path: '/cancellation-requests',
+          name: 'cancellation-requests',
+          component: () => import('@/views/pages/tienda/cancellationOrderRequest.vue'),
+          children:[
+            {
+              path: '/cancellation-requests/:request_status',
+              name: 'cancellation-requests-sesion',
+              component: () => import('@/views/pages/tienda/cancellationOrderRequestSesion.vue'),
+            },
+
+          ]
+        },
+        
         // {
         //   path: '/guias-user',
         //   name: 'guias-user',

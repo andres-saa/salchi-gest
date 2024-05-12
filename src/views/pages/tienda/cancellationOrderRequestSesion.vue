@@ -1,0 +1,219 @@
+<template>
+    <div class="container">
+
+
+        <Dialog v-model:visible="cancelDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
+            <template #header>
+              <h3> <b>Rechazar esta solicitud</b> </h3>
+            </template>
+
+            <form @submit.prevent="resolve(false,cancelData.id,cancelData.reason)" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
+        
+              
+              <Textarea style="resize: none; text-transform: lowercase; width:100%" id="reason" v-model="cancelData.reason" rows="5"
+                placeholder="Escribe la razón de la cancelación"></Textarea>
+        
+              <Button  style="width: 100%;border-radius:0.5rem" label="Rechazar" type="submit" class="p-button-danger" />
+
+            </form>
+        </Dialog>
+
+        <Dialog v-model:visible="aceptDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
+            <template #header>
+              <h3> <b>Aprobar esta solicitud</b> </h3>
+            </template>
+
+            <form @submit.prevent="resolve(true,cancelData.id,cancelData.reason)" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
+        
+              
+              <Textarea style="resize: none; text-transform: lowercase; width:100%" id="reason" v-model="cancelData.reason" rows="5"
+                placeholder="Escribe la razón de la cancelación"></Textarea>
+        
+              <Button style="width: 100%;border-radius:0.5rem" label="Aprobar" type="submit" class="p-button-success" />
+
+            </form>
+        </Dialog>
+
+        <DataTable stripedRows style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
+        :value="cancellationRequests" tableStyle="min-width: 50rem;">
+        <template #header>
+            <div class="grid" style="align-items:center">
+                <div class="col-12 md:col-6 p-3"> 
+                    <span  class="text-xl" style="width: 100%;"> Solicitudes de cancelacion - <span style="text-transform: capitalize;">{{route.params.request_status.split('-').join(' ')}}</span> </span>
+                </div>
+            </div>
+        </template>
+
+        <Column class="py-1" field="id" header="ID"></Column>
+        <Column class="py-1" field="site_name" header="Sede"></Column>
+        <Column class="py-1" field="order_id" header="ID orden"></Column>
+        <Column class="py-1" field="reason" header="Motivo"></Column>
+        <Column class="py-1" field="responsible" header="Quien solicita?"></Column>
+        <Column style="" class="py-1 px-0" field="date" header="Action">
+            <template #body="data">
+
+                <div style="display: flex;gap:0.5rem;">
+                  
+                        <Button v-if="route.params.request_status != 'aprobadas'" @click="show(true,data.data.id)" style="height: 2rem;" severity="success" class="p-1" icon="pi pi-check" />
+                        <Button v-if="route.params.request_status != 'rechazadas'" @click="show(false,data.data.id)" style="height: 2rem;background:var(--primary-color);border:none"  severity="danger" class="p-1"
+                        icon="pi pi-times" />
+
+                    
+                </div>
+                
+            </template>
+        </Column>
+
+
+    </DataTable>
+
+
+
+
+
+    </div>
+
+</template>
+
+<script setup>
+
+import {ref,onMounted,watch} from 'vue'
+import {PathService} from '@/service/pathService.js'
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import {useRoute} from 'vue-router'
+import {orderService} from '@/service/menu/orderService.js'
+import {loginStore} from '@/store/user.js'
+
+const cancelDialogVisible = ref(false)
+const cancellationRequests = ref([])
+const aceptDialogVisible =ref(false)
+const userStore = loginStore()
+const cancelData = ref({
+
+})
+const requestMethods = {
+    
+    "revisar": orderService.getPendientsCancellationRequest,
+    "aprobadas":orderService.getaceptedCancellationAcepted,
+    "rechazadas":orderService.getPendientsCancellationRejected
+}
+
+
+const show = (desition,id) => {
+    
+    cancelData.value.id = id
+    desition? aceptDialogVisible.value = true : cancelDialogVisible.value = true
+
+}
+
+
+const resolve = async(desition,id,observation) => {
+ const  data = {
+        "authorized": desition,
+        "responsible_id": userStore.rawUserData.id,
+        "responsible_observation": cancelData.value.reason || 'sin observaciones'
+    }
+
+    await orderService.resolveCancellationRequest(id,data)
+    aceptDialogVisible.value = false
+    cancelDialogVisible.value = false
+    cancellationRequests.value = await requestMethods[route.params.request_status]()
+
+
+}
+
+
+
+
+
+
+
+const route = useRoute()
+
+const filters = ref()
+const initFilters = () => {
+    filters.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    };
+};
+
+initFilters();
+
+onMounted(async() => {
+    cancellationRequests.value = await requestMethods[route.params.request_status]()
+})
+
+const isActive = PathService.isActiveRoute
+
+watch(()=> route.params.request_status, async() => {
+    cancellationRequests.value = await requestMethods[route.params.request_status]()
+},{deep:true})
+
+
+
+
+
+</script>
+
+<style scoped>
+
+ul{
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    gap: 1rem;
+}
+
+@media (width < 600px) {
+    
+    ul{
+
+        justify-content: start;
+        padding:  0.5rem 0;
+     
+    }
+    
+}
+
+.nav-bar--item{
+    padding-bottom: 0.3rem;
+}
+
+
+.nav-bar{
+    margin: auto;
+    width: min-content;
+    background-color: rgb(255, 255, 255);
+    padding: 0;
+
+
+    position: sticky;
+    top:3rem;
+    width: 100%;
+    z-index: 99;
+}
+li{
+    list-style:none;  
+}
+
+.container{
+    margin-top: 3rem;
+    position: relative;
+
+}
+
+
+.nav-var--item-button{
+    color:gray;
+    border-radius: 0%;
+    padding: 0.5rem ;
+    min-width: max-content;
+}
+
+.nav-var--item-button-selected{
+    box-shadow: 0 0.3rem var(--primary-color);
+    color: black;
+}
+
+
+</style>
