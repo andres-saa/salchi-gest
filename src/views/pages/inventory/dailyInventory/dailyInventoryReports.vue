@@ -153,17 +153,19 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { siteService } from '../../../../service/siteService.js'
 import { dailyInventoryReportsService } from '../../../../service/inventory/dailyInventoryService.js'
 import * as XLSX from 'xlsx';
-
+import { useReportesStore } from '@/store/reportes';
 
 import { loginStore } from '../../../../store/user.js'
+
+const loadingStore = useReportesStore()
 
 const store = loginStore()
 const sites = ref([])
 const selectedSites = ref([{}])
 const showDateDialog = ref(false)
-const TempStartDate = ref(new Date(new Date().setDate(new Date().getDate() - 7)))
+const TempStartDate = ref(new Date(new Date().setDate(new Date().getDate())))
 const TempEndDate = ref(new Date());
-const startDate = ref(new Date(new Date().setDate(new Date().getDate() - 7)))
+const startDate = ref(new Date(new Date().setDate(new Date().getDate())))
 const endDate = ref(new Date());
 const invetnoryDailyReports = ref()
 const filters = ref();
@@ -184,15 +186,12 @@ const setDateRange = (days) => {
 
 
     if (days == 1) {
-        TempEndDate.value = today;
+        TempEndDate.value = pastDate;
         endDate.value = TempEndDate.value
         startDate.value = TempStartDate.value
         showDateDialog.value = false
-
-
-
     } else {
-        TempEndDate.value = tomorrow;
+        TempEndDate.value = today;
         startDate.value = TempStartDate.value
         endDate.value = TempEndDate.value
         showDateDialog.value = false
@@ -205,7 +204,7 @@ const setDateRange = (days) => {
 onMounted(async () => {
     sites.value = await siteService.getSites()
     selectedSites.value = sites.value
-    invetnoryDailyReports.value = await dailyInventoryReportsService.getAllDailyInventoryReports()
+    getFiltered()
 })
 
 
@@ -270,15 +269,65 @@ const prepareDownload = async (daily_inventory_id,site_name,date) => {
 
 
 
-const downloadAll = async() => {
+// const downloadAll = async() => {
 
+//     const reportes = invetnoryDailyReports.value
+
+//     reportes.forEach(reporte => {
+//         prepareDownload(reporte.daily_inventory_id,reporte.site_name,reporte.date)
+//     });
+
+
+
+    
+
+// }
+
+
+
+
+const downloadAll = async () => {
+
+    loadingStore.setLoading(true,"generando descargas")
     const reportes = invetnoryDailyReports.value
 
-    reportes.forEach(reporte => {
-        prepareDownload(reporte.daily_inventory_id,reporte.site_name,reporte.date)
-    });
 
-}
+    for (const reporte of reportes) {
+        const reports = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(reporte.daily_inventory_id);
+        entries.value.push(...reports);    
+    }
+
+    console.log(entries.value)
+    
+    const data = entries.value.map(product => ({
+        "Fecha":product.date.split('-').reverse().join('-'),
+        "Sede":product.site_name,
+        "Producto": product.item_name,
+        "Cantidad": product.quantity,
+        "Unidad de medida":product.unit_measure
+    }));
+
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    worksheet["!cols"] = [
+    { wch: Math.max(0, "Unidad de medida".length) },
+    { wch: Math.max(0, "Unidad de medida".length) },
+        { wch: Math.max(30, "Producto".length) },
+        { wch: Math.max(0, "Cantidad".length) },
+       ]
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
+
+    XLSX.writeFile(workbook, `Inventario todas las sedes.xlsx`);
+    loadingStore.setLoading(false,"generando descargas")
+
+
+};
+
+
+
+
+
 
 
 </script>
