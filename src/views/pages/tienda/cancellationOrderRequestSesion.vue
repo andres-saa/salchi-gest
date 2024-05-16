@@ -11,7 +11,7 @@
         
               
               <Textarea style="resize: none; text-transform: lowercase; width:100%" id="reason" v-model="cancelData.reason" rows="5"
-                placeholder="Escribe la razón de la cancelación"></Textarea>
+                placeholder="Porque desea rechazar esta solicitud?"></Textarea>
         
               <Button  style="width: 100%;border-radius:0.5rem" label="Rechazar" type="submit" class="p-button-danger" />
 
@@ -27,7 +27,7 @@
         
               
               <Textarea style="resize: none; text-transform: lowercase; width:100%" id="reason" v-model="cancelData.reason" rows="5"
-                placeholder="Escribe la razón de la cancelación"></Textarea>
+                placeholder="Notas para el solicitante"></Textarea>
         
               <Button style="width: 100%;border-radius:0.5rem" label="Aprobar" type="submit" class="p-button-success" />
 
@@ -46,9 +46,36 @@
 
         <Column class="py-1" field="id" header="ID"></Column>
         <Column class="py-1" field="site_name" header="Sede"></Column>
-        <Column class="py-1" field="order_id" header="ID orden"></Column>
-        <Column class="py-1" field="reason" header="Motivo"></Column>
-        <Column class="py-1" field="responsible" header="Quien solicita?"></Column>
+
+        <Column class="py-1" field="site_name" header="Fecha">
+        
+            <template #body="data">
+            
+                <p style="min-width: max-content;">{{ data.data.timestamp.split('T')[0].split('-').reverse().join('-') }}</p>
+            
+            </template>
+        
+        </Column>
+
+
+        <Column style="" class="py-1" field="order_id" header="ID orden">
+        
+        
+            <template #body="data">
+
+                <p style="min-width: max-content;"> {{ data.data.order_id }}</p>
+
+            </template>
+        </Column>
+        <Column style="min-width: 30rem;" class="py-1" field="reason" header="Motivo"></Column>
+
+
+        <Column style="min-width: 10rem;" class="py-1" field="responsible" header="Quien solicita?"></Column>
+        <Column style="min-width: 20em;" class="py-1" field="user_name" header="Nombre del cliente"></Column>
+        <Column style="min-width: 10rem;" class="py-1" field="user_phone" header="Cel. cliente"></Column>
+
+
+
         <Column style="" class="py-1 px-0" field="date" header="Action">
             <template #body="data">
 
