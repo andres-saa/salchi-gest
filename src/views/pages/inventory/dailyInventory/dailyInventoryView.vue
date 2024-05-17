@@ -65,7 +65,7 @@ const initFilters = () => {
 onMounted(async() => {
     const daily_inventory_id = router.params.daily_inventory_id
     entries.value = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(daily_inventory_id)
-
+    entries.value = entries.value.filter(item => item.quantity != 0)
 })
 
 

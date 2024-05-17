@@ -133,12 +133,18 @@ export const dailyInventoryReportsService = {
             store.setLoading(true,"cargango UNIDADES")
             const response = await axios.get(`${URI}/daily_inventory_unit_measures`);
             if (response.status === 200) {
+                store.setLoading(false,"cargango UNIDADES")
+
                 return response.data;
             } else {
+                store.setLoading(false,"cargango UNIDADES")
+
                 console.error('An error occurred while fetching the ingredients:', response.status);
                 return null;
             }
         } catch (error) {
+            store.setLoading(false,"cargango UNIDADES")
+
             console.error('An error occurred while fetching the ingredients:', error);
             return null;
         }
@@ -169,12 +175,20 @@ export const dailyInventoryReportsService = {
             store.setLoading(true,"cargango UNIDADES")
             const response = await axios.post(`${URI}/insert_unit_measure`,unit_measure);
             if (response.status === 200) {
+                store.setLoading(false,"cargango UNIDADES")
+
                 return response.data;
+                
+                
             } else {
                 console.error('An error occurred while fetching the ingredients:', response.status);
+                store.setLoading(false,"cargango UNIDADES")
+
                 return null;
             }
         } catch (error) {
+            store.setLoading(false,"cargango UNIDADES")
+
             console.error('An error occurred while fetching the ingredients:', error);
             return null;
         }

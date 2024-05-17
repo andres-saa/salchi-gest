@@ -125,11 +125,11 @@ const unitMeasureColors = {
     3: '#FFD700',  // Oro
     4: '#FF4500',  // Verde oficina
     5: '#0000FF',  // Azul fuerte
-    6: '#4B0082',  // Índigo
-    7: '#800080',  // Púrpura
-    8: '#EE82EE',  // Violeta
-    9: '#FFC0CB',  // Rosa
-    10: '#00FFFF', // Aqua
+    20: '#4B0082',  // Índigo
+    21: '#3CB371',  // Púrpura
+    25: '#EE82EE',  // Violeta
+    23: '#FFC0CB',  // Rosa
+    24: '#00FFFF', // Aqua
     11: '#3CB371', // Verde mar medio
     12: '#00008B', // Azul oscuro
     13: '#FFA500', // Naranja

@@ -115,7 +115,9 @@ const initFilters = () => {
 const refresh = async () => {
     const group_name = router.params.sesion
     items.value = await dailyInventoryReportsService.getAllDailyInventoryItems(group_name)
+    items.value.filter(item => item.quantity != 0)
     unitMeasures.value = await dailyInventoryReportsService.getAllDailyInventoryUnitMeasures()
+    alert(3)
 }
 
 onMounted( async() => {

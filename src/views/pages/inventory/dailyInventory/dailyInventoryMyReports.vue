@@ -51,7 +51,7 @@
             
             
 
-            <div class="col-12 p-0" style="display: flex; gap:1rem;justify-content:center;align-items:center">
+            <div class="col-12 p-0 mt-4" style="display: flex; gap:1rem;justify-content:center;align-items:center">
                 <span class="text-xl" > <b>Periodo</b></span>
                 <InputText class="" @click="showDateDialog = true" style="height: 2.7rem;width:16rem"
                     :value="`${formatDate(startDate)}  |  ${formatDate(endDate)}`" placeholder="periodo" />
@@ -62,10 +62,11 @@
 
             </div>
 
-            <div class="col-12 px-3" style="display: flex;justify-content:end">
-                <Button severity="help" icon="pi pi-download" label="Descargar todo" @click="downloadAll"></Button>
-    
-            </div>
+            <div class="col-12 px-3 mt-4" style="display: flex;justify-content:end;gap: 1rem;">
+            <Button severity="help" icon="pi pi-download" label="Descargar Todo" @click="downloadAll"></Button>
+            <Button severity="help" icon="pi pi-download" label="Descargar Informe" @click="downloadAll2"></Button>
+
+        </div>
 
         </div>
     </div>
@@ -130,8 +131,12 @@ import { siteService } from '../../../../service/siteService.js'
 import { dailyInventoryReportsService } from '../../../../service/inventory/dailyInventoryService.js'
 import { loginStore } from '../../../../store/user.js'
 import * as XLSX from 'xlsx';
-
-
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
+import { useReportesStore } from '@/store/reportes';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+const loadingStore = useReportesStore()
 
 const store = loginStore()
 const sites = ref([])
@@ -247,15 +252,181 @@ const prepareDownload = async (daily_inventory_id,site_name,date) => {
 };
 
 
-const downloadAll = async() => {
+const downloadAll2 = async () => {
+    loadingStore.setLoading(true, "generando descargas");
 
+    const reportes = invetnoryDailyReports.value;
+    const entries = [];
+
+    for (const reporte of reportes) {
+        const reports = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(reporte.daily_inventory_id);
+        entries.push(...reports);
+    }
+
+    const reports = {};
+
+    // Recorre cada entrada
+    entries.forEach(entry => {
+        const siteName = entry.site_name;
+        const itemName = entry.item_name;
+        const quantity = entry.quantity;
+        const unitMeasure = entry.unit_measure;
+
+        // Si el item no existe en reports, inicialízalo
+        if (!reports[itemName]) {
+            reports[itemName] = { unit_measure: unitMeasure };
+        }
+
+        // Si el sitio no existe en el item, inicialízalo
+        if (!reports[itemName][siteName]) {
+            reports[itemName][siteName] = 0;
+        }
+
+        // Suma la cantidad del item en el sitio
+        reports[itemName][siteName] += quantity;
+    });
+
+    // Obtener todas las sedes
+    const allSites = [...new Set(entries.map(entry => entry.site_name))];
+
+    // Crear la data para el excel
+    const data = [];
+
+    // Formatear las fechas
+    const formattedStartDate = format(startDate.value, 'dd-MMMM-yyyy', { locale: es });
+    const formattedEndDate = format(endDate.value, 'dd-MMMM-yyyy', { locale: es });
+
+    // Agregar la fila de fecha fusionada
+    if (formattedStartDate == formattedEndDate) {
+        data.push([`REPORTE DE INVENTARIO DEL ${formattedStartDate.toUpperCase()}`, ...Array(allSites.length + 2).fill('')]);
+
+    }else {
+        data.push([`REPORTE DE INVENTARIO DEL ${formattedStartDate.toUpperCase()} AL ${formattedEndDate.toUpperCase()}`, ...Array(allSites.length + 2).fill('')]);
+
+    }
+
+    // Crear la primera fila (encabezados)
+    const headers = ['PRODUCTO', 'UNIDAD DE MEDIDA', ...allSites, 'TOTAL'];
+    data.push(headers);
+
+    // Crear las filas para cada producto
+    for (const [product, sites] of Object.entries(reports)) {
+        const row = [product, sites.unit_measure];
+        let totalQuantity = 0;
+        for (const site of allSites) {
+            const quantity = sites[site] || 0;
+            row.push(quantity);
+            totalQuantity += quantity; // Sumar la cantidad para el total
+        }
+        row.push(totalQuantity); // Añadir la cantidad total
+        data.push(row);
+    }
+
+    // Crear un nuevo libro de trabajo
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Inventario por Sede');
+
+    // Agregar la data al worksheet
+    data.forEach((row, index) => {
+        const worksheetRow = worksheet.addRow(row);
+        if (index === 0) {
+            worksheetRow.height = 40; // Mayor altura para la fila del título
+            worksheetRow.font = { name: 'Arial', bold: true, size: 14}; // Texto en negrita y en mayúsculas
+            worksheetRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true  }; // Texto centrado vertical y horizontalmente
+            worksheet.mergeCells(`A1:${worksheet.getColumn(allSites.length + 3).letter}1`);
+            worksheet.getRow(1).eachCell(cell => {
+            cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFF00' }
+        };
+    });
+        } else if (index === 1) {
+            worksheetRow.font = { name: 'Arial', bold: true };
+        }
+    });
+
+
+    // Estilo de bordes y ajuste de columnas
+    worksheet.columns.forEach((column, index) => {
+        column.width = index === 0 ? 30 : (index === 1 ? 25 : 15);
+        column.eachCell(cell => {
+            cell.font = { name: 'Arial' };
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+            
+        });
+    });
+
+    // Estilo para la fila de encabezados (negrita)
+    worksheet.getRow(2).eachCell(cell => {
+        cell.font = { name: 'Arial', bold: true };
+    });
+    worksheet.getRow(1).eachCell(cell => {
+        cell.font = { name: 'Arial', bold: true,size:16 };
+    });
+
+    // Ocultar líneas de cuadrícula
+    worksheet.views = [{ showGridLines: false }];
+
+    // Convertir el libro de trabajo a un blob
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Descargar el archivo Excel
+    if (formattedStartDate == formattedEndDate) {
+            saveAs(blob, `Reporte de inventario del ${formattedStartDate}.xlsx`);
+    } else {
+        saveAs(blob, `Reporte de inventario del ${formattedStartDate} al ${formattedEndDate} .xlsx`);
+
+    }
+        loadingStore.setLoading(false, "generando descargas");
+    };
+
+
+
+    const downloadAll = async () => {
+
+loadingStore.setLoading(true,"generando descargas")
 const reportes = invetnoryDailyReports.value
 
-reportes.forEach(reporte => {
-    prepareDownload(reporte.daily_inventory_id,reporte.site_name,reporte.date)
-});
 
+for (const reporte of reportes) {
+    const reports = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(reporte.daily_inventory_id);
+    entries.value.push(...reports);    
 }
+
+console.log(entries.value)
+
+const data = entries.value.map(product => ({
+    "Fecha":product.date.split('-').reverse().join('-'),
+    "Sede":product.site_name,
+    "Producto": product.item_name,
+    "Cantidad": product.quantity,
+    "Unidad de medida":product.unit_measure
+}));
+
+
+const worksheet = XLSX.utils.json_to_sheet(data);
+worksheet["!cols"] = [
+{ wch: Math.max(0, "Unidad de medida".length) },
+{ wch: Math.max(0, "Unidad de medida".length) },
+    { wch: Math.max(30, "Producto".length) },
+    { wch: Math.max(0, "Cantidad".length) },
+   ]
+const workbook = XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
+
+XLSX.writeFile(workbook, `Inventario todas las sedes.xlsx`);
+loadingStore.setLoading(false,"generando descargas")
+
+
+};
+
 
 
 </script>
