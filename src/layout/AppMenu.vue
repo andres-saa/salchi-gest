@@ -11,10 +11,10 @@ import { useDocumentsStore } from '../store/documentos';
 const documentStore = useDocumentsStore()
 
 
-const calcSiteDocument  = () => {
-    if (documentStore.currentSite.site_id){
+const calcSiteDocument = () => {
+    if (documentStore.currentSite.site_id) {
         return `/site/${site_id}/documentos`
-    } else{
+    } else {
         return '/site/1/documentos'
     }
 }
@@ -58,43 +58,89 @@ async function fetchAndUpdateRoles() {
             roles: roles.value.todos,
             items: [
 
-            // {
-            //         label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user',
 
-            //     },
-               
-                // {
-                //     label: 'Ingredientes', icon: 'fa-solid fa-calendar', to: '/ingredients',
 
-                // },
-                
                 {
-                    label: 'Reportes de inventario', icon: 'fa-solid fa-calendar',
+                    label: 'Reportes de inventario diario', icon: 'fa-solid fa-calendar',
                     items: [
                         {
-                    label: 'Reportar inventario diario', icon: 'fa-solid fa-calendar', to: '/daily-inventory/report-inventory',
+                            label: 'Reportar inventario diario', icon: 'fa-solid fa-calendar', to: '/daily-inventory/report-inventory',
 
-                },
-                {
-                    label: 'Revisar reportes de inventario', icon: 'fa-solid fa-calendar', to: '/daily-inventory/daily-inventory-reports',
+                        },
+                        {
+                            label: 'Revisar reportes', icon: 'fa-solid fa-calendar', to: '/daily-inventory/daily-inventory-reports',
 
-                },
+                        },
+                     
                     ]
 
                 },
 
-                
-                 {
-                    label: 'Ordenes de compra', icon: 'fa-solid fa-calendar',
+
+                {
+                    label: 'Reportes de inventario Mensual', icon: 'fa-solid fa-calendar',
                     items: [
                         {
-                    label: 'Generar orden de compra', icon: 'fa-solid fa-calendar', to: '/purchase-order/generate-purchase-order',
+                            label: 'Reportar inventario mensual', icon: 'fa-solid fa-calendar', to: '/monthly-inventory/report-monthly-inventory',
+
+                        },
+                        {
+                            label: 'Revisar reportes', icon: 'fa-solid fa-calendar', to: '/monthly-inventory/monthly-inventory-reports',
+
+                        },
+                     
+                    ]
 
                 },
+
+
                 {
-                    label: 'Revisar Ordenes de compra', icon: 'fa-solid fa-calendar', to: '/purchase-order/purchase-order-reports',
+                    label: 'Ordenes de compra', icon: 'fa-solid fa-calendar',
+                    items: [
 
-                },
+
+                        {
+                            label: 'Nueva', icon: 'fa-solid fa-calendar', to: '/purchase-order/generate-purchase-order',
+
+                        },
+
+                        {
+                            label: 'Generadas por mi', icon: 'fa-solid fa-calendar', to: '/purchase-order/purchase-order-my-orders/',
+
+                        },
+
+
+                        {
+                            label: 'Alistar', icon: 'fa-solid fa-calendar', to: '/purchase-order/recorrido/alistar/',
+
+                        },
+
+                        {
+                            label: 'Autorizar', icon: 'fa-solid fa-calendar', to: '/purchase-order/recorrido/autorizar',
+
+                        },
+                        {
+                            label: 'Transportar', icon: 'fa-solid fa-calendar', to: '/purchase-order/recorrido/transport/',
+
+                        },
+
+                        {
+                            label: 'Completada', icon: 'fa-solid fa-calendar', to: '/purchase-order/recorrido/completed/',
+
+                        },
+
+
+
+                        {
+                            label: 'Todas las ordenes', icon: 'fa-solid fa-calendar', to: '/purchase-order/recorrido/purchase-order-reports/',
+
+                        },
+
+
+                        {
+                            label: 'Stock', icon: 'fa-solid fa-calendar', to: '/purchase-order/recorrido/purchase-order-settings/',
+
+                        },
                     ]
 
                 },
@@ -103,10 +149,10 @@ async function fetchAndUpdateRoles() {
                 //     label: 'Recetas', icon: 'fa-solid fa-envelope', to: '/recipes',
 
                 // }
-                
+
             ]
         },
- 
+
 
         {
             label: 'RECURSOS HUMANOS',
@@ -128,12 +174,12 @@ async function fetchAndUpdateRoles() {
 
             ]
         },
-                
+
         {
             label: 'CALIDAD Y CONTROL',
             roles: roles.value['Calidad y control'],
             items: [
- 
+
 
                 {
                     label: 'Auditorias ', icon: 'fa-solid fa-folder', to: '/auditorias/lista',
@@ -152,8 +198,8 @@ async function fetchAndUpdateRoles() {
                     label: 'Mantenimientos ', icon: 'fa-solid fa-folder', to: '/maintenance/equipment',
 
                 },
-                
-                
+
+
 
 
 
@@ -178,7 +224,7 @@ async function fetchAndUpdateRoles() {
 
         {
             label: 'CELEBRACIONES', icon: 'pi pi-fw pi-home', to: '/cumples',
-            roles:roles.value.todos,
+            roles: roles.value.todos,
             items: [
                 {
                     label: 'Cumpleanos', icon: 'fa-solid fa-cake-candles', to: '/cumples',
@@ -191,13 +237,13 @@ async function fetchAndUpdateRoles() {
             label: 'SEDES',
             roles: roles.value.documentos,
             items: [
-   
+
                 {
                     label: 'Documentos', icon: 'fa-solid fa-book', to: calcSiteDocument(),
                 },
-                
 
- 
+
+
             ]
         },
 
@@ -205,14 +251,14 @@ async function fetchAndUpdateRoles() {
             label: 'GUIAS',
             roles: roles.value.Guias,
             items: [
-   
-            {
+
+                {
                     label: 'Gestion de guias', icon: 'fa-solid fa-book', to: '/guias',
 
                 },
-                
 
- 
+
+
             ]
         },
 
@@ -272,7 +318,7 @@ async function fetchAndUpdateRoles() {
                     label: 'Un verdadero Monstruo', icon: 'fa-solid fa-chart-simple', to: '/informacion-empresarial',
 
                 },
-                
+
                 {
                     label: 'Mis Turnos ', icon: 'fa-solid fa-dumbbell', to: '/turnos-trabajo-empleados',
 
@@ -281,7 +327,7 @@ async function fetchAndUpdateRoles() {
                     label: 'Evaluación clima organizacional ', icon: 'fa-solid fa-umbrella', to: '/clima',
 
                 },
-                
+
 
                 {
                     label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-simple', to: '/desempeno',
@@ -291,7 +337,7 @@ async function fetchAndUpdateRoles() {
                     label: 'Encuesta de retiro ', icon: 'fa-solid fa-umbrella', to: '/retiro',
 
                 },
-                
+
 
 
 
@@ -304,11 +350,11 @@ async function fetchAndUpdateRoles() {
             roles: roles.value.todos,
             items: [
 
-            // {
-            //         label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user',
+                // {
+                //         label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user',
 
-            //     },
-               
+                //     },
+
                 {
                     label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
 
@@ -319,40 +365,40 @@ async function fetchAndUpdateRoles() {
                 },
                 {
                     label: 'Principal', icon: 'fa-solid fa-envelope',
-                    items:[
-                                    {
-                                label: 'Recetario cucharas', icon: 'fa-solid fa-calendar', to: '/cucharas',
+                    items: [
+                        {
+                            label: 'Recetario cucharas', icon: 'fa-solid fa-calendar', to: '/cucharas',
 
-                                },
-                                {
-                                    label: 'Organizacion', icon: 'fa-solid fa-envelope', to: '/samovar',
+                        },
+                        {
+                            label: 'Organizacion', icon: 'fa-solid fa-envelope', to: '/samovar',
 
-                                },
-                                // {
-                                //     label: 'inventario', icon: 'fa-solid fa-envelope', to: '/inventory',
+                        },
+                        // {
+                        //     label: 'inventario', icon: 'fa-solid fa-envelope', to: '/inventory',
 
-                                // },
-                                // {
-                                //     label: 'Org. Nevera doble ', icon: 'fa-solid fa-envelope', to: '/nevera-doble',
+                        // },
+                        // {
+                        //     label: 'Org. Nevera doble ', icon: 'fa-solid fa-envelope', to: '/nevera-doble',
 
-                                // },
-                                // {
-                                //     label: 'Org. Nevera triple', icon: 'fa-solid fa-envelope', to: '/nevera-triple',
+                        // },
+                        // {
+                        //     label: 'Org. Nevera triple', icon: 'fa-solid fa-envelope', to: '/nevera-triple',
 
-                                // },
+                        // },
 
-                            ]
-                        
-                        }
+                    ]
+
+                }
 
                 ,
-                
+
 
             ]
         },
 
 
-     
+
 
 
         {
@@ -386,7 +432,7 @@ async function fetchAndUpdateRoles() {
             ]
         },
 
-        
+
         {
             label: 'Extras', icon: 'pi pi-fw pi-home', to: '/mis-permisos',
             roles: roles.value.todos,
@@ -400,7 +446,7 @@ async function fetchAndUpdateRoles() {
 
             ]
 
-         
+
         },
     ];
 }
@@ -415,7 +461,7 @@ onBeforeMount(async () => {
 
 
 <template>
-    
+
     <ul class="layout-menu" style="position: relative;">
         <template v-for="(item, i) in model" :key="item">
             <app-menu-item v-if="item.roles?.includes(getUserRole())" :item="item" :index="i"></app-menu-item>
@@ -423,12 +469,9 @@ onBeforeMount(async () => {
         </template>
 
 
-        
+
     </ul>
     <!-- <Button style="position: fixed;top: 50%;left: 22rem;"><i :class="PrimeIcons.ANGLE_DOUBLE_LEFT"></i></Button> -->
 </template>
 
-<style lang="scss" scoped>
-
-
-</style>
+<style lang="scss" scoped></style>

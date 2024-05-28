@@ -117,13 +117,13 @@
             <Column class="py-1" field="date" header="Estado">
 
                 <template #body="data">
-                    <Tag severity="danger" style="width: 100%;height:2rem; min-width:max-content" >
-                        {{ data.data.current_status}}
+                    <Tag style="width: 100%;height:2.7rem"
+                        :style="`background-color:${color_status[data.data.current_status]}`">
+                        {{ data.data.current_status }}
 
                     </Tag>
 
                 </template>
-
             </Column>
 
             <!-- <Column class="py-1" field="date" header="Action">
@@ -178,6 +178,13 @@ import { loginStore } from '../../../../store/user.js'
 import * as XLSX from 'xlsx';
 import {purchaseOrderService} from '../../../../service/inventory/purchaseOrderService'
 
+
+const color_status = {
+    Generada: '#FF0000', // Rojo
+    Lista: '#FFA500', // Naranja
+    "Entregada al transportista": '#FFFF00', // Amarillo
+    Completada: '#00FF00' // Verde
+};
 
 
 const store = loginStore()

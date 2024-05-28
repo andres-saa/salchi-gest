@@ -8,7 +8,11 @@
                         <Button :icon="button.icon" text :class="isActive(button.path)? 'nav-var--item-button-selected': '' " severity="help" class=" nav-var--item-button" :label="button.label" />
                     </router-link>
                 </li>
+                <div class="px-3" style="position: absolute;left: 0; border-radius:0 0  10rem 0 ; top:100%; height: 1.3rem;background-color: var(--primary-color);"> <span style="color: white;font-weight: bold;">Diario</span></div>
+
             </ul>
+
+
         </nav>
 
 

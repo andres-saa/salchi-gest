@@ -30,14 +30,14 @@
         </template>
     </Dialog>
 
-    <Dialog :closable="false" class="mx-2" header="Unidades de medida" style="width: 40rem;" modal v-model:visible="dialogVisibleMeasure">
+    <Dialog :closable="false" class="mx-2" header="UNIDADES DE MEDIDA" style="width: 40rem;" modal v-model:visible="dialogVisibleMeasure">
 
 
     
         <DataTable style="max-width:1000px;border-radius:0.5rem;min-height:min-content"  v-model:filters="filters" class="col-12 p-0" :value=" unitMeasures" tableStyle="">
             <template #header>
                 <div style="display: flex;justify-content:center;align-items:center;">
-                   Unidades de medida
+                    UNIDADES DE MEDIDA
                 </div>
             </template>
             <Column style="width: 10%;" class="py-1 px-0" field="id" header="Id">
@@ -76,7 +76,7 @@
             <template #footer> 
 
                 <div class="col-12 p-0" style="display: flex; justify-content:end">
-                    <Button @click="newUnitMeasureDialog = true" class="p-0"  severity="help" style="border-radius: 0.5rem;height:2rem; padding:0.3rem 0" icon="pi pi-plus"></Button>
+                    <Button @click="newUnitMeasureDialog = true" class="p-0"  severity="help" style="border-radius: 0.5rem;height:2rem; padding:0.3rem 0"  icon="pi pi-plus"></Button>
                 </div>
             </template>
         </DataTable>
@@ -147,13 +147,13 @@
                 
                
                 <li class="p-0" style="display: flex;gap:1rem">
-                    <Button  class="nav-bar--button-black m-0 shadow-2" @click="dialogVisible = true" icon="pi pi-plus" ></Button>
+                    <Button label="ITEM" class="nav-bar--button-black m-0 shadow-2" @click="dialogVisible = true" icon="pi pi-plus" ></Button>
 
-                    <Button  @click="deleting = !deleting" :style="!deleting? 'background-color: red;' : 'background-color: #22c55e;'"  class="nav-bar--button-black m-0 shadow-2" :icon="deleting? 'pi pi-check' : 'pi pi-trash'" ></Button>
                 </li>
 
                 <li class="p-0" style="display: flex;gap:1rem">
-                    <Button label="Unidades de medida" severity="warning" class="nav-bar--button-primary m-0 shadow-2" @click="dialogVisibleMeasure = true" icon="pi pi-plus" ></Button>
+                    <Button style="height: 2rem;" label="UNIDADES DE MEDIDA" severity="warning" class="nav-bar--button-primary m-0 shadow-2" @click="dialogVisibleMeasure = true" icon="pi pi-plus" ></Button>
+                    <Button  @click="deleting = !deleting" :style="!deleting? 'background-color: red;' : 'background-color: #22c55e;'"  class="nav-bar--button-black m-0 shadow-2" :icon="deleting? 'pi pi-check' : 'pi pi-trash'" ></Button>
 
                 </li>
             </ul>
@@ -263,7 +263,9 @@ const isActive = (sesion) => {
 }
 
 onMounted( async() => {
-    refresh()
+    items.value = await purchaseOrderService.getpurchaseOrderGroups()
+    unitMeasures.value = await dailyInventoryReportsService.getAllDailyInventoryUnitMeasures()
+    router.push(`/purchase-order/recorrido/purchase-order-settings/${items.value[0].name}/${items.value[0].id}/`)
 })
 
 
@@ -296,7 +298,7 @@ button{
 .nav-bar--button-primary{
     border-radius: 0.5rem;
     padding: 0.3rem 1rem;
-    background-color: var(--primary-color);
+    background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     border: none;
 

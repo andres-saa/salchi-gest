@@ -14,7 +14,7 @@
     <div v-for="(value, key) in agruparPorGroupName(entries)" >
         
         
-        <DataTable style="max-width:50rem"  v-model:filters="filters" class="col-12 mb-4 shadow-2 mt-0 mx-auto" :value=" value" tableStyle="min-width:30rem">
+        <DataTable v-if="value.some(item => item.quantity != 0)" style="max-width:50rem"  v-model:filters="filters" class="col-12 mb-4 p-0 mt-0 mx-auto" :value=" value.filter(item => item.quantity != 0)" tableStyle="min-width:30rem">
             <template #header>
                 <div style="display: flex;justify-content:center;align-items:center;">
                     <span>{{ key }}</span>

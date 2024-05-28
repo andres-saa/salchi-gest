@@ -92,6 +92,12 @@ const router = createRouter({
         },
 
         {
+          path: '/concursos/',
+          name: 'concursos',
+          component: () => import('@/views/pages/concursos/currentConcursos.vue')
+        },
+
+        {
           path: '/reporte-ventas/',
           name: 'reporte-ventas',
           component: () => import('@/views/pages/reporteVentas.vue'),
@@ -125,16 +131,122 @@ const router = createRouter({
 
           ]
         },
-        // {
-        //     path: '/uikit/input',
-        //     name: 'input',
-        //     component: () => import('@/views/uikit/Input.vue')
-        // },
-        // {
-        //     path: '/uikit/floatlabel',
-        //     name: 'floatlabel',
-        //     component: () => import('@/views/uikit/FloatLabel.vue')
-        // },
+       
+        {
+          path: '/purchase-order/recorrido',
+          name: 'purchase-order-recorrido',
+          component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/orderPath.vue'),
+          children:[
+            {
+              path: '/purchase-order/recorrido/purchase-order-reports',
+              name: 'purchase-order-reports',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderReports.vue')
+            },
+            {
+              path: '/purchase-order/recorrido/alistar',
+              name: 'purchase-order-recorrido-alistar',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/OrderPathAlistar.vue')
+            },
+            
+
+            {
+              path: '/purchase-order/recorrido/transport',
+              name: 'purchase-order-recorrido-transport',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/orderPathTransport.vue')
+            },
+
+
+            {
+              path: '/purchase-order/recorrido/recibida-en-sede',
+              name: 'purchase-order-recorrido-recibida-en-sede',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/orderPathRecibidaEnSede.vue')
+            },
+            {
+              path: '/purchase-order/recorrido/autorizar',
+              name: 'purchase-order-recorrido-autorizada',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/OrderPathToAuthorize.vue')
+            },
+
+            {
+              path: '/purchase-order/recorrido/completed',
+              name: 'purchase-order-recorrido-completed',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/orderPathComplete.vue')
+            },
+            
+            
+
+
+
+
+
+
+
+
+            {
+              path: '/purchase-order/recorrido/purchase-order-settings',
+              name: 'purchase-order-settings',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettings.vue'),
+              children:[
+                {
+                  path: '/purchase-order/recorrido/purchase-order-settings/:sesion/:id',
+                  name: 'purchase-order-settings-sesion',
+                  component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettingsSesion.vue'),   
+                }
+              ]       
+            
+            },
+              
+            
+              
+
+
+
+            {
+              path: '/purchase-order/recorrido/purchase-order-view/:purchase_order_id',
+              name: 'purchase-order-view-3/',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderView.vue')
+            },
+
+          ]
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {
           path: '/sites',
           name: 'sites',
@@ -147,6 +259,8 @@ const router = createRouter({
           name: 'dotacion',
           component: () => import('@/views/pages/Dotacion.vue')
         },
+
+
 
         {
           path: '/auditorias',
@@ -249,6 +363,9 @@ const router = createRouter({
           name: 'cucharas',
           component: () => import('@/views/pages/importante/recetarioCucharas.vue')
         },
+
+
+
         {
           path: '/daily-inventory',
           name: 'daily-inventory',
@@ -300,17 +417,70 @@ const router = createRouter({
 
           ]
         },
+
+
+
+        {
+          path: '/monthly-inventory',
+          name: 'monthly-inventory',
+          component: () => import('@/views/pages/inventory/monthlyInventory/monthlyInventory.vue'),
+          children:[
+            {
+              path: '/monthly-inventory/monthly-inventory-reports',
+              name: 'monthly-inventory-reports',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/monthlyInventory/monthlyInventoryReports.vue')
+            },
+            {
+              path: '/monthly-inventory/monthly-inventory-my-reports',
+              name: 'monthly-inventory-my-reports',
+              meta:{roles: roles.value['Inventario diario'] },
+              component: () => import('@/views/pages/inventory/monthlyInventory/monthlyInventoryMyReports.vue')
+            },
+            {
+              path: '/monthly-inventory/report-monthly-inventory',
+              name: 'monthly-inventory-report-monthly-inventory',
+              meta:{roles: roles.value['Inventario diario'] },
+              component: () => import('@/views/pages/inventory/monthlyInventory/reportMonthlyInventory.vue')
+            },
+              
+              
+            {
+              path: '/monthly-inventory/monthly-inventory-settings',
+              name: 'monthly-inventory-settings',
+              component: () => import('@/views/pages/inventory/monthlyInventory/monthlyInventorySettings.vue'),
+              meta:{roles: roles.value['Inventario diario admin'] },
+              children:[
+                {
+                  path: '/monthly-inventory/monthly-inventory-settings/:sesion/:id',
+                  name: 'monthly-inventory-settings-sesion',
+                  component: () => import('@/views/pages/inventory/monthlyInventory/monthlyInventorySettingsSesion.vue'),   
+                }
+              ]       
+            
+            
+            },
+              
+
+
+
+              {
+                path: '/monthly-inventory/monthly-inventory-view/:monthly_inventory_id',
+                name: 'monthly-inventory-view',
+                component: () => import('@/views/pages/inventory/monthlyInventory/monthlyInventoryView.vue'),            },
+
+          ]
+        },
+
+
+
+
         {
           path: '/purchase-order',
           name: 'purchase-order',
           component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrder.vue'),
           children:[
-            {
-              path: '/purchase-order/purchase-order-reports',
-              name: 'purchase-order-reports',
-              meta:{roles: roles.value['Inventario diario admin'] },
-              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderReports.vue')
-            },
+          
             {
               path: '/purchase-order/purchase-order-my-orders',
               name: 'purchase-order-my-orders',
@@ -325,21 +495,21 @@ const router = createRouter({
             },
               
               
-            {
-              path: '/purchase-order/purchase-order-settings',
-              name: 'purchase-order-settings',
-              meta:{roles: roles.value['Inventario diario admin'] },
-              component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettings.vue'),
-              children:[
-                {
-                  path: '/purchase-order/purchase-order-settings/:sesion/:id',
-                  name: 'purchase-order-settings-sesion',
-                  component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettingsSesion.vue'),   
-                }
-              ]       
+            // {
+            //   path: '/purchase-order/purchase-order-settings',
+            //   name: 'purchase-order-settings',
+            //   meta:{roles: roles.value['Inventario diario admin'] },
+            //   component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettings.vue'),
+            //   children:[
+            //     {
+            //       path: '/purchase-order/purchase-order-settings/:sesion/:id',
+            //       name: 'purchase-order-settings-sesion',
+            //       component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettingsSesion.vue'),   
+            //     }
+            //   ]       
             
             
-            },
+            // },
               
 
 

@@ -85,8 +85,15 @@
     </div>
 
 
-    <div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
+    <div v-if="downloading" class=" p-1" :style="`width:${downloadPersent}%`" style="transition: 1s ease all; position: fixed;top: 3rem; display: flex;justify-content: end;align-items: center; z-index: 9999; height: 1rem;background-color: var(--primary-color);">
 
+        <p  class="text-center p-0 text-white " >{{  Math.round(downloadPersent) }}%</p>
+
+</div>
+
+    <div class="mt-3" style="min-height:20vh;flex-direction: column; display: flex; justify-content:center;align-items:center">
+
+ 
 
         <DataTable style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
             :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
@@ -182,6 +189,10 @@ const sites = ref([])
 const selectedSites = ref([{}])
 const showDateDialog = ref(false)
 const currentDateInColombia = moment().tz(timeZone).toDate();
+
+
+const downloading = ref(false)
+const downloadPersent = ref(0)
 
 const TempStartDate = ref(currentDateInColombia);
 const TempEndDate = ref(currentDateInColombia);
@@ -309,13 +320,20 @@ const prepareDownload = async (daily_inventory_id, site_name, date) => {
 const downloadAll2 = async () => {
     loadingStore.setLoading(true, "generando descargas");
 
+
     const reportes = invetnoryDailyReports.value;
     const entries = [];
+    downloadPersent.value = 0
 
+    downloading.value = true
     for (const reporte of reportes) {
         const reports = await dailyInventoryReportsService.getDailyInventoryEntriesByDailyInventoryID(reporte.daily_inventory_id);
         entries.push(...reports);
+        downloadPersent.value += 100/reportes.length
     }
+
+    
+
 
     const reports = {};
 
@@ -439,6 +457,9 @@ const downloadAll2 = async () => {
 
     }
         loadingStore.setLoading(false, "generando descargas");
+        downloadPersent.value = 0
+        downloading.value = false
+
     };
 
 

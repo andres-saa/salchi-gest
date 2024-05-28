@@ -34,17 +34,19 @@
     </Dialog>
 
     <div class="m-2">
-        <DataTable style="max-width:1000px;border-radius:0.5rem;min-height:70vh"  v-model:filters="filters" class="col-12 shadow-3 my-0 mx-auto" :value=" items" tableStyle="min-width:30rem">
+        <DataTable stripedRows style="max-width:1000px;border-radius:0.5rem;min-height:70vh"  v-model:filters="filters" class="col-12 shadow-3 my-0 mx-auto" :value=" items" tableStyle="min-width:30rem">
             <template #header>
                 <div style="display: flex;justify-content:center;align-items:center;">
                     <span style="text-transform: uppercase;"> {{router.params.sesion}} </span>
                 </div>
             </template>
-            <Column style="width: 10%;" class="py-1 px-0" field="item_id" header="Id"></Column>
-            <Column style="width: 50%;" class="py-1 px-0" field="item_name" header="Nombre"></Column>
-            <Column style="width: 20%;" class="py-1 px-0" field="unit_of_measure_name" header="Unidad de medida"></Column>
+            <Column style="width: 10%;" class="py-1 pr-2 pl-0" field="item_id" header="Id"></Column>
+            <Column style="width: 50%;" class="py-1 px-2" field="item_name" header="Nombre"></Column>
+            <Column style="width: 20%;" class="py-1 px-2" field="stock" header="Stock"></Column>
 
-            <Column style="width: 20%;" class="py-1 px-0" field="item_name" header="">
+            <Column style="width: 20%; min-width: 10rem;" class="py-1 px-2" field="unit_of_measure_name" header="Unidad de medida"></Column>
+
+            <Column style="width: 20%;" class="py-1 pl-2 pr-0" field="item_name" header="">
             <template #body="item"  >
                 <div style="display: flex; justify-content:end">
                     <!-- <Button text severity="warning" class="p-0" icon="pi pi-pencil"></Button> -->
@@ -54,6 +56,8 @@
              
             </template>
             </Column>
+
+            
 
             <!-- <Column style="width: 400%;" class="py-1 px-0" field="unit_measure" header="Unidad de medida"></Column> -->
             <template #footer> 

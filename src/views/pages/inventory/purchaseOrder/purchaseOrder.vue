@@ -37,16 +37,6 @@ const navItems = [
         icon:'pi pi-chart-bar',
         path:'purchase-order-my-orders'
     },
-    {
-        label:'Adiministrar ordenes',
-        icon:'pi pi-chart-bar',
-        path:'purchase-order-reports'
-    },
-    {
-        label:'Configuracion',
-        icon:'pi pi-cog',
-        path:'purchase-order-settings'
-    },
 
 
 ]

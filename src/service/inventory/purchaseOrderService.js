@@ -82,6 +82,37 @@ export const purchaseOrderService = {
             return null;
         }
     },
+
+
+
+
+
+
+    async getPurchaseOrderHistory(purchase_order_id) {
+        try {
+            const response = await axios.get(`${URI}/purchase-order-history/${purchase_order_id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
     
     async getAllpurchaseOrderUnitMeasures() {
         try {
@@ -146,6 +177,22 @@ export const purchaseOrderService = {
     },
 
 
+    async PreparePurchaserOrder(data) {
+        try {
+            const response = await axios.post(`${URI}/prepare-purchase-order`,data);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+
 
     async disablePurchaseGroupItems(group_id) {
         try {
@@ -182,6 +229,24 @@ export const purchaseOrderService = {
     async getAllpurchaseOrderItems(daily_item_group_name) {
         try {
             const response = await axios.get(`${URI}/group-purchase-items-by-group-name/${daily_item_group_name}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+
+
+    
+    async getPurchaseOrderByLap_id(lap_id) {
+        try {
+            const response = await axios.get(`${URI}/all-purchase_orders_by_lap_id/${lap_id}`);
             if (response.status === 200) {
                 return response.data;
             } else {

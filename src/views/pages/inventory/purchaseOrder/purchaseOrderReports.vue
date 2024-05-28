@@ -76,7 +76,7 @@
 
         </div>
 
-        <div class="col-12 px-3 mt-4" style="display: flex;justify-content:end;gap: 1rem;">
+        <div class="col-12 px-3 mt-4 pack-butons" style="display: flex;justify-content:end;gap: 1rem;">
             <Button severity="help" icon="pi pi-download" label="Descargar Todo" @click="downloadAll"></Button>
             <Button severity="help" icon="pi pi-download" label="Descargar Informe" @click="downloadAll2"></Button>
 
@@ -132,7 +132,7 @@
             <Column class="py-1" field="date" header="Estado actual">
 
                 <template #body="data">
-                    <Tag severity="danger" style="width: 100%;height:2rem">
+                    <Tag   style="width: 100%;height:2.7rem" :style="`background-color:${color_status[data.data.current_status]}`">
                         {{ data.data.current_status}}
 
                     </Tag>
@@ -216,6 +216,16 @@ const setDateRangeDirect = (start, end) => {
     startDate.value = start
     endDate.value = end
 }
+
+
+
+const color_status = {
+    Generada: '#FF0000', // Rojo
+    Lista: '#FFA500', // Naranja
+    "Entregada al transportista": '#FFFF00', // Amarillo
+    Completada: '#00FF00' // Verde
+};
+
 
 const setDateRange = (days) => {
     const today = new Date();
@@ -519,6 +529,10 @@ loadingStore.setLoading(false,"generando descargas")
 
     .multi {
         width: 80%;
+    }
+
+    .pack-butons{
+        flex-direction: column;
     }
 
 }
