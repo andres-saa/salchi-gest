@@ -141,7 +141,7 @@
 
 
                     <template #body="data">
-                        <input @change="verify(data.data)" @keydown="handleKeydown" class=" text-right"
+                        <input  @keydown="handleKeydown" class=" text-right"
                             :max="data.data.quantity" :min="0" v-model="data.data.ajustment"
                             style="background-color: transparent; height: 2rem; width:100%; border: none;"
                             :style="data.data.quantity === data.data.ajustment ? 'background-color: aquamarine;' : data.data.ajustment === 0 ? 'background-color:#ffc9d1' :  
@@ -346,10 +346,6 @@ const openShowNote = (itemsData) => {
         return
     }
 
-    if (itemsData.some(item => item.ajustment > item.quantity)) {
-        alert("No puedes enviar mas de lo solicitado")
-        return
-    }
 
     showAddNotesDialog .value = true
 

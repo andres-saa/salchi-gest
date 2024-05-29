@@ -425,10 +425,7 @@ const openShowNote = (itemsData) => {
         return
     }
 
-    if (itemsData.some(item => item.ajustment > item.quantity)) {
-        alert("No puedes enviar mas de lo solicitado")
-        return
-    }
+
 
     showAddNotesDialog .value = true
 
@@ -848,12 +845,7 @@ function handleKeydown(event) {
 }
 
 
-const verify = (data) => {
-    if (data.ajustment > data.quantity) {
-        alert('No puedes enviar mas de lo solicitado')
-        data.ajustment == data.quantity
-    }
-}
+
 
 </script>
 
