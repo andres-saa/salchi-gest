@@ -131,6 +131,13 @@ const router = createRouter({
 
           ]
         },
+
+        {
+          path: '/cocina',
+          name: 'cocina',
+          component: () => import('@/views/pages/cocina/pedidos.vue'),
+          
+        },
        
         {
           path: '/purchase-order/recorrido',

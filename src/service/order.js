@@ -1,148 +1,184 @@
-import { contarObjetosRepetidos, products } from "./cart";
-import { ref } from "vue";
-import {URI} from '@/service/conection'
-import { domicilio } from "./cart";
-import router from '@/router/index.js'
-const user_data = ref({})
-const order_notes = ref("")
-const showThaks = ref(false)
-const currenNeigborhood = 'calle'
-const payMethod = ref('')
-const payMethods = ref(["Recoger en local", "Efectivo", "Pago con tarjeta (datafono),"])
+import axios from "axios";
+import { URI } from "./conection";
+import { useOrderStore } from "../store/order";
 
 
+export const orderService = {
+    
 
-
-const getUserID = async (userData) => {
-    const userUrl = `${URI}/user`;
-    userData.user_address = `${userData.user_address} ${currenNeigborhood} `
-    console.log(userData)
-    const userRequestOptions = {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    };
-
-    try {
-        const response = await fetch(userUrl, userRequestOptions);
-        if (!response.ok) {
-            throw new Error(`Error en la solicitud para obtener user_id: ${response.status}`);
+    async getOrdersBySite(site_id) {
+        
+        try {
+            const response = await axios.get(`${URI}/order-by-site/${site_id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
         }
 
-        const userData = await response.json();
-        return userData.user_id; // Asumiendo que el user_id se encuentra en la respuesta JSON
-    } catch (error) {
-        console.error('Error al obtener user_id:', error);
-        throw error; // Puedes manejar el error según tus necesidades
+
+
+    },
+
+
+    async getOrderCount(site_id) {
+        
+        try {
+            const response = await axios.get(`${URI}/get_order_count_by_site_id/${site_id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+
+
+    async is_recent_order_generated(site_id) {
+        
+        try {
+            const response = await axios.get(`${URI}/recent-order/${site_id}`);
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+
+
+
+    async prepareOrder(order_id) {
+        const store = useOrderStore()
+        store.setVisible('currentOrder',false)
+
+        try {
+            
+            const response = await axios.post(`${URI}/order/${order_id}/prepare`);
+            if (response.status === 200) {
+                store.Notification.pause()
+                store.Notification.currentTime = 0
+                store.getTodayOrders()
+                return response.data;
+            } else {
+                console.error('An error occurred while preparing the order:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while preparing the order:', error);
+            return null;
+        }
+    },
+
+    async cancelOrder(order_id, reason, responsible) {
+        const store = useOrderStore()
+        store.Notification.pause()
+        store.Notification.currentTime = 0
+
+        store.setVisible('currentOrder',false)
+        const data = {
+                "reason":reason,
+                "responsible": responsible 
+            }
+
+        try {
+            const response = await axios.post(`${URI}/order/${order_id}/cancel`, data);
+            if (response.status === 200) {
+                store.getTodayOrders()
+                store.setVisible('currentOrder',false)
+
+                return response.data;
+            } else {
+                console.error('An error occurred while cancelling the order:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while cancelling the order:', error);
+            return null;
+        }
+    },
+
+    async sendOrder(order_id) {
+        const store = useOrderStore()
+        store.setVisible('currentOrder',false)
+
+        try {
+            const response = await axios.post(`${URI}/order/${order_id}/send`);
+            if (response.status === 200) {
+                store.getTodayOrders()
+                store.setVisible('currentOrder',false)
+                return response.data;
+                
+            } else {
+                console.error('An error occurred while sending the order:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while sending the order:', error);
+            return null;
+        }
+    },
+
+
+
+
+    async create_cancellling_request(data) {
+        const store = useOrderStore()
+        store.setVisible('currentOrder',false)
+
+        try {
+            const response = await axios.post(`${URI}/insert-cancellation-order`,data);
+            if (response.status === 200) {
+                store.getTodayOrders()
+                store.setVisible('currentOrder',false)
+                return response.data;
+                
+            } else {
+                console.error('An error occurred while sending the order:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while sending the order:', error);
+            return null;
+        }
+    },
+
+
+
+    async deliveryZero(order_id) {
+        const store = useOrderStore()
+        store.setVisible('currentOrder',false)
+        try {
+            const response = await axios.put(`${URI}/delivery_zero/${order_id}`);
+            if (response.status === 200) {
+                store.getTodayOrders()
+                store.setVisible('currentOrder',false)
+                return response.data;
+                
+            } else {
+                console.error('An error occurred while sending the order:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while sending the order:', error);
+            return null;
+        }
     }
 };
 
 
-
-
-
-
-
-
-
-
-
-const send_order = async () => {
-
-    const serverTimeResponse = await fetch( `${URI}/server_time`);
-    const serverTimeData = await serverTimeResponse.json();
-
-    // Extrae la fecha y la hora del objeto de respuesta
-    const { fecha, hora } = serverTimeData;
-
-    const user = user_data.value
-    user.site_id = JSON.parse(localStorage.getItem('currentNeigborhood')).currenSiteId
-    const user_id = await getUserID(user);
-
-    const data = {
-        "order_products": JSON.parse(localStorage.getItem('cart')).products,
-        "user_id": user_id,
-        // "site_id":JSON.parse(localStorage.getItem('currentNeigborhood')).currenSiteId,
-        "site_id":12,
-        "order_status": {
-            "status": "generada",
-            "timestamp":serverTimeData
-        },
-        "payment_method": payMethod.value,
-        "delivery_person_id": 4,
-        "status_history": [
-            {
-
-            }
-        ],
-        "delivery_price":domicilio.value.deliveryPrice? domicilio.value.deliveryPrice:0,
-        "order_notes":order_notes.value == null || order_notes.value == "" ? 'sin notas': order_notes.value
-    }
-
-
-    let Method = "POST"
-    const queryUrl = `${URI}/order`
-    const requestOptions = {
-        method: Method,
-        headers: {
-            'Content-Type': 'application/json' // Asegúrate de establecer el tipo de contenido adecuado
-        },
-        body: JSON.stringify(data)
-    };
-
-    // Realizar la solicitud Fetch
-   await fetch(queryUrl, requestOptions)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Error en la solicitud: ${response.status}`);
-            }
-            // file.value? uploadUserPhotoProfile(file.value,data.dni): '' 
-
-            return response.json();
-        })
-        .then(data => {
-            // Aquí puedes trabajar con los datos actualizados
-            console.log('Datos actualizados:', data);
-            // localStorage.removeItem('cart')
-            eliminarProductosDelCarrito();
-
-            showThaks.value = true
-            // router.push('/')
-
-        })
-        .catch(error => {
-            console.error('Error en la solicitud:', error);
-            // toast.add({ severity: 'error', summary: 'llene todos los campos', detail: '', life: 3000 })
-
-        });
-
-
-
-        
-
-}
-
-
-
-function eliminarProductosDelCarrito() {
-    // Obtener el carrito actual almacenado en el LocalStorage
-    const cart = JSON.parse(localStorage.getItem('cart'));
-  
-    // Verificar si el carrito existe y tiene la propiedad "products"
-    if (cart && cart.products) {
-      // Vaciar el array de productos
-      cart.products = [];
-  
-      // Actualizar el LocalStorage con el carrito modificado
-      localStorage.setItem('cart', JSON.stringify(cart));
-  
-      console.log('Se eliminaron los productos del carrito y se actualizó el LocalStorage.');
-    } else {
-      console.log('El carrito no tiene la propiedad "products" o no existe en el LocalStorage.');
-    }
-  }
-
-
-export{payMethods,payMethod,showThaks,send_order,order_notes,user_data}
