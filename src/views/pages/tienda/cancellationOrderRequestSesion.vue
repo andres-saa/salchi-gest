@@ -34,7 +34,13 @@
             </form>
         </Dialog>
 
-        <DataTable stripedRows style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
+        <DataTable :paginator="true" :rows="15"
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes"
+          :rowsPerPageOptions="[5, 10, 25, 100]"
+          scrollable
+          scrollHeight="65vh"
+        stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
         :value="cancellationRequests" tableStyle="min-width: 50rem;">
         <template #header>
             <div class="grid" style="align-items:center">
@@ -118,6 +124,7 @@ const userStore = loginStore()
 const cancelData = ref({
 
 })
+
 const requestMethods = {
     
     "revisar": orderService.getPendientsCancellationRequest,
