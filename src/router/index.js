@@ -354,6 +354,16 @@ const router = createRouter({
 
           ]
         },
+
+
+
+        {
+          path: '/transfer',
+          name: 'transfer',
+          component: () => import('@/views/pages/tienda/TransferSession.vue'),
+          
+          
+        },
         
         // {
         //   path: '/guias-user',

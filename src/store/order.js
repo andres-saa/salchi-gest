@@ -11,7 +11,8 @@ export const useOrderStore = defineStore('cart', {
         key: 'order',
         storage: localStorage,
         paths: [
-            'currentCountOrders'
+            'currentCountOrders',
+            'numberCancellationRequests'
         ]
 
     },
@@ -25,7 +26,8 @@ export const useOrderStore = defineStore('cart', {
         webSocket: null,
         currentCountOrders:0,
         last_order_id:0,
-        currentSearchingOrder:{}
+        currentSearchingOrder:{},
+        numberCancellationRequests:0
 
     }),
 

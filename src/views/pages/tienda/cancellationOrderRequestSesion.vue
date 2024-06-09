@@ -34,7 +34,7 @@
             </form>
         </Dialog>
 
-        <DataTable :paginator="true" :rows="15"
+        <DataTable   :paginator="true" :rows="15" :filters="filters"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes"
           :rowsPerPageOptions="[5, 10, 25, 100]"
@@ -43,36 +43,54 @@
         stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
         :value="cancellationRequests" tableStyle="min-width: 50rem;">
         <template #header>
-            <div class="grid" style="align-items:center">
+            <div class="grid" style="align-items:center;justify-content: space-between;">
                 <div class="col-12 md:col-6 p-3"> 
                     <span  class="text-xl" style="width: 100%;"> Solicitudes de cancelacion - <span style="text-transform: capitalize;">{{route.params.request_status.split('-').join(' ')}}</span> </span>
                 </div>
+
+                <span class="md:mt-0 p-input-icon-right m-3">
+                                <i class="pi pi-search" />
+                                <InputText class="" v-model="filters['global'].value"
+                                    placeholder="Buscar Solicitud..." />
+                            </span>
             </div>
         </template>
 
-        <Column class="py-1" field="id" header="ID"></Column>
-        <Column class="py-1" field="site_name" header="Sede"></Column>
 
+        <Column style="" class="py-1 pl-0" field="order_id" header="ID orden" frozen>
+        
+        
+        <template #body="data">
+
+            <p style="min-width: max-content;"> {{ data.data.order_id }}</p>
+
+        </template>
+    </Column>
+        
+
+        <!-- <Column class="py-1" field="id" header="ID"></Column> -->
+        <Column class="py-1" field="site_name" header="Sede"></Column>
         <Column class="py-1" field="site_name" header="Fecha">
         
             <template #body="data">
             
-                <p style="min-width: max-content;">{{ data.data.timestamp.split('T')[0].split('-').reverse().join('-') }}</p>
+                <p style="min-width: max-content;">{{ buildData(data.data.timestamp).date }}</p>
             
             </template>
         
         </Column>
 
-
-        <Column style="" class="py-1" field="order_id" header="ID orden">
+        <Column class="py-1" field="site_name" header="Hora">
         
+        <template #body="data">
         
-            <template #body="data">
+            <p style="min-width: max-content;">{{ buildData(data.data.timestamp).time }}</p>
+        
+        </template>
+    
+    </Column>
 
-                <p style="min-width: max-content;"> {{ data.data.order_id }}</p>
 
-            </template>
-        </Column>
         <Column style="min-width: 30rem;" class="py-1" field="reason" header="Motivo"></Column>
 
 
@@ -82,13 +100,13 @@
 
 
 
-        <Column style="" class="py-1 px-0" field="date" header="Action">
+        <Column style="" class="py-1 px-0" field="date" header="Action" frozen alignFrozen="right">
             <template #body="data">
 
                 <div style="display: flex;gap:0.5rem;">
                   
-                        <Button v-if="route.params.request_status != 'aprobadas'" @click="show(true,data.data.id)" style="height: 2rem;" severity="success" class="p-1" icon="pi pi-check" />
-                        <Button v-if="route.params.request_status != 'rechazadas'" @click="show(false,data.data.id)" style="height: 2rem;background:var(--primary-color);border:none"  severity="danger" class="p-1"
+                        <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="show(true,data.data.id)" style="height: 1.8rem;width: 2rem;" severity="success" class="p-1" icon="pi pi-check" />
+                        <Button v-if="route.params.request_status != 'rechazadas'" @click="show(false,data.data.id)" style="height: 1.8rem;width: 2rem;background:var(--primary-color);border:none"  severity="danger" class="p-1"
                         icon="pi pi-times" />
 
                     
@@ -110,13 +128,14 @@
 
 <script setup>
 
-import {ref,onMounted,watch} from 'vue'
+import {ref,onMounted,onBeforeMount,watch,onUnmounted} from 'vue'
 import {PathService} from '@/service/pathService.js'
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import {useRoute} from 'vue-router'
 import {orderService} from '@/service/menu/orderService.js'
 import {loginStore} from '@/store/user.js'
-
+import { useOrderStore } from '../../../store/order';
+import { months } from 'moment-timezone';
 const cancelDialogVisible = ref(false)
 const cancellationRequests = ref([])
 const aceptDialogVisible =ref(false)
@@ -125,12 +144,40 @@ const cancelData = ref({
 
 })
 
+
+
+const sonido1 = new Audio('/sound/pip1.wav')
+const sonido2 = new Audio('/sound/pip2.wav')
+const sonido3 = new Audio('/sound/pip3.wav')
+
+const orderStore = useOrderStore()
+
+const intervalId = ref(null); // Guardar la referencia al intervalo
+
 const requestMethods = {
     
     "revisar": orderService.getPendientsCancellationRequest,
     "aprobadas":orderService.getaceptedCancellationAcepted,
     "rechazadas":orderService.getPendientsCancellationRejected
 }
+
+
+
+
+const requestMethodsNoLoading = {
+    
+    "revisar": orderService.getPendientsCancellationRequestNoLoading,
+    "aprobadas":orderService.getaceptedCancellationAceptedNoLoading,
+    "rechazadas":orderService.getPendientsCancellationRejectedNoLoading
+}
+
+
+
+onBeforeMount(() => {
+    initFilters();
+
+});
+
 
 
 const show = (desition,id) => {
@@ -159,6 +206,30 @@ const resolve = async(desition,id,observation) => {
 
 
 
+const buildData = (timestamp) => {
+    const monthsStr = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const parts = timestamp.split('T');
+    const dateParts = parts[0].split('-');
+
+    const day = dateParts[2];
+    const month = parseInt(dateParts[1], 10) - 1;  // Convertir a entero y ajustar índice
+    const year = dateParts[0];
+
+    const monthStr = monthsStr[month];
+    const timeParts = parts[1].split(':');
+    const hour = parseInt(timeParts[0], 10);  // Hora en formato de 24 horas
+    const minute = timeParts[1];
+
+    const isPM = hour >= 12;
+    const formattedHour = hour % 12 || 12;  // Convierte la hora a formato 12 horas y ajusta medianoche a 12
+    const paddedHour = formattedHour < 10 ? `0${formattedHour}` : `${formattedHour}`; // Agrega cero si es necesario
+    const amPm = isPM ? 'PM' : 'AM';
+
+    return {
+        date: `${day}-${monthStr}-${year}`,
+        time: `${paddedHour}:${minute} ${amPm}`
+    };
+}
 
 
 
@@ -173,9 +244,40 @@ const initFilters = () => {
 
 initFilters();
 
-onMounted(async() => {
-    cancellationRequests.value = await requestMethods[route.params.request_status]()
-})
+onMounted(() => {
+    // Ejecutar inicialmente al montar el componente
+    fetchCancellationRequests();
+
+    // Configurar el intervalo para actualizar los datos cada 10 segundos
+    intervalId.value = setInterval(() => {
+        fetchCancellationRequestsNoLoading();
+    }, 10000);
+});
+
+
+
+// Función para cargar las solicitudes de cancelación
+const fetchCancellationRequests = async () => {
+    cancellationRequests.value = await requestMethods[route.params.request_status]();
+
+};
+
+
+const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
+
+const fetchCancellationRequestsNoLoading = async () => {
+    cancellationRequests.value = await requestMethodsNoLoading['revisar']();
+    const currentNumberCansellationRequests = orderStore.numberCancellationRequests;
+    const newCansellationResquestNumber = cancellationRequests.value.length;
+
+    if (currentNumberCansellationRequests < newCansellationResquestNumber) {
+        const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
+        sounds[randomSoundIndex].play(); // Reproduce el sonido seleccionado al azar
+
+        orderStore.numberCancellationRequests = newCansellationResquestNumber; // Actualiza el store
+    }
+};
+
 
 const isActive = PathService.isActiveRoute
 
