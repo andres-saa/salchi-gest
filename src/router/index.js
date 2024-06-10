@@ -43,6 +43,11 @@ const router = createRouter({
           component: () => import('@/views/pages/infoSalchi.vue'),
         },
         {
+          path: '/ingresar-pedido',
+          name: 'ingresar-pedido',
+          component: () => import('@/views/pages/cocina/salchiweb.vue'),
+        },
+        {
           path: '/tienda-menu',
           name: 'menuTienda',
           component: () => import('@/views/pages/tienda/MenuTienda.vue'),

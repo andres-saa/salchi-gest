@@ -101,7 +101,7 @@ const startTokenValidation = () => {
           store.setUserData(data)
           startTokenValidation();
           // localStorage.setItem('token', data.access_token);
-          router.push('/actualizar-datos')
+          router.push('/')
 
           // Redireccionar a la página de inicio o donde sea necesario
         } catch (error) {
