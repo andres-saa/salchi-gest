@@ -15,7 +15,8 @@ export const useReportesStore = defineStore('reportes', {
                     'dateRange',
                     'salesReport',
                     'selectedSites',
-                    'order_status', // Estado por defecto si no hay nada en localStorage
+                    'order_status',
+                     // Estado por defecto si no hay nada en localStorage
                     // 'ventasCharData',
                     'visibleNotifications']
 
@@ -49,6 +50,7 @@ export const useReportesStore = defineStore('reportes', {
             ventasCharData:{},
             ordersCharData:{},
             ticketsCharData:{},
+            sumaryData:[],
             loading:false,
             visibleNotifications:false,
             visibleOrder:{
@@ -203,6 +205,7 @@ export const useReportesStore = defineStore('reportes', {
                 this.fetchDilyReport()
                 this.fetchDilyOrdersReport()
                 this.fetchTicketsReport()
+                this.fetchSumaryReport()
 
 
                 // Maneja la respuesta
@@ -315,6 +318,8 @@ export const useReportesStore = defineStore('reportes', {
               console.error('Fetch error:', error);
           }
       },
+
+
       async fetchTicketsReport() {
         const formattedStartDate = this.formatDate(this.dateRange.startDate)
         const formattedEndDate = this.formatDate(this.dateRange.endDate)
@@ -356,6 +361,67 @@ export const useReportesStore = defineStore('reportes', {
           console.error('Fetch error:', error);
       }
   },
+
+
+
+
+
+  
+  async fetchSumaryReport() {
+    const formattedStartDate = this.formatDate(this.dateRange.startDate)
+    const formattedEndDate = this.formatDate(this.dateRange.endDate)
+    const siteIds = this.selectedSites.map(site => site.site_id).join(',');
+
+  // Construir la URL con parámetros de consulta
+  const queryParams = new URLSearchParams({
+      site_ids: siteIds,
+      start_date: formattedStartDate,
+      end_date: formattedEndDate
+  });
+
+  const url = `${URI}/sales_report_sumary?${queryParams.toString()}`;
+
+  try {
+      const response = await fetch(url, {
+          method: 'GET', // Método GET especificado aquí
+          headers: {
+              'Content-Type': 'application/json',
+              // Agrega aquí otros encabezados si son necesarios
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // salesReport.value = data
+
+      this.sumaryData = data
+      return (data)
+
+
+      // Maneja la respuesta
+      console.log(data);
+  } catch (error) {
+      console.error('Fetch error:', error);
+  }
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
         setChartData (data) {
                 const keys = [];

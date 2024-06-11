@@ -266,7 +266,8 @@ const fetchCancellationRequests = async () => {
 const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
 
 const fetchCancellationRequestsNoLoading = async () => {
-    cancellationRequests.value = await requestMethodsNoLoading['revisar']();
+    const method = route.params.request_status || 'revisar'
+    cancellationRequests.value = await requestMethodsNoLoading[method]();
     const currentNumberCansellationRequests = orderStore.numberCancellationRequests;
     const newCansellationResquestNumber = cancellationRequests.value.length;
 

@@ -24,7 +24,7 @@
 
 
        <div class="text-sm col-12 p-2  md:col-4  xl:col-6 ">
-        <MultiSelect style="" display="chip" multiple v-model="store.selectedSites" optionLabel="site_name" :options="sites.filter(s => s.site_id != 12 & s.site_id !=13)" class="text-sm col-12 p-0" placeholder="Sedes"></MultiSelect>
+        <MultiSelect style="" display="chip" multiple v-model="store.selectedSites" optionLabel="site_name" :options="sites?.filter(s => s.show_on_web)" class="text-sm col-12 p-0" placeholder="Sedes"></MultiSelect>
        </div>
                     
 <div class="text-center col-12 p-2  md:col-3  ">
@@ -440,6 +440,11 @@ const menus = ref([
     {
         name: 'Ordenes',
         to: '/reporte-ventas/ordenes',
+        icon:'fa-solid fa-table'
+    },
+    {
+        name: 'Resumen',
+        to: '/reporte-ventas/order-sumary',
         icon:'fa-solid fa-table'
     }
 ])

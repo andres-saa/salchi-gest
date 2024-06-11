@@ -132,6 +132,11 @@ const router = createRouter({
               path: '/reporte-ventas/ordenes',
               name: 'reporte-ventas-ordenes',
               component: () => import('@/views/pages/ordenes.vue'),
+            },
+            {
+              path: '/reporte-ventas/order-sumary',
+              name: 'reporte-ventas-order-sumary',
+              component: () => import('@/views/pages/orderSumary.vue'),
             }
 
           ]
