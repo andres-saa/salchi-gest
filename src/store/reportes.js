@@ -18,7 +18,8 @@ export const useReportesStore = defineStore('reportes', {
                     'order_status',
                      // Estado por defecto si no hay nada en localStorage
                     // 'ventasCharData',
-                    'visibleNotifications']
+                    'visibleNotifications',
+                    'sites']
 
         
     },
@@ -42,7 +43,8 @@ export const useReportesStore = defineStore('reportes', {
                 "total_sales": {
                     "total_sales": 0,
                     "total_orders": 0,
-                    "average_ticket": 0
+                    "average_ticket": 0,
+                    
                 }
             },
             selectedSites: [],
@@ -50,6 +52,7 @@ export const useReportesStore = defineStore('reportes', {
             ventasCharData:{},
             ordersCharData:{},
             ticketsCharData:{},
+            sites:[],
             sumaryData:[],
             loading:false,
             visibleNotifications:false,
@@ -167,8 +170,7 @@ export const useReportesStore = defineStore('reportes', {
         async fetchSalesReport() {
 
             if(this.selectedSites.length<1){
-                alert('Selecciones las sedes pare el reporte, gracias.')
-                return
+              await  this.getSites()
             }
             const formattedStartDate = this.formatDate(this.dateRange.startDate);
             const formattedEndDate = this.formatDate(this.dateRange.endDate);
@@ -277,6 +279,41 @@ export const useReportesStore = defineStore('reportes', {
                 console.error('Fetch error:', error);
             }
         },
+
+
+
+
+
+        async getSites ()  {
+            try {
+                const response = await fetch(`${URI}/sites`)
+        
+                if(!response.ok){
+                    throw 'paila'
+                }
+        
+                const data = await response.json()
+                this.selectedSites = data.filter(s => s.show_on_web)
+                this.sites = data.filter(s => s.show_on_web)
+                
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         async fetchDilyOrdersReport() {
             const formattedStartDate = this.formatDate(this.dateRange.startDate)
             const formattedEndDate = this.formatDate(this.dateRange.endDate)

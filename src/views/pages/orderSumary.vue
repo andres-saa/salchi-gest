@@ -66,14 +66,13 @@
 <p class="text-l px-0 my-4  text-900 font-bold">Resumen de Ventas entre {{ store.formatDate(store.dateRange.startDate)  }} y {{ store.formatDate(store.dateRange.endDate)  }} </p>
 
 
-        <DataTable paginator  :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
+        <DataTable   :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
                 
         
-        :rows="10" :filters="filters"
-                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                  :rowsPerPageOptions="[5, 10, 25,100]"
-                    stripedRows=""
-                  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Sedes"
+        :rows="11" :filters="filters"
+                  
+               
+                 
                   responsiveLayout="scroll" scrollable >
 
                   
@@ -83,7 +82,7 @@
             <Column field="order_id" header="Sede" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
             
                 <template #body="slotProps">
-                 <P style="min-width: max-content;">
+                 <P class="text" :class="slotProps.data.site_name == 'TOTAL'? 'bold':''" style="min-width: max-content;">
                     {{slotProps.data.site_name}}
                  </P>   
                 </template>
@@ -91,7 +90,7 @@
             <Column field="order_id" header="Env" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
             
             <template #body="slotProps">
-             <P style="min-width: max-content;">
+             <P class="text"  :class="slotProps.data.site_name == 'TOTAL'? 'bold':''" style="min-width: max-content;">
                 {{slotProps.data.total_orders_sent}}
              </P>   
             </template>
@@ -99,24 +98,24 @@
         <Column field="order_id"  header="$ env" class="py-0 px-0" headerStyle="width:3rem;min-width:2rem">
             
             <template #body="slotProps">
-             <P class="" style="min-width: max-content;">
+             <P class="text"  :class="slotProps.data.site_name == 'TOTAL'? 'bold':''"  style="min-width: max-content;">
                 {{formatToColombianPeso(slotProps.data.total_sales_sent) }}
              </P>   
             </template>
         </Column>
 
-        <Column field="order_id" header="Canc" class="py-0" headerStyle="width:3rem;min-width:3rem">
+        <Column field="order_id" header="Canc" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
             
             <template #body="slotProps">
-             <P style="min-width: max-content;">
+             <P class="text"  :class="slotProps.data.site_name == 'TOTAL'? 'bold':''" style="min-width: max-content;">
                 {{slotProps.data.total_orders_cancelled}}
              </P>   
             </template>
         </Column>
-        <Column field="order_id" header="$ Canc" class="py-0" headerStyle="width:12rem;min-width:3rem">
+        <Column field="order_id" header="$ Canc" class="py-0 px-0"  headerStyle="width:12rem;min-width:3rem">
             
             <template #body="slotProps">
-             <P style="min-width: max-content;">
+             <P class="text"  :class="slotProps.data.site_name == 'TOTAL'? 'bold':''" style="min-width: max-content;">
                 {{formatToColombianPeso(slotProps.data.total_sales_cancelled) }}
              </P>   
             </template>
@@ -280,6 +279,17 @@ const exportCSV = async() => {
 }
 
 
+.bold{
+    font-weight: bold;
+    font-size: 1.1rem;
+    background-color: var(--blue-100);
+
+    
+}
+
+.text{
+    padding: 0 1rem 0 0;
+}
 </style>
 
 
