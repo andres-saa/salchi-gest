@@ -45,6 +45,7 @@ async function fetchAndUpdateRoles() {
                     items: [
                         { label: 'Menu', icon: ' fa-solid fa-burger', to: '/tienda-menu/productos/SALCHIPAPAS/3' },
                         { label: 'Cocina', icon: ' fa-solid fa-burger', to: '/cocina/' },
+                        { label: 'Transferencias', icon: ' fa-solid fa-truck-fast', to: '/transfer/' },
 
                         { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
                         { label: 'Conectividad', icon: ' fa-solid fa-truck-fast', to: '/conectividad/' },

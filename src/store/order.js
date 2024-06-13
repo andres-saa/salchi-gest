@@ -27,7 +27,9 @@ export const useOrderStore = defineStore('cart', {
         currentCountOrders:0,
         last_order_id:0,
         currentSearchingOrder:{},
-        numberCancellationRequests:0
+        numberCancellationRequests:0,
+        numberTransferRequests:0
+
 
     }),
 

@@ -1,10 +1,14 @@
 <template>
     <div class="container" style="margin-top: 7rem;">
 
+        <p  class=" text-4xl text-center px-4" style="font-weight: bold; margin-top: 6rem;">
+    <i class="fa-solid fa-truck-arrow-right"></i>
+       Transferencias
+    </p>
 
         <Dialog v-model:visible="cancelDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
             <template #header>
-              <h3> <b>Rechazar esta solicitud</b> </h3>
+              <h3> <b>Rechazar orden</b> </h3>
             </template>
 
             <form @submit.prevent="resolve(false,cancelData.id,cancelData.reason)" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
@@ -20,28 +24,26 @@
 
         <Dialog v-model:visible="aceptDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
             <template #header>
-              <h3> <b>Aprobar esta solicitud</b> </h3>
+              <h3> <b>Aprobar esta orden</b> </h3>
             </template>
 
-            <form @submit.prevent="resolve(true,cancelData.id,cancelData.reason)" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
+            <form @submit.prevent="authoize(cancelData.order_id)" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
         
               
-              <Textarea style="resize: none; text-transform: lowercase; width:100%" id="reason" v-model="cancelData.reason" rows="5"
-                placeholder="Notas para el solicitante"></Textarea>
-        
-              <Button style="width: 100%;border-radius:0.5rem" label="Aprobar" type="submit" class="p-button-success" />
+            
+              <Button style="width: 100%;border-radius:0.5rem" label="Aprobar (Transferencia confirmada)" type="submit" class="p-button-success" />
 
             </form>
         </Dialog>
 
         <DataTable   :paginator="true" :rows="15" :filters="filters"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Transferencias"
           :rowsPerPageOptions="[5, 10, 25, 100]"
           scrollable
           scrollHeight="65vh"
         stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
-        :value="cancellationRequests" tableStyle="min-width: 50rem;">
+        :value="TransferRequests" tableStyle="min-width: 50rem;">
         <template #header>
             <div class="grid" style="align-items:center;justify-content: space-between;">
                 <div class="col-12 md:col-6 p-3"> 
@@ -57,27 +59,51 @@
         </template>
 
 
-        <Column style="" class="py-1 pl-0" field="order_id" header="ID orden" frozen>
-        
-        
+        <Column style="" class="py-1 pl-0" field="order_id" header="ID orden" frozen />
+        <!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
+        <Column style="" class="py-1 pl-0" field="total_order_price" header="Monto de la orden"  >
+            <template #body="data">
+                {{formatToColombianPeso(data.data.total_order_price)   }}
+            </template>
         </Column>
-        <Column style="" class="py-1 pl-0" field="order_id" header="ID orden" frozen>
+
+        <Column style="" class="py-1 pl-0" field="delivery_price" header="Domicilio"  >
+            <template #body="data">
+                {{formatToColombianPeso(data.data.delivery_price)   }}
+            </template>
+        </Column>
+
+
+
+        <Column style="" class="py-1 pl-0" field="Total" header="Total"  >
+            <template #body="data">
+                {{formatToColombianPeso(data.data.delivery_price + data.data.total_order_price)   }}
+            </template>
+
+
+
+        </Column>
+        <!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
+
+
+
         
+        <Column style="" class="py-1 pl-0" field="user_name" header="Cliente"  />
+
+        <Column style="" class="py-1 pl-0" field="user_phone" header="Telefono cliente"  />
+        <!-- <Column style="" class="py-1 pl-0" field="user_phone" header="ID orden" frozen /> -->
         
-    </Column>
 
-
-
-
-    
 
 
         <Column style="" class="py-1 px-0" field="date" header="Action" frozen alignFrozen="right">
             <template #body="data">
 
                 <div style="display: flex;gap:0.5rem;">
-                  
-                        <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="show(true,data.data.id)" style="height: 1.8rem;width: 2rem;" severity="success" class="p-1" icon="pi pi-check" />
+                    
+                        <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="open(data.data)" style="height: 1.8rem;width: 2rem;" severity="info" class="p-1" icon="pi pi-eye" />
+
+                        <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="show(data.data.order_id)" style="height: 1.8rem;width: 2rem;" severity="success" class="p-1" icon="pi pi-check" />
                         <!-- <Button v-if="route.params.request_status != 'rechazadas'" @click="show(false,data.data.id)" style="height: 1.8rem;width: 2rem;background:var(--primary-color);border:none"  severity="danger" class="p-1"
                         icon="pi pi-times" /> -->
 
@@ -96,20 +122,55 @@
 
     </div>
 
+
+<DialogoPedido>
+
+</DialogoPedido>
+
 </template>
 
 <script setup>
 
 import {ref,onMounted,onBeforeMount,watch,onUnmounted} from 'vue'
 import {PathService} from '@/service/pathService.js'
+import { formatToColombianPeso, salesReport } from '@/service/valoresReactivosCompartidos';
+import OrderItem from '../cocina/OrderItem.vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import DialogoPedido from '../cocina/DialogoPedido.vue';
 import {useRoute} from 'vue-router'
 import {orderService} from '@/service/menu/orderService.js'
 import {loginStore} from '@/store/user.js'
 import { useOrderStore } from '../../../store/order';
 import { months } from 'moment-timezone';
+
+
+
+
+
+
+
+
+const store = useOrderStore()
+
+
+
+const open = (order) => {
+    store.setVisible('currentOrder',true)
+    store.setOrder(order)
+}
+
+
+const authoize = async( order_id) => {
+    const responsible_id = userStore.rawUserData.id
+    await orderService.authorizeOrder(order_id,responsible_id)
+    aceptDialogVisible.value = false
+    fetchTransferRequests();
+
+}
+
+
 const cancelDialogVisible = ref(false)
-const cancellationRequests = ref([])
+const TransferRequests = ref([])
 const aceptDialogVisible =ref(false)
 const userStore = loginStore()
 const cancelData = ref({
@@ -121,7 +182,7 @@ const cancelData = ref({
 const sonido1 = new Audio('/sound/pip1.wav')
 const sonido2 = new Audio('/sound/pip2.wav')
 const sonido3 = new Audio('/sound/pip3.wav')
-
+const sonido4 = new Audio('/sound/pip4.wav')
 const orderStore = useOrderStore()
 
 const intervalId = ref(null); // Guardar la referencia al intervalo
@@ -152,10 +213,10 @@ onBeforeMount(() => {
 
 
 
-const show = (desition,id) => {
+const show = (id) => {
     
-    cancelData.value.id = id
-    desition? aceptDialogVisible.value = true : cancelDialogVisible.value = true
+    aceptDialogVisible.value = true
+    cancelData.value.order_id = id
 
 }
 
@@ -170,7 +231,7 @@ const resolve = async(desition,id,observation) => {
     await orderService.resolveCancellationRequest(id,data)
     aceptDialogVisible.value = false
     cancelDialogVisible.value = false
-    cancellationRequests.value = await requestMethods['revisar']()
+    TransferRequests.value = await requestMethods['revisar']()
 
 
 }
@@ -218,43 +279,111 @@ initFilters();
 
 onMounted(() => {
     // Ejecutar inicialmente al montar el componente
-    fetchCancellationRequests();
+    fetchTransferRequests();
 
     // Configurar el intervalo para actualizar los datos cada 10 segundos
     // intervalId.value = setInterval(() => {
-    //     fetchCancellationRequestsNoLoading();
+    //     fetchTransferRequestsNoLoading();
     // }, 10000);
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 });
 
 
 
+
+
+
+
+
+
+onMounted(async() => {
+    // Ejecutar inicialmente al montar el componente
+    fetchTransferRequests();
+
+    // Configurar el intervalo para actualizar los datos cada 10 segundos
+    intervalId.value = setInterval(async() => {
+        const recentTransfer = await orderService.is_recent_transfer_generated()
+        if (recentTransfer && orderStore.numberTransferRequests != recentTransfer) {
+            // const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
+            sonido4.play(); // Reproduce el sonido seleccionado al azar
+            orderStore.numberTransferRequests = recentTransfer; // Actualiza el store
+        fetchTransferRequestsNoLoading();
+        }
+    }, 10000);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Función para cargar las solicitudes de cancelación
-const fetchCancellationRequests = async () => {
-    cancellationRequests.value = await orderService.getOrdersTransfer();
+const fetchTransferRequests = async () => {
+    TransferRequests.value = await orderService.getOrdersTransfer();
 
 };
 
+const fetchTransferRequestsNoLoading = async () => {
+    TransferRequests.value = await orderService.getOrdersTransferNoLoading();
+
+};
 
 const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
 
-const fetchCancellationRequestsNoLoading = async () => {
-    cancellationRequests.value = await requestMethodsNoLoading['revisar']();
-    const currentNumberCansellationRequests = orderStore.numberCancellationRequests;
-    const newCansellationResquestNumber = cancellationRequests.value.length;
+// const fetchTransferRequestsNoLoading = async () => {
+//     TransferRequests.value = await requestMethodsNoLoading['revisar']();
+//     const currentNumberCansellationRequests = orderStore.numberTransferRequests;
+//     const newCansellationResquestNumber = TransferRequests.value.length;
 
-    if (currentNumberCansellationRequests < newCansellationResquestNumber) {
-        const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
-        sounds[randomSoundIndex].play(); // Reproduce el sonido seleccionado al azar
+//     if (currentNumberCansellationRequests < newCansellationResquestNumber) {
+//         const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
+//         sounds[randomSoundIndex].play(); // Reproduce el sonido seleccionado al azar
 
-        orderStore.numberCancellationRequests = newCansellationResquestNumber; // Actualiza el store
-    }
-};
+//         orderStore.numberTransferRequests = newCansellationResquestNumber; // Actualiza el store
+//     }
+// };
 
 
 const isActive = PathService.isActiveRoute
 
 watch(()=> route.params.request_status, async() => {
-    cancellationRequests.value = await requestMethods['revisar']()
+    TransferRequests.value = await requestMethods['revisar']()
 },{deep:true})
 
 

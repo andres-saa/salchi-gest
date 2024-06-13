@@ -244,13 +244,19 @@ const initFilters = () => {
 
 initFilters();
 
-onMounted(() => {
+onMounted(async() => {
     // Ejecutar inicialmente al montar el componente
     fetchCancellationRequests();
 
     // Configurar el intervalo para actualizar los datos cada 10 segundos
-    intervalId.value = setInterval(() => {
+    intervalId.value = setInterval(async() => {
+        const recent_cancellation = await orderService.is_recent_order_generated()
+        if (recent_cancellation && orderStore.numberCancellationRequests != recent_cancellation) {
+            const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
+            sounds[randomSoundIndex].play(); // Reproduce el sonido seleccionado al azar
+            orderStore.numberCancellationRequests = recent_cancellation; // Actualiza el store
         fetchCancellationRequestsNoLoading();
+        }
     }, 10000);
 });
 
@@ -268,15 +274,8 @@ const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
 const fetchCancellationRequestsNoLoading = async () => {
     const method = route.params.request_status || 'revisar'
     cancellationRequests.value = await requestMethodsNoLoading[method]();
-    const currentNumberCansellationRequests = orderStore.numberCancellationRequests;
-    const newCansellationResquestNumber = cancellationRequests.value.length;
 
-    if (currentNumberCansellationRequests < newCansellationResquestNumber) {
-        const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
-        sounds[randomSoundIndex].play(); // Reproduce el sonido seleccionado al azar
-
-        orderStore.numberCancellationRequests = newCansellationResquestNumber; // Actualiza el store
-    }
+    
 };
 
 

@@ -78,6 +78,12 @@
 
 
      
+
+      <Tag style="" class="tag mb-2" severity="success" v-if="store.currentOrder.responsible_id"> <i class="pi pi-whatsapp mr-2"></i>   TRANSFERENCIA APROBADA</Tag> <br> 
+      
+      <Tag class="tag mb-2" severity="success" v-if="store.currentOrder.responsible_id">  {{store.currentOrder.name}}</Tag>
+
+     
     
       <div class="" style="width: auto; color: black;">
 
@@ -106,7 +112,8 @@
 
 <p class="text-2xl estado" :class="store.currentOrder.current_status" v-if="store.currentOrder.current_status == 'generada'" style="text-transform: lowercase;"> 
     
-    Hemos recibido su pedido a las  {{ obtenerHoraFormateadaAMPM(store.currentOrder.latest_status_timestamp) }} y empezaremos a prepararlo en breve, gracias por su espera
+    Hemos recibido su pedido a las  {{ obtenerHoraFormateadaAMPM(store.currentOrder.latest_status_timestamp) }}
+    {{ store.currentOrder.authorized? `  y empezaremos a prepararlo en breve, gracias por su espera` : 'y empezaremos a prepararlo Cuando se confirme su Transferencia, Muchas gracias.'}}
 
 </p>
 
@@ -171,16 +178,16 @@
               </p>
             </div> -->
             <div >
-              <p style="text-align: end;color: black;">
-                <!-- {{ formatoPesosColombianos(product.price) }} -->
-                {{ formatoPesosColombianos(product.total_price) }}
-              </p>
+              
             </div>
 
             </div>
 
             <div style="background-color: rgba(0, 0, 0, 0.286); height: 1px;">
-
+              <p style="text-align: end;color: black;">
+                <!-- {{ formatoPesosColombianos(product.price) }} -->
+                {{ formatoPesosColombianos(product.total_price) }}
+              </p>
 </div>  
 
           </div>
