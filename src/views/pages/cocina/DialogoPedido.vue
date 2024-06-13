@@ -178,16 +178,16 @@
               </p>
             </div> -->
             <div >
-              
+              <p style="text-align: end;color: black;">
+                <!-- {{ formatoPesosColombianos(product.price) }} -->
+                {{ formatoPesosColombianos(product.total_price) }}
+              </p>
             </div>
 
             </div>
 
             <div style="background-color: rgba(0, 0, 0, 0.286); height: 1px;">
-              <p style="text-align: end;color: black;">
-                <!-- {{ formatoPesosColombianos(product.price) }} -->
-                {{ formatoPesosColombianos(product.total_price) }}
-              </p>
+
 </div>  
 
           </div>

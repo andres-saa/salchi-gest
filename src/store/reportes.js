@@ -172,10 +172,17 @@ export const useReportesStore = defineStore('reportes', {
             if(this.selectedSites.length<1){
               await  this.getSites()
             }
+
             const formattedStartDate = this.formatDate(this.dateRange.startDate);
             const formattedEndDate = this.formatDate(this.dateRange.endDate);
             const siteIds = this.selectedSites.map(site => site.site_id).join(',');
 
+
+            if (formattedStartDate > formattedEndDate) {
+                alert('La fecha de inicio debe ser anterior o igual a la fecha final.');
+                // Ajusta las fechas según sea necesario, por ejemplo:
+                return
+            }
             // Construir la URL con parámetros de consulta
             const queryParams = new URLSearchParams({
                 site_ids: siteIds,
@@ -221,11 +228,7 @@ export const useReportesStore = defineStore('reportes', {
 
 
         formatDate(dated) {
-            const date = new Date(dated)
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            return new Date(dated).toISOString();
         },
 
         setDateRange(startDate, endDate) {
