@@ -149,13 +149,13 @@
         <Dialog v-model:visible="showDateDialog" modal header="Periodo" :style="{ width: '25rem' }">
             <div class="grid">
 
-                <div class="col-12 px-0 mx-0">
+                <div class="col-12" style="display: flex; flex-wrap: wrap;gap:1rem;">
                     <!-- Botones para selección rápida de fechas -->
-                    <!-- <Button text label="Hoy" @click="setDateRange(0)" class="p-button-text col-12 p-1 m-0" />
-                    <Button text label="Ayer" @click="setDateRange(1)" class="p-button-text col-12 p-1 m-0" />
-                    <Button text label="Últimos 7 días" @click="setDateRange(7)" class="p-button-text col-12 p-1 m-0" />
-                    <Button text label="Últimos 14 días" @click="setDateRange(14)" class="p-button-text col-12 p-1" />
-                    <Button text label="Últimos 28 días" @click="setDateRange(28)" class="p-button-text col-12 p-0" /> -->
+                    <Button size="small" severity="help" style="flex-grow: 1; min-width: max-content;" label="Hoy" @click="setDateRange(0)" class=" " />
+                    <Button size="small" severity="warning" style="flex-grow: 1;" label="Ayer" @click="setDateRange(1)" class="" />
+                    <Button size="small" severity="success" style="flex-grow: 1;" label="Últimos 7 días" @click="setDateRange(7)" class=" " />
+                    <Button size="small" severity="danger" style="flex-grow: 1;" label="Últimos 14 días" @click="setDateRange(14)" class="" />
+                    <Button size="small" severity="info" style="flex-grow: 1;" label="Últimos 28 días" @click="setDateRange(28)" class="" />
                 </div>
 
                 <!-- <Divider></Divider> -->
@@ -163,18 +163,18 @@
                     <span style="font-weight: bold; " class="text-l">Desde </span>
 
                     <div style="position: relative;">
-                        <InputText
+                        <!-- <InputText
                             style="position: absolute;pointer-events: none;width: 100%;  top: 0;left: 0;z-index: 1000;"
-                            readOnly :value="formatDate(TempStartDate)"></InputText>
+                            readOnly :value="formatDate(TempStartDate)"></InputText> -->
 
-                        <Calendar hourFormat="12" style="min-width: max-content;width: 100%;" v-model="TempStartDate"
+                        <Calendar showTime hourFormat="12" style="min-width: max-content;width: 100%;" v-model="TempStartDate"
                             showWeek>
 
                         </Calendar>
 
                     </div>
-                    <div  class="my-2">
-                            <!-- Selección de horas -->
+                    <!-- <div  class="my-2">
+                          
                             <div v-if="selectedHour == null"
                                 style="display: flex; flex-wrap: wrap; width: 100%;gap: .1rem;">
                                 <div v-for="hour in hours" :key="'hour-' + hour">
@@ -184,34 +184,33 @@
 
                            
 
-                            <!-- Selección de decenas de minutos, se muestra solo si la hora está definida -->
                             <div v-if="selectedHour !== null && selectedMinuteTens == null"
                                 style="display: flex; flex-wrap: wrap; gap: .1rem; width: 100%;">
                                 <div v-for="tens in minuteTens" :key="'tens-' + tens">
                                     <Button outlined class="py-1 px-3" :label="tens" @click="setMinuteTens(tens)"></Button>
-                                    <!-- <Button  style="width: 3rem;" :label="hour" class="py-1 px-2" @click="setHour(hour)"></Button>?  -->
+                                  
                                 </div>
                             </div>
 
                            
 
-                            <!-- Selección de unidades de minutos, se muestra solo si las decenas están definidas -->
+                          
                             <div v-if="selectedMinuteTens !== null && selectedMinutes == null"
                                 style="display: flex; flex-wrap: wrap; gap: .5rem; width: 100%;">
                                 <div v-for="unit in minuteUnits" :key="'unit-' + unit">
                                     <Button outlined :label="unit" class="py-1 px-3" @click="setMinuteUnits(unit)"></Button>
                                 </div>
                             </div>
-                    </div>
+                    </div> -->
 
 
 
-                    <div style="display: flex; width: 100%; justify-content: end;">
+                    <!-- <div style="display: flex; width: 100%; justify-content: end;">
                         <Button  size="small" rounded severity="help"  class="p-0" icon="pi pi-clock" style="width: 2rem; height: 2rem;"  @click="() => {
                         selectedHour = null
                         selectedMinuteTens = null
                     } "></Button>
-                    </div>
+                    </div> -->
                   
 
                 </div>
@@ -223,18 +222,17 @@
                     <span style="font-weight: bold; " class="text-l">Hasta </span>
 
                     <div style="position: relative;">
-                        <InputText
+                        <!-- <InputText
                             style="position: absolute;pointer-events: none;width: 100%;  top: 0;left: 0;z-index: 1000;"
-                            readOnly :value="formatDate(TempEndDate)"></InputText>
+                            readOnly :value="formatDate(TempEndDate)"></InputText> -->
 
-                        <Calendar hourFormat="12" style="min-width: max-content;width: 100%;" v-model="TempEndDate"
+                        <Calendar showTime hourFormat="12" style="min-width: max-content;width: 100%;" v-model="TempEndDate"
                             showWeek>
-
+                          
                         </Calendar>
 
                     </div>
-                    <div  class="my-2">
-                            <!-- Selección de horas -->
+                    <!-- <div  class="my-2">
                             <div v-if="selectedHourEnd == null"
                                 style="display: flex; flex-wrap: wrap; width: 100%;gap: .1rem;">
                                 <div v-for="hourEnd in hoursEnd" :key="'hour-' + hourEnd">
@@ -244,34 +242,31 @@
 
                            
 
-                            <!-- Selección de decenas de minutos, se muestra solo si la hora está definida -->
                             <div v-if="selectedHourEnd !== null && selectedMinuteTensEnd == null"
                                 style="display: flex; flex-wrap: wrap; gap: .1rem; width: 100%;">
                                 <div v-for="tensEnd in minuteTensEnd" :key="'tens-' + tensEnd">
                                     <Button outlined class="py-1 px-3" :label="tensEnd" @click="setMinuteTensEnd(tensEnd)"></Button>
-                                    <!-- <Button  style="width: 3rem;" :label="hour" class="py-1 px-2" @click="setHour(hour)"></Button>?  -->
                                 </div>
                             </div>
 
                            
 
-                            <!-- Selección de unidades de minutos, se muestra solo si las decenas están definidas -->
                             <div v-if="selectedMinuteTensEnd !== null && selectedMinutesEnd == null"
                                 style="display: flex; flex-wrap: wrap; gap: .5rem; width: 100%;">
                                 <div v-for="unitEnd in minuteUnitsEnd" :key="'unit-' + unitEnd">
                                     <Button outlined :label="unitEnd" class="py-1 px-3" @click="setMinuteUnitsEnd(unitEnd)"></Button>
                                 </div>
                             </div>
-                    </div>
+                    </div> -->
 
 
 
-                    <div style="display: flex; width: 100%; justify-content: end;">
+                    <!-- <div style="display: flex; width: 100%; justify-content: end;">
                         <Button  size="small" rounded severity="help"  class="p-0" icon="pi pi-clock" style="width: 2rem; height: 2rem;"  @click="() => {
                         selectedHourEnd = null
                         selectedMinuteTensEnd = null
                     } "></Button>
-                    </div>
+                    </div> -->
                   
 
                 </div>
@@ -280,13 +275,13 @@
 
                 <div class="col-12 p-0" style="display: flex; justify-content: center;">
                     <div class="col-12" style="display: flex; justify-content: center;">
-                        <Button @click="() => {
+                        <Button label="Aplicar" severity="help" @click="() => {
                             store.setDateRange(TempStartDate, TempEndDate);
                             showDateDialog = false;
                             store.fetchSalesReport();
 
 
-                        }">Aplicar</Button>
+                        }"></Button>
                     </div>
                 </div>
 
@@ -484,34 +479,39 @@ const selectedRangeName = ref('');
 function setDateRange(days) {
     const today = new Date();
     const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1); // Incrementa en uno para incluir el día de mañana
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
     const pastDate = new Date(today);
-    pastDate.setDate(today.getDate() - days); // Ajustado para incluir el día de hoy en el rango si es necesario
+    pastDate.setDate(today.getDate() - days);
 
-    TempStartDate.value = pastDate;
+    // Establece la hora de inicio a las 10 AM
+    pastDate.setHours(10, 0, 0, 0);
 
+    let endDate;
 
     if (days == 1) {
-        TempEndDate.value = today;
-        store.setDateRange(TempStartDate.value, TempEndDate.value)
-        showDateDialog.value = false
-
-
+        // Si el rango es 'Ayer', ajusta la fecha de fin para hoy a las 4 AM
+        endDate = new Date(today);
+        endDate.setHours(4, 0, 0, 0);
+        if (endDate < today) {
+            endDate.setDate(endDate.getDate()); // Ajusta al día siguiente si la hora ya pasó
+        }
+        TempStartDate.value = pastDate;
+        TempEndDate.value = endDate;
     } else {
-        TempEndDate.value = tomorrow;
-        store.setDateRange(TempStartDate.value, TempEndDate.value)
-        showDateDialog.value = false
-
+        // Para otros rangos, ajusta la fecha de fin para 'mañana' a las 4 AM
+        endDate = new Date(tomorrow);
+        endDate.setHours(4, 0, 0, 0);
+        TempStartDate.value = pastDate;
+        TempEndDate.value = endDate;
     }
 
-
-
-
-    store.fetchSalesReport()
-
-    // Usando 'tomorrow' en lugar de 'today'
+    store.setDateRange(TempStartDate.value, TempEndDate.value);
+    showDateDialog.value = false;
+    store.fetchSalesReport(); // Llama a la función para obtener el reporte de ventas basado en el rango establecido
 }
+
+
 
 onMounted(() => {
     getSites().then(data => {

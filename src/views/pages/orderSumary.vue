@@ -1,15 +1,10 @@
 <template>
 
 
-<div class="col-12 p-0 md:p-2" style="max-width: 768px;">
+<div class="col-12 p-0 md:p-2 m-auto" style="max-width:1024px">
 
-    <div class="flex flex-wrap align-items-center justify-content-between gap-2 my-5 pl-0 ml-0">
-                    <div class="flex p-0  flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
-                        <span class="text-l p-0  text-900 font-bold">Indicadores Generales  </span>
-    
-                          
-                        </div>
-                </div>
+    <p class="text-xl px-0 mx-0 my-0 pb-0" style="font-weight: bold;"> 
+        Inducadores generales</p>
 
 
 
@@ -63,7 +58,10 @@
 
 </div>
 
-<p class="text-l px-0 my-4  text-900 font-bold">Resumen de Ventas entre {{ store.formatDate(store.dateRange.startDate)  }} y {{ store.formatDate(store.dateRange.endDate)  }} </p>
+<p class="text-xl px-0 mx-0 my-0 pb-0" style="font-weight: bold;"> 
+            Resumen de ventas</p>
+
+<p class="text-l px-0 my-4  text-900 font-bold">{{ convertirFechaUTCaColombia(store.formatDate(store.dateRange.startDate) )  }}  -  {{ convertirFechaUTCaColombia(store.formatDate(store.dateRange.endDate))   }} </p>
 
 
         <DataTable   :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
@@ -152,7 +150,27 @@ import * as XLSX from 'xlsx';
 
 const filters = ref(null);
 
+function convertirFechaUTCaColombia(fechaUTC) {
+  // Crear un objeto de fecha con la fecha UTC
+  const fecha = new Date(fechaUTC);
 
+  // Opciones para el formateador de fecha
+  const opciones = {
+    weekday: 'long', // nombre del día de la semana
+    year: 'numeric',
+    month: 'long', // nombre del mes
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true // formato de 12 horas
+  };
+
+  // Crear un formateador de fecha para Colombia
+  const formateador = new Intl.DateTimeFormat('es-CO', opciones);
+
+  // Convertir la fecha UTC a hora local de Colombia y formatearla
+  return formateador.format(fecha);
+}
 
 const store = useReportesStore()
 
