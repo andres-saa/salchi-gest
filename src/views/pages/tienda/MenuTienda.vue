@@ -20,6 +20,7 @@
     <router-view class=""></router-view>
 </div>
 <dialogEditProduct class="m-3"></dialogEditProduct>
+<dialogDeleteProduct></dialogDeleteProduct>
 </template>
 
 <script setup>
@@ -31,6 +32,7 @@ import BarraCategorias from '../../../components/BarraCategorias.vue';
 import { siteService } from '../../../service/siteService';
 import dialogEditProduct from '../dialogEditProduct.vue';
 import { useSitesStore } from '../../../store/site';
+import dialogDeleteProduct from '../dialogDeleteProduct.vue';
 
 const siteStore = useSitesStore()
 
@@ -40,6 +42,9 @@ const sites = ref([])
 
 onMounted(async() => {
     sites.value = await siteService.getSites()
+
+        // siteStore.site = sites.value.filter(site => site.site_id = 1)[0]
+    
 })
 
 </script>

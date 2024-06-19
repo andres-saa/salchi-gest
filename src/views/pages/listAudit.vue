@@ -52,7 +52,7 @@
            
 
             <div class="cara" style="width: min-content;position: relative; align-items: center;display: flex; justify-content: center;">
-                <Knob :strokeWidth="10"  valueTemplate="" v-model="value" readonly />
+                <Knob :strokeWidth="10"  valueTemplate="" v-model="value[coordinador.name]"  />
                 <img class="p-4" style="width: 7rem;z-index: -1; aspect-ratio: 1/1;position: absolute; object-fit: cover; border-radius: 50%;" :src="`${URI}/read-product-image/96/employer-${coordinador.dni}`"  @error="onImageError(coordinador.gender, $event)">
             </div>
             <span style="width: max-content;font-weight: bold;">  {{ coordinador.name.split(' ').slice(0,2).join(' ') }}</span>
@@ -61,11 +61,11 @@
  
  
     <div v-if="calidometoSedes" class="px-2 md:mx-4 mb-2 pb-2" style="display:  flex;gap: 2rem;justify-content: ; overflow-x: auto; ">
-        <div style="display: flex;align-items: center; flex-direction: column;justify-content: center;gap:0.5rem" v-for=" site in sites">
+        <div style="display: flex;align-items: center; flex-direction: column;justify-content: center;gap:0.5rem" v-for=" site in sites.filter(e => e.show_on_web)">
            
 
             <div class="cara" style="width: min-content;position: relative; align-items: center;display: flex; justify-content: center;">
-                <Knob :strokeWidth="10"  valueTemplate="" v-model="value" readonly />
+                <Knob :strokeWidth="10"  valueTemplate="" v-model="value[site.site_name]"  />
                 <img class="p-4" style="width: 7rem;z-index: -1; aspect-ratio: 1/1;position: absolute; object-fit: cover; border-radius: 50%;" :src="`${URI}/read-product-image/96/site-${site.site_id}`">
             </div>
             <span style="width: max-content;font-weight: bold;">  {{ site.site_name }}</span>
@@ -469,7 +469,7 @@ import { siteService } from '../../service/siteService';
 import MultiSelect from 'primevue/multiselect';
 
 
-const value = ref(40)
+const value = ref([])
 const coordinators = ref([])
 
 

@@ -5211,10 +5211,10 @@
     color: #3b82f6;
   }
   .p-toast .p-toast-message.p-toast-message-success {
-    background: rgba(228, 248, 240, 0.7);
+    background: #1ea97c;
     border: solid #1ea97c;
     border-width: 0 0 0 6px;
-    color: #1ea97c;
+    color: #fff;
   }
   .p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon,
 .p-toast .p-toast-message.p-toast-message-success .p-toast-icon-close {
@@ -5231,10 +5231,10 @@
     color: #cc8925;
   }
   .p-toast .p-toast-message.p-toast-message-error {
-    background: rgba(255, 231, 230, 0.7);
+    background: #ff5757;
     border: solid #ff5757;
     border-width: 0 0 0 6px;
-    color: #ff5757;
+    color: #fff;
   }
   .p-toast .p-toast-message.p-toast-message-error .p-toast-message-icon,
 .p-toast .p-toast-message.p-toast-message-error .p-toast-icon-close {

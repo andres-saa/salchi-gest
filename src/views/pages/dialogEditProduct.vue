@@ -27,14 +27,14 @@
 
 
 
-        <div class="m-auto col-12" style="max-width: 600px;" v-for="(items, grupo) in adicionales" :key="grupo">
-            <p class="text-center text-2xl"
+        <div class="m-auto col-12 p-0" style="max-width: 600px;" v-for="(items, grupo) in adicionales" :key="grupo">
+            <p class="text-center text-2xl py-4"
                 style="font-weight: bold;text-transform: capitalize;display: flex; align-items: center;justify-content: center;gap: 1rem;">
                 <span>{{ grupo }}</span>
                 <!-- {{ currentAditions }} -->
                 <InputSwitch :modelValue="allSelected(grupo)" @update:modelValue="toggleGroup(grupo, $event)" />
             </p>
-            <DataTable  stripedRows :value="items">
+            <DataTable  stripedRows :value="items" class="p-0">
                 <Column style="text-transform: capitalize;" class="p-0" field="aditional_item_name" header="Nombre">
                     <template #body="adicion">
                         <span style="text-transform: uppercase;"> {{ adicion.data.item_name }} </span>
@@ -47,7 +47,7 @@
                         </span>
                     </template>
                 </Column>
-                <Column class="py-0 pl-4" header="Estado" headerStyle="width:1rem">
+                <Column class="py-0 pl-4 p-0" header="Estado" headerStyle="width:1rem">
                     <template #body="adicion">
                         <InputSwitch v-model="adicion.data.status"
                             @update:modelValue="handleSwitch(adicion.data.item_id, grupo, $event)" />
@@ -58,8 +58,8 @@
 
         <template #footer>
 
-            <div class="col-12 px-0">
-                <Button @click="prepareToSend" severity="success" label="Guardar"></Button>
+            <div class="col-12 px-0 pb-0">
+                <Button class="" @click="prepareToSend" severity="success" label="Guardar"></Button>
             </div>
         </template>
     </Dialog>

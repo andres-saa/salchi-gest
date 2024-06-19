@@ -19,6 +19,10 @@ export const productService = {
             return null;
         }
     },
+
+
+
+
     async updateProductInstanceStatus(product_instance_id, new_status) {
         try {
             const response = await axios.put(`${URI}/product-instance/${product_instance_id}/status`, {
@@ -33,9 +37,33 @@ export const productService = {
             }
         } catch (error) {
             console.error('Error updating product instance status:', error);
+      
             return null;
         }
     },
+
+    
+    async deleteProduct(product_id) {
+        try {
+            const response = await axios.put(`${URI}/deactivate-product/${product_id}`)
+            if (response.status === 200) {
+                console.log('Product instance status updated successfully:', response.data);
+                return response.data;
+            } else {
+                console.error('Failed to update product instance status:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error updating product instance status:', error);
+      
+            return null;
+        }
+    },
+
+
+
+
+
     async updateProductInstance(product,additional_item_ids) {
 
         const productStore = useProductStore()

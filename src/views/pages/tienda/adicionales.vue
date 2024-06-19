@@ -19,9 +19,9 @@
                 </template>
             
             </Column>
-            <Column class="p-0" field="aditional_item_price" header="Precio">
+            <Column class="p-0 pl-3" field="aditional_item_price" header="Precio" >
              <template  #body="adicion">
-                <span style="font-weight: bold;">
+                <span style="font-weight: bold;" v-if="adicion.data.aditional_item_price != 0">
                     {{ formatoPesosColombianos(adicion.data.aditional_item_price) }}
 
                 </span>
@@ -29,9 +29,9 @@
             </template>
             
             </Column>
-            <Column style="" class="p-0 pl-4" header="" headerStyle="width:min-content;max-width:min-content;">
+            <Column style="width: 2rem;" class="p-0 pl-3" header="">
                 <template #body="adicion">
-                    <InputSwitch class="p-0 m-0" v-model="adicion.data.status" @change="updateStatus(adicion.data.aditional_item_instance_id, adicion.data.status)" />
+                    <InputSwitch  class="p-0 m-0" v-model="adicion.data.status" @change="updateStatus(adicion.data.aditional_item_instance_id, adicion.data.status)" />
                 </template>
             </Column>
         </DataTable>

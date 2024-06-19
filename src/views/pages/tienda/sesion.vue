@@ -49,6 +49,7 @@ import TarjetaMenu from '@/components/TarjetaMenu.vue'
 import { useRoute } from 'vue-router'
 import { useSitesStore } from '../../../store/site'
 import { nextTick } from 'vue'
+import { siteService } from '../../../service/siteService'
 
 const siteStore = useSitesStore()
 const route = useRoute()
@@ -64,18 +65,13 @@ onMounted( async () => {
 const getProducts = async()=> {
     let category_id = route.params.category_id
     let site_id = siteStore.site.site_id;
-    if( !category_id || !site_id) {
-        noProducts.value = true
-        return
-    }
     products.value = await productService.getProductsByCategorySite(category_id,site_id)
 }
 
 watch(() => route.params.category_id, async () => {
-    if(route.params.category_id){
+   
         getProducts();
-    await nextTick(); 
-    }
+    
 },{deep:true});
 
 

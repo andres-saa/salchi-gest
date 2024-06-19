@@ -1,25 +1,32 @@
 <template>
     <!-- {{ store.currentProduct }} -->
 
-    <div class="container p-shadow col-12" style="border-radius: 0.5rem;height: 100%;position: relative;">
+    <div class="container p-shadow col-12 shadow-2 p-3" style="border-radius: 0.5rem;background-color: white; height: 100%;position: relative;">
 
-        <div style="display: flex; position: absolute; right: -1rem; top: -1rem; gap: 0.2rem;">
-            <Button @click="store.visibles.dialogEditProduct = true" severity="danger" style=" width: 2rem;height: 2rem; right: 0;top: 0;" rounded
+        <div style="display: flex; position: absolute; right: -1rem; top: -1rem; gap: 0.2rem;z-index: 9;">
+            <Button class="shadow-2" @click="prepareToDelete(props.product)" severity="danger" style=" width: 2rem;height: 2rem; right: 0;top: 0;" rounded
                 icon="pi pi-times"></Button>
 
 
-            <Button @click="prepareToEdit(props.product)" severity="warning" style="font-weight: bold;width: 2rem;height: 2rem;  right: 0;top: 0;" rounded
+            <Button class="shadow-2" @click="prepareToEdit(props.product)" severity="warning" style="font-weight: bold;width: 2rem;height: 2rem;  right: 0;top: 0;" rounded
                 icon="pi pi-pencil"></Button>
 
         </div>
 
 
-        <div class="imagen">
+        <div class="imagen" style="overflow: hidden;">
 
-            <img class=""
-                style="width: 100%;height: 100%; background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.2rem;"
+            <img  v-show="loaded" @load="see" :class="loaded? 'cargado': 'sin-cargar'" class=""
+                style="width: 100%;aspect-ratio: 1 / 1; background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.2rem;"
                 :src="`https://backend.salchimonster.com/read-product-image/300/${props.product.product_name}`" alt=""
-                @click="open(props.product)">
+                >
+
+                <div v-if="!loaded" style="width: 100%;display: flex;justify-content: center; align-items: center; aspect-ratio: 1 / 1; background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.5rem;">
+        
+        <ProgressSpinner   style="width: 60px; height: 60px" strokeWidth="8" 
+        animationDuration=".2s" aria-label="Custom ProgressSpinner" />
+    
+    </div>
 
 
         </div>
@@ -73,7 +80,7 @@
 <script setup>
 
 import { formatoPesosColombianos } from '../service/formatoPesos'
-import { computed } from 'vue';
+import { computed,ref } from 'vue';
 import { productService } from '../service/ProductService';
 
 import { useProductStore } from '../store/productStore';
@@ -89,12 +96,24 @@ const props = defineProps({
 
 });
 
+const loaded = ref(false)
+
+const see = () => {
+    loaded.value = true
+}
 
 
 const prepareToEdit = (product) => {
     store.visibles.dialogEditProduct = true
     store.currentProductToEdit = product
 }
+
+
+const prepareToDelete = (product) => {
+    store.visibles.dialogDeleteProduct = true
+    store.currentProductToDelete = product
+}
+
 
 const updateProductStatus = async (newStatus) => {
     try {
@@ -135,7 +154,7 @@ const imagenError = (Event) => {
 
     margin: 0;
     padding: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     border-radius: 0.5rem 0.5rem 1.4rem 0.6rem;
 }
 
@@ -183,8 +202,24 @@ const imagenError = (Event) => {
 }
 
 
-.p-shadow {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+@keyframes fadeIn {
+    from {
+       opacity: 0;
+        transform: translateY(-100px);
+        /* transform: scale(.5); */
+        /* background-color: rgb(255, 255, 0); */
+        /* filter: blur(1px); */
+    }
+    to {
+        opacity: 1;
+        /* filter: blur(1px); */
+
+    }
+}
+
+.cargado {
+    opacity: 0; /* Inicialmente invisible */
+    animation: fadeIn .1s ease-out forwards; /* Duración de 1 segundo, 'ease-out' para desacelerar hacia el final, y 'forwards' para mantener el estado final visible */
 }
 
 /* Add additional styles for buttons, text, etc., as needed */

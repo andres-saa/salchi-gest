@@ -8,7 +8,7 @@
             style="max-width: min-content;  display: flex; border-radius: 0.5rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.389); 
             display: flex; flex-direction: column; background-color: rgb(255, 255, 255); 
             align-items: center;">
-          <img src="/images/logo.png" alt="" style="width: 48px;" class="m-3">
+          <img  src="/images/logo.png" alt="" style="width: 48px;" class="m-3">
           <p class="text-2xl" style="font-weight: bold;">Iniciar sesión</p>
        
             <InputText class="my-3  m-0" v-model="credentials.username" type="text" 
@@ -23,16 +23,18 @@
 </template>
 
   
-  <script>
+  <script setup>
   import { ref } from 'vue';
   import { URI } from '../../../service/conection';
   import router from '@/router/index'
   import {loginStore} from '@/store/user.js'
   import axios from 'axios';
   const store = loginStore()
+  import { useToast } from 'primevue/usetoast';
 
 
   
+  const toast = useToast()
 const validateToken = (token) => {
 
 const store = loginStore()
@@ -75,8 +77,7 @@ const startTokenValidation = () => {
     }, 60000); // 60000 ms = 1 minuto
 };
 
-  export default {
-    setup() {
+
       const credentials = ref({ username: '', password: '' });
   
       const login = async () => {
@@ -102,16 +103,18 @@ const startTokenValidation = () => {
           startTokenValidation();
           // localStorage.setItem('token', data.access_token);
           router.push('/')
+          toast.add({ severity: 'success', summary: 'Bienvenido', detail: 'Hoy es un gran dia', life: 10000 });
+
 
           // Redireccionar a la página de inicio o donde sea necesario
         } catch (error) {
+          toast.add({ severity: 'error', summary: 'Algo salio mal', detail: 'Revisate los datos monstruo', life: 10000 });
+
           console.error(error);
         }
       };
   
-      return { credentials, login };
-    }
-  };
+
   </script>
   
   <style scoped>

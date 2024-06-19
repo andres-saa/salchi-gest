@@ -213,6 +213,12 @@ onBeforeMount(() => {
 
 
 
+watch(() => store.numberTransferRequests, () => {
+    fetchTransferRequests();
+  
+})
+
+
 const show = (id) => {
     
     aceptDialogVisible.value = true
@@ -321,16 +327,7 @@ onMounted(async() => {
     // Ejecutar inicialmente al montar el componente
     fetchTransferRequests();
 
-    // Configurar el intervalo para actualizar los datos cada 10 segundos
-    intervalId.value = setInterval(async() => {
-        const recentTransfer = await orderService.is_recent_transfer_generated()
-        if (recentTransfer && orderStore.numberTransferRequests != recentTransfer) {
-            // const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
-            sonido4.play(); // Reproduce el sonido seleccionado al azar
-            orderStore.numberTransferRequests = recentTransfer; // Actualiza el store
-        fetchTransferRequestsNoLoading();
-        }
-    }, 10000);
+
 });
 
 
