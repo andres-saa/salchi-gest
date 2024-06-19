@@ -390,9 +390,9 @@
 
     </div>
 
-    <!-- <template #footer>
+    <template #footer>
 
-      <div class="col-12 mb-0 pb-0 px-0 m-0" style="display: flex;justify-content: space-between;gap: 1rem;">
+      <!-- <div class="col-12 mb-0 pb-0 px-0 m-0" style="display: flex;justify-content: space-between;gap: 1rem;">
 
         <Button v-if="store.currentOrder.current_status == 'generada'" size="small"
           @click="orderService.prepareOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem;width: 100%;"
@@ -409,18 +409,18 @@
 
           <Button  size="small" style="border-radius: 0.3rem;width: 100%;" @click="cancelDialogVisibleAdmin = true" severity="danger"
           label="CANCELAR "></Button>  
-      </div>
+      </div> -->
 
 
       <div  class="col-12 px-0">
-        <Button @click="showDeleteDeliveryPrice = true" style="width: 100%;" label="domicilio $0.00">
+        <Button severity="help" @click="showDeleteDeliveryPrice = true" style="width: 100%;" label="domicilio $0.00">
 
         </Button>
       </div>
   
 
 
-    </template> -->
+    </template>
 
 
     <Button class="shadow-4" @click="store.setVisible('currentOrder', false)" icon="pi pi-times" rounded severity="danger"
