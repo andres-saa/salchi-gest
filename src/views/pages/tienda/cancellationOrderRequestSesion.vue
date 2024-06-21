@@ -23,6 +23,10 @@
               <h3> <b>Aprobar esta solicitud</b> </h3>
             </template>
 
+            <Dropdown v-model="selectedCancellationCategorie" optionLabel="name" :options="cancellationCategories" placeholder="CATEGORIA DE LA CANCELACION" class="mb-3" style="width: 100%;">
+                
+            </Dropdown>
+
             <form @submit.prevent="resolve(true,cancelData.id,cancelData.reason)" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
         
               
@@ -91,13 +95,20 @@
     </Column>
 
 
+        <Column style="min-width: 15rem;" class="py-1" field="cancellation_categorie" header="Categoria">
+        
+            <template #body="data">
+                <Tag :style="`background-color:${idColors[data.data.cancellation_category_id] } ;`" v-if="data.data.cancellation_categorie">{{ data.data.cancellation_categorie }}</Tag>
+            </template>
+        </Column>
+
         <Column style="min-width: 30rem;" class="py-1" field="reason" header="Motivo"></Column>
+        <Column style="min-width: 30rem;" class="py-1" field="responsible_observation" header="Observacion Call center"></Column>
 
 
         <Column style="min-width: 10rem;" class="py-1" field="responsible" header="Quien solicita?"></Column>
         <Column style="min-width: 20em;" class="py-1" field="user_name" header="Nombre del cliente"></Column>
         <Column style="min-width: 10rem;" class="py-1" field="user_phone" header="Cel. cliente"></Column>
-
 
 
         <Column style="" class="py-1 px-0" field="date" header="Action" frozen alignFrozen="right">
@@ -143,8 +154,16 @@ const userStore = loginStore()
 const cancelData = ref({
 
 })
+const cancellationCategories = ref ([])
+const selectedCancellationCategorie = ref({})
 
-
+const idColors = ref({
+    1: '#27ae60', // Verde Vibrante
+    2: '#3498db', // Azul Claro
+    3: '#f1c40f', // Amarillo Soleado
+    4: '#e74c3c', // Rojo Intenso
+    5: '#9b59b6'  // Púrpura Suave
+})
 
 const sonido1 = new Audio('/sound/pip1.wav')
 const sonido2 = new Audio('/sound/pip2.wav')
@@ -188,11 +207,12 @@ const show = (desition,id) => {
 }
 
 
-const resolve = async(desition,id,observation) => {
+const resolve = async(desition,id) => {
  const  data = {
         "authorized": desition,
         "responsible_id": userStore.rawUserData.id,
-        "responsible_observation": cancelData.value.reason || 'sin observaciones'
+        "responsible_observation": cancelData.value.reason || 'sin observaciones',
+        "category_id":selectedCancellationCategorie.value.id || 5
     }
 
     await orderService.resolveCancellationRequest(id,data)
@@ -258,6 +278,13 @@ onMounted(async() => {
         fetchCancellationRequestsNoLoading();
         }
     }, 10000);
+
+
+    cancellationCategories.value = await orderService.getCancellationCategories()
+
+
+
+
 });
 
 
