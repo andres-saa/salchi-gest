@@ -28,8 +28,23 @@
     </Dialog>
 
 
-    <Dialog class="p-2" header="Cargar Evidencia" style="width: 30rem" modal v-model:visible="showAddEvidenceDialog">
-         <div>
+    <Dialog class="p-2" style="max-width: min-content" modal v-model:visible="showDialogs.showParticipantDetail">
+
+
+    <div class="py-2" style="overflow-x: auto;display: flex; flex-direction: column; width: 20rem">
+        <img style="width: 100%;border-radius: .5rem;aspect-ratio: 1 / 1;object-fit: cover;" :src="`${URI}/read-product-image/600/employer-${currentUser.dni}`" alt="">
+        <p><b>Nombre:</b> {{ currentUser.name }}</p>
+        <p><b>Participaciones:</b> {{ currentUser.total_entries }}</p>
+        <Button severity="help" size="small" label="VER PARTICIPACIONES"></Button>
+
+    </div>
+
+
+</Dialog>
+
+
+    <Dialog :close="imagePreview = null" class="p-2" header="Cargar Evidencia" style="width: 30rem" modal v-model:visible="showAddEvidenceDialog">
+        <div>
 
             <p style="font-weight: bold;">{{ contestToParticipate.name }}</p>
 
@@ -38,52 +53,72 @@
                 }} </span>
 
 
-            <div v-if="contestToParticipate.evidence_type_id == 4">
-                <span>Cuanto vendiste de adiciones hoy</span>
-      
 
+            <p class="p-0 m-0 mt-3"><b>Instrucciones:</b></p>
+            <p class="px-0 mx-0">{{contestToParticipate.instructions}}</p>
+
+
+             <img  class="" v-if="contestToParticipate.evidence_type_id ==1 && imagePreview" style="width: 100%;" :src="imagePreview" alt="">
+            
+
+            <div v-if="contestToParticipate.evidence_type_id == 4">
                 <inputNumber style="width: 100%;"></inputNumber>
             </div>
 
 
-            <div v-if="contestToParticipate.evidence_type_id == 2 || contestToParticipate.evidence_type_id == 3 ">
-                <br>
-  
-                <span>Introduce el link de tu video</span>
-                <br>
-                <br>
-                <inputText style="width: 100%;"></inputText>
+            <div v-if="contestToParticipate.evidence_type_id == 2 || contestToParticipate.evidence_type_id == 3">
+                <inputText v-model="entry_to_send" style="width: 100%;"></inputText>
             </div>
 
 
-            <div v-if="contestToParticipate.evidence_type_id == 1">
-               
-                <br>
-                <br>
-                <span>Carga la foto de la evidencia</span>
+         
+
+            <input @change="previewFile" ref="inputFile" style="display: none;" type="file" accept="image/*">
             </div>
-
-
-
-
-            
-
-
-            <input style="display: none;" type="file">
-
-
-
-        </div>
+        
         <template #footer >
-            <div style="display: flex; justify-content: space-between;gap: 1rem;">
-                <Button severity="help" style="width: 100%;" label="Subir Archivo"></Button>
-                <Button severity="help" style="width: 100%;" label="Guardar"></Button>
+            <div class="py-3" style="display: flex;width: 100%; justify-content: space-between;gap: 1rem;">
+                <Button class="m-0" :severity="!imagePreview?  'help' : 'warning'" v-if="contestToParticipate.evidence_type_id == 1" @click="inputFile.click()"
+                    style="width: 100%;" :label="!imagePreview?  'Subir Archivo' : 'Cambiar archivo'"></Button>
+
+                <Button severity="help" class="m-0" style="width: 100%;" label="Guardar"
+                    @click="sendEvidence(entry_to_send, contestToParticipate.id, contestToParticipate.evidence_type_id)">
+                </Button>
 
             </div>
 
-            </template>
+        </template>
     </Dialog>
 
+
+    <Dialog class="p-2" header="Listado de evidencias" style="width: 30rem;;background-color:#fff;" modal
+        v-model:visible="showDialogs.showMyEvidenceDialog">
+        <div style="height: 60vh;">
+
+            <b>MIS EVIDENCIAS </b>
+
+
+            <ol class="p-3" style="display: flex; flex-direction: column;gap: .5rem; ">
+                <li style="" class="" v-for="evidence in currentEvidenceList">
+
+
+                    <p class="p-0 m-0"><b>{{formatDateTime( evidence.timestamp) }} </b></p>
+
+                    <a v-if="evidence.evidence_type_id !== 1" style="color: var(--primary-color);"
+                        :href="evidence.evidence_entry"> {{ evidence.evidence_entry }} </a>
+
+
+                    <img v-if="evidence.evidence_type_id == 1" style="width: 100%;border-radius:.5rem;r"
+                        :src="`${URI}${evidence.evidence_entry}`" alt="">
+
+
+                    <!-- <img  style="width: 100px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: .5rem;" :src="evidence.evidence_entry" alt=""> -->
+
+                </li>
+            </ol>
+
+        </div>
+    </Dialog>
 
 
 
@@ -112,7 +147,7 @@
 
 
                         <img class="p-0"
-                            style="width: 30%;aspect-ratio: 3 / 3;border-radius: 0.3rem; object-fit: cover;"
+                            style="width: 30%;aspect-ratio: 3 / 3; object-fit: cover;"
                             src="https://www.mundodeportivo.com/urbantecno/hero/2022/08/Como-anadirle-subtitulos-a-un-video-de-TikTok.jpg?width=1200"
                             alt="">
 
@@ -122,18 +157,23 @@
                             <p class=" m-0" style="color: #fff;"> {{ contest.description }}</p>
                             <img src="" alt="">
 
-                            <p class="text-white">{{ contest.start_date }} --> {{ contest.end_date }}</p>
+                            <p class="text-white"> <span style="color: var(--primary-color);"> 
+                                <b>Desde</b>:</span> {{formatDateTime(contest.start_date)  }} <br> <span style="color: var(--primary-color);"> 
+                                    <b>Hasta</b>:</span> {{ formatDateTime(contest.end_date) }}</p>
 
+
+                            <p class="text-white text-xl py-0 my-0"><b>{{ contest.rbq.length }}  personas participando</b></p>
                             <p class="text-2xl" style="color: var(--primary-color); font-weight: bold;"> {{
                                 calcaDiferenceBetweenDates(contest.end_date) }}</p>
 
                             <div style="display: flex; gap: 1rem;">
                                 <Button @click="participate(contest)" v-if="!contest.entry_exists" severity="help"
                                     style="background-color: var(--primary-color);">Participar</Button>
-                                <Button @click="participate(contest)" v-else severity="help" style="background-color: var(--primary-color);">Subir
+                                <Button @click="participate(contest)" v-else severity="help"
+                                    style="background-color: var(--primary-color);">Subir
                                     evidencia</Button>
-                                <Button v-if="contest.entry_exists" severity="help"
-                                    style="border: 2px solid var(--primary-color);">Mi participacion</Button>
+                                <Button @click="open_evidence(contest.id)" v-if="contest.entry_exists" severity="help"
+                                    style="border: 2px solid var(--primary-color);">Mis evidencias</Button>
                             </div>
 
                         </div>
@@ -147,26 +187,34 @@
 
                         <div style="display: flex;justify-content: end; align-items: center;">
 
-                            <!-- <span style="color: white;"> Ampliar </span> -->
-                            <Button @click="fullParticipantView = true" label="Ampliar" size="small"
-                                style="color: white;" severity="help" icon="fa-solid fa-expand"> </Button>
+                           
                         </div>
 
 
 
 
-                        <div class="py-2" style="display: flex;gap: 1rem;overflow-x: auto;">
+                        <div class="py-2" style="display: flex;gap: 1rem;overflow-x: auto;width: 100%;">
 
-                            <div v-for="(i, index) in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4, 5, 6, 7]"
-                                style="display: flex;flex-direction: column;gap:1rem; justify-content: end; align-items: center;">
+                            <div  v-for="(i, index) in contest.rbq"
+                                style="display: flex;flex-direction: column;gap:1rem; justify-content: end; align-items: center;width: 100%;position: relative;">
 
 
-                                <img style="width: 2rem; aspect-ratio: 1 / 1;border-radius: 50%; border: 3px solid yellow;"
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC-buhde5C1FxyNtkRvkUTCe6gq73eLIv_JOycF3WMvg&s"
+                                
+                                <p  class="text-white py-0 my-0">{{ i.total_entries }}</p>
+                                <img class="min-user-img" @click="showParticipantDetail(i)" style="width: 100%;max-width: 5rem; background-color:#fff; aspect-ratio: 1 / 1;border-radius: 50%; object-fit: cover;"
+                                    :src="`${URI}/read-product-image/96/employer-${i.dni}`"
                                     alt="">
 
-                                <div class="py-2" :style="`height:${(12 - index + 1) / 2}rem`"
-                                    style="width: 2rem;background-color: var(--primary-color); border-radius: 3rem 3rem 0 0;">
+                                <div class="py-2" :style="`height:${(i.total_entries)/contest.max_entries*10}rem; width:${100/contest.rbq.length}%`"
+                                    style="min-width: 3rem;max-width: 5rem; background-color: var(--primary-color);overflow: hidden; border-radius: 3rem 3rem 0 0; position: relative;">
+
+                                    <img v-if="i.total_entries == contest.max_entries " style="width: 100%; position: absolute;z-index: 10; bottom: 0;;" src="/images/gif/fire.gif" alt="">
+
+                                    <div  style=" display: flex; flex-direction: column; gap: .5rem;justify-content: end; height: 100%;">
+
+                          
+                                       
+                                    </div>
 
                                 </div>
 
@@ -202,19 +250,98 @@ import { contestService } from '@/service/contest/contestService.js'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ref, onMounted, watch } from 'vue'
+import { loginStore } from '@/store/user.js'
+import { URI } from '../../../service/conection';
+import {formatDateTime} from '@/service/formating/formatDate.js'
+import { read } from 'xlsx';
 
-const showAddEvidenceDialog = ref(true)
+const showDialogs = ref({
+    showMyEvidenceDialog: false,
+    showParticipantDetail:false
+})
+
+const currentUser = ref({})
+const contests = ref([])
+const fullParticipantView = ref(false)
+
+const currentEvidenceList = ref([])
+
+const imagePreview = ref(null);
+const filters = ref()
+const initFilters = () => {
+    filters.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    };
+};
+const previewFile = () => {
+    const file = inputFile.value.files[0];
+    if (file) {
+        imagePreview.value = URL.createObjectURL(file);
+    }
+}
 
 
+const showParticipantDetail = (user) => {
+    currentUser.value = user
+    showDialogs.value.showParticipantDetail = true
+    
+}
+
+
+const entry_to_send = ref("")
+
+const userStore = loginStore()
+const showAddEvidenceDialog = ref(false)
+
+const inputFile = ref(null)
 const participate = (contest) => {
+    inputFile.value = null
     showAddEvidenceDialog.value = true
     contestToParticipate.value = contest
 }
 const contestToParticipate = ref({})
 
+const sendEvidence = async (evidence_entry, contest_id, evidence_type_id) => {
 
-const contests = ref([])
-const fullParticipantView = ref(false)
+
+    const evidence = {
+        "evidence_type_id": evidence_type_id,
+        "evidence_entry": evidence_entry || "",
+        "contest_id": contest_id
+    };
+    const Contest_entry = {
+        "participant_id": userStore.rawUserData.id,
+        "contest_id": contest_id
+    };
+
+
+
+    const response_evidence_id = await contestService.sendEvidence({ evidence, Contest_entry });
+
+
+
+    if (evidence_type_id === 1) {
+        if (!inputFile.value.files.length) {
+            alert("Por favor, selecciona una imagen.");
+            return;
+        }
+        const imageFile = inputFile.value.files[0];
+        await contestService.sendContestImage(userStore.rawUserData.id, contest_id, response_evidence_id, imageFile);
+    }
+
+
+    showAddEvidenceDialog.value = false;
+    entry_to_send.value = "";
+    contests.value = await contestService.getAllContest();
+};
+
+
+
+const open_evidence = async (contest_id) => {
+    currentEvidenceList.value =[]
+    showDialogs.value.showMyEvidenceDialog = true
+    currentEvidenceList.value = await contestService.getParticipationByUserId(contest_id)
+}
 
 const calcaDiferenceBetweenDates = (end) => {
     const answer = new Date(end).getDate() - new Date().getDate()
@@ -240,6 +367,8 @@ const calcaDiferenceBetweenDates = (end) => {
 onMounted(async () => {
     contests.value = await contestService.getAllContest()
 })
+
+
 </script>
 
 
@@ -281,5 +410,15 @@ onMounted(async () => {
     .gridd {
         flex-direction: column;
     }
+}
+
+
+.min-user-img{
+    transition: all ease .2s;
+}
+
+.min-user-img:hover{
+    filter: brightness(1.3);
+    outline: 2px solid var(--primary-color)
 }
 </style>

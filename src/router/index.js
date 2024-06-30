@@ -7,6 +7,7 @@ import axios from 'axios';
 import { URI } from '../service/conection';
 import { ref } from 'vue';
 // import { roles } from '../service/roles';
+import pixel from './pixel';
 
 const getRoles = async () => {
   try {
@@ -37,6 +38,56 @@ const router = createRouter({
           name: 'dashboard',
           component: () => import('@/views/pages/home.vue'),
         },
+
+
+
+
+        {
+          path: '/call-center-vender',
+          name: 'call-center-vender',
+          component: () => import('@/views/pages/callCenter/MenuView.vue'),
+          children: [
+            {
+              path: '/call-center-vender/:menu_name/:category_id',
+              name: 'call-center-vender-menu',
+              component: () => import('@/views/pages/callCenter/sesion.vue'),
+              meta: { title:'callCenter' },
+            },
+            {
+              path: '/call-center-vender/cart',
+              name: 'cart',
+              component: () => import('@/views/pages/callCenter/cart.vue'),
+             
+            },
+            {
+              path: '/call-center-vender/pay',
+              name: 'pay',
+              component: () => import('@/views/pages/callCenter/pay.vue'),
+              meta: { requireOpen: true, title:'Finalizar pedido' },
+            },
+            {
+              path: '/call-center-vender/gracias',
+              name: 'call-center-vender-gracias',
+              component: () => import('@/views/pages/callCenter/gracias.vue'),
+              meta: { requirePay: true, title:'Gracias' },
+            },
+          ]
+
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {
           path: '/informacion-empresarial',
           name: 'informacion-empresarial',
@@ -100,6 +151,11 @@ const router = createRouter({
           path: '/concursos/',
           name: 'concursos',
           component: () => import('@/views/pages/concursos/currentConcursos.vue')
+        },
+        {
+          path: '/manage-concursos/',
+          name: 'manage-concursos',
+          component: () => import('@/views/pages/concursos/manageContest.vue')
         },
 
         {
@@ -995,6 +1051,14 @@ const router = createRouter({
 });
 
 
+
+
+
+pixel.init()
+router.afterEach((to, from) => {
+  // Esto rastreará una "PageView" cada vez que el usuario cambie de ruta
+  pixel.sendTrackingEvent('track', 'PageView');
+});
 
 
 

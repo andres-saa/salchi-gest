@@ -1,24 +1,24 @@
 import { ref } from "vue"
-import { Palmira } from "../sedes/palmira/palmira"
-import { Jamundi } from "../sedes/jamundi/jamundi"
-import { Cali } from "../sedes/cali/cali"
-import { Tulua } from "../sedes/tulua/tulua"
-import { Bogota } from "../sedes/bogota/bogota"
-import { Medellin } from "../sedes/Medellin/Medellin"
+// import { Palmira } from "../sedes/palmira/palmira"
+// import { Jamundi } from "../sedes/jamundi/jamundi"
+// import { Cali } from "../sedes/cali/cali"
+// import { Tulua } from "../sedes/tulua/tulua"
+// import { Bogota } from "../sedes/bogota/bogota"
+// import { Medellin } from "../sedes/Medellin/Medellin"
 const cities = ref([
 
   
-    Palmira,
+    // Palmira,
   
-    Jamundi,
+    // Jamundi,
     
-    Cali,
+    // Cali,
 
-    Tulua,
+    // Tulua,
     
-    Bogota,
+    // Bogota,
 
-    Medellin
+    // Medellin
 
 
   

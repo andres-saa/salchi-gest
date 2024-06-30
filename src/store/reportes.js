@@ -505,7 +505,8 @@ export const useReportesStore = defineStore('reportes', {
         setCharOrdersData (data) {
             const keys = [];
             const values = [];
-            data.forEach(obj => {
+            const values2 = [];
+            data.current_period.forEach(obj => {
                 Object.keys(obj).forEach(key => {
                     if (!keys.includes(key)) {
                         keys.push(key);
@@ -516,17 +517,33 @@ export const useReportesStore = defineStore('reportes', {
                     values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
                 });
             });
+
+            data.previous_period.forEach(obj => {
+                Object.values(obj).forEach(value => {
+                    values2.push(value); // Si quieres valores únicos, debes verificar antes de añadir
+                });
+            });
     
             this.ordersCharData = {
                 labels: keys,
             datasets: [
                 {
-                    label: 'Venta',
+                    label: 'Periodo actual',
                     data: values,
                     fill: true,
                     tension: 0.4,
-                    backgroundColor: this.order_status == 'enviada'? '#d0e1fd' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
+                    backgroundColor: this.order_status == 'enviada'? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
                     borderColor:this.order_status == 'enviada'? '#3b82f6' :  'rgba(255, 99, 132, 1)', // Color del borde
+                    borderWidth: 1.8,
+                },
+                {
+                    label: 'Periodo anterio',
+                    data: values2,
+                    fill: true,
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    backgroundColor: this.order_status == 'enviada'? 'rgba(255, 99, 132, 0.2)' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
+                    borderColor:this.order_status == 'enviada'? 'rgba(255, 99, 132, 1)' :  'rgba(255, 99, 132, 1)', // Color del borde
                     borderWidth: 1.8,
                 },
     

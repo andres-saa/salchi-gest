@@ -45,8 +45,8 @@ async function fetchAndUpdateRoles() {
                     items: [
                         { label: 'Menu', icon: ' fa-solid fa-burger', to: '/tienda-menu/productos/SALCHIPAPAS/3' },
                         { label: 'Cocina', icon: ' fa-solid fa-burger', to: '/cocina/' },
+                        { label: 'Ingresar pedido', icon: ' fa-solid fa-burger', to: '/call-center-vender' },
                         { label: 'Transferencias', icon: ' fa-solid fa-truck-fast', to: '/transfer/' },
-
                         { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
                         { label: 'Conectividad', icon: ' fa-solid fa-truck-fast', to: '/conectividad/' },
                         { label: 'Reportes de ventas', icon: ' fa-solid fa-chart-line', to: '/reporte-ventas/valor-ventas/' },

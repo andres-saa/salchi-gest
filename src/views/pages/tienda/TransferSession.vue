@@ -67,6 +67,13 @@
             </template>
         </Column>
 
+
+        <Column style="" class="py-1 pl-0" field="total_order_price" header="Hora"  >
+            <template #body="data">
+                {{ extraerHora(data.data.latest_status_timestamp ) }}
+            </template>
+        </Column>
+
         <Column style="" class="py-1 pl-0" field="delivery_price" header="Domicilio"  >
             <template #body="data">
                 {{formatToColombianPeso(data.data.delivery_price)   }}
@@ -79,9 +86,6 @@
             <template #body="data">
                 {{formatToColombianPeso(data.data.delivery_price + data.data.total_order_price)   }}
             </template>
-
-
-
         </Column>
         <!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
 
@@ -142,7 +146,7 @@ import {orderService} from '@/service/menu/orderService.js'
 import {loginStore} from '@/store/user.js'
 import { useOrderStore } from '../../../store/order';
 import { months } from 'moment-timezone';
-
+import {formatDateTime, extraerHora} from '@/service/formating/formatDate.js'
 
 
 
