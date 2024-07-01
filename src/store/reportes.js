@@ -464,40 +464,56 @@ export const useReportesStore = defineStore('reportes', {
   
 
         setChartData (data) {
-                const keys = [];
-                const values = [];
-                data.forEach(obj => {
-                    Object.keys(obj).forEach(key => {
-                        if (!keys.includes(key)) {
-                            keys.push(key);
-                        }
-                    });
-        
-                    Object.values(obj).forEach(value => {
-                        values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
-                    });
+            const keys = [];
+            const values = [];
+            const values2 = [];
+            data.current_period.forEach(obj => {
+                Object.keys(obj).forEach(key => {
+                    if (!keys.includes(key)) {
+                        keys.push(key);
+                    }
                 });
-        
-                this.ventasCharData = {
-                    labels: keys,
-                datasets: [
-                    {
-                        label: 'Venta',
-                        data: values,
-                        fill: true,
-                        tension: 0.4,
-                        backgroundColor: this.order_status == 'enviada'? '#d0e1fd' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
-                        borderColor:this.order_status == 'enviada'? '#3b82f6' :  'rgba(255, 99, 132, 1)', // Color del borde
-                        borderWidth: 1.8,
-                    },
-        
-                ]
-                }
-        
-        
-        
-        
-            const documentStyle = getComputedStyle(document.documentElement);
+    
+                Object.values(obj).forEach(value => {
+                    values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
+                });
+            });
+
+            data.previous_period.forEach(obj => {
+                Object.values(obj).forEach(value => {
+                    values2.push(value); // Si quieres valores únicos, debes verificar antes de añadir
+                });
+            });
+    
+            this.ventasCharData = {
+                labels: keys,
+            datasets: [
+                {
+                    label: 'Periodo actual',
+                    data: values,
+                    fill:  true,
+                    tension: 0.4,
+                    backgroundColor: this.order_status == 'enviada'? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
+                    borderColor:this.order_status == 'enviada'? '#3b82f6' :  'rgba(255, 99, 132, 1)', // Color del borde
+                    borderWidth: 1.8,
+                },
+                {
+                    label: 'Periodo anterior',
+                    data: values2,
+                    fill: this.order_status == 'enviada',
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    backgroundColor: this.order_status == 'enviada'? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
+                    borderColor:this.order_status == 'enviada'? 'rgba(255, 99, 132, 1)' :  'rgba(0, 99, 132, 1)', // Color del borde
+                    borderWidth: 1.8,
+                },
+    
+            ]
+            }
+    
+    
+    
+    
         
            
         },
@@ -537,13 +553,13 @@ export const useReportesStore = defineStore('reportes', {
                     borderWidth: 1.8,
                 },
                 {
-                    label: 'Periodo anterio',
+                    label: 'Periodo anterior',
                     data: values2,
-                    fill: true,
+                    fill: this.order_status == 'enviada',
                     borderDash: [5, 5],
                     tension: 0.4,
-                    backgroundColor: this.order_status == 'enviada'? 'rgba(255, 99, 132, 0.2)' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
-                    borderColor:this.order_status == 'enviada'? 'rgba(255, 99, 132, 1)' :  'rgba(255, 99, 132, 1)', // Color del borde
+                    backgroundColor: this.order_status == 'enviada'? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
+                    borderColor:this.order_status == 'enviada'? 'rgba(255, 99, 132, 1)' :  'rgba(0, 99, 132, 1)', // Color del borde
                     borderWidth: 1.8,
                 },
     
@@ -559,36 +575,53 @@ export const useReportesStore = defineStore('reportes', {
     },
     setCharTicketsData (data) {
         const keys = [];
-        const values = [];
-        data.forEach(obj => {
-            Object.keys(obj).forEach(key => {
-                if (!keys.includes(key)) {
-                    keys.push(key);
-                }
+            const values = [];
+            const values2 = [];
+            data.current_period.forEach(obj => {
+                Object.keys(obj).forEach(key => {
+                    if (!keys.includes(key)) {
+                        keys.push(key);
+                    }
+                });
+    
+                Object.values(obj).forEach(value => {
+                    values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
+                });
             });
 
-            Object.values(obj).forEach(value => {
-                values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
+            data.previous_period.forEach(obj => {
+                Object.values(obj).forEach(value => {
+                    values2.push(value); // Si quieres valores únicos, debes verificar antes de añadir
+                });
             });
-        });
-
-        this.ticketsCharData = {
-            labels: keys,
-        datasets: [
-            {
-                label: 'Venta',
-                data: values,
-                fill: true,
-                tension: 0.4,
-                backgroundColor: this.order_status == 'enviada'? '#d0e1fd' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
-                borderColor:this.order_status == 'enviada'? '#3b82f6' :  'rgba(255, 99, 132, 1)', // Color del borde
-                borderWidth: 1.8,
-            },
-
-        ]
-        }
-
-
+    
+            this.ticketsCharData = {
+                labels: keys,
+            datasets: [
+                {
+                    label: 'Periodo actual',
+                    data: values,
+                    fill: true,
+                    tension: 0.4,
+                    backgroundColor: this.order_status == 'enviada'? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
+                    borderColor:this.order_status == 'enviada'? '#3b82f6' :  'rgba(255, 99, 132, 1)', // Color del borde
+                    borderWidth: 1.8,
+                },
+                {
+                    label: 'Periodo anterior',
+                    data: values2,
+                    fill: this.order_status == 'enviada',
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    backgroundColor: this.order_status == 'enviada'? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
+                    borderColor:this.order_status == 'enviada'? 'rgba(255, 99, 132, 1)' :  'rgba(0, 99, 132, 1)', // Color del borde
+                    borderWidth: 1.8,
+                },
+    
+            ]
+            }
+    
+    
 
 
     const documentStyle = getComputedStyle(document.documentElement);
