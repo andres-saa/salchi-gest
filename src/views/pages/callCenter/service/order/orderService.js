@@ -88,10 +88,10 @@ export const orderService = {
 
 
 
-         pixel.sendTrackingEvent('Purchase', {
-          currency: "COP", 
-          value:parseFloat(cart.cart.total_cost) 
-        });
+        //  pixel.sendTrackingEvent('Purchase', {
+        //   currency: "COP", 
+        //   value:parseFloat(cart.cart.total_cost) 
+        // });
 
       
         
