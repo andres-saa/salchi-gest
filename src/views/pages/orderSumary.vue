@@ -1,10 +1,10 @@
 <template>
 
 
-    <div class="col-12 p-0 md:p-2 m-auto" style="max-width:1024px">
+    <div class="col-12 p-0 md:p-2 m-auto" style="">
 
-        <p class="text-xl px-0 mx-0 my-0 pb-0" style="font-weight: bold;">
-            Inducadores generales</p>
+        <p class="text-xl px-0 mx-0 my-3 pb-0" style="font-weight: bold;">
+            INDICADORES GENERALES</p>
 
 
 
@@ -60,25 +60,27 @@
                 </div>
             </div>
 
+            
+
 
         </div>
 
-        <p class="text-xl px-0 mx-0 my-0 pb-0" style="font-weight: bold;">
-            Resumen de ventas</p>
+        <p class="text-xl px-0 mx-0 my-3 pb-0" style="font-weight: bold;">
+            RESUMEN DE VENTAS</p>
 
-        <p class="text-l px-0 my-4  text-900 font-bold">{{
-            convertirFechaUTCaColombia(store.formatDate(store.dateRange.startDate)) }} - {{
+        <p class="text-l px-0 my-4  text-900 font-bold" style="text-transform: uppercase;">{{
+            convertirFechaUTCaColombia(store.formatDate(store.dateRange.startDate)) }}   ->   {{
                 convertirFechaUTCaColombia(store.formatDate(store.dateRange.endDate)) }} </p>
 
 
-        <DataTable stripedRows :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
+        <DataTable :loading="store.loading.visible" stripedRows :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
             :rows="11" :filters="filters" responsiveLayout="scroll" scrollable>
 
 
             <template>
 
             </template>
-            <Column field="order_id" header="Sede" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
+            <Column field="order_id" header="SEDE   " class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
 
                 <template #body="slotProps">
                     <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
@@ -87,7 +89,7 @@
                     </P>
                 </template>
             </Column>
-            <Column field="order_id" header="Env" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
+            <Column field="order_id" header="ENVIADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
 
                 <template #body="slotProps">
                     <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
@@ -96,7 +98,7 @@
                     </P>
                 </template>
             </Column>
-            <Column field="order_id" header="$ env" class="py-0 px-0" headerStyle="width:3rem;min-width:2rem">
+            <Column field="order_id" header="$ ENVIADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:2rem">
 
                 <template #body="slotProps">
                     <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
@@ -106,21 +108,23 @@
                 </template>
             </Column>
 
-            <Column field="order_id" header="Canc" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
+            <Column field="order_id" header="CANCELADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
 
                 <template #body="slotProps">
                     <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
                         style="min-width: max-content;">
-                        {{ slotProps.data.total_orders_cancelled }}
+                        {{ slotProps.data.total_orders_cancelled || 0 }}
                     </P>
                 </template>
             </Column>
-            <Column field="order_id" header="$ Canc" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
+            <Column field="order_id" header="$ CANCELADAS" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
 
                 <template #body="slotProps">
                     <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
                         style="min-width: max-content;">
-                        {{ formatToColombianPeso(slotProps.data.total_sales_cancelled) }}
+                        {{ formatToColombianPeso(slotProps.data.total_sales_cancelled) ||
+                            '$ 0.0'
+                        }}
                     </P>
                 </template>
             </Column>
@@ -165,7 +169,7 @@
                 headerStyle="width:12rem;min-width:3rem">
                 <template #body="data">
 
-                    <div class="py-1" :class="data.data.name == 'TOTAL' ? 'bold' : ''">
+                    <div class="py-1 " :class="data.data.name == 'TOTAL' ? 'bold' : ''">
 
                         {{ data.data.orders_sent + data.data.orders_cancelled }}
                     </div>
@@ -200,6 +204,33 @@
 
             </Column>
 
+            <Column style="text-transform: uppercase;" field="orders_cancelled" header="Transferencias" class="py-0 px-0"
+                headerStyle="width:12rem;min-width:3rem">
+
+                <template #body="data">
+
+                    <div class="py-1"   :class="data.data.name == 'TOTAL' ? 'bold' : ''">
+
+                        {{ data.data.concreted_transferences || 0}}
+                    </div>
+                </template>
+
+            </Column>
+
+
+            <Column style="text-transform: uppercase;" field="orders_cancelled" header="Rendimiento" class="py-0 px-0"
+                headerStyle="width:12rem;min-width:3rem">
+
+                <template #body="data">
+
+                    <div class="py-1"   :class="data.data.name == 'TOTAL' ? 'bold' : ''">
+
+                        {{ data.data.name != 'TOTAL' ? data.data.concreted_transferences +   data.data.orders_sent + data.data.orders_cancelled : '--'}}
+                    </div>
+                </template>
+
+            </Column>
+
 
 
 
@@ -220,7 +251,6 @@ import { useReportesStore } from '@/store/reportes.js'
 import { formatToColombianPeso, salesReport } from '../../service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
 import { onBeforeMount } from 'vue'
-
 import { FilterMatchMode } from 'primevue/api';
 import { ref } from 'vue'
 import OrderDialog from '../../components/orderDialog.vue';

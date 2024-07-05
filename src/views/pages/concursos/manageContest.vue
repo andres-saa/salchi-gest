@@ -39,6 +39,24 @@
                     {{ data.data.formattedStartDate }}
                 </template>
             </column>
+            <column header="Fecha de finalizacion" field="formattedStartDate">
+                <template #body="data">
+                    {{ data.data.formattedEndDate }}
+                </template>
+            </column>
+
+
+            <column header="Estado" field="formattedStartDate">
+                <template #body="data">
+                   
+                    <Tag v-if="data.data.started" :severity="data.data.vigent? 'success' : 'danger'" style="border-radius: .3rem;">{{ data.data.vigent? 'En curso...' : 'Finalizado' }} </Tag> 
+                    <Tag v-if="!data.data.started" style="border-radius: .3rem;">{{ data.data.started? '' : 'Proximo' }} </Tag> 
+
+                </template>
+            </column>
+
+
+
         </DataTable>
     </div>
 </template>
@@ -61,7 +79,8 @@ const initFilters = () => {
 const formattedContest = computed(() => {
     return contest.value.map(item => ({
         ...item,
-        formattedStartDate: formatShortDateTime(item.start_date)
+        formattedStartDate: formatShortDateTime(item.start_date),
+        formattedEndDate: formatShortDateTime(item.end_date)
     }));
 });
 
@@ -70,7 +89,7 @@ onBeforeMount(() => {
 });
 
 onMounted(async () => {
-    contest.value = await contestService.getAllContest();
+    contest.value = await contestService.getAllContestAll();
 });
 </script>
 

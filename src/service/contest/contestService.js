@@ -33,9 +33,36 @@ export const contestService = {
 
 
 
-    async getParticipationByUserId(contest_id) {
+    async getAllContestAll() {
         const login = loginStore()
         const user = login.rawUserData.id
+        const store = useReportesStore()
+        try {
+            store.setLoading(true,"cargango consursos")
+            const response = await axios.get(`${URI}/contests_all/${user}`);
+            if (response.status === 200) {
+                store.setLoading(false,"cargango consursos")
+                return response.data;
+                
+            } else {
+                store.setLoading(false,"cargango consursos")
+
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            store.setLoading(false,"cargango consursos")
+
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+
+
+    async getParticipationByUserId(contest_id, user) {
+        const login = loginStore()
+        
         const store = useReportesStore()
         try {
             store.setLoading(true,"cargango evidencias")

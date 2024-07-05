@@ -6,4 +6,4 @@
 // const URI = 'http://167.71.178.54:9000'
 const URI = 'https://backend.salchimonster.com'
 
-export {URI}  
+export {URI}   

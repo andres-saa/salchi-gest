@@ -1,1 +1,0 @@
-import{E as e}from"./index-42ad2ef6.js";const o=e("directory",{persist:{key:"directory",storage:localStorage,paths:["currentSite"]},state:()=>({currentSite:{}}),getters:{},actions:{setSite(t){this.currentSite=t}}});export{o as u};

@@ -49,7 +49,7 @@ async function fetchAndUpdateRoles() {
                         { label: 'Transferencias', icon: ' fa-solid fa-truck-fast', to: '/transfer/' },
                         { label: 'Domicilios', icon: ' fa-solid fa-truck-fast', to: '/domicilios/1' },
                         { label: 'Conectividad', icon: ' fa-solid fa-truck-fast', to: '/conectividad/' },
-                        { label: 'Reportes de ventas', icon: ' fa-solid fa-chart-line', to: '/reporte-ventas/valor-ventas/' },
+                        { label: 'Reportes de ventas', icon: ' fa-solid fa-chart-line', to: '/reporte-ventas/order-sumary' },
                         { label: 'Solicitudes de cancelacion', icon: ' fa-solid fa-burger', to: '/cancellation-requests/revisar/' },
 
                     ]

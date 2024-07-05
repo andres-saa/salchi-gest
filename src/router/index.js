@@ -152,6 +152,12 @@ const router = createRouter({
           name: 'concursos',
           component: () => import('@/views/pages/concursos/currentConcursos.vue')
         },
+
+        {
+          path: '/future-concursos/',
+          name: 'future-concursos',
+          component: () => import('@/views/pages/concursos/FutureConcursos.vue')
+        },
         {
           path: '/manage-concursos/',
           name: 'manage-concursos',

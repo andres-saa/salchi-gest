@@ -34,9 +34,10 @@
     <div class="py-2" style="overflow-x: auto;display: flex; flex-direction: column; width: 20rem">
         <img style="width: 100%;border-radius: .5rem;aspect-ratio: 1 / 1;object-fit: cover;" :src="`${URI}/read-product-image/600/employer-${currentUser.dni}`" alt="">
         <p><b>Nombre:</b> {{ currentUser.name }}</p>
-        <p><b>Participaciones:</b> {{ currentUser.total_entries }}</p>
-        <Button severity="help" size="small" label="VER PARTICIPACIONES"></Button>
+        <p><b>Participaciones:</b> {{ `${currentContest.evidence_type_id == 4 ? formatoPesosColombianos(currentUser.total_entries) : currentUser.total_entries}` }} </p>
+        <Button @click="open_evidence(currentContest.id, currentUser.employer_id)" severity="help" size="small" label="VER PARTICIPACIONES"></Button>
 
+      
     </div>
 
 
@@ -62,11 +63,20 @@
             
 
             <div v-if="contestToParticipate.evidence_type_id == 4">
-                <inputNumber style="width: 100%;"></inputNumber>
+                <inputNumber  v-model="entry_to_send" style="width: 100%;"></inputNumber>
             </div>
 
 
-            <div v-if="contestToParticipate.evidence_type_id == 2 || contestToParticipate.evidence_type_id == 3">
+            <!-- <div v-if="contestToParticipate.contest_winner_type_id == 2 "> 
+                <inputNumber min="0" v-model="entry_to_send" style="width: 100%;"></inputNumber>
+            </div> -->
+
+            <div v-if="contestToParticipate.contest_winner_type_id == 1 && contestToParticipate.evidence_type_id == 2"> 
+                <inputText  v-model="entry_to_send" style="width: 100%;"></inputText>
+            </div>
+
+
+            <div v-if=" contestToParticipate.evidence_type_id == 3">
                 <inputText v-model="entry_to_send" style="width: 100%;"></inputText>
             </div>
 
@@ -104,15 +114,28 @@
 
                     <p class="p-0 m-0"><b>{{formatDateTime( evidence.timestamp) }} </b></p>
 
-                    <a v-if="evidence.evidence_type_id !== 1" style="color: var(--primary-color);"
-                        :href="evidence.evidence_entry"> {{ evidence.evidence_entry }} </a>
+                    <a v-if="evidence.evidence_type_id == 3 && (evidence.evidence_entry.startsWith('http://') || evidence.evidence_entry.startsWith('https://'))" 
+                        style="color: var(--primary-color);" 
+                        :href="evidence.evidence_entry"> 
+                        {{ evidence.evidence_entry }} 
+                        </a>
+
+                        <p v-else-if="evidence.evidence_type_id == 3 || evidence.evidence_type_id == 2" style="color: var(--primary-color);">
+                        {{ evidence.evidence_entry }} 
+                        </p>
+
+                        <span style="color: var(--primary-color);" v-if="evidence.evidence_type_id == 4" >
+                            {{ formatoPesosColombianos(evidence.evidence_entry) }}
+                        </span>
+
+                        <!-- {{ evidence }} -->
+                   
 
 
                     <img v-if="evidence.evidence_type_id == 1" style="width: 100%;border-radius:.5rem;r"
                         :src="`${URI}${evidence.evidence_entry}`" alt="">
 
 
-                    <!-- <img  style="width: 100px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: .5rem;" :src="evidence.evidence_entry" alt=""> -->
 
                 </li>
             </ol>
@@ -129,14 +152,14 @@
 
     <div class="container mx-auto p-2" style="max-width:700px;z-index: 99; ">
 
-        <p class="text-white text-4xl text-center" style="font-weight: bold;"> CONCURSOS</p>
+        <p class="text-white text-4xl text-center" style="font-weight: bold;"> CONCURSOS VIGENTES</p>
 
 
         <!-- {{ contests }} -->
 
         <div class="container_contests" style="display: flex;flex-direction: column;gap: 2rem;">
 
-            <div class="container_contest_item p-2" v-for="contest in contests"
+            <div class="container_contest_item p-2" v-for="contest in contests.filter(c => c.vigent)"
                 style="display: flex;flex-direction: column;gap: 1rem;background-color: #00000090; border: 3px solid var(--primary-color);border-radius: 0.5rem;">
 
 
@@ -162,7 +185,7 @@
                                     <b>Hasta</b>:</span> {{ formatDateTime(contest.end_date) }}</p>
 
 
-                            <p class="text-white text-xl py-0 my-0"><b>{{ contest.rbq.length }}  personas participando</b></p>
+                            <p class="text-white text-xl py-0 my-0"><b>{{ contest.rbq.length }}  Personas participando</b></p>
                             <p class="text-2xl" style="color: var(--primary-color); font-weight: bold;"> {{
                                 calcaDiferenceBetweenDates(contest.end_date) }}</p>
 
@@ -172,7 +195,7 @@
                                 <Button @click="participate(contest)" v-else severity="help"
                                     style="background-color: var(--primary-color);">Subir
                                     evidencia</Button>
-                                <Button @click="open_evidence(contest.id)" v-if="contest.entry_exists" severity="help"
+                                <Button @click="open_evidence(contest.id, userStore.rawUserData.id)" v-if="contest.entry_exists" severity="help"
                                     style="border: 2px solid var(--primary-color);">Mis evidencias</Button>
                             </div>
 
@@ -195,13 +218,16 @@
 
                         <div class="py-2" style="display: flex;gap: 1rem;overflow-x: auto;width: 100%;">
 
-                            <div  v-for="(i, index) in contest.rbq"
+                            <div  v-for="(i, index) in contest.rbq.filter(r => r.total_entries)"
                                 style="display: flex;flex-direction: column;gap:1rem; justify-content: end; align-items: center;width: 100%;position: relative;">
 
 
                                 
-                                <p  class="text-white py-0 my-0">{{ i.total_entries }}</p>
-                                <img class="min-user-img" @click="showParticipantDetail(i)" style="width: 100%;max-width: 5rem; background-color:#fff; aspect-ratio: 1 / 1;border-radius: 50%; object-fit: cover;"
+                                <p v-if="contest.contest_winner_type_id == 2" class="text-white pt-4 my-0">{{formatoPesosColombianos( i.total_entries) }}</p>
+
+                                <p v-else class="text-white pt-4 my-0">{{ i.total_entries }}</p>
+
+                                <img class="min-user-img" @click="showParticipantDetail(i, contest)" style="width: 100%;max-width: 5rem; background-color:#fff; aspect-ratio: 1 / 1;border-radius: 50%; object-fit: cover;"
                                     :src="`${URI}/read-product-image/96/employer-${i.dni}`"
                                     alt="">
 
@@ -240,6 +266,11 @@
         </div>
     </div>
 
+
+    
+
+
+
 </template>
 
 
@@ -254,6 +285,7 @@ import { loginStore } from '@/store/user.js'
 import { URI } from '../../../service/conection';
 import {formatDateTime} from '@/service/formating/formatDate.js'
 import { read } from 'xlsx';
+import { formatoPesosColombianos } from '../callCenter/service/formatoPesos';
 
 const showDialogs = ref({
     showMyEvidenceDialog: false,
@@ -261,18 +293,14 @@ const showDialogs = ref({
 })
 
 const currentUser = ref({})
+const currentContest = ref({})
 const contests = ref([])
 const fullParticipantView = ref(false)
 
 const currentEvidenceList = ref([])
 
 const imagePreview = ref(null);
-const filters = ref()
-const initFilters = () => {
-    filters.value = {
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    };
-};
+
 const previewFile = () => {
     const file = inputFile.value.files[0];
     if (file) {
@@ -281,9 +309,12 @@ const previewFile = () => {
 }
 
 
-const showParticipantDetail = (user) => {
+const showParticipantDetail = (user,contest) => {
     currentUser.value = user
+    currentContest.value = contest
     showDialogs.value.showParticipantDetail = true
+
+    
     
 }
 
@@ -291,6 +322,7 @@ const showParticipantDetail = (user) => {
 const entry_to_send = ref("")
 
 const userStore = loginStore()
+
 const showAddEvidenceDialog = ref(false)
 
 const inputFile = ref(null)
@@ -301,12 +333,25 @@ const participate = (contest) => {
 }
 const contestToParticipate = ref({})
 
+
+
 const sendEvidence = async (evidence_entry, contest_id, evidence_type_id) => {
+
+
+    if(evidence_entry === null){
+        alert('debe cargar una evidaencia')
+        return
+    }
+
+    if(evidence_type_id == 3 && !evidence_entry.includes('.')){
+        alert('debe ser una URL valida')
+        return
+    }
 
 
     const evidence = {
         "evidence_type_id": evidence_type_id,
-        "evidence_entry": evidence_entry || "",
+        "evidence_entry": `${evidence_entry}`|| "0",
         "contest_id": contest_id
     };
     const Contest_entry = {
@@ -337,10 +382,10 @@ const sendEvidence = async (evidence_entry, contest_id, evidence_type_id) => {
 
 
 
-const open_evidence = async (contest_id) => {
+const open_evidence = async (contest_id, user) => {
     currentEvidenceList.value =[]
     showDialogs.value.showMyEvidenceDialog = true
-    currentEvidenceList.value = await contestService.getParticipationByUserId(contest_id)
+    currentEvidenceList.value = await contestService.getParticipationByUserId(contest_id,user)
 }
 
 const calcaDiferenceBetweenDates = (end) => {

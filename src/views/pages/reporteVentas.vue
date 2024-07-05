@@ -79,7 +79,7 @@
 
 
 
-            <div class="col-12 px-0 py-0 my-0 p-0" style="overflow-x:auto; background-color: #fafafa;">
+            <div class="col-12 px-0 py-0 my-0 p-0 m-auto" style="overflow-x:auto; background-color: #fafafa;">
                 <div class="px-0 mx-0"
                     style="width: max-content; background-color:#fafafa; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">
                     <div v-for="boton in menus" style="background-color: ;">
@@ -632,6 +632,11 @@ const getSites = async () => {
 }
 
 const menus = ref([
+{
+        name: 'Resumen',
+        to: '/reporte-ventas/order-sumary',
+        icon: 'fa-solid fa-table'
+    },
     {
         name: 'Valor ventas',
         to: '/reporte-ventas/valor-ventas',
@@ -651,12 +656,8 @@ const menus = ref([
         name: 'Ordenes',
         to: '/reporte-ventas/ordenes',
         icon: 'fa-solid fa-table'
-    },
-    {
-        name: 'Resumen',
-        to: '/reporte-ventas/order-sumary',
-        icon: 'fa-solid fa-table'
     }
+
 ])
 
 

@@ -8,7 +8,7 @@ export const loginStore = defineStore('userCall', {
    
     persist: {
        
-                key: 'user', // La clave bajo la cual se almacenará tu estado en el storage
+                key: 'userCall', // La clave bajo la cual se almacenará tu estado en el storage
                 storage: localStorage,
                 paths:[
                     'userData'
