@@ -6,15 +6,16 @@ import {loginStore} from '@/store/user.js'
 import axios from 'axios';
 import { URI } from '../service/conection';
 import { ref } from 'vue';
-// import { roles } from '../service/roles';
 import pixel from './pixel';
+
+
+
 
 const getRoles = async () => {
   try {
       const response = await fetch(`${URI}/formatted-rolegroups`)
       const groups = await response.json();
 
-      // roles.value = groups;
       return groups
   } catch (error) {
       console.error(error);
@@ -23,7 +24,6 @@ const getRoles = async () => {
 
 
 const roles = ref('') 
-
 roles.value = getRoles()
 
 const router = createRouter({
@@ -157,6 +157,12 @@ const router = createRouter({
           path: '/future-concursos/',
           name: 'future-concursos',
           component: () => import('@/views/pages/concursos/FutureConcursos.vue')
+        },
+
+        {
+          path: '/completed-concursos/',
+          name: 'completed-concursos',
+          component: () => import('@/views/pages/concursos/CompletedConcursos.vue')
         },
         {
           path: '/manage-concursos/',
@@ -1042,17 +1048,6 @@ const router = createRouter({
       component: () => import('@/views/pages/auth/Login.vue')
     },
 
-
-    // {
-    //     path: '/auth/access',
-    //     name: 'accessDenied',
-    //     component: () => import('@/views/pages/auth/Access.vue')
-    // },
-    // {
-    //     path: '/auth/error',
-    //     name: 'error',
-    //     component: () => import('@/views/pages/auth/Error.vue')
-    // }
   ]
 });
 
@@ -1061,7 +1056,7 @@ const router = createRouter({
 
 
 pixel.init()
-router.afterEach((to, from) => {
+router.afterEach(() => {
   // Esto rastreará una "PageView" cada vez que el usuario cambie de ruta
   pixel.sendTrackingEvent('track', 'PageView');
 });

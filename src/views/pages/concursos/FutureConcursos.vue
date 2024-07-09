@@ -28,12 +28,12 @@
     </Dialog>
 
 
-    <Dialog class="p-2" style="max-width: min-content" modal v-model:visible="showDialogs.showParticipantDetail">
+    <Dialog class="p-2" header="Informacion de participante" style="max-width: min-content" modal v-model:visible="showDialogs.showParticipantDetail">
 
 
     <div class="py-2" style="overflow-x: auto;display: flex; flex-direction: column; width: 20rem">
-        <img style="width: 100%;border-radius: .5rem;aspect-ratio: 1 / 1;object-fit: cover;" :src="`${URI}/read-product-image/600/employer-${currentUser.dni}`" alt="">
-        <p><b>Nombre:</b> {{ currentUser.name }}</p>
+        <img style="width: 100%;border-radius: .5rem;aspect-ratio: 1 / 1;object-fit: cover;" :src="!currentContest.is_site_participation? `${URI}/read-product-image/600/employer-${ currentUser.dni}`  : `${URI}/read-product-image/600/site-${ currentUser.site_id}`" alt="">
+        <p style=""><b>Nombre:</b> {{ currentUser.name }}</p>
         <p><b>Participaciones:</b> {{ `${currentContest.evidence_type_id == 4 ? formatoPesosColombianos(currentUser.total_entries) : currentUser.total_entries}` }} </p>
         <Button @click="open_evidence(currentContest.id, currentUser.employer_id)" severity="help" size="small" label="VER PARTICIPACIONES"></Button>
 
@@ -145,14 +145,14 @@
 
 
 
-    <div style="position: fixed;left: -2rem; z-index: -1;filter: blur(3px);" class="col-12">
-        <img style="width: 120%;left: 0rem;height: 100vh;"
-            src="https://backend.salchimonster.com/read-product-image/600/site-4" alt="">
+    <div style="position: fixed;left: -2rem; z-index: -1;filter: blur(10px);" class="col-12">
+        <img style="width: 120%;left: 0rem;height: 100vh;object-fit: cover;"
+            src="https://backend.salchimonster.com/read-product-image/600/site-2" alt="">
     </div>
 
     <div class="container mx-auto p-2" style="max-width:700px;z-index: 99; ">
 
-        <p class="text-white text-4xl text-center" style="font-weight: bold;">  PROXIMOS CONCURSOS</p>
+        <p class="text-white text-4xl text-center" style="font-weight: bold;">PROXIMOS CONCURSOS </p>
 
 
         <!-- {{ contests }} -->
@@ -170,22 +170,28 @@
 
 
                         <img class="p-0"
-                            style="width: 30%;aspect-ratio: 3 / 3; object-fit: cover;"
-                            src="https://www.mundodeportivo.com/urbantecno/hero/2022/08/Como-anadirle-subtitulos-a-un-video-de-TikTok.jpg?width=1200"
+                            style="width: 30%;aspect-ratio: 3 / 3;border-radius: .3rem; object-fit: cover;"
+                             :src="`${URI}/read-product-image/600/contest-${contest.id}`"
                             alt="">
 
                         <div>
-                            <p class=" m-0 text-2xl" style="font-weight: bold;color: #fff;"> {{ contest.name }}</p>
+                            <p class=" m-0 text-2xl" style="font-weight: bold;color: #fff;text-transform: capitalize;"> {{ contest.name }}</p>
 
                             <p class=" m-0" style="color: #fff;"> {{ contest.description }}</p>
                             <img src="" alt="">
 
+
+                            <p class="text-white"> <span style="color: var(--primary-color);font-weight: bold;"> 
+                                <b>Participa</b>:</span>  {{ contest.is_site_participation? 'SEDES' : 'COLABORADORES'  }} <br> </p>
                             <p class="text-white"> <span style="color: var(--primary-color);"> 
+                                
                                 <b>Desde</b>:</span> {{formatDateTime(contest.start_date)  }} <br> <span style="color: var(--primary-color);"> 
                                     <b>Hasta</b>:</span> {{ formatDateTime(contest.end_date) }}</p>
 
 
-                            <p class="text-white text-xl py-0 my-0"><b>{{ contest.rbq.length }}  Personas participando</b></p>
+                            <p v-if="contest.rbq.filter(p => p.name).length > 0" class="text-white text-xl py-0 my-0"><b>{{ contest.rbq.filter(p => p.name).length }}  {{ contest.is_site_participation? 'sede' : 'persona'}} participando</b></p>
+
+                            <p v-else class="text-white text-xl py-0 my-0"><b> Se el primero en inscribirte</b></p>
                             <p class="text-2xl" style="color: var(--primary-color); font-weight: bold;"> {{
                                 calcaDiferenceBetweenDates(contest.end_date) }}</p>
 
@@ -227,9 +233,7 @@
 
                                 <p v-else class="text-white pt-4 my-0">{{ i.total_entries }}</p>
 
-                                <img class="min-user-img" @click="showParticipantDetail(i, contest)" style="width: 100%;max-width: 5rem; background-color:#fff; aspect-ratio: 1 / 1;border-radius: 50%; object-fit: cover;"
-                                    :src="`${URI}/read-product-image/96/employer-${i.dni}`"
-                                    alt="">
+                                <img @click="showParticipantDetail(i, contest)" class="min-user-img" style="width: 100%;max-width: 5rem; background-color:#fff; aspect-ratio: 1 / 1;border-radius: 50%; object-fit: cover;" :src="!contest.is_site_participation? `${URI}/read-product-image/300/employer-${ i.dni}`  : `${URI}/read-product-image/600/site-${ i.site_id}`" alt="" >
 
                                 <div class="py-2" :style="`height:${(i.total_entries)/contest.max_entries*10}rem; width:${100/contest.rbq.length}%`"
                                     style="min-width: 3rem;max-width: 5rem; background-color: var(--primary-color);overflow: hidden; border-radius: 3rem 3rem 0 0; position: relative;">
@@ -392,8 +396,11 @@ const calcaDiferenceBetweenDates = (end) => {
     const answer = new Date(end).getDate() - new Date().getDate()
     let result = ''
     switch (answer) {
+        case 0:
+            result = 'Finaliza hoy'
+            break;
         case 1:
-            result = 'Finaliza acaba Manana'
+            result = 'Finaliza Manana'
             break;
 
         case 2:
@@ -402,8 +409,10 @@ const calcaDiferenceBetweenDates = (end) => {
 
         default:
 
-            result = `Finaliza en  ${answer} dias`
+            result = `Finaliza en  ${answer} ${Math.abs(answer)>1? 'dias' : 'dia'} `
             break;
+
+            
     }
 
     return result

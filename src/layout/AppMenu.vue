@@ -56,6 +56,34 @@ async function fetchAndUpdateRoles() {
                 }]
         },
 
+
+
+        {
+            label: 'CONCURSOS',
+            roles: roles.value['Gestion Humana'],
+            items: [
+                {
+                    label: 'Vigentes', icon: 'fa-database fa-solid', to: '/concursos',
+
+                },
+                {
+                    label: 'Proximos', icon: 'fa-database fa-solid', to: '/future-concursos',
+
+                },
+                {
+                    label: 'Finalizados ', icon: 'fa-solid fa-folder', to: '/completed-concursos',
+
+                },
+
+                {
+                    label: 'Administrar ', icon: 'fa-solid fa-folder', to: '/manage-concursos',
+
+                },
+
+
+            ]
+        },
+
         {
             label: 'INVENTARIO',
             roles: roles.value.todos,

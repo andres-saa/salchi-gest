@@ -85,6 +85,84 @@ export const contestService = {
         }
     },
 
+
+
+
+    
+    async getContestEntryOption() {
+        const login = loginStore()
+        
+        const store = useReportesStore()
+        try {
+            store.setLoading(true,"cargango evidencias")
+            const response = await axios.get(`${URI}/contest_entry_option`);
+            if (response.status === 200) {
+                store.setLoading(false,"cargango consursos")
+                return response.data;
+                
+            } else {
+                store.setLoading(false,"cargango consursos")
+
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            store.setLoading(false,"cargango consursos")
+
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+
+
+    async createContest( data ) {        
+        const store = useReportesStore()
+        try {
+            store.setLoading(true,"Creando concurso")
+            const response = await axios.post(`${URI}/contest`,data );
+            if (response.status === 200) {
+                store.setLoading(false,"cargango consursos")
+                return response.data;
+            } else {
+                store.setLoading(false,"cargango consursos")
+
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            store.setLoading(false,"cargango consursos")
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+    async updateContest( data ) {        
+        const store = useReportesStore()
+        try {
+            store.setLoading(true,"actualizando concurso")
+            const response = await axios.put(`${URI}/contest`,data );
+            if (response.status === 200) {
+                store.setLoading(false,"cargango consursos")
+                return response.data;
+            } else {
+                store.setLoading(false,"cargango consursos")
+
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                return null;
+            }
+        } catch (error) {
+            store.setLoading(false,"cargango consursos")
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+    },
+
+
+
+
+
+
     async sendEvidence(evidence_data) {
         const store = useReportesStore()
         store.setLoading(true,"enviando evidencia")
@@ -110,6 +188,70 @@ export const contestService = {
             return null;
         }
     },
+
+    async contestToggleVisible (status,id) {
+        const store = useReportesStore()
+        // store.setLoading(true,"enviando evidencia")
+
+        try {
+            
+            const response = await axios.put(`${URI}/contest_toggle_visible/status/${status}/id/${id}`)
+            if (response.status === 200) {
+                store.setLoading(false,"enviando evidencia")
+                return response.data;
+            } else {
+                console.error('An error occurred while preparing the order:', response.status);
+                store.setLoading(false,"enviando evidencia")
+
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while preparing the order:', error);
+            store.setLoading(false,"enviando evidencia")
+
+            return null;
+        }
+    },
+
+
+
+
+    async deleteContest (id) {
+        const store = useReportesStore()
+        store.setLoading(true,"Eliminando concurso")
+
+        try {
+            
+            const response = await axios.delete(`${URI}/delete-contest/${id}`)
+            if (response.status === 200) {
+                store.setLoading(false,"borrando concurso")
+                return response.data;
+            } else {
+                console.error('An error occurred while preparing the order:', response.status);
+                store.setLoading(false,"enviando evidencia")
+
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while preparing the order:', error);
+            store.setLoading(false,"enviando evidencia")
+
+            return null;
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     async sendContestImage(userId, contestId, evidenceId, imageFile) {
