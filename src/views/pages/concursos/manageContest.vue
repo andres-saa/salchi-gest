@@ -458,7 +458,7 @@ const deleteContest = async (id) => {
 
 
 onMounted(async () => {
-    if(userStore.rawUserData.id != 1082){
+    if(userStore.rawUserData.id != 1132){
         alert('no autorizado')
         router.push('/concursos')
     }
