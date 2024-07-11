@@ -512,6 +512,57 @@ const router = createRouter({
 
           ]
         },
+        {
+          path: '/cdi-inventory',
+          name: 'cdi-inventory',
+          component: () => import('@/views/pages/inventory/cdiInventory/cdiInventory.vue'),
+          children:[
+            {
+              path: '/cdi-inventory/cdi-inventory-reports',
+              name: 'cdi-inventory-reports',
+              meta:{roles: roles.value['Inventario diario admin'] },
+              component: () => import('@/views/pages/inventory/cdiInventory/cdiInventoryReports.vue')
+            },
+            {
+              path: '/cdi-inventory/cdi-inventory-my-reports',
+              name: 'cdi-inventory-my-reports',
+              meta:{roles: roles.value['Inventario diario'] },
+              component: () => import('@/views/pages/inventory/cdiInventory/cdiInventoryMyReports.vue')
+            },
+            {
+              path: '/cdi-inventory/report-inventory',
+              name: 'cdi-inventory-report-inventory',
+              meta:{roles: roles.value['Inventario diario'] },
+              component: () => import('@/views/pages/inventory/cdiInventory/reportInventory.vue')
+            },
+              
+              
+            {
+              path: '/cdi-inventory/cdi-inventory-settings',
+              name: 'cdi-inventory-settings',
+              component: () => import('@/views/pages/inventory/cdiInventory/cdiInventorySettings.vue'),
+              meta:{roles: roles.value['Inventario diario admin'] },
+              children:[
+                {
+                  path: '/cdi-inventory/cdi-inventory-settings/:sesion/:id',
+                  name: 'cdi-inventory-settings-sesion',
+                  component: () => import('@/views/pages/inventory/cdiInventory/cdiInventorySettingsSesion.vue'),   
+                }
+              ]       
+            
+            
+            },
+              
+
+
+
+              {
+                path: '/cdi-inventory/cdi-inventory-view/:cdi_inventory_id',
+                name: 'cdi-inventory-view',
+                component: () => import('@/views/pages/inventory/cdiInventory/cdiInventoryView.vue'),            },
+
+          ]
+        },
 
 
 
@@ -1055,12 +1106,6 @@ const router = createRouter({
 
 
 
-pixel.init()
-router.afterEach(() => {
-  // Esto rastreará una "PageView" cada vez que el usuario cambie de ruta
-  pixel.sendTrackingEvent('track', 'PageView');
-});
-
 
 
 const validateToken = (token) => {
@@ -1089,7 +1134,6 @@ const validateToken = (token) => {
 
 
 router.beforeEach(async(to, from, next) => {
-  console.log(to.meta)
   const store = loginStore()
   const token = store.userData.access_token
   const validToken = await validateToken(token)

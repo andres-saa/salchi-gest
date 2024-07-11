@@ -12,18 +12,18 @@
         <Button label="Eliminar" @click="deleteNeighborhood" class="p-button-danger" />
     </Dialog>
 
-    <Dialog v-model:visible="showCreateDialog" header="Crear Nuevo Barrio" :modal="true" :closable="false">
+    <Dialog style="width: 45rem;" class="mx-2" v-model:visible="showCreateDialog" header="Crear Nuevo Barrio" :modal="true" :closable="false">
 
         <div class="   grid" style=" ">
 
 
-            <div class="col-6 pr-2 pl-3">
+            <div class=" col-12 my-0 pb-0">
                 <Dropdown style="width: 100%;" v-model="newNeighborhoodCity" :options="cities" optionLabel="city_name"
                     placeholder="Ciudad" />
             </div>
 
-            <div class="col-6 pl-2 pr-3">
-                <Dropdown style="width: 100%;" v-model="newNeighborhoodSite" :options="sites" optionLabel="site_name"
+            <div class="col-12 my-0 ">
+                <Dropdown style="width: 100%;" v-model="newNeighborhoodSite" :options="sites.filter(site => site.show_on_web)" optionLabel="site_name"
                     placeholder="Sede" />
 
             </div>
@@ -32,12 +32,19 @@
         </div>
 
 
-        <div v-for="(barrio, index) in barriosToAdd" :key="index">
-    <div class="my-2" style="width: 100%; display: flex; gap: 1rem;">
-        <InputText v-model="barrio.name" placeholder="Nombre del Barrio" />
-        <InputNumber  prefix="$" v-model="barrio.delivery_price" placeholder="Precio del Domicilio" />
-        <Button v-if="barriosToAdd.length > 1" text class="p-0" size="small" severity="danger" @click="removeBarrio(index)">
-            <i class="text-xl" :class="PrimeIcons.TRASH"></i>
+        <div v-for="(barrio, index) in barriosToAdd" :key="index" class="my-3">
+    <div class=" grid m-0" style="width: 100%; ">
+        <div class="col-12 md:col-6 p-0 md:pr-2">
+            <InputText style="width: 100%;" v-model="barrio.name" placeholder="Nombre del Barrio" />
+        </div>
+
+        <div class="col-11 md:col-5 p-0 md:pl-2" style="display: flex;justify-content: end;">
+            <InputNumber style="width: 100%;"  prefix="$" v-model="barrio.delivery_price" placeholder="Precio del Domicilio" />
+        </div>
+        
+       
+        <Button icon="pi pi-trash text-2xl"  text class=" col-1 p-0 m-0" size="small" severity="danger" @click="removeBarrio(index)">
+            
         </Button>
     </div>
 </div>
@@ -107,7 +114,7 @@
                 <template #body="neighborhood">
                     <span class="p-column-title p-0">Code</span>
                   
-                    <InputText   :onchange="() => update(neighborhood.data)" style="width:100%; border: none;border-right:2px solid rgba(0, 0, 0, 0.1); border-radius: 0;;border-left: 2px solid rgba(0, 0, 0, 0.1); border-radius: 0;"
+                    <InputText   :onchange="() => update(neighborhood.data)" style="width:100%; border: none; border-radius: 0; border-radius: 0;"
                         v-model="neighborhood.data.name"></InputText>
 
                 </template>
@@ -116,9 +123,9 @@
            <Column class="px-2 py-0 m-0" field="delivery_price" header="Precio del domicilio" :sortable="true"
                 headerStyle="width:15rem;min-width:15rem ">
                 <template #body="neighborhood">
-                    <span class="p-column-title p-0">Code</span>
+
                
-                    <InputNumber prefix="$"  style="width:100%; border: none;border-right:2px solid rgba(0, 0, 0, 0.1); border-radius: 0;border-radius: 0;" v-model="neighborhood.data.delivery_price"
+                    <InputNumber prefix="$"  style="width:10%; border: none; border-radius: 0;border-radius: 0;" v-model="neighborhood.data.delivery_price"
                         @update:modelValue="() => update(neighborhood.data)"/>
                 </template>
             </Column>

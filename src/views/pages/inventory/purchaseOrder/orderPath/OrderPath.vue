@@ -70,11 +70,7 @@ const navItems = [
         path:'purchase-order-settings'
     },
 
-    {
-        label:'Movimientos',
-        icon:'pi pi-cog',
-        path:'purchase-order-comple'
-    }
+
 
 ]
 

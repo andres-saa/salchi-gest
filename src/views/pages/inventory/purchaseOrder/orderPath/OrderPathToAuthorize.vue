@@ -283,7 +283,10 @@
 
 
         <DataTable showGridlines style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
-            :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
+            :value="invetnoryDailyReports" tableStyle="min-width: 50rem;" :paginator="true"
+            :rows="15"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reportes">
             <template #header>
                 <div class="grid" style="align-items:center">
                     <div class="col-12 md:col-6 p-3">

@@ -45,7 +45,7 @@
 
 
 
-        <Dropdown style="width: 100%;"  filter v-model="site" :options="sites.filter(n => n.site_id  != 12 && n.site_id  != 13 )" placeholder="SEDE" optionLabel="site_name"
+        <Dropdown style="width: 100%;"  filter v-model="site" :options="sites.filter(n => n.show_on_web)" placeholder="SEDE" optionLabel="site_name"
                             required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" 
                             />
     </div>

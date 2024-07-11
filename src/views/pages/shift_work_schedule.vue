@@ -1,4 +1,5 @@
 <template>
+    
           <Dialog v-model:visible="showUserDialog" modal style="width: 30rem">
         <h4>{{ selectedUser.name }}</h4>
 
@@ -32,7 +33,7 @@
     </Dialog>
 
     <Dialog v-model:visible="showDateRangeDialog" modal closable>
-        <div class="">
+        <div >
 
             <div class="col-12 p-0 m-0 my-2">
                 <Button class="col-12  p-1" severity="success"  label="Semana entrante" @click="setNextWeek"></Button>
@@ -104,7 +105,17 @@
     </Dialog>
 
     <div style="margin-top: 6rem;" class="px-2 mx-0 col-12">
+        
         <div class="col-12 p-0 m-0 mb-8">
+
+
+            <p class="texto" ref="texto">
+
+            </p>
+
+
+    
+
             <div class="grid p-0 mx-auto">
                 <div class="col-12 md:col-5 py-2" style="height: 4rem">
                     <Dropdown :disabled="!roles['Horarios de trabajo admin']?.includes(loginData?.rawUserData?.rol) && getUserId()!=1104" style="height: 100%" class="col-12 p-0 m-0" v-model="currentSite" :options="sites" optionLabel="site_name"></Dropdown>
@@ -140,7 +151,7 @@
                 </div>
             </div>
             <div class="col" style="height: 80vh; overflow-y: auto">
-                <div class="col-12 pb-6" style="">
+                <div class="col-12 pb-6" >
                     <div style="display: flex; gap: 0rem; flex-direction: column">
                         <div class="p-0 m-0" v-for="workDay in workDays" :key="workDay.id" style="position: relative">
                             <div class="shadow-2" :style="{ 'background-color': getDayColor(workDay.date), color: 'white', 'border-radius': '0.5rem 0.5rem 0 0', display: 'flex', 'align-items': 'center', 'justify-content': 'space-beetwen' }">
@@ -234,22 +245,18 @@
 
     
     <Dialog v-model:visible="showCalendar" style="width: 20rem" :modal="true">
-            <template #header> . </template>
+            
 
-            <h5 class="" style="text-transform: uppercase">Cuantas horas trabajo {{ currentUser.name }}?</h5>
+            <h5 style="text-transform: uppercase">Cuantas horas trabajo {{ currentUser.name }}?</h5>
 
             <p>Hora de llegada:</p>
             <Calendar v-model="arrivalTime" showIcon iconDisplay="input" timeOnly hourFormat="12">
-                <template #inputicon="{ clickCallback }">
-                    <InputIcon class="pi pi-clock cursor-pointer" @click="clickCallback" />
-                </template>
+                
             </Calendar>
 
             <p>Hora de salida:</p>
             <Calendar v-model="departureTime" showIcon iconDisplay="input" timeOnly hourFormat="12">
-                <template #inputicon="{ clickCallback }">
-                    <InputIcon class="pi pi-clock cursor-pointer" @click="clickCallback" />
-                </template>
+                
             </Calendar>
 
             <template #footer>
@@ -260,6 +267,8 @@
                 </div>
             </template>
         </Dialog>
+
+
 </template>
   
     <script setup>
@@ -273,10 +282,12 @@ import { loginStore } from '../../store/user';
 import { roles } from '../../service/roles';
 import { getUserId } from '../../service/valoresReactivosCompartidos';
 import { subDays, startOfWeek, endOfWeek, subMonths, startOfMonth, endOfMonth, format, setWeek } from 'date-fns';
+import Editor from 'primevue/editor';
 
+const value = ref('')
 const showUserDialog = ref(false);
 const selectedUser = ref(null);
-
+const texto = ref(null)
 const openUserDialog = (user) => {
     selectedUser.value = user;
     showUserDialog.value = true;
@@ -315,6 +326,8 @@ const openDateRangeDialog = () => {
 const closeDateRangeDialog = () => {
     showDateRangeDialog.value = false;
 };
+
+
 
 const applyDateRange = async() => {
     start_date.value = tempStartDate.value;

@@ -203,7 +203,8 @@ const sendPurchaseOrder = async() => {
     const data = preparePurchaseOrder()
     data.daily_inventory_items = prepareItemsToSendCero([...groupWithItems.value])
     await purchaseOrderService.InsertpurchaseOrder(data)
-    router.push('/purchase-order/purchase-order-my-orders/')
+    showConfirmDialog.value = false
+
 
 }
 

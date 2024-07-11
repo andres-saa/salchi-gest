@@ -208,7 +208,7 @@ onMounted(async () => {
     const grupos = await dailyInventoryReportsService.getGroupsWithItems()
     grupos.map( g => g.items.map( i=> i.quantity = null))
     groupWithItems.value = grupos
-    console.log(grupos)
+
 
 
 })

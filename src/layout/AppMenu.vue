@@ -124,6 +124,22 @@ async function fetchAndUpdateRoles() {
 
                 },
 
+                {
+                    label: 'Reportes de inventario Cdi', icon: 'fa-solid fa-calendar',
+                    items: [
+                        {
+                            label: 'Reportar inventario ', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/report-inventory/',
+
+                        },
+                        {
+                            label: 'Revisar reportes', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/cdi-inventory-reports/',
+
+                        },
+                     
+                    ]
+
+                },
+
 
                 {
                     label: 'Ordenes de compra', icon: 'fa-solid fa-calendar',

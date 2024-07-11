@@ -113,7 +113,7 @@
 
             <DataTable showGridlines style="max-width: 1024px;" stripedRows v-model:filters="filters"
                 class="col-12 m-auto p-0 m-0" :value="itemsToPrepare.filter(order => order.quantity != 0)"
-                tableStyle="min-width: 50rem;">
+                tableStyle="min-width: 50rem;" >
 
 
 
@@ -225,7 +225,10 @@
 
 
         <DataTable showGridlines style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
-            :value="invetnoryDailyReports" tableStyle="min-width: 50rem;">
+            :value="invetnoryDailyReports" tableStyle="min-width: 50rem;" :paginator="true"
+            :rows="15"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reportes">
             <template #header>
                 <div class="grid" style="align-items:center">
                     <div class="col-12 md:col-6 p-3">
