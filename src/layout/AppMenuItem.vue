@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, watch } from 'vue';
+import { ref, onBeforeMount, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
 
@@ -68,13 +68,15 @@ const itemClick = (event, item) => {
 const checkActiveRoute = (item) => {
     return route.path === item.to;
 };
+
+
 </script>
 
 <template>
     <li :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
-        <div @click="visibleMenus = !visibleMenus"  style="cursor: pointer; border-radius: 1rem; display: flex;background-color: #ffffff15;min-width: max-content; justify-content: space-between;align-items: center;" v-if="root && item.visible !== false" class="layout-menuitem-root-text p-2 border-radius-1">{{ item.label }} 
+        <div  @click="visibleMenus = !visibleMenus"  style="cursor: pointer; border-radius: 1rem; display: flex;background-color: #ffffff15;min-width: max-content; justify-content: space-between;align-items: center;" v-if="root && item.visible !== false" class="layout-menuitem-root-text p-2 border-radius-1">{{ item.label }} 
             
-            <i  class="pi pi-fw pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
+            <i   :class="!visibleMenus?  'pi pi-angle-down t-up' :  'pi pi-angle-down t-down' " v-if="item.items"></i>
         
             <!-- {{ visibleMenus }} -->
         </div>
@@ -82,13 +84,13 @@ const checkActiveRoute = (item) => {
 
 
 
-    <template v-if="visibleMenus">
+
 
         <Transition name="layout-submenu">
-            <a v-if="(!item.to || item.items) && item.visible !== false" :href="item.url" @click="itemClick($event, item, index)" :class="item.class" :target="item.target" tabindex="0" class="layout-submenu">
+            <a v-if="(!item.to || item.items) && item.visible !== false" :href="item.url" @click="itemClick($event, item, index)" :class="item.class" :target="item.target" tabindex="0" class="layout-submenu pr-2">
                 <i :class="item.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
-                <i class="pi pi-fw pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
+                <i style="transition: all .3s ease;" class="pi pi-fw pi-angle-down layout-submenu-toggler text-l" v-if="item.items"></i>
             </a>
         </Transition>
             
@@ -100,12 +102,12 @@ const checkActiveRoute = (item) => {
             </router-link>
 
             <Transition v-if="item.items && item.visible !== false" name="layout-submenu">
-                <ul v-show="root ? true : isActiveMenu" class="layout-submenu">
-                    <app-menu-item v-for="(child, i) in item.items" :key="child" :index="i+1" :item="child" :parentItemKey="itemKey" :root="false"></app-menu-item>
+                <ul  v-show="root ? true : isActiveMenu" class="layout-submenu">
+                    <app-menu-item style="transition: .2s all ease;" :class="visibleMenus ? 'open layout-submenu'  : 'close layout-submenu'" v-for="(child, i) in item.items" :key="child" :index="i+1" :item="child" :parentItemKey="itemKey" :root="false"></app-menu-item>
                 </ul>
             </Transition>
     
-    </template>
+
 
  
    
@@ -149,6 +151,28 @@ const checkActiveRoute = (item) => {
 }
 
 
+.open{
+
+    max-height: 30rem;
+    opacity: 1;
+    height: auto;
+}
 
 
+.close{
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateX(-1rem);
+}
+
+.t-down{
+    transform: rotatez(-180deg);
+    transition: all .3s ease;
+}
+
+.t-up{
+    transform: rotateX(0);
+    transition: all .3s ease;
+}
 </style>

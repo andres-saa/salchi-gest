@@ -171,6 +171,13 @@ async function fetchAndUpdateRoles() {
 
                         },
 
+
+                        {
+                            label: 'Recibir en la sede', icon: 'fa-solid fa-calendar', to: '/purchase-order/recorrido/recibida-en-sede/',
+
+                        },
+
+
                         {
                             label: 'Completada', icon: 'fa-solid fa-calendar', to: '/purchase-order/recorrido/completed/',
 
@@ -215,6 +222,12 @@ async function fetchAndUpdateRoles() {
                 },
                 {
                     label: 'Directorio ', icon: 'fa-solid fa-folder', to: '/directorio',
+
+                },
+
+                {
+                    label: 'Administrar PQRS ', icon: 'fa-solid fa-folder',to:'/pqrs/pagina_web/1'
+                    
 
                 },
 
@@ -384,6 +397,11 @@ async function fetchAndUpdateRoles() {
                     label: 'Encuesta de retiro ', icon: 'fa-solid fa-umbrella', to: '/retiro',
 
                 },
+                {
+                    label: 'PQRS ', icon: 'fa-solid fa-folder',to:'/pqrs-user'
+                    
+
+                },
 
 
 
@@ -510,15 +528,14 @@ onBeforeMount(async () => {
 <template>
 
     <ul class="layout-menu" style="position: relative;">
-        <template v-for="(item, i) in model" :key="item">
-            <app-menu-item v-if="item.roles?.includes(getUserRole())" :item="item" :index="i"></app-menu-item>
+        <div v-for="(item, i) in model" :key="item">
+            <app-menu-item v-show="item.roles?.includes(getUserRole())" :item="item" :index="i"></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
-        </template>
+        </div>
 
-
-
+        
     </ul>
-    <!-- <Button style="position: fixed;top: 50%;left: 22rem;"><i :class="PrimeIcons.ANGLE_DOUBLE_LEFT"></i></Button> -->
+
 </template>
 
 <style lang="scss" scoped></style>

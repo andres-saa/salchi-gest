@@ -81,6 +81,31 @@ const router = createRouter({
 
 
 
+        
+        {
+          path: '/pqrs',
+          name: 'pqrs',
+          component: () => import('@/views/pages/pqrs/pqrs.vue'),
+          children:[
+            {
+              path: '/pqrs/:section/:section_id',
+              name: 'pqrs-section',
+              component: () => import('@/views/pages/pqrs/pqrsSection.vue'),
+              
+            },
+
+          ]
+        },
+
+        {
+          path: '/pqrs-user',
+          name: 'pqrs-user',
+          component: () => import('@/views/pages/pqrs/pqrUser.vue'),
+          
+        },
+
+
+
 
 
 

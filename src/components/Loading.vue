@@ -1,6 +1,6 @@
 <template>
 
-<Dialog class="p-0" :closable="false"  modal style="width: min-content; display: flex;" v-model:visible="store.loading.visible">
+<Dialog class="p-0" :closable="false"  modal style="width: min-content; display: flex;  " v-model:visible="store.loading.visible">
 
 
 
@@ -14,7 +14,6 @@
     <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
     animationDuration=".1s" aria-label="Custom ProgressSpinner" />
 
-  
 </div>
 
 
