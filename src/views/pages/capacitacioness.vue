@@ -1,7 +1,7 @@
 <template>
 
 
-<div class="col-12 m-auto p-4"> 
+<div class="col-12 mx-auto p-4 my-8 "> 
 <!-- {{ permisos }}  -->
 
 

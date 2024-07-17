@@ -1,7 +1,7 @@
 <template>
  
 
-    <div  class="container shadow-3 col-12"   style="border-radius: 0.5rem;background-color: white; height: 100%;position: relative;">
+    <div  class="container shadow-3 col-12"   style="border-radius: 0.5rem;background-color: white; height: 100%;position: relative;overflow: ;">
     
         
 
@@ -9,7 +9,7 @@
         
     
     
-    <div class="imagen" style="display: flex;align-items: center; " @click="open(props.product)">
+    <div class="imagen" style="display: flex; overflow: hidden;align-items: center; " @click="open(props.product)">
   
         <transition name="fade">
         <img   v-show="loaded" @load="see" :class="loaded? 'cargado': 'sin-cargar'" style="width: 100%; aspect-ratio: 1 / 1 ; border-radius: 1rem;cursor: pointer;  background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.5rem;" :src="`https://backend.salchimonster.com/read-product-image/300/${props.product.product_name}`" alt="" >

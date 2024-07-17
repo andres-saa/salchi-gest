@@ -1033,13 +1033,9 @@ const verIMagen = (dni) => {
 <template>
 
 
-<ConfirmDialog></ConfirmDialog>
-
-    <!-- <Loading tittle="CARGANDO USUARIOS" v-if="charging"></Loading> -->
-
-
-
     <div class="grid   mx-0 xl:mx-4 p-0 " style="margin-top: 3rem;">
+
+        <ConfirmDialog></ConfirmDialog>
 
         <Dialog class="p-0 " v-model:visible="visibleImage" modal header="Foto de Perfil" :style="{ width: '30rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw', 'padding': 0 }">

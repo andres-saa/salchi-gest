@@ -135,7 +135,6 @@
     <div>
         
     </div>
-    </div>
 
 
     <Dialog style="border: none; box-shadow: none;" v-model:visible="show" :style="{ width: '700px' }" header="Revizar permiso" :modal="true"
@@ -339,6 +338,10 @@
         <Button  style="background-color: rgb(255, 156, 156);color: rgba(0, 0, 0, 0.864); border: none;" class="m-auto my-4 ml-4 text-center"> <span class="text-center col-12 p-0">No, talvez luego</span></Button>
 
     </Dialog>
+
+
+    </div>
+
 
 
 </template>

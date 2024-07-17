@@ -122,14 +122,14 @@
 
 
 
+    <DialogoPedido>
 
+</DialogoPedido>
 
     </div>
 
 
-<DialogoPedido>
 
-</DialogoPedido>
 
 </template>
 

@@ -1,6 +1,10 @@
 <template>
     
-          <Dialog v-model:visible="showUserDialog" modal style="width: 30rem">
+
+
+    <div style="margin-top: 6rem;" class="px-2 mx-0 col-12">
+        
+        <Dialog v-model:visible="showUserDialog" modal style="width: 30rem">
         <h4>{{ selectedUser.name }}</h4>
 
         <div v-if="selectedUser" class="user-info" style="display: flex; flex-direction: column; align-items: center">
@@ -67,9 +71,7 @@
         </template>
     </Dialog>
 
-    <!-- {{ roles['Horaios de trabajo admin'] }}  -->
 
-    <!-- {{ loginData }} -->
 
     <Dialog v-model:visible="showDeleteWorkDayDialog" modal style="width: 350px" header="Confirmar eliminación" :closable="false">
         <div class="confirmation-content">
@@ -103,9 +105,6 @@
             <Button label="Agregar" @click="addNewWorkDay(newWorkDayDate)" class="p-button-success" />
         </template>
     </Dialog>
-
-    <div style="margin-top: 6rem;" class="px-2 mx-0 col-12">
-        
         <div class="col-12 p-0 m-0 mb-8">
 
 
@@ -240,11 +239,7 @@
                 </div>
             </div>
         </div>
-
-    </div>
-
-    
-    <Dialog v-model:visible="showCalendar" style="width: 20rem" :modal="true">
+        <Dialog v-model:visible="showCalendar" style="width: 20rem" :modal="true">
             
 
             <h5 style="text-transform: uppercase">Cuantas horas trabajo {{ currentUser.name }}?</h5>
@@ -268,6 +263,11 @@
             </template>
         </Dialog>
 
+
+    </div>
+
+    
+   
 
 </template>
   

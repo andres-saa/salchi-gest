@@ -1,14 +1,20 @@
 <template>
 
 
-<!-- <Loading v-if="modificandoCargos" tittle="MODIFICANDO GRUPO DE CARGOS"></Loading> -->
 
 
 
 
 
 
-<Dialog class="mx-2" v-model:visible="visibleModify" modal header="Seleccion de Cargos para el grupo" :style="{ width: '50rem',height:'80vh' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+
+
+
+
+
+    <div class="mx-auto px-2" style="max-width: 700px;">
+
+        <Dialog class="mx-2" v-model:visible="visibleModify" modal header="Seleccion de Cargos para el grupo" :style="{ width: '50rem',height:'80vh' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     
     <div style="display: flex;" class="grid pt-6">
         <div v-for=" cargo in roles" style="display: flex;" class="col-12 p-0">
@@ -49,15 +55,6 @@
     
     <Button @click="CrearCargo" class="mt-4">Crear nuevo cargo</Button>
 </Dialog>
-
-
-
-
-
-
-
-
-    <div class="mx-auto px-2" style="max-width: 700px;">
 
 
         

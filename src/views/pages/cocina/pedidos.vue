@@ -1,13 +1,17 @@
 <template>
-  <div class="grid xl:mx-0 mx-0  py-0 mt-6 px-0">
+  <div class="grid xl:mx-0 mx-0  py-0 mt-6 px-0" style="background-color: white;">
 
-    <div class="col-12 py-0 px-2 shadow-2 my-0" >
+    <div  :class="sites.length>0? 'apear' : 'hide'" class="col-12 py-0 px-2 shadow-1 my-0" >
 
-      <nav class="">
+      <nav >
 
         <ul class="pb-0 p-0" style="display: flex;flex-wrap: wrap; gap:1rem;list-style: none;overflow-x: auto;">
           <li v-for="site in sites.filter(site => site.show_on_web)">
-            <Button class="p-2 mb-2" @click="site_cocina.site = site" :style="site_cocina.site.site_id == site.site_id? 'box-shadow:0 5px 0px var(--primary-color)' : ''"  style="min-width: max-content;border-radius: 0;color: black" text :label="site.site_name"></Button>
+
+         
+              <Button class="p-2 mb-2" @click="site_cocina.site = site" :style="site_cocina.site.site_id == site.site_id? 'box-shadow:0 5px 0px var(--primary-color)' : ''"  style="min-width: max-content;border-radius: 0;color: black" text :label="site.site_name"></Button>
+      
+            
           </li>
 
 
@@ -28,7 +32,8 @@
 
   </DialogoPedido>
 
-    <div class="md:px-2 xl:pt-5 p-0 col-12 xl:col-4 top">
+  
+    <div :vif="store.TodayOrders.filter(orden => orden.current_status == 'generada').length>0? 'apear' : 'hide'" class="md:px-2 xl:pt-5 p-0 col-12 xl:col-4 top">
 
       <div class=" shadow-4 contenedor pb-2" style="overflow: hidden; background-color:#ffad53
 ">
@@ -41,7 +46,7 @@
 
         
 
-          <div class="lg:pb-8" style="height: 100%; overflow-y: auto;">
+          <div class="lg:pb-8"  style="height: 100%; overflow-y: auto;">
 
             <div class="px-3 py-2"
               v-for="orden in store.TodayOrders.filter(orden => orden.current_status == 'generada')">
@@ -64,7 +69,7 @@
 
 
 
-   <div class="md:px-2 xl:pt-5  p-0 col-12 xl:col-4 top">
+   <div   class="md:px-2 xl:pt-5  p-0 col-12 xl:col-4 top">
       <div class=" shadow-4 contenedor pb-2" style="overflow: hidden; background-color:#8e3693
 ">
         <div style="height: 100%;width: 100%;">
@@ -107,11 +112,12 @@
           </p>
           <div style="height: 100%; overflow-y: auto;">
 
-            <div class="px-3 py-2"
-            v-for="orden in store.TodayOrders.filter(orden => orden.current_status == 'enviada')">
-              <OrderItem :order="orden"/>
+            <transition-group name="fade" tag="div" >
+            <div  class="px-3 py-2" v-for="orden in store.TodayOrders.filter(orden => orden.current_status == 'enviada')">
+              <OrderItem :id="orden.order_id" :order="orden"/>
             </div>
 
+          </transition-group>
 
           </div>
 
@@ -125,7 +131,7 @@
     </div>
 
 
-    <div class="md:px-2 xl:pt-5 p-0 col-12 xl:col-4 top">
+    <div v-if="store.TodayOrders.filter(orden => orden.current_status == 'cancelada').length>0"  class="md:px-2 xl:pt-5 p-0 col-12 xl:col-4 top">
       <div class=" shadow-4 contenedor pb-2" style="overflow: hidden; background-color:red
 ">
         <div class="lg:pb-8" style="height: 100%;width: 100%;">
@@ -154,7 +160,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
@@ -170,7 +175,13 @@ import { useOrderStore } from '@/store/order';
 import {siteService} from '@/service/siteService.js'
 import {orderService} from '@/service/cocina/orderService.js'
 import { useSitesCocinaStore } from "@/store/siteCocina";
-const sites = ref([])
+
+import { useReportesStore } from '../callCenter/store/ventas';
+const reportstore = useOrderStore()
+const sites = ref([ 
+  
+  ])
+
 
 const store = useOrderStore()
 
@@ -251,16 +262,7 @@ const searchPhone = async(phone) => {
   color: black;
 }
 
-.before {
-  background-color: rgba(0, 0, 0, 0.8);
-  width: 100vw;
-  height: 100vh;
-  z-index: 999;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: scale(2);
-}
+
 
 
 .pedido {
@@ -293,8 +295,10 @@ const searchPhone = async(phone) => {
 @media  ( max-width: 1200px)  {
 
   .contenedor{
-    height: 1000%;
+    height: min-content;
+
     min-height: 20vh;
+    max-height: min-content;
     margin: 0;
     border-radius: 0;
 
@@ -322,6 +326,15 @@ const searchPhone = async(phone) => {
   /* display: none; */
 }
 
+
+.anim-enter-active, .anim-leave-active {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.anim-enter, .anim-leave-to { /* .anim-leave-active en versiones anteriores de Vue */
+    opacity: 0;
+    transform: translateY(2rem);
+}
+
 .clase {}
 
 /* Estilo del pulgar de la barra de desplazamiento */
@@ -334,5 +347,24 @@ const searchPhone = async(phone) => {
   height: 10rem;
   width: 10rem;
   /* display: none;  */
+}
+
+.apear{
+  transition: .5s all ease;
+  opacity:1;
+  max-height: 30rem;
+}
+
+.hide{
+  opacity: 0;
+  max-height: 0rem;
+  overflow: hidden;
+
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
 
-<div class="  m-2 m-auto ">
+<div class="  mx-2 my-8 m-auto ">
   
 <p class="text-2xl lg:text-3xl text-center my-4 mt-8 " style="font-weight: bold;">Generar Certificado Laboral</p>
 <span class=" mb-6 col-12" style="display: flex; height: auto;">
@@ -8,7 +8,7 @@
   
   
   <InputNumber v-model="usrDni" :disabled="!roles.documentos.includes(getUserRole()?.toLowerCase())"  class="mr-5" style="width: 100%;" placeholder="Cedula del empleado"></InputNumber>
-    <Button style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;" @click="getUser(usrDni)"><span style="color: white;">Buscar</span></Button>
+    <Button severity="help" style="display: flex;color: white; align-items: center;justify-content: center;font-weight: bold;" @click="getUser(usrDni)"><span style="color: white; ">Buscar</span></Button>
     
 
 
@@ -163,9 +163,6 @@
 
 
 </div>
-
-
-
 
 </template>
 

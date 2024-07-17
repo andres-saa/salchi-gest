@@ -2,7 +2,9 @@
 
 
 
-
+<div>
+    
+</div>
 
 
 
@@ -39,7 +41,7 @@
         </div>
 
         <div class="col-11 md:col-5 p-0 md:pl-2" style="display: flex;justify-content: end;">
-            <InputNumber style="width: 100%;"  prefix="$" v-model="barrio.delivery_price" placeholder="Precio del Domicilio" />
+            <InputNumber unstyled style="width: 100%;"  prefix="$" v-model="barrio.delivery_price" placeholder="Precio del Domicilio" />
         </div>
         
        
@@ -75,7 +77,7 @@
                             @click="showCreateDialog = true"></Button>
 </div>
 
-        <DataTable stripedRows ref="dt" :value="neighborhoods" v-model:selection="selectedneighborhoods" dataKey="id" :paginator="true"
+        <DataTable :class="neighborhoods.length > 0? 'apear' : 'hide'" stripedRows ref="dt" :value="neighborhoods" v-model:selection="selectedneighborhoods" dataKey="id" :paginator="true"
             :rows="10" :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25, 100]"
@@ -822,7 +824,19 @@ Button {
 
 
 
+.apear{
+  transition: .3s all ease;
+  opacity:1;
+  max-height: 100vh;
+}
 
+.hide{
+  opacity: 0;
+  min-height: 100vh;
+  max-height: 0rem;
+  overflow: hidden;
+
+}
 
 
 

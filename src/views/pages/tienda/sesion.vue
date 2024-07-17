@@ -4,13 +4,13 @@
 
 
      <p class="text-center text-3xl col-12" style="font-weight: bold;display: flex;gap: 1rem;align-items: center;">
-      <div style="width: 100%;height: 5px; background-color: #ff6200">
+      <div style="width: 100%;height: 3px; background-color: #ff6200">
     
       </div>
 
      <span class="text-3xl" style="width: min-content;"> <p style="min-width: max-content;">{{ route.params.menu_name }} DE</p>  {{ siteStore.site.site_name }}</span> 
     
-        <div style="width: 100%;height: 5px; background-color:#ff6200">
+        <div style="width: 100%;height: 3px; background-color:#ff6200">
     
     </div>
         

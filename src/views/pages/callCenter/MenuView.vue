@@ -22,13 +22,15 @@
   <p class="text-center text-4xl md:text-6xl">  <b>Por favor seleccione una categoria</b> </p>
 
   </div>
-        
+       
+  
+  <VistaProducto></VistaProducto>
 </div>
 
 
     
 
-<VistaProducto></VistaProducto>
+
 
 
 

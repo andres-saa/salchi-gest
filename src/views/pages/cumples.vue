@@ -111,7 +111,7 @@ const obtenerImagenPredeterminada = (gender) => {
 </script>
 
 <template>
-<div class="cont p-2 col-12">
+<div class="cont px-2 col-12 mt-8">
   <h5 class="m-auto col-12  text-center text-5xl" style="font-weight: bold; color: ;"> Cumples <i class="pi pi-spin pi-star-fill
 " style="font-size: 3rem"></i> </h5>
   <h5 class="m-auto col-12  text-center text-2xl"> Hoy: {{ fechaFormateada }} 

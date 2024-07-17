@@ -1,5 +1,10 @@
 <template>
 
+
+<div>
+
+
+
     <Dialog class="p-2" style="max-width: 100vw" modal v-model:visible="fullParticipantView">
 
 
@@ -145,8 +150,8 @@
 
 
 
-    <div style="position: fixed;left: -2rem; z-index: -1;filter: blur(10px);" class="col-12">
-        <img style="width: 120%;left: 0rem;height: 100vh;object-fit: cover;"
+    <div style="position: fixed;left: -2rem; z-index: -1;filter: blur(10px);top:0" class="col-12">
+        <img style="width: 120%;left: 0rem;top: -6rem; height: 100vh;object-fit: cover;"
             src="https://backend.salchimonster.com/read-product-image/600/site-1" alt="">
     </div>
 
@@ -270,7 +275,7 @@
         </div>
     </div>
 
-
+</div>
     
 
 

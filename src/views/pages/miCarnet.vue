@@ -3,11 +3,9 @@
 <template>
 
 
+<div>
 
-
-            
-
-              <div class="col-12 " style="display: flex;justify-content: center ;flex-direction: column; align-items: center;">
+    <div class="col-12 " style="display: flex;justify-content: center ;flex-direction: column; align-items: center;">
                 <p class="px-3 py-0 mt-3 text-center text-4xl col-12 " style="font-weight: bold;">Mi carnet</p>
 <div class=" carnet mb-8 mt-8 p-3" style="background-color: rgba(255, 255, 255, 0); display: flex;width: min-content; justify-content: center; align-items: center;transform: scale(1.4); border-radius:0.7rem">
 
@@ -56,6 +54,10 @@
     <Button @click="downloadCarnetAsJPG()"> <i :class="PrimeIcons.DOWNLOAD" class="mr-2"></i> Descargar</Button>
     
 </div>
+
+</div>
+
+            
 
 
 </template>

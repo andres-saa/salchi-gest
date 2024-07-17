@@ -1074,6 +1074,9 @@
   .p-inputnumber.p-invalid.p-component > .p-inputtext {
     border-color: #e24c4c;
   }
+  .p-inputnumber-input{
+    background-color: red;
+  }
 
   .p-inputswitch {
     width: 3rem;
@@ -2873,7 +2876,7 @@
     border-radius: 0;
   }
   .p-dataview .p-dataview-header {
-    background: #f9fafb;
+    /* background: #f9fafb; */
     color: #374151;
     border: 1px solid #e5e7eb;
     border-width: 1px 0 1px 0;
@@ -2881,7 +2884,7 @@
     font-weight: 700;
   }
   .p-dataview .p-dataview-content {
-    background: #ffffff;
+    /* background: #ffffff; */
     color: #4b5563;
     border: 0 none;
     padding: 0;
@@ -2891,7 +2894,7 @@
     border-width: 0 0 1px 0;
   }
   .p-dataview .p-dataview-footer {
-    background: #f9fafb;
+    /* background: #f9fafb; */
     color: #374151;
     border: 1px solid #e5e7eb;
     border-width: 0 0 1px 0;
@@ -3116,7 +3119,7 @@
   }
 
   .p-paginator {
-    background: #ffffff;
+    /* background: #ffffff; */
     color: #6b7280;
     border: solid #f3f4f6;
     border-width: 0;

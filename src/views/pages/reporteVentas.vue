@@ -1,10 +1,5 @@
 <template>
 
-    <!-- <Transition name="fade">
-        <Loading :tittle=" `CARGANDO REPORTE DE ORDENES ${store.order_status}s` " v-if="store.loading"></Loading>
-
-    </Transition> -->
-
 
     <div class="col-12 px-3 md:px-4 mx-auto" style="position: relative; max-width: 1366px; margin-top: 6rem;">
 
@@ -132,7 +127,6 @@
 
                 <transition name="fade">
                     <RouterView>
-
                     </RouterView>
                 </transition>
             </div>
@@ -294,10 +288,7 @@
 
     </div>
 
-    <!-- {{ store }} -->
-    <!-- {{ salesReport }} -->
-
-
+ 
 
 
 </template>
@@ -921,7 +912,6 @@ function saveState() {
 .fade-enter-from {
     opacity: 0;
     transform: translateY(20rem);
-    filter: blur(10px);
     /* filter: blur(0); */
 
 }
@@ -930,7 +920,7 @@ function saveState() {
 .noti-enter-from {
     opacity: 0;
     transform: translateY(20rem);
-    filter: blur(10px);
+
     /* filter: blur(0); */
 
 }

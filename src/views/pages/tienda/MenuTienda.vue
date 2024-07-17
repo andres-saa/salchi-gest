@@ -2,11 +2,11 @@
 
 
 
-<barraCategorias class="" />
 
-<div style="max-width: 1024px;; border-radius: 1rem;"  class="m-auto m-0 p-0 mt-8">
 
-    <div class="mx-3 my-4 mx-auto px-4" style="min-width: max-content;max-width: 1024px; display: flex; align-items: center;">
+<div style="; border-radius: 1rem;"  class="mx-auto mx-0 p-0 mt-6 mb-8">
+    <barraCategorias class="m-0" />
+    <div  class="mx-3 my-4 mx-auto px-4" style="min-width: max-content;max-width: 1024px; display: flex; align-items: center;">
         <span class="mr-4" > <b>SEDE</b>  </span>
 
         <Dropdown v-model="siteStore.site" :options="sites.filter(site => site.show_on_web)" optionLabel="site_name" class="" style="width: 100%;"/>
@@ -18,9 +18,10 @@
     
     
     <router-view class=""></router-view>
+    <dialogEditProduct class="m-3"></dialogEditProduct>
+    <dialogDeleteProduct></dialogDeleteProduct> 
 </div>
-<dialogEditProduct class="m-3"></dialogEditProduct>
-<dialogDeleteProduct></dialogDeleteProduct>
+
 </template>
 
 <script setup>

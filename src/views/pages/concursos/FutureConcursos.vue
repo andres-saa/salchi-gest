@@ -1,263 +1,257 @@
 <template>
 
-    <Dialog class="p-2" style="max-width: 100vw" modal v-model:visible="fullParticipantView">
+    <div>
+        <Dialog class="p-2" style="max-width: 100vw" modal v-model:visible="fullParticipantView">
 
 
-        <div class="py-2" style="display: flex;gap: 1rem;overflow-x: auto; width: 50rem;">
+<div class="py-2" style="display: flex;gap: 1rem;overflow-x: auto; width: 50rem;">
 
-            <div v-for="(i, index) in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4, 5, 6, 7]"
-                style="display: flex;flex-direction: column;gap:1rem; justify-content: end; align-items: center;">
-
-
-                <img style="width: 2rem; aspect-ratio: 1 / 1;border-radius: 50%; border: 3px solid yellow;"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC-buhde5C1FxyNtkRvkUTCe6gq73eLIv_JOycF3WMvg&s"
-                    alt="">
-
-                <div class="py-2" :style="`height:${(12 - index + 1) / 2}rem`"
-                    style="width: 2rem;background-color: var(--primary-color); border-radius: 3rem 3rem 0 0;">
-
-                </div>
+    <div v-for="(i, index) in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4, 5, 6, 7]"
+        style="display: flex;flex-direction: column;gap:1rem; justify-content: end; align-items: center;">
 
 
+        <img style="width: 2rem; aspect-ratio: 1 / 1;border-radius: 50%; border: 3px solid yellow;"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC-buhde5C1FxyNtkRvkUTCe6gq73eLIv_JOycF3WMvg&s"
+            alt="">
 
-            </div>
+        <div class="py-2" :style="`height:${(12 - index + 1) / 2}rem`"
+            style="width: 2rem;background-color: var(--primary-color); border-radius: 3rem 3rem 0 0;">
 
         </div>
 
 
-    </Dialog>
 
-
-    <Dialog class="p-2" header="Informacion de participante" style="max-width: min-content" modal v-model:visible="showDialogs.showParticipantDetail">
-
-
-    <div class="py-2" style="overflow-x: auto;display: flex; flex-direction: column; width: 20rem">
-        <img style="width: 100%;border-radius: .5rem;aspect-ratio: 1 / 1;object-fit: cover;" :src="!currentContest.is_site_participation? `${URI}/read-product-image/600/employer-${ currentUser.dni}`  : `${URI}/read-product-image/600/site-${ currentUser.site_id}`" alt="">
-        <p style=""><b>Nombre:</b> {{ currentUser.name }}</p>
-        <p><b>Participaciones:</b> {{ `${currentContest.evidence_type_id == 4 ? formatoPesosColombianos(currentUser.total_entries) : currentUser.total_entries}` }} </p>
-        <Button @click="open_evidence(currentContest.id, currentUser.employer_id)" severity="help" size="small" label="VER PARTICIPACIONES"></Button>
-
-      
     </div>
+
+</div>
 
 
 </Dialog>
 
 
-    <Dialog :close="imagePreview = null" class="p-2" header="Cargar Evidencia" style="width: 30rem" modal v-model:visible="showAddEvidenceDialog">
-        <div>
-
-            <p style="font-weight: bold;">{{ contestToParticipate.name }}</p>
+<Dialog class="p-2" header="Informacion de participante" style="max-width: min-content" modal v-model:visible="showDialogs.showParticipantDetail">
 
 
-            <span><span style="font-weight: bold;">Fecha:</span> {{ format(new Date(), 'dd-MMMM-yyyy', { locale: es })
-                }} </span>
+<div class="py-2" style="overflow-x: auto;display: flex; flex-direction: column; width: 20rem">
+<img style="width: 100%;border-radius: .5rem;aspect-ratio: 1 / 1;object-fit: cover;" :src="!currentContest.is_site_participation? `${URI}/read-product-image/600/employer-${ currentUser.dni}`  : `${URI}/read-product-image/600/site-${ currentUser.site_id}`" alt="">
+<p style=""><b>Nombre:</b> {{ currentUser.name }}</p>
+<p><b>Participaciones:</b> {{ `${currentContest.evidence_type_id == 4 ? formatoPesosColombianos(currentUser.total_entries) : currentUser.total_entries}` }} </p>
+<Button @click="open_evidence(currentContest.id, currentUser.employer_id)" severity="help" size="small" label="VER PARTICIPACIONES"></Button>
 
 
-
-            <p class="p-0 m-0 mt-3"><b>Instrucciones:</b></p>
-            <p class="px-0 mx-0">{{contestToParticipate.instructions}}</p>
+</div>
 
 
-             <img  class="" v-if="contestToParticipate.evidence_type_id ==1 && imagePreview" style="width: 100%;" :src="imagePreview" alt="">
-            
-
-            <div v-if="contestToParticipate.evidence_type_id == 4">
-                <inputNumber  v-model="entry_to_send" style="width: 100%;"></inputNumber>
-            </div>
+</Dialog>
 
 
-            <!-- <div v-if="contestToParticipate.contest_winner_type_id == 2 "> 
-                <inputNumber min="0" v-model="entry_to_send" style="width: 100%;"></inputNumber>
-            </div> -->
+<Dialog :close="imagePreview = null" class="p-2" header="Cargar Evidencia" style="width: 30rem" modal v-model:visible="showAddEvidenceDialog">
+<div>
 
-            <div v-if="contestToParticipate.contest_winner_type_id == 1 && contestToParticipate.evidence_type_id == 2"> 
-                <inputText  v-model="entry_to_send" style="width: 100%;"></inputText>
-            </div>
+    <p style="font-weight: bold;">{{ contestToParticipate.name }}</p>
 
 
-            <div v-if=" contestToParticipate.evidence_type_id == 3">
-                <inputText v-model="entry_to_send" style="width: 100%;"></inputText>
-            </div>
-
-
-         
-
-            <input @change="previewFile" ref="inputFile" style="display: none;" type="file" accept="image/*">
-            </div>
-        
-        <template #footer >
-            <div class="py-3" style="display: flex;width: 100%; justify-content: space-between;gap: 1rem;">
-                <Button class="m-0" :severity="!imagePreview?  'help' : 'warning'" v-if="contestToParticipate.evidence_type_id == 1" @click="inputFile.click()"
-                    style="width: 100%;" :label="!imagePreview?  'Subir Archivo' : 'Cambiar archivo'"></Button>
-
-                <Button severity="help" class="m-0" style="width: 100%;" label="Guardar"
-                    @click="sendEvidence(entry_to_send, contestToParticipate.id, contestToParticipate.evidence_type_id)">
-                </Button>
-
-            </div>
-
-        </template>
-    </Dialog>
-
-
-    <Dialog class="p-2" header="Listado de evidencias" style="width: 30rem;;background-color:#fff;" modal
-        v-model:visible="showDialogs.showMyEvidenceDialog">
-        <div style="height: 60vh;">
-
-            <b>MIS EVIDENCIAS </b>
-
-
-            <ol class="p-3" style="display: flex; flex-direction: column;gap: .5rem; ">
-                <li style="" class="" v-for="evidence in currentEvidenceList">
-
-
-                    <p class="p-0 m-0"><b>{{formatDateTime( evidence.timestamp) }} </b></p>
-
-                    <a v-if="evidence.evidence_type_id == 3 && (evidence.evidence_entry.startsWith('http://') || evidence.evidence_entry.startsWith('https://'))" 
-                        style="color: var(--primary-color);" 
-                        :href="evidence.evidence_entry"> 
-                        {{ evidence.evidence_entry }} 
-                        </a>
-
-                        <p v-else-if="evidence.evidence_type_id == 3 || evidence.evidence_type_id == 2" style="color: var(--primary-color);">
-                        {{ evidence.evidence_entry }} 
-                        </p>
-
-                        <span style="color: var(--primary-color);" v-if="evidence.evidence_type_id == 4" >
-                            {{ formatoPesosColombianos(evidence.evidence_entry) }}
-                        </span>
-
-                        <!-- {{ evidence }} -->
-                   
-
-
-                    <img v-if="evidence.evidence_type_id == 1" style="width: 100%;border-radius:.5rem;r"
-                        :src="`${URI}${evidence.evidence_entry}`" alt="">
+    <span><span style="font-weight: bold;">Fecha:</span> {{ format(new Date(), 'dd-MMMM-yyyy', { locale: es })
+        }} </span>
 
 
 
-                </li>
-            </ol>
-
-        </div>
-    </Dialog>
+    <p class="p-0 m-0 mt-3"><b>Instrucciones:</b></p>
+    <p class="px-0 mx-0">{{contestToParticipate.instructions}}</p>
 
 
+     <img  class="" v-if="contestToParticipate.evidence_type_id ==1 && imagePreview" style="width: 100%;" :src="imagePreview" alt="">
+    
 
-    <div style="position: fixed;left: -2rem; z-index: -1;filter: blur(10px);" class="col-12">
-        <img style="width: 120%;left: 0rem;height: 100vh;object-fit: cover;"
-            src="https://backend.salchimonster.com/read-product-image/600/site-2" alt="">
+    <div v-if="contestToParticipate.evidence_type_id == 4">
+        <inputNumber  v-model="entry_to_send" style="width: 100%;"></inputNumber>
     </div>
 
-    <div class="container mx-auto p-2" style="max-width:700px;z-index: 99; ">
 
-        <p class="text-white text-4xl text-center" style="font-weight: bold;">PROXIMOS CONCURSOS </p>
+    <!-- <div v-if="contestToParticipate.contest_winner_type_id == 2 "> 
+        <inputNumber min="0" v-model="entry_to_send" style="width: 100%;"></inputNumber>
+    </div> -->
 
-
-        <!-- {{ contests }} -->
-
-        <div class="container_contests" style="display: flex;flex-direction: column;gap: 2rem;">
-
-            <div class="container_contest_item p-2" v-for="contest in contests.filter(c => !c.started)"
-                style="display: flex;flex-direction: column;gap: 1rem;background-color: #00000090; border: 3px solid var(--primary-color);border-radius: 0.5rem;">
+    <div v-if="contestToParticipate.contest_winner_type_id == 1 && contestToParticipate.evidence_type_id == 2"> 
+        <inputText  v-model="entry_to_send" style="width: 100%;"></inputText>
+    </div>
 
 
-
-                <div class="col-12 p-0" style="display: flex;flex-direction: column; ">
-
-                    <div class="gridd" style="display: flex; gap: 1rem;">
-
-
-                        <img class="p-0"
-                            style="width: 30%;aspect-ratio: 3 / 3;border-radius: .3rem; object-fit: cover;"
-                             :src="`${URI}/read-product-image/600/contest-${contest.id}`"
-                            alt="">
-
-                        <div>
-                            <p class=" m-0 text-2xl" style="font-weight: bold;color: #fff;text-transform: capitalize;"> {{ contest.name }}</p>
-
-                            <p class=" m-0" style="color: #fff;"> {{ contest.description }}</p>
-                            <img src="" alt="">
+    <div v-if=" contestToParticipate.evidence_type_id == 3">
+        <inputText v-model="entry_to_send" style="width: 100%;"></inputText>
+    </div>
 
 
-                            <p class="text-white"> <span style="color: var(--primary-color);font-weight: bold;"> 
-                                <b>Participa</b>:</span>  {{ contest.is_site_participation? 'SEDES' : 'COLABORADORES'  }} <br> </p>
-                            <p class="text-white"> <span style="color: var(--primary-color);"> 
-                                
-                                <b>Desde</b>:</span> {{formatDateTime(contest.start_date)  }} <br> <span style="color: var(--primary-color);"> 
-                                    <b>Hasta</b>:</span> {{ formatDateTime(contest.end_date) }}</p>
+ 
+
+    <input @change="previewFile" ref="inputFile" style="display: none;" type="file" accept="image/*">
+    </div>
+
+<template #footer >
+    <div class="py-3" style="display: flex;width: 100%; justify-content: space-between;gap: 1rem;">
+        <Button class="m-0" :severity="!imagePreview?  'help' : 'warning'" v-if="contestToParticipate.evidence_type_id == 1" @click="inputFile.click()"
+            style="width: 100%;" :label="!imagePreview?  'Subir Archivo' : 'Cambiar archivo'"></Button>
+
+        <Button severity="help" class="m-0" style="width: 100%;" label="Guardar"
+            @click="sendEvidence(entry_to_send, contestToParticipate.id, contestToParticipate.evidence_type_id)">
+        </Button>
+
+    </div>
+
+</template>
+</Dialog>
 
 
-                            <p v-if="contest.rbq.filter(p => p.name).length > 0" class="text-white text-xl py-0 my-0"><b>{{ contest.rbq.filter(p => p.name).length }}  {{ contest.is_site_participation? 'sede' : 'persona'}} participando</b></p>
+<Dialog class="p-2" header="Listado de evidencias" style="width: 30rem;;background-color:#fff;" modal
+v-model:visible="showDialogs.showMyEvidenceDialog">
+<div style="height: 60vh;">
 
-                            <p v-else class="text-white text-xl py-0 my-0"><b> Se el primero en inscribirte</b></p>
-                            <p class="text-2xl" style="color: var(--primary-color); font-weight: bold;"> {{
-                                calcaDiferenceBetweenDates(contest.end_date) }}</p>
+    <b>MIS EVIDENCIAS </b>
 
-                            <div style="display: flex; gap: 1rem;">
-                                <Button @click="participate(contest)" v-if="!contest.entry_exists" severity="help"
-                                    style="background-color: var(--primary-color);">Participar</Button>
-                                <Button @click="participate(contest)" v-else severity="help"
-                                    style="background-color: var(--primary-color);">Subir
-                                    evidencia</Button>
-                                <Button @click="open_evidence(contest.id, userStore.rawUserData.id)" v-if="contest.entry_exists" severity="help"
-                                    style="border: 2px solid var(--primary-color);">Mis evidencias</Button>
+
+    <ol class="p-3" style="display: flex; flex-direction: column;gap: .5rem; ">
+        <li style="" class="" v-for="evidence in currentEvidenceList">
+
+
+            <p class="p-0 m-0"><b>{{formatDateTime( evidence.timestamp) }} </b></p>
+
+            <a v-if="evidence.evidence_type_id == 3 && (evidence.evidence_entry.startsWith('http://') || evidence.evidence_entry.startsWith('https://'))" 
+                style="color: var(--primary-color);" 
+                :href="evidence.evidence_entry"> 
+                {{ evidence.evidence_entry }} 
+                </a>
+
+                <p v-else-if="evidence.evidence_type_id == 3 || evidence.evidence_type_id == 2" style="color: var(--primary-color);">
+                {{ evidence.evidence_entry }} 
+                </p>
+
+                <span style="color: var(--primary-color);" v-if="evidence.evidence_type_id == 4" >
+                    {{ formatoPesosColombianos(evidence.evidence_entry) }}
+                </span>
+
+                <!-- {{ evidence }} -->
+           
+
+
+            <img v-if="evidence.evidence_type_id == 1" style="width: 100%;border-radius:.5rem;r"
+                :src="`${URI}${evidence.evidence_entry}`" alt="">
+
+
+
+        </li>
+    </ol>
+
+</div>
+</Dialog>
+
+
+
+<div style="position: fixed;left: -2rem; z-index: -1;filter: blur(10px);top:0" class="col-12">
+<img style="width: 120%;left: 0rem;height: 100vh;object-fit: cover;"
+    src="https://backend.salchimonster.com/read-product-image/600/site-2" alt="">
+</div>
+
+<div class="container mx-auto p-2" style="max-width:700px;z-index: 99; ">
+
+<p class="text-white text-4xl text-center" style="font-weight: bold;">PROXIMOS CONCURSOS </p>
+
+
+<!-- {{ contests }} -->
+
+<div class="container_contests" style="display: flex;flex-direction: column;gap: 2rem;">
+
+    <div class="container_contest_item p-2" v-for="contest in contests.filter(c => !c.started)"
+        style="display: flex;flex-direction: column;gap: 1rem;background-color: #00000090; border: 3px solid var(--primary-color);border-radius: 0.5rem;">
+
+
+
+        <div class="col-12 p-0" style="display: flex;flex-direction: column; ">
+
+            <div class="gridd" style="display: flex; gap: 1rem;">
+
+
+                <img class="p-0"
+                    style="width: 30%;aspect-ratio: 3 / 3;border-radius: .3rem; object-fit: cover;"
+                     :src="`${URI}/read-product-image/600/contest-${contest.id}`"
+                    alt="">
+
+                <div>
+                    <p class=" m-0 text-2xl" style="font-weight: bold;color: #fff;text-transform: capitalize;"> {{ contest.name }}</p>
+
+                    <p class=" m-0" style="color: #fff;"> {{ contest.description }}</p>
+                    <img src="" alt="">
+
+
+                    <p class="text-white"> <span style="color: var(--primary-color);font-weight: bold;"> 
+                        <b>Participa</b>:</span>  {{ contest.is_site_participation? 'SEDES' : 'COLABORADORES'  }} <br> </p>
+                    <p class="text-white"> <span style="color: var(--primary-color);"> 
+                        
+                        <b>Desde</b>:</span> {{formatDateTime(contest.start_date)  }} <br> <span style="color: var(--primary-color);"> 
+                            <b>Hasta</b>:</span> {{ formatDateTime(contest.end_date) }}</p>
+
+
+                    <p v-if="contest.rbq.filter(p => p.name).length > 0" class="text-white text-xl py-0 my-0"><b>{{ contest.rbq.filter(p => p.name).length }}  {{ contest.is_site_participation? 'sede' : 'persona'}} participando</b></p>
+
+                    <p v-else class="text-white text-xl py-0 my-0"><b> Se el primero en inscribirte</b></p>
+                    <p class="text-2xl" style="color: var(--primary-color); font-weight: bold;"> {{
+                        calcaDiferenceBetweenDates(contest.end_date) }}</p>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <Button @click="participate(contest)" v-if="!contest.entry_exists" severity="help"
+                            style="background-color: var(--primary-color);">Participar</Button>
+                        <Button @click="participate(contest)" v-else severity="help"
+                            style="background-color: var(--primary-color);">Subir
+                            evidencia</Button>
+                        <Button @click="open_evidence(contest.id, userStore.rawUserData.id)" v-if="contest.entry_exists" severity="help"
+                            style="border: 2px solid var(--primary-color);">Mis evidencias</Button>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div style="justify-content: center;overflow-x: auto; width: 100%; gap: 0rem; display: flex; flex-direction: column;"
+                class="px-0 overflow pb-1" c>
+
+
+                <div style="display: flex;justify-content: end; align-items: center;">
+
+                   
+                </div>
+
+
+
+
+                <div class="py-2" style="display: flex;gap: 1rem;overflow-x: auto;width: 100%;">
+
+                    <div  v-for="(i, index) in contest.rbq.filter(r => r.total_entries)"
+                        style="display: flex;flex-direction: column;gap:1rem; justify-content: end; align-items: center;width: 100%;position: relative;">
+
+
+                        
+                        <p v-if="contest.contest_winner_type_id == 2" class="text-white pt-4 my-0">{{formatoPesosColombianos( i.total_entries) }}</p>
+
+                        <p v-else class="text-white pt-4 my-0">{{ i.total_entries }}</p>
+
+                        <img @click="showParticipantDetail(i, contest)" class="min-user-img" style="width: 100%;max-width: 5rem; background-color:#fff; aspect-ratio: 1 / 1;border-radius: 50%; object-fit: cover;" :src="!contest.is_site_participation? `${URI}/read-product-image/300/employer-${ i.dni}`  : `${URI}/read-product-image/600/site-${ i.site_id}`" alt="" >
+
+                        <div class="py-2" :style="`height:${(i.total_entries)/contest.max_entries*10}rem; width:${100/contest.rbq.length}%`"
+                            style="min-width: 3rem;max-width: 5rem; background-color: var(--primary-color);overflow: hidden; border-radius: 3rem 3rem 0 0; position: relative;">
+
+                            <img v-if="i.total_entries == contest.max_entries " style="width: 100%; position: absolute;z-index: 10; bottom: 0;;" src="/images/gif/fire.gif" alt="">
+
+                            <div  style=" display: flex; flex-direction: column; gap: .5rem;justify-content: end; height: 100%;">
+
+                  
+                               
                             </div>
 
                         </div>
 
-                    </div>
-
-
-                    <div style="justify-content: center;overflow-x: auto; width: 100%; gap: 0rem; display: flex; flex-direction: column;"
-                        class="px-0 overflow pb-1" c>
-
-
-                        <div style="display: flex;justify-content: end; align-items: center;">
-
-                           
-                        </div>
-
-
-
-
-                        <div class="py-2" style="display: flex;gap: 1rem;overflow-x: auto;width: 100%;">
-
-                            <div  v-for="(i, index) in contest.rbq.filter(r => r.total_entries)"
-                                style="display: flex;flex-direction: column;gap:1rem; justify-content: end; align-items: center;width: 100%;position: relative;">
-
-
-                                
-                                <p v-if="contest.contest_winner_type_id == 2" class="text-white pt-4 my-0">{{formatoPesosColombianos( i.total_entries) }}</p>
-
-                                <p v-else class="text-white pt-4 my-0">{{ i.total_entries }}</p>
-
-                                <img @click="showParticipantDetail(i, contest)" class="min-user-img" style="width: 100%;max-width: 5rem; background-color:#fff; aspect-ratio: 1 / 1;border-radius: 50%; object-fit: cover;" :src="!contest.is_site_participation? `${URI}/read-product-image/300/employer-${ i.dni}`  : `${URI}/read-product-image/600/site-${ i.site_id}`" alt="" >
-
-                                <div class="py-2" :style="`height:${(i.total_entries)/contest.max_entries*10}rem; width:${100/contest.rbq.length}%`"
-                                    style="min-width: 3rem;max-width: 5rem; background-color: var(--primary-color);overflow: hidden; border-radius: 3rem 3rem 0 0; position: relative;">
-
-                                    <img v-if="i.total_entries == contest.max_entries " style="width: 100%; position: absolute;z-index: 10; bottom: 0;;" src="/images/gif/fire.gif" alt="">
-
-                                    <div  style=" display: flex; flex-direction: column; gap: .5rem;justify-content: end; height: 100%;">
-
-                          
-                                       
-                                    </div>
-
-                                </div>
-
-
-
-                            </div>
-
-                        </div>
-
 
 
                     </div>
-
 
                 </div>
 
@@ -266,8 +260,18 @@
             </div>
 
 
-
         </div>
+
+
+
+    </div>
+
+
+
+</div>
+</div>
+
+
     </div>
 
 

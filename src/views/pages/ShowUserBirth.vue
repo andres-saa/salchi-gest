@@ -405,7 +405,7 @@ const initFilters = () => {
 </script>
 
 <template>
-    <div class="grid">
+    <div class="grid" style="">
         <div class="col-12">
             <div class="">
             

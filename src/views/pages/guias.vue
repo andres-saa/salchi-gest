@@ -1,6 +1,8 @@
 <template>
 
 
+<div>
+
 
 
 
@@ -47,7 +49,7 @@
     <!-- {{ capacitacion }} -->
 
     <!-- <p class="col-12 text-center text-xl p-0 mb-5" style="font-weight: bold;">Asi lo hacemos en salchimonster</p> -->
-<div  class="md:shadow-3 md:p-5 " style="min-height: calc(100vh - 9rem);background-color: white ;max-width: 1024px;margin: auto;margin-top: 3rem;    ">
+<div  class="md:shadow-1 md:p-5 " style="min-height: calc(100vh - 9rem);background-color: white ;max-width: 1024px;margin: auto;margin-top: 3rem;    ">
     <DataTable class=" mb-4   "  
     stripedRows
         style=" border: none; ; padding: 0;" ref="dt"
@@ -244,6 +246,7 @@
             </div>
         </form>
     </Dialog>
+</div>
 </template>
     
     

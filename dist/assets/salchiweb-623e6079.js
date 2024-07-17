@@ -1,1 +1,0 @@
-import{_ as e,o as c,c as r}from"./index-50590a77.js";const t={},o={style:{width:"100%",height:"calc(100vh - 3.3rem)","margin-top":"3rem"},src:"https://salchimonster.com/ingreso-call-center/",frameborder:"0"};function s(a,n){return c(),r("iframe",o)}const m=e(t,[["render",s]]);export{m as default};

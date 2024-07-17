@@ -1,6 +1,9 @@
 <template>
 
-<Dialog v-model:visible="showDateRangeDialog" modal closable>
+
+  
+    <div class="p-0 mx-auto my-8" style="margin-top: 3rem;" >
+        <Dialog v-model:visible="showDateRangeDialog" modal closable>
         <div class="">
 
             <div class="col-12 p-0 m-0 my-2">
@@ -34,15 +37,6 @@
             <Button severity="success" label="Aceptar" @click="applyDateRange" />
         </template>
     </Dialog>
-
-    <!-- {{ roles['Horaios de trabajo admin'] }}  -->
-
-    <!-- {{ loginData }} -->
-
-
-  
-    <div class="p-0 mx-auto" style="margin-top: 3rem;" >
-
 
         <div class="col-12 p-0 m-0">
             <div class="grid p-0 mx-auto" style="max-width: 700px">

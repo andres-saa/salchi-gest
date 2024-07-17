@@ -1,6 +1,6 @@
 <template>
 
-        
+<div>
         <!-- <Button @click="productDialog = true" class="p-button-danger" style="z-index: 99; position: absolute;border: none; ; font-weight: bold"> ACTUALIZAR MIS DATOS</Button> -->
         <img class=""  style=" position:absolute;width: 100vw;top: -3rem;left: 0; height: 100vh;object-fit: cover;" src="/images/bg-ipad.jpg" alt="">
 
@@ -407,6 +407,9 @@
             <Button label="Guardar" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
         </template>
     </Dialog>
+</div>
+        
+
 </template>
 
 <script setup>

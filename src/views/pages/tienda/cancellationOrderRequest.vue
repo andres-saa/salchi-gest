@@ -12,8 +12,9 @@
         </nav>
 
 
-        <router-view/>
-
+   
+            <router-view > </router-view>
+  
 
 
     </div>
@@ -24,6 +25,8 @@
 
 import {ref} from 'vue'
 import {PathService} from '@/service/pathService.js'
+import { useReportesStore } from '../callCenter/store/ventas';
+const reportStore = useReportesStore()
 const isActive = PathService.isActiveRoute
 
 const cancellationRequests = ref([])
@@ -79,6 +82,8 @@ ul{
 }
 
 
+
+
 .nav-bar{
     margin: auto;
     width: min-content;
@@ -113,6 +118,80 @@ li{
     box-shadow: 0 0.3rem var(--primary-color);
     color: black;
 }
+
+.btn-ocultar {
+    /* outline: none !important; */
+    box-shadow: none;
+    border: none !important;
+    /* background-color: ; */
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all ease .3s;
+
+}
+
+
+.noti-enter-active,
+.noti-leave-active {
+    transition: all ease 1s;
+
+}
+
+.fade-leave-to {
+    opacity: 0;
+    transform: translateY(20rem);
+
+}
+
+/* .fade-enter-to  {
+  opacity: 0;
+  transform: translateX(20rem);
+ 
+} */
+
+
+.fade-leave-from {
+    opacity: 1;
+    transform: translateY(20rem);
+
+}
+
+/*
+*/
+
+.fade-enter-from {
+    opacity: 0;
+    transform: translateY(20rem);
+    /* filter: blur(0); */
+
+}
+
+
+.noti-enter-from {
+    opacity: 0;
+    transform: translateY(20rem);
+
+    /* filter: blur(0); */
+
+}
+
+.noti-enter-to {
+    opacity: 1;
+    filter: blur(0);
+
+}
+
+
+
+.fade-enter-to {
+    opacity: 1;
+    filter: blur(0);
+
+
+}
+
 
 
 </style>

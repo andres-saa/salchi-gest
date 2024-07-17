@@ -1,12 +1,8 @@
 <template>
 
-    <div style="position: sticky;top: 3rem; z-index: 99; background-color: white;" class=" shadow-3 d-flex p lg:justify-content-center align-items-center mb-5 p-0 md:p-0 m-0">
+    <div :class="categories.length>0? 'apear' : 'hide'" style="position: sticky;top: 3rem;min-height: 3rem;min-width: 100%; z-index: 99; " class=" shadow-3 d-flex p lg:justify-content-center align-items-center mb-5 p-0 md:p-0 m-0">
        
-       
-        <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; left: 0rem;z-index: 99;height: 100%;width: 1.7rem; border-radius: 0;" severity="help"  icon="pi pi-angle-left text-2xl"></Button>
-
-
-        <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; right: 0rem;z-index: 99;height: 100%; width: 1.7rem; border-radius: none;" severity="help"  icon="pi pi-angle-right text-2xl"></Button>
+      
 
         <div class=" barra align-items-center  p-0 md:p-1"
         style="overflow-x: auto;display: flex;  background-color: rgba(255, 255, 255, 0.913)">
@@ -133,7 +129,18 @@ const checkSelected = (section) => {
 
 
 
+.apear{
+  transition: .3s all ease;
+  opacity:1;
+  max-height: 10rem;
+}
 
+.hide{
+  opacity: 0;
+  max-height: 0rem;
+  overflow: hidden;
+
+}
 
 
 @media (min-width: 600px) {

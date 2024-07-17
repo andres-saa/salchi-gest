@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container"  ref="reuqests">
 
 
         <Dialog v-model:visible="cancelDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
@@ -181,6 +181,13 @@ const requestMethods = {
 }
 
 
+watch(cancellationRequests, async() => {
+    const element = reuqests.value
+    console.log(element)
+    element.classList.remove('animator')
+    element.classList.add('animator')
+}, {deep:true})
+
 
 
 const requestMethodsNoLoading = {
@@ -252,7 +259,7 @@ const buildData = (timestamp) => {
 }
 
 
-
+const  reuqests = ref(null)
 const route = useRoute()
 
 const filters = ref()
@@ -378,5 +385,27 @@ li{
     color: black;
 }
 
+
+@keyframes identifier {
+
+0%{
+    opacity: 0;
+
+}
+
+100%{
+    opacity: 1;
+}
+
+}
+
+
+
+
+
+
+.animator{
+animation: identifier 1s ease  ;
+}
 
 </style>

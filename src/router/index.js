@@ -328,35 +328,6 @@ const router = createRouter({
           ]
         },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         {
           path: '/sites',
           name: 'sites',
@@ -369,8 +340,6 @@ const router = createRouter({
           name: 'dotacion',
           component: () => import('@/views/pages/Dotacion.vue')
         },
-
-
 
         {
           path: '/auditorias',
@@ -392,9 +361,6 @@ const router = createRouter({
               name: '/auditorias-checklist',
               component: () => import('@/views/pages/checklist.vue')
             },
-
-
-
 
           ]
         },
@@ -467,12 +433,7 @@ const router = createRouter({
           
           
         },
-        
-        // {
-        //   path: '/guias-user',
-        //   name: 'guias-user',
-        //   component: () => import('@/views/pages/GuiasUsers.vue')
-        // },
+
         {
           path: '/cumples',
           name: 'cumples',
@@ -632,9 +593,6 @@ const router = createRouter({
             
             },
               
-
-
-
               {
                 path: '/monthly-inventory/monthly-inventory-view/:monthly_inventory_id',
                 name: 'monthly-inventory-view',
@@ -642,9 +600,6 @@ const router = createRouter({
 
           ]
         },
-
-
-
 
         {
           path: '/purchase-order',
@@ -664,26 +619,6 @@ const router = createRouter({
               meta:{roles: roles.value['Inventario diario admin'] },
               component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderNew.vue')
             },
-              
-              
-            // {
-            //   path: '/purchase-order/purchase-order-settings',
-            //   name: 'purchase-order-settings',
-            //   meta:{roles: roles.value['Inventario diario admin'] },
-            //   component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettings.vue'),
-            //   children:[
-            //     {
-            //       path: '/purchase-order/purchase-order-settings/:sesion/:id',
-            //       name: 'purchase-order-settings-sesion',
-            //       component: () => import('@/views/pages/inventory/purchaseOrder/purchaseOrderSettingsSesion.vue'),   
-            //     }
-            //   ]       
-            
-            
-            // },
-              
-
-
 
             {
               path: '/purchase-order/purchase-order-view/:purchase_order_id',
@@ -763,6 +698,13 @@ const router = createRouter({
           name: 'gestion',
           component: () => import('@/views/pages/gestion.vue')
         },
+
+        {
+          path: '/innovation',
+          name: 'innovation',
+          component: () => import('@/views/pages/innovation/innovation.vue')
+        },
+
 
 
         {
@@ -858,53 +800,12 @@ const router = createRouter({
               component: () => import('@/views/pages/capacitaciones/asistencia.vue'),
 
             },
-            //   {
-            //     path: '/capacitaciones',
-            //     name: 'capacitaciones',
-            //     component: () => import('@/views/pages/capacitacionNueva.vue'),
 
-            //   },
 
           ]
 
         },
 
-
-
-
-
-
-
-
-
-
-        //   {
-        //     path: '/capacitaciones',
-        //     name: 'capacitaciones',
-        //     component: () => import('@/views/pages/capacitaciones.vue'),
-        //     children:[
-        //         {
-        //             path: '/capacitaciones/guias',
-        //             name: 'guias',
-        //             component: () => import('@/views/pages/guias.vue')
-        //           },
-        //           {
-        //             path: '/capacitaciones/cuestionario',
-        //             name: 'cuestionario',
-        //             component: () => import('@/views/pages/cuestionario.vue')
-        //         },
-        //         {
-        //             path: '/capacitaciones/asistencia',
-        //             name: 'asistencia',
-        //             component: () => import('@/views/pages/asistencia.vue')
-        //         },
-        //         {
-        //             path: '/capacitaciones/links',
-        //             name: 'links',
-        //             component: () => import('@/views/pages/links.vue')
-        //         },
-        //     ]
-        //   },
         {
           path: '/actualizar-datos',
           name: 'actualizar-datos',

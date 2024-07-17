@@ -1,5 +1,8 @@
 <template>
 
+<div class="mt-6 mx-4">
+
+
 
  <Loading v-if="Load?.start" tittle="consultando registros"></Loading>
  <Loading v-if="Load?.firmando" tittle="firmando"></Loading>
@@ -251,6 +254,10 @@
         <Button label="Sí" @click="signDeliveryAsReceived(selectedDeliveryIdToSign)"></Button>
     </div>
 </Dialog>
+
+
+
+</div>
 </template>
 
 <script setup>

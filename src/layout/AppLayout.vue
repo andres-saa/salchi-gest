@@ -6,7 +6,9 @@ import AppSidebar from './AppSidebar.vue';
 import AppConfig from './AppConfig.vue';
 import { useLayout } from '@/layout/composables/layout';
 import Loading from '../components/Loading.vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute()
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
 
 const outsideClickListener = ref(null);
@@ -72,7 +74,13 @@ const isOutsideClicked = (event) => {
             <div class="layout-main p-0" style="position: relative;content:paint;">
   
                     
-                    <router-view class="p-0" style=""></router-view>
+                
+                <router-view v-slot="{ Component }">
+                <transition name="fade" mode="out-in">
+                    <component :is="Component" class="p-0" />
+                </transition>
+                </router-view>
+                  
 
              
             </div>
@@ -83,8 +91,11 @@ const isOutsideClicked = (event) => {
 </template>
 
 <style lang="scss" scoped>
-
-
-
-
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.fade-enter, .fade-leave-to { /* .fade-leave-active en versiones anteriores de Vue */
+    opacity: 0;
+    transform: translateY(2rem);
+}
 </style>

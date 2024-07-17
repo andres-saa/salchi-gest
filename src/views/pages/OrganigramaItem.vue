@@ -15,12 +15,12 @@
         <i class=""></i>
        <div class=" tex-center p-0"  style="height: auto; position: relative;min-width: max-content;background-color: rgba(255, 255, 255, 0);border: 2px; display: flex;justify-content: center;"> 
 
-        <div v-if="item.subordinates?.length > 1" style="width: 100%;top:40px; height: 5px;border-radius: 10rem; background-color: rgb(0, 0, 0);  position: absolute; z-index: 2; ">
+        <div v-if="item.subordinates?.length > 1" style="width: 100%;top:40px; height: 5px;border-radius: 10rem; background-color: rgb(0, 0, 0);  position: absolute; ; ">
 
 </div>
 
-        <div  :class="item.id == getUserId()?'aro-ext-imagen':''" class="p-1" style="border-radius: 50%;display: flex;align-items: center;justify-content: center; position: relative;z-index: 1111; ">
-          <img :class="item.id == getUserId()?'aro-int-imagen':''" style="width: 1.5cm;z-index: 1000;background-color: white; height: 1.5cm; ; border-radius: 50%;object-fit: cover; border: 5px solid rgb(0, 0, 0);" :src="`${URI}/read-product-image/96/employer-${item.dni}`"
+        <div  :class="item.id == getUserId()?'aro-ext-imagen':''" class="p-1" style="border-radius: 50%;display: flex;align-items: center;justify-content: center; position: relative;z-index: 111; ">
+          <img :class="item.id == getUserId()?'aro-int-imagen':''" style="width: 1.5cm;;background-color: white; height: 1.5cm; ; border-radius: 50%;object-fit: cover; border: 5px solid rgb(0, 0, 0);" :src="`${URI}/read-product-image/96/employer-${item.dni}`"
                                     @error="onImageError(item.gender, $event)" class=" img-profile "
                                      />
         </div>

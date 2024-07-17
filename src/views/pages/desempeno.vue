@@ -1,5 +1,6 @@
 <template>
-    <div id="loadingMessage" style="text-align:center; font-size:24px; height: 100%; display: flex; align-items: center;">
+    <div>
+        <div id="loadingMessage" style="text-align:center; font-size:24px; height: 100%; display: flex; align-items: center;">
        <p class="text-center text-4xl">
         Cargando encuesta, por favor espera...
        </p> 
@@ -12,6 +13,8 @@
             marginwidth="0" 
             onload="document.getElementById('loadingMessage').style.display='none';">
     </iframe>
+    </div>
+    
 </template>
 
 <script setup>

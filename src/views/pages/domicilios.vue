@@ -1,7 +1,7 @@
 <template>
 
 
-<div class="col-12 p-2">
+<div class="col-12 p-3">
 
     <p  class=" text-4xl text-center px-4" style="font-weight: bold; margin-top: 6rem;">
     <i class="fa-solid fa-truck-arrow-right"></i>

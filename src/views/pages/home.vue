@@ -1,5 +1,10 @@
 <template>
 
+
+
+<div>
+
+
 <div class="aux-back"  style="background-color: white;  object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
     
 </div> 
@@ -95,17 +100,8 @@ menu.name }}</span>
 </div>
 </div>
 
-    
+</div>
 
-
-<!-- 
-    <Dock class="dock" position="right" :model="items" style="">
-                    <template #item="{ item }">
-                        <a v-tooltip.top="item.label" href="#" class="p-dock-link">
-                            <img :alt="item.label" :src="item.icon" style="width: 100%" />
-                        </a>
-                    </template>
-                </Dock> -->
 
 
 </template>

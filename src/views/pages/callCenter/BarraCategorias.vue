@@ -1,6 +1,6 @@
 <template>
 
-    <div style="position: sticky; top: 3rem; z-index: 99; background-color: white;" class=" shadow-3 d-flex  lg:justify-content-center align-items-center mb-5 p-0 md:p-0">
+    <div :class="categories.length > 1? 'apear' : 'hide'" style="position: sticky; top: 3rem; z-index: 99; background-color: white;height: max-content; min-height: max-content;" class=" shadow-1 d-flex  lg:justify-content-center align-items-center mb-5 p-0 md:p-0">
        
        
         <!-- <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; left: -0.5rem;z-index: 99;height: 100%;width: 1.7rem; border-radius: 0;" severity="help"  icon="pi pi-angle-left text-2xl"></Button>
@@ -47,7 +47,7 @@ import {useSitesStore} from  './store/site'
 
 const store = useSitesStore()
 
-const categories = ref([]);
+const categories = ref([{name:'CARGANDO ...'}]);
 
 
 const navigateToCategory = (categoryName,category_id) => {
@@ -131,5 +131,20 @@ const checkSelected = (section) => {
     /* position: absolute; */
     left: 0;
     padding: 1.5rem;
+}
+
+
+
+.apear{
+  transition: .3s all ease;
+  opacity:1;
+
+}
+
+.hide{
+  opacity: 0;
+
+  overflow: hidden;
+
 }
 </style>

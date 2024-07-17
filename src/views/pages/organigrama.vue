@@ -1,28 +1,30 @@
 <template>
 
+<div>
 
-<Loading tittle="GENERANDO ORGANIGRAMA" v-if="charging"></Loading>
+  <Loading tittle="GENERANDO ORGANIGRAMA" v-if="charging"></Loading>
 
-  <Button  @click="verInfo = !verInfo" style="position: fixed; bottom: 20px;right: 20px;z-index: 9999; size:" size="large"> ver info</Button>
 <!--  -->
 
-  <!-- {{ verInfo }} -->
-    <div   v-for="item in items.filter(item =>  item?.site?.site_name != 'prueba')" ref="scrollContainer mt-8" class="m-auto col mt-8" style="overflow-x: auto; background-color: rgb(255, 255, 255);border-top: 6px solid rgba(0, 0, 0, 0.331);">
+<!-- {{ verInfo }} -->
+  <div   v-for="item in items.filter(item =>  item?.site?.site_name != 'prueba')" ref="scrollContainer mt-8" class="m-auto col mt-8" style="overflow-x: auto; background-color: rgb(255, 255, 255);border-top: 6px solid rgba(0, 0, 0, 0.331);">
 
-      <p class="text-5xl mb-6" style="font-weight: bold; position: absolute;">{{ item?.site?.site_name }}</p>
+    <p class="text-5xl mb-6" style="font-weight: bold; position: absolute;">{{ item?.site?.site_name }}</p>
 
-        <div  class="py-8" style="">
+      <div  class="py-8" style="">
 
-        
-                <OrganigramaItem style="" class="pt-8" :items="item.organigrama" ref="organigramaItem"></OrganigramaItem>
+      
+              <OrganigramaItem style="" class="pt-8" :items="item.organigrama" ref="organigramaItem"></OrganigramaItem>
 
 
-              <!-- {{ item }} -->
-        
-        
-        </div>
- 
-    </div>
+            <!-- {{ item }} -->
+      
+      
+      </div>
+
+  </div>
+</div>
+
 </template>
 
 <script setup> 

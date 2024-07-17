@@ -1,131 +1,6 @@
 <template>
 
 
-    <!-- Botón para abrir el diálogo de actualización -->
-
-
-    <!-- Diálogo de actualización -->
-    <Dialog class="mx-2" header="Actualizar datos de la sede" v-model:visible="isUpdateDialogVisible" :modal="true" :style="{ width: '500px' }">
-
-            <p class="m-0" for="siteName">Nombre de la sede</p>
-            <InputText class="mb-3" style="width: 100%;" id="siteName" v-model="updateData.site_name" />
- 
-
-            <p class="m-0" for="siteAddress">Dirección</p>
-            <InputText class="mb-3" style="width: 100%;" id="siteAddress" v-model="updateData.site_address" />
- 
-
-            <p class="m-0" for="sitePhone">Teléfono</p>
-            <InputText class="mb-3" style="width: 100%;" id="sitePhone" v-model="updateData.site_phone" />
-
-
-            <p class="m-0" for="emailAddress">Correo electrónico</p>
-            <InputText class="mb-3" style="width: 100%;" id="emailAddress" v-model="updateData.email_address" />
-
-
-            <p class="m-0" for="whatsappLink">Enlace de WhatsApp</p>
-            <InputText class="mb-3" style="width: 100%;" id="whatsappLink" v-model="updateData.wsp_link" />
-
-
-            <p class="m-0" for="mapsLink">Enlace de maps</p>
-            <InputText class="mb-3" style="width: 100%;" id="mapsLink" v-model="updateData.maps" />
-
-            <div class="col-12 p-0" style="display: flex; justify-content: end;">
-                <Button class="mt-4" label="Guardar cambios" @click="updateSite" severity="success" />
-            </div>
-    </Dialog>
-
-
-    <Dialog header="Agregar nueva aplicación" v-model:visible="isApplicationDialogVisible" modal
-    :style="{ width: '450px' }">
-        <div class="field col-12 pb-0 px-0">
-            <label for="appName">Nombre de la aplicación</label>
-            <InputText class="col-12" id="appName" v-model="applicationData.name" />
-        </div>
-        <div class="field col-12 pb-0 px-0">
-            <label for="username">Nombre de usuario</label>
-            <InputText class="col-12" id="username" v-model="applicationData.username" />
-        </div>
-        <div class="field col-12 pb-0 px-0">
-            <label for="password">Contraseña</label>
-            <InputText class="col-12" id="password" type="password" v-model="applicationData.password" />
-        </div>
-        <Button label="Agregar" severity="success" @click="addApplication" />
-    </Dialog>
-
-    <Dialog header="Agregar nueva página web" v-model:visible="isWebPageDialogVisible" modal :style="{ width: '450px' }">
-        <div class="field col-12 pb-0 px-0">
-            <label for="pageName">Nombre de la página</label>
-            <InputText class="col-12" id="pageName" v-model="webPageData.page" />
-        </div>
-        <div class="field col-12 pb-0 px-0">
-            <label for="username">Nombre de usuario</label>
-            <InputText class="col-12" id="username" v-model="webPageData.username" />
-        </div>
-        <div class="field col-12 pb-0 px-0">
-            <label for="password">Contraseña</label>
-            <InputText class="col-12" id="password" type="password" v-model="webPageData.password" />
-        </div>
-        <Button label="Agregar" severity="success" @click="addWebPage" />
-    </Dialog>
-
-
-
-
-    <Dialog header="Agregar nuevo datáfono" v-model:visible="isDataphoneDialogVisible" modal :style="{ width: '450px' }">
-        <div class="field col-12 pb-0 px-0">
-            <label for="uniqueCode">Código único</label>
-            <InputText class="col-12" id="uniqueCode" v-model="dataphoneData.unique_code" />
-        </div>
-        <div class="field col-12 pb-0 px-0">
-            <label for="externalCode">Código externo</label>
-            <InputText class="col-12" id="externalCode" v-model="dataphoneData.external_code" />
-        </div>
-        <Button label="Agregar" severity="success" @click="addDataphone" />
-    </Dialog>
-
-    <Dialog header="Agregar nueva red WiFi" v-model:visible="isWifiDialogVisible" modal :style="{ width: '450px' }">
-        <div class="field col-12 pb-0 px-0">
-            <label for="wifiUsername">Nombre de usuario</label>
-            <InputText class="col-12" id="wifiUsername" v-model="wifiData.username" />
-        </div>
-        <div class="field col-12 pb-0 px-0">
-            <label for="wifiPassword">Contraseña</label>
-            <InputText class="col-12" id="wifiPassword" v-model="wifiData.password" type="password" />
-        </div>
-        <Button label="Agregar" severity="success" @click="addWifiNetwork" />
-    </Dialog>
-
-
-
-    <Dialog header="Agregar nueva cámara" v-model:visible="isCameraDialogVisible" modal :style="{ width: '450px' }"
-        :closable="true" :showHeader="true">
-        <div class="field col-12 pb-0 px-0">
-            <label for="username">Nombre de usuario</label>
-            <InputText class="col-12" id="username" v-model="cameraData.username" />
-        </div>
-        <div class="field col-12 pb-0 px-0">
-            <label for="password">Contraseña</label>
-            <InputText class="col-12" id="password" v-model="cameraData.password" />
-        </div>
-        <Button label="Agregar" severity="success" @click="addCamera" />
-    </Dialog>
-
-
-    <Dialog header="Agregar nueva caja fuerte" v-model:visible="isSafeBoxDialogVisible" modal
-    :style="{ width: '450px' }">
-        <div class="field col-12 pb-0 px-0">
-            <label for="boxName">Nombre de la caja</label>
-            <InputText class="col-12" id="boxName" v-model="safeBoxData.boxName" />
-        </div>
-        <div class="field col-12 pb-0 px-0">
-            <label for="password">Contraseña</label>
-            <InputText class="col-12" id="password" v-model="safeBoxData.password" type="password" />
-        </div>
-        <Button label="Agregar" severity="success" @click="addSafeBox" />
-    </Dialog>
-
-
 
 
 
@@ -139,6 +14,132 @@
 
 
     <div class="col-12 mx-auto md:shadow-3 py-6 md:p-3 p-0 px-2 mb-8" style="max-width: 700px;margin-top: 3rem; background-color: white; border-radius: 0.5rem;">
+
+            <!-- Botón para abrir el diálogo de actualización -->
+
+
+    <!-- Diálogo de actualización -->
+    <Dialog class="mx-2" header="Actualizar datos de la sede" v-model:visible="isUpdateDialogVisible" :modal="true" :style="{ width: '500px' }">
+
+<p class="m-0" for="siteName">Nombre de la sede</p>
+<InputText class="mb-3" style="width: 100%;" id="siteName" v-model="updateData.site_name" />
+
+
+<p class="m-0" for="siteAddress">Dirección</p>
+<InputText class="mb-3" style="width: 100%;" id="siteAddress" v-model="updateData.site_address" />
+
+
+<p class="m-0" for="sitePhone">Teléfono</p>
+<InputText class="mb-3" style="width: 100%;" id="sitePhone" v-model="updateData.site_phone" />
+
+
+<p class="m-0" for="emailAddress">Correo electrónico</p>
+<InputText class="mb-3" style="width: 100%;" id="emailAddress" v-model="updateData.email_address" />
+
+
+<p class="m-0" for="whatsappLink">Enlace de WhatsApp</p>
+<InputText class="mb-3" style="width: 100%;" id="whatsappLink" v-model="updateData.wsp_link" />
+
+
+<p class="m-0" for="mapsLink">Enlace de maps</p>
+<InputText class="mb-3" style="width: 100%;" id="mapsLink" v-model="updateData.maps" />
+
+<div class="col-12 p-0" style="display: flex; justify-content: end;">
+    <Button class="mt-4" label="Guardar cambios" @click="updateSite" severity="success" />
+</div>
+</Dialog>
+
+
+<Dialog header="Agregar nueva aplicación" v-model:visible="isApplicationDialogVisible" modal
+:style="{ width: '450px' }">
+<div class="field col-12 pb-0 px-0">
+<label for="appName">Nombre de la aplicación</label>
+<InputText class="col-12" id="appName" v-model="applicationData.name" />
+</div>
+<div class="field col-12 pb-0 px-0">
+<label for="username">Nombre de usuario</label>
+<InputText class="col-12" id="username" v-model="applicationData.username" />
+</div>
+<div class="field col-12 pb-0 px-0">
+<label for="password">Contraseña</label>
+<InputText class="col-12" id="password" type="password" v-model="applicationData.password" />
+</div>
+<Button label="Agregar" severity="success" @click="addApplication" />
+</Dialog>
+
+<Dialog header="Agregar nueva página web" v-model:visible="isWebPageDialogVisible" modal :style="{ width: '450px' }">
+<div class="field col-12 pb-0 px-0">
+<label for="pageName">Nombre de la página</label>
+<InputText class="col-12" id="pageName" v-model="webPageData.page" />
+</div>
+<div class="field col-12 pb-0 px-0">
+<label for="username">Nombre de usuario</label>
+<InputText class="col-12" id="username" v-model="webPageData.username" />
+</div>
+<div class="field col-12 pb-0 px-0">
+<label for="password">Contraseña</label>
+<InputText class="col-12" id="password" type="password" v-model="webPageData.password" />
+</div>
+<Button label="Agregar" severity="success" @click="addWebPage" />
+</Dialog>
+
+
+
+
+<Dialog header="Agregar nuevo datáfono" v-model:visible="isDataphoneDialogVisible" modal :style="{ width: '450px' }">
+<div class="field col-12 pb-0 px-0">
+<label for="uniqueCode">Código único</label>
+<InputText class="col-12" id="uniqueCode" v-model="dataphoneData.unique_code" />
+</div>
+<div class="field col-12 pb-0 px-0">
+<label for="externalCode">Código externo</label>
+<InputText class="col-12" id="externalCode" v-model="dataphoneData.external_code" />
+</div>
+<Button label="Agregar" severity="success" @click="addDataphone" />
+</Dialog>
+
+<Dialog header="Agregar nueva red WiFi" v-model:visible="isWifiDialogVisible" modal :style="{ width: '450px' }">
+<div class="field col-12 pb-0 px-0">
+<label for="wifiUsername">Nombre de usuario</label>
+<InputText class="col-12" id="wifiUsername" v-model="wifiData.username" />
+</div>
+<div class="field col-12 pb-0 px-0">
+<label for="wifiPassword">Contraseña</label>
+<InputText class="col-12" id="wifiPassword" v-model="wifiData.password" type="password" />
+</div>
+<Button label="Agregar" severity="success" @click="addWifiNetwork" />
+</Dialog>
+
+
+
+<Dialog header="Agregar nueva cámara" v-model:visible="isCameraDialogVisible" modal :style="{ width: '450px' }"
+:closable="true" :showHeader="true">
+<div class="field col-12 pb-0 px-0">
+<label for="username">Nombre de usuario</label>
+<InputText class="col-12" id="username" v-model="cameraData.username" />
+</div>
+<div class="field col-12 pb-0 px-0">
+<label for="password">Contraseña</label>
+<InputText class="col-12" id="password" v-model="cameraData.password" />
+</div>
+<Button label="Agregar" severity="success" @click="addCamera" />
+</Dialog>
+
+
+<Dialog header="Agregar nueva caja fuerte" v-model:visible="isSafeBoxDialogVisible" modal
+:style="{ width: '450px' }">
+<div class="field col-12 pb-0 px-0">
+<label for="boxName">Nombre de la caja</label>
+<InputText class="col-12" id="boxName" v-model="safeBoxData.boxName" />
+</div>
+<div class="field col-12 pb-0 px-0">
+<label for="password">Contraseña</label>
+<InputText class="col-12" id="password" v-model="safeBoxData.password" type="password" />
+</div>
+<Button label="Agregar" severity="success" @click="addSafeBox" />
+</Dialog>
+
+
 
 
         <!-- {{ directories }} -->
