@@ -242,6 +242,10 @@ async function fetchAndUpdateRoles() {
 
 
                 {
+                    label: 'Innovacion ', icon: 'fa-solid fa-folder', to: '/innovation',
+
+                },
+                {
                     label: 'Auditorias ', icon: 'fa-solid fa-folder', to: '/auditorias/lista',
 
                 },
