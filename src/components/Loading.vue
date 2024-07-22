@@ -14,6 +14,8 @@
     <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
     animationDuration=".1s" aria-label="Custom ProgressSpinner" />
 
+    <p class="text-3xl  text-center"   style="width: min-content; font-weight: bold;text-transform: uppercase; color: var(--orange-500);border-radius: 10rem; ;background-color: rgba(255, 255, 255, 0);">{{store.loading.progress}}%</p>
+
 </div>
 
 

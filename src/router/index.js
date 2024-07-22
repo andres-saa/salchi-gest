@@ -172,6 +172,38 @@ const router = createRouter({
           component: () => import('@/views/pages/gestionCargos.vue')
         },
 
+
+        {
+          path: '/video-training-sequences/',
+          name: 'video-training-sequences',
+          component: () => import('@/views/pages/training_video/training_video_secuence.vue'),
+         
+        },
+        {
+          path: '/video-training-video/:sequence_id/:sequence_name',
+          name: 'video-training-videos',
+          component: () => import('@/views/pages/training_video/training_videos.vue')
+        },
+
+        {
+          path: '/video-training-video-admin/:sequence_id/:sequence_name',
+          name: 'video-training-video-admin',
+          component: () => import('@/views/pages/training_video/admin/training_videos.vue')
+        },
+
+        {
+          path: '/video-training-video-sesion',
+          name: 'video-training-videos-sesion',
+          component: () => import('@/views/pages/training_video/admin/training_video_sesion.vue')
+        },
+
+        {
+          path: '/video-training-sequence-admin/:sesion_name/:sesion_id',
+          name: 'video-training-sequence-admin',
+          component: () => import('@/views/pages/training_video/admin/training_video_sequence.vue')
+        },
+        
+
         {
           path: '/concursos/',
           name: 'concursos',

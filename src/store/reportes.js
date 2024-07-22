@@ -63,7 +63,8 @@ export const useReportesStore = defineStore('reportes', {
 
             Loading:{
                 visible:false,
-                tittle:'Cargando'
+                tittle:'Cargando',
+                progress:0
             },
             sitesStatus:[]
             
@@ -654,13 +655,15 @@ export const useReportesStore = defineStore('reportes', {
                 setTimeout(() => {
                     this.loading = {
                         visible:visibleValue,
-                        tittle: visibleValue == false? 'cargando' : tittleValue
+                        tittle: visibleValue == false? 'cargando' : tittleValue,
+                        progress: this.loading.progress
                         }
                 }, 0);
             }else
             this.loading = {
             visible:visibleValue,
-            tittle: visibleValue == false? 'cargando' : tittleValue
+            tittle: visibleValue == false? 'cargando' : tittleValue,
+            progress:  this.loading.progress
             }
           },
 

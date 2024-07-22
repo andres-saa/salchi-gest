@@ -199,10 +199,10 @@ async function fetchAndUpdateRoles() {
 
                 },
 
-                // {
-                //     label: 'Recetas', icon: 'fa-solid fa-envelope', to: '/recipes',
+                {
+                    label: 'Recetas', icon: 'fa-solid fa-envelope', to: '/recipes',
 
-                // }
+                }
 
             ]
         },
@@ -424,14 +424,25 @@ async function fetchAndUpdateRoles() {
 
                 //     },
 
+                // {
+                //     label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
+
+                // },
+                // {
+                //     label: 'Mi formacion', icon: 'fa-solid fa-calendar', to: '/video-training-sequences/',
+
+                // },
+
                 {
-                    label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
+                    label: 'Administrar Escuelas', icon: 'fa-solid fa-calendar', to: '/video-training-video-sesion',
 
                 },
-                {
-                    label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones',
 
-                },
+
+                // {
+                //     label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones',
+
+                // },
                 {
                     label: 'Principal', icon: 'fa-solid fa-envelope',
                     items: [
@@ -443,6 +454,8 @@ async function fetchAndUpdateRoles() {
                             label: 'Organizacion', icon: 'fa-solid fa-envelope', to: '/samovar',
 
                         },
+
+                        
                         // {
                         //     label: 'inventario', icon: 'fa-solid fa-envelope', to: '/inventory',
 
