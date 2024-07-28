@@ -1,9 +1,9 @@
 <template>
-    <div @click="open" class="col-12 apear"  :style="store.currentSearchingOrder.order_id == props.order.order_id? 'border:3px solid var(--primary-color)' : ''" style="background-color: rgba(255, 255, 255, 0.506);padding: .6rem; position: relative; border-radius: 0.5rem;cursor: pointer;">
+    <div @click="open" class="col-12 "  :style="store.currentSearchingOrder.order_id == props.order.order_id? 'border:3px solid var(--primary-color)' : ''" style="background-color: rgba(255, 255, 255, 0.506);padding: .6rem; position: relative; border-radius: 0.5rem;cursor: pointer;">
 
  
        
-        <Tag style="border-radius: .3rem" class="text mb-2" :severity="props.order.user_phone == '1111111111'? 'danger' : 'help'"> {{props.order.user_phone == '1111111111'? 'ES UNA PRUEBA, RELAJATE' : `${props.order.user_name?.toUpperCase()}` }}</Tag>
+        <Tag style="border-radius: .3rem" class="text mb-2" :severity="props.order.user_phone == '1111111111'? 'danger' : 'help'"> {{props.order.user_phone == '1111111111'? 'ES UNA PRUEBA, RELAJATE' : `CLIENTE --> ${props.order.user_name?.toUpperCase()}` }}</Tag>
 
 
         <div style="display: flex; align-items: center;justify-content: space-between;">
@@ -14,7 +14,7 @@
 
             <div v-for="product in props.order.products.slice(0,3)" style="width: 3rem;height:100%;">
                 <div style="position: relative;">
-                    <img  style="width: 100%;height: 3rem; aspect-ratio: 1 / 1; border-radius: 10%;" :src="`https://backend.salchimonster.com/read-product-image/96/${product.name}`" alt="">
+                    <img style="width: 100%; border-radius: 10%;background-color: white;" :src="`https://backend.salchimonster.com/read-product-image/96/${product.name}`" alt="">
                     
                     <Button  severity="danger" class="p-0" rounded :label="product.quantity" style="width: 1.5rem;position: absolute;top: -.5rem;right: -.5rem;z-index: 99; height: 1.5rem;border-radius: 1rem;">
 
@@ -74,7 +74,17 @@
         <Tag style="border-radius: .3rem" severity="success" v-if="props.order.responsible_id">  {{props.order.name}}</Tag>
 
     
+        <div v-if="props.order.inserted_by_name">
+            <p style="color: black;" class="py-0 my-1"><b>Vendido por</b></p>
+        <Tag style="border-radius: .3rem; background-color: black;" > 
+            {{ props.order.inserted_by_name}} ->
+        </Tag>
        
+        </div>
+
+        <Tag style="border-radius: .3rem ; background-color: var(--primary-color);" v-else >
+           DIRECTO DE WEB ->
+        </Tag>
        
 
 
@@ -143,22 +153,6 @@ const format_date = (date) => {
 
 Tag{
     border-radius: .5rem;
-
-}
-
-
-@keyframes identifier {
-    0%{
-        opacity: 0;
-    }
-    100%{
-        opacity: 1;
-    }
-}
-
-.apear{
-
-    animation: identifier .5s ease;
 
 }
 
