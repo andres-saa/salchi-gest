@@ -297,8 +297,8 @@ export const useReportesStore = defineStore('reportes', {
                 }
         
                 const data = await response.json()
-                this.selectedSites = data.filter(s => s.show_on_web)
-                this.sites = data.filter(s => s.show_on_web)
+                this.selectedSites = data?.filter(s => s?.show_on_web)
+                this.sites = data?.filter(s => s?.show_on_web)
                 
             } catch (error) {
                 console.log(error)
