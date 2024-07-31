@@ -25,7 +25,13 @@ export const useDataToInteract = defineStore('dataToInteract', {
             sequenceToUpdate:{},
 
             videoToDelete:{},
-            videoToUpdate:{}
+            videoToUpdate:{},
+            
+            secuence_students: {
+
+            },
+
+            videoUsersId: 0
         }
     },
 

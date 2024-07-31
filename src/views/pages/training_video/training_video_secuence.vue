@@ -38,12 +38,7 @@
 
         </template>
 
-        <column header="Check" class="px-4" field="created_time">
-            <template #body="data">
-
-                <Checkbox></Checkbox>
-            </template>
-        </column>
+        
      
         <column header="Id" class="px-4" field="created_time">
             <template #body="data">
@@ -70,10 +65,10 @@
                     </Button>
                
 
-                    <Button text label="50%" >
+                    <!-- <Button text label="50%" >
                         
                     </Button>
-                  
+                   -->
 
 
 
@@ -83,6 +78,20 @@
             </template>
         </column>
 
+
+        <column header="Descripcion" style="min-width: 30rem;" class="px-4" field="created_time">
+                <template #body="data">
+
+                    <h6 class="" style="text-transform: capitalize;"> {{ data.data.description?.toLowerCase() }}</h6>
+                </template>
+            </column>
+
+        <column header="Descripcion" style="min-width: 30rem;" class="px-4" field="created_time">
+                <template #body="data">
+
+                    <h6 class="" style="text-transform: capitalize;"> {{ data.data.description?.toLowerCase() }}</h6>
+                </template>
+            </column>
 
 
 
@@ -258,6 +267,8 @@ import { urlService } from '../../../service/video_training/urlService';
 import { ref, onMounted, watch } from 'vue';
 import { da } from 'date-fns/locale';
 import router from '../../../router';
+import { loginStore } from '@/store/user.js'
+const user = loginStore()
 
 import { useRoute } from 'vue-router';
 
@@ -300,8 +311,10 @@ const sequesces = ref([])
 
 
 onMounted(async () => {
-    const sesion_id = route.params.sesion_id
-    sequesces.value = await videoSequenceService.getVideoSequencesBySesionId(sesion_id)
+
+    const student_id = user.rawUserData.id
+ 
+    sequesces.value = await videoSequenceService.getVideoSequencesBySesionIdAndStudentId(student_id)
 })
 
 </script>

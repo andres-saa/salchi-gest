@@ -4,6 +4,7 @@
         <dialogToAddSequence @update="updateSequence" />
         <DialogToDeleteSequence @update="updateSequence" />
         <dialogToEditSequence @update="updateSequence" />
+        <dialogStudents></dialogStudents>
 
 
 
@@ -41,17 +42,12 @@
 
             </template>
 
-            <column header="Check" class="" field="created_time">
-                <template #body="data">
-
-                    <Checkbox></Checkbox>
-                </template>
-            </column>
+        
 
             <column header="Id" class="" field="created_time">
                 <template #body="data">
 
-                    <h6> {{ data.data.sesion_id }}</h6>
+                    <h6> {{ data.data.sequence_id }}</h6>
                 </template>
             </column>
 
@@ -76,7 +72,7 @@
                         <Button text @click="openToDelete(data.data)" severity="danger" icon="fa-solid fa-trash">
 
                         </Button>
-                        <Button severity="success" text label="Estudiantes" icon="fa-solid fa-graduation-cap">
+                        <Button severity="success" @click="openToStudents(data.data)" text label="Estudiantes" icon="fa-solid fa-graduation-cap">
 
                         </Button>
 
@@ -275,6 +271,7 @@ import { videoSequenceService } from '@/service/video_training/videoTrainingServ
 import { urlService } from '@/service/video_training/urlService';
 import dialogToAddSesion from './dialogs/sesion/dialogToAddSesion.vue';
 import { ref, onMounted, watch } from 'vue';
+import dialogStudents from './dialogs/dialogStudents.vue';
 import { da } from 'date-fns/locale';
 import router from '@/router';
 import { useRoute } from 'vue-router';
@@ -334,6 +331,14 @@ const openToDelete = (data) => {
     dialogStore.deleteSequence = true
 }
 
+
+const openToStudents = (data) => {
+
+    dataToInteractStore.secuence_students = {}
+    dataToInteractStore.secuence_students = data
+    dialogStore.showSequenceStudents = true
+
+}
 
 const openVideo = (video) => {
     videoToSee.value = video

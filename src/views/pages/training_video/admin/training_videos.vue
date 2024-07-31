@@ -5,6 +5,7 @@
         <dialogToAddVideo @update="updateVideos" />
         <dialogToDeleteVideo @update="updateVideos" />
         <dialogToEditVideo @update="updateVideos" />
+        <dialogStudentsVideo></dialogStudentsVideo>
 
 
 
@@ -74,7 +75,7 @@
                         <Button @click="openToDelete(data.data)" text severity="danger" icon="fa-solid fa-trash">
 
                         </Button>
-                        <Button severity="success" text label="Estudiantes" icon="fa-solid fa-graduation-cap">
+                        <Button severity="success" @click="openToSeeViews(data.data.video_id)" text label="Visualizaciones" icon="fa-solid fa-eye">
 
                         </Button>
 
@@ -269,7 +270,7 @@ import { da } from 'date-fns/locale';
 import { useRoute } from 'vue-router';
 import { useDialogStore } from '../../../../store/trainingVideo/dialogs';
 import { useDataToInteract } from '../../../../store/trainingVideo/dataToInteract';
-
+import dialogStudentsVideo from './dialogs/dialogStudentsVideo.vue';
 
 
 
@@ -287,6 +288,14 @@ const dialogStore = useDialogStore()
 const videos = ref([])
 
 const videoToSee = ref({})
+
+
+
+
+const openToSeeViews = (id) => {
+    dataToInteractStore.videoUsersId = id
+    dialogStore.showvideoStudents = true
+}
 
 
 

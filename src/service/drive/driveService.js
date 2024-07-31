@@ -57,8 +57,6 @@ export const driveService = {
                         'Content-Type': 'multipart/form-data',
                     },
                     onUploadProgress: (progressEvent) => {
-                console.log('Upload Progress: ' + Math.round((progressEvent.loaded / progressEvent.total) * 100) + '%');
-                
                 this.store.loading.progress =+ Math.round((progressEvent.loaded / progressEvent.total) * 100)
             },
                 });

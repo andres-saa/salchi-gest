@@ -3,6 +3,25 @@
     <div class="container py-6">
 
 
+        <Dialog header="Completar clase" v-model:visible="visible_to_delete" modal style="width: 30rem; text-transform: capitalize;">
+
+            <h5 class="p-0 m-0"> Esta accion no se puede deshacer, seguro que deseas marcar el video <b>{{ videoToMark.video_name }}</b> como completado?</h5>
+
+            <template #footer>
+
+                <div style="display: flex;justify-content: end; width:100%">
+
+
+                    <Button @click="visible_to_delete = false" severity="help" label="No, no le he visto aun"></Button>
+                    <Button @click="markvideo(videoToMark)" text severity="danger" label="Si claro"></Button>
+                </div>
+
+
+            </template>
+
+        </Dialog>
+
+
 
         <h2 style="text-transform: uppercase;" class="text-center"><b>{{ route.params.sequence_name }}</b></h2>
 
@@ -46,7 +65,7 @@
         <column header="Check" icon="pi pi-check" class="px-4" field="created_time">
             <template #body="data">
 
-                <Checkbox></Checkbox>
+                <Checkbox :disabled="videoChecks[data.data.video_id]" @change="validate(data.data, videoChecks[data.data.video_id])" binary v-model="videoChecks[data.data.video_id]"></Checkbox>
             </template>
         </column>
         <column header="Id" class="px-4" field="id">
@@ -71,15 +90,7 @@
                     <Button text  icon="fa-solid fa-ellipsis-vertical">
                         
                     </Button>
-                    
 
-                 
-                  
-
-
-
-                 
-                     
                 </div>
             </template>
         </column>
@@ -89,7 +100,7 @@
         <column header="Descripcion" style="max-width: 20rem;" class="px-4" field="created_time">
             <template #body="data">
 
-                <h6 class="date" style=""> {{ data.data.description }}</h6>
+                <h6 class="" style=""> {{ data.data.description }}</h6>
             </template>
         </column>
 
@@ -257,15 +268,23 @@ import { urlService } from '../../../service/video_training/urlService';
 import { ref, onMounted, watch } from 'vue';
 import { da } from 'date-fns/locale';
 import { useRoute } from 'vue-router';
-
+import { loginStore } from '@/store/user.js'
+import { fetchService } from '../../../service/utils/fetchService';
+import { URI } from '../../../service/conection';
+const user = loginStore()
 
 const  route = useRoute()
 const playVisible = ref( false )
-
+const videoChecks = ref({})
 
 const videos = ref([])
 
 const videoToSee = ref({})
+
+
+const visible_to_delete = ref(false)
+
+
 
 
 const formattedVideoLink = (link) => {
@@ -288,10 +307,51 @@ const openVideo = (video) => {
 }
 
 
+
+const markvideo = async(video) => {
+    const data = {
+        "user_id": user.rawUserData.id,
+        "video_id": video.video_id
+        }
+     await fetchService.post(`${URI}/mark-video-user`,data,'marcando video como visto')
+     update()
+     visible_to_delete.value = false
+}
+
+
+
+const update = async() => {
+
+
+    const sequence_id = route.params.sequence_id
+    const student_id = user.rawUserData.id
+
+    const video = await videoSequenceService.getVideosBySequenceIdAndStudentId(sequence_id,student_id)
+
+    video.forEach(e => {
+        videoChecks.value[e.video_id] = e.video_user_mark
+    });
+
+    videos.value = video
+}
+
+
 onMounted(async () => {
-    videos.value = await videoSequenceService.getVideos(1)
+    await update()
 })
 
+
+const videoToMark = ref ({})
+
+const validate = (video, value) => {
+   
+        visible_to_delete.value = true
+        if (!value){
+            return
+        }
+        videoChecks.value[video.video_id] = false
+        videoToMark.value = video
+}
 </script>
 
 <style scoped>

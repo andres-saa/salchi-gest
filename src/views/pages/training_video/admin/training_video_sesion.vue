@@ -66,9 +66,9 @@
                         
                     </Button>
 
-                    <Button severity="success" text label="Estudiantes" icon="fa-solid fa-graduation-cap">
+                    <!-- <Button severity="success" text label="Estudiantes" icon="fa-solid fa-graduation-cap">
                         
-                    </Button>
+                    </Button> -->
                 </div>
             </template>
         </column>

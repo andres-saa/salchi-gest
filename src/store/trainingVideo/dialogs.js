@@ -34,7 +34,11 @@ export const useDialogStore = defineStore('dialogs', {
                 
                 addVideo:false,
                 deleteVideo:false,
-                updateVideo:false
+                updateVideo:false,
+
+                showSequenceStudents:false,
+                showvideoStudents:false
+
 
           
 

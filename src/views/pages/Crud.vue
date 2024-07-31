@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { departamentos, findByDepartament } from '@/service/CountryService.js'
 import { jsPDF } from "jspdf";
 import { roles, obtenerRolesYActualizar, getRoles } from '@/service/roles';
-
+import {formatoPesosColombianos} from '../../service/formatoPesos.js' 
 import { uploadUserPhotoProfile } from '@/service/sendFileService'
 import {
     sitesDropValues,
@@ -618,7 +618,7 @@ const asingDataToSave = () => {
 
     // enviar el id de la sede en lugar del nombre de esta
     data.site_id = SiteDropValue.value.site_id
-    data.food_handling_certificate_number = switchFoodHandlingCertificate.value ? data.food_handling_certificate_number : null;
+    data.food_handling_certificate_number = 1;
     // swithHasVehicle.value? data.vehicle_type = null:data.vehicle_type = vehicleTypeDropValue.value
     data.birth_department = departamentDropValue.value
     data.birth_city = cityDropValue.value
@@ -643,7 +643,7 @@ const asingDataToSave = () => {
         data.eps = data.eps ?? null;
         data.blood_type = data.blood_type ?? null;
         data.education_level = data.education_level ?? null;
-        data.contract_type = data.contract_type ?? null;
+        data.contract_type = 'none';
         data.shirt_size = data.shirt_size ?? null;
         data.jeans_sweater_size = data.jeans_sweater_size ?? null;
         data.housing_type = data.housing_type ?? null;
@@ -1051,49 +1051,36 @@ const verIMagen = (dni) => {
         <!-- {{ getUserRole() }} -->
         <div class="col-12 m-0 p-0 ">
 
+            <p class="mb-2 text-2xl text-center " style="font-weight: bold;margin-top: 3rem;">
+                                <i class="fa-solid fa-users"></i>
+                               GESTION DEL PERSONAL
+                            </p>
             <div class="col-12 p-0 m-0 ">
                 <Toast />
 
 
 
 
-                <div class="grid  m-0 " style="">
+                <div  class="shadow-2 my-4 p-1  " style="display: flex; overflow-x: auto;">
 
 
                     <input ref="cargarExcel" style="display:none" type="file" @change="handleFileUpload" />
 
 
-                    <Button severity="success" style="height: 2.5rem;" label="SUBIR EXCEL  " icon="pi pi-plus"
-                        class="p-button-error col m-2  text-sm " @click="$refs.cargarExcel.click();" />
+                    <!-- <Button  text severity="success" style="height: 2.5rem;color: var(--text-color);" label="SUBIR EXCEL  " icon="pi pi-plus"
+                        class="p-button-error    text-sm " @click="$refs.cargarExcel.click();" /> -->
 
 
-                    <Button severity="info" style="height: 2.5rem;" label="REGISTRAR USUARIO" icon="pi pi-plus"
-                        class=" col m-2  text-sm " @click="openNew" />
+                    <Button text severity="info" style="height: 2.5rem;color: var(--text-color);" label="REGISTRAR USUARIO" icon="pi pi-plus"
+                        class="   text-sm " @click="openNew" />
 
 
-                    <Button style="height: 2.5rem;" label="EXPORTAR EXCEL" icon="pi pi-upload"
-                        class="p-button-help col m-2   text-sm " @click="exportCSV($event)" />
+                    <Button text style="height: 2.5rem;color: var(--text-color);" label="EXPORTAR EXCEL" icon="pi pi-upload"
+                        class="p-button-help      text-sm " @click="exportCSV($event)" />
 
 
-                    <!-- <Button style="height: 2.5rem;" label="DESCARGAR  PLANTILLA" icon="pi pi-upload"
-                            class="p-button-warning col m-2  text-sm" @click="downloadEmptyTemplate()" /> -->
-
-
-                    <Button style="height: 2.5rem;" label="EXPORTAR DOTACION" icon="pi pi-upload"
-                        class="p-button-danger col m-2  text-sm  " @click="exportDotacion()" />
-
-
-
-
-
-
-                    <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
-                            class="mr-2 inline-block" /> -->
-
-
-
-
-
+                    <Button text style="height: 2.5rem;color: var(--text-color);" label="EXPORTAR DOTACION" icon="pi pi-upload"
+                        class="p-button-danger  text-sm  " @click="exportDotacion()" />
 
 
                 </div>
@@ -1101,19 +1088,21 @@ const verIMagen = (dni) => {
 
 
                 <DataTable ref="dt" :value="users" v-model:selection="selectedProducts" dataKey="id" :paginator="true"
-                    :rows="10" :filters="filters"
-                    stripedRows
+                    :rows="10" :filters="filters" 
+                    stripedRows showGridlines 
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25, 100]"
+                    :rowsPerPageOptions="[5,10, 15, 25, 100]"
                     currentPageReportTemplate="Mostrando {first} to {last} de {totalRecords} empleados"
-                    responsiveLayout="scroll" scrollable :frozenValue="lockedCustomers">
+                    responsiveLayout="scroll" scrollable >
                     <template #header style="z-index:200">
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
                             style="background-color: ;">
-                            <p class="mb-2 text-4xl text-center " style="font-weight: bold;">
-                                <i class="fa-solid fa-users"></i>
-                                Personal
-                            </p>
+                           <h5>
+                            <b>
+                                Empleados
+                            </b>
+          
+                           </h5>
 
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
@@ -1123,17 +1112,17 @@ const verIMagen = (dni) => {
                         </div>
                     </template>
 
-                    <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " ></Column>
+                    <Column class="py-2" selectionMode="multiple" headerStyle="width: 3rem; " ></Column>
 
-                    <Column class="p-2" field="id" header="Id" :sortable="true"
+                    <Column class="py-2" field="id" header="Id" :sortable="true"
                         headerStyle="width:min-content; min-width:min-content; ">
                         <template #body="user">
-                            <span class="p-column-title">Code</span>
-                            {{ user.data.id }}
+                           
+                            <h6>{{ user.data.id }}</h6>
                         </template>
                     </Column>
 
-                    <Column class="p-2" header="Foto" headerStyle="width:5%; min-width:3rem;">
+                    <Column class="py-2" header="Foto" headerStyle="width:5%; min-width:3rem;">
                         <template #body="user">
                             <!-- <span class="p-column-title">Foto</span> -->
 
@@ -1144,333 +1133,380 @@ const verIMagen = (dni) => {
                                 style="border:none; position:relative; height: 2rem; width:2rem; object-fit: cover; border-radius: 50%;" />
 
 
-                            <div>
-
-                                <!-- <Button type="button" label="Image"  class="p-button-success" /> -->
-                                <!-- <OverlayPanel ref="op" appendTo="body" :showCloseIcon="true" style=" padding: 0; box-shadow: 4px 4px 8px var(--primary-color);">
-                                <img   :src=" `${URI}/read_user_photo_profile/${user.data.id}`" alt="Nature 9" style="width: 40vw; height: ; "
-    />
-                            </OverlayPanel> -->
-
-
-                                <!-- <OverlayPanel ref="op2" appendTo="body" :showCloseIcon="true" style=" padding: 0; box-shadow: 4px 4px 8px var(--primary-color);">
-                            <img src="@/images/bg_black.jpg" alt="Nature 9" style="height:80vh ; "
- />
-                        </OverlayPanel> -->
-                            </div>
+                            
                         </template>
                     </Column>
 
 
 
 
-                    <Column class="p-2" field="name" header="Nombre" :sortable="true"
+                    <Column class="py-2" field="name" header="Nombre" :sortable="true"
                         headerStyle="width:20%; min-width:20rem; ">
                         <template #body="user">
-                            <span class="p-column-title">name</span>
-                            {{ user.data.name }}
+                            <h6 style="text-transform: uppercase;">{{ user.data.name }}</h6> 
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="boss_id" header="Id del jefe" :sortable="true"
+                    <Column class="py-2" field="boss_id" header="Id del jefe" :sortable="true"
                         headerStyle="width:5%; min-width:10rem; ">
                         <template #body="user">
-                            <span class="p-column-title">id del jefe</span>
-                            {{ user.data?.boss_id }}
+                          <h6> {{ user.data?.boss_id || 'No asignado' }}</h6> 
                         </template>
                     </Column>
 
 
-                    <Column class="p-2" field="dni" header="Documento" :sortable="true"
+                    <Column class="py-2" field="dni" header="Documento" :sortable="true"
                         headerStyle="width:14%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Price</span>
-                            {{ user.data.dni }}
+                            <h6>
+                                {{ user.data.dni }}
+                            </h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="address" header="Direccion" :sortable="true"
+                    <Column class="py-2" field="address" header="Direccion" :sortable="true"
                         headerStyle="width:14%; min-width:15rem;">
                         <template #body="user">
-                            <span class="p-column-title">Category</span>
-                            {{ user.data.address }}
+                         <h6>  {{ user.data.address }}</h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="position" header="Cargo" :sortable="true"
+                    <Column class="py-2" field="position" header="Cargo" :sortable="true"
                         headerStyle="width:14%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Category</span>
-                            {{ user.data.position }}
+                    
+                           <h6> {{ user.data.position }}</h6>
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="site_name" header="Sede" :sortable="true"
+                    <Column class="py-2" field="site_name" header="Sede" :sortable="true"
                         headerStyle="width:14%; min-width:5rem;">
                         <template #body="user">
-                            <span class="p-column-title">Category</span>
-                            {{ user.data.site_name }}
+                   <h6>
+                    {{ user.data.site_name }}
+                   </h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="status" header="Estado" :sortable="true"
+                    <Column class="py-2" field="status" header="Estado" :sortable="true"
                         headerStyle="width:14%; min-width:5rem;">
                         <template #body="user">
-                            <span class="p-column-title">Category</span>
-                            {{ user.data.status }}
+
+                            <Tag class="px-4" :severity="user.data.status == 'activo'? 'success' : 'danger'">
+
+                            {{ user.data.status?.toLowerCase() }}
+                      
+                            </Tag>
+                          
+                          
                         </template>
                     </Column>
 
 
-                    <Column class="p-2" field="gender" header="Género" :sortable="true"
+                    <Column class="py-2" field="gender" header="Género" :sortable="true"
                         headerStyle="width:10%; min-width:8rem;">
                         <template #body="user">
-                            <span class="p-column-title">Género</span>
-                            {{ user.data.gender }}
+              <h6>
+                {{ user.data.gender || 'N/A' }}
+              </h6>
+                            
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="birth_date" header="Fecha de Nacimiento" :sortable="true"
+                    <Column class="py-2" field="birth_date" header="Fecha de Nacimiento" :sortable="true"
                         headerStyle="width:12%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Fecha de Nacimiento</span>
-                            {{ user.data.birth_date }}
+     
+                            <h6>
+                                {{ user.data.birth_date }}
+                            </h6>
+             
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="phone" header="Teléfono" :sortable="true"
+                    <Column class="py-2" field="phone" header="Teléfono" :sortable="true"
                         headerStyle="width:12%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Teléfono</span>
-                            {{ user.data.phone }}
+                  <h6>
+                    {{ user.data.phone }}
+                  </h6>
+             
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="email" header="Correo Electrónico" :sortable="true"
+                    <Column class="py-2" field="email" header="Correo Electrónico" :sortable="true"
                         headerStyle="width:10%; min-width:5rem;">
                         <template #body="user">
-                            <span class="p-column-title">Correo Electrónico</span>
-                            {{ user.data.email }}
+                         <h6>
+                            {{ user.data.email || 'No proporcionado'}}
+                         </h6>
+                      
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="entry_date" header="Fecha de Ingreso" :sortable="true"
+                    <Column class="py-2" field="entry_date" header="Fecha de Ingreso" :sortable="true"
                         headerStyle="width:12%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Fecha de Ingreso</span>
-                            {{ user.data.entry_date }}
+          
+                            <h6>
+                                {{ user.data.entry_date }}
+                            </h6>
+                          
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="exit_date" header="Fecha de Salida" :sortable="true"
+                    <Column class="py-2" field="exit_date" header="Fecha de Salida" :sortable="true"
                         headerStyle="width:12%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Fecha de Salida</span>
-                            {{ user.data.exit_date }}
+          
+                            <h6>
+                                {{ user.data.exit_date || '.........................'}}
+                            </h6>
+                    
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="exit_reason" header="Motivo de Salida" :sortable="true"
+                    <Column class="py-2" field="exit_reason" header="Motivo de Salida" :sortable="true"
                         headerStyle="width:14%; min-width:15rem;">
                         <template #body="user">
-                            <span class="p-column-title">Motivo de Salida</span>
-                            {{ user.data.exit_reason }}
+                            <h6>
+                                {{ user.data.exit_reason || '..............................................'}}
+                            </h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="authorization_data" header="Autorización de Datos" :sortable="true"
+                   
+
+                    <Column class="py-2" field="birth_country" header="País de Nacimiento" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Autorización de Datos</span>
-                            {{ user.data.authorization_data == 1 ? 'si' : 'no' }}
+                            <h6>
+                                {{ user.data.birth_country || 'N/a'}}
+                            </h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="birth_country" header="País de Nacimiento" :sortable="true"
+                    <Column class="py-2" field="birth_department" header="Departamento de Nacimiento" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">País de Nacimiento</span>
-                            {{ user.data.birth_country }}
+                            <h6>
+                                {{ user.data.birth_department || 'N/a'}}
+                            </h6>
+                          
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="birth_department" header="Departamento de Nacimiento" :sortable="true"
+                    <Column class="py-2" field="birth_city" header="Ciudad de Nacimiento" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Departamento de Nacimiento</span>
-                            {{ user.data.birth_department }}
+                            <h6> {{ user.data.birth_city || 'N/a'}} </h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="birth_city" header="Ciudad de Nacimiento" :sortable="true"
+                    <Column class="py-2" field="blood_type" header="Tipo de Sangre" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Ciudad de Nacimiento</span>
-                            {{ user.data.birth_city }}
+                            <h6>
+                                {{ user.data.blood_type || '...............'}}
+                            </h6>
+                            
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="blood_type" header="Tipo de Sangre" :sortable="true"
+                    <Column class="py-2" field="marital_status" header="Estado Civil" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Tipo de Sangre</span>
-                            {{ user.data.blood_type }}
+                          <h6>
+                            {{ user.data.marital_status || 'N/a'}}
+                          </h6>
+                        
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="marital_status" header="Estado Civil" :sortable="true"
+                    <Column class="py-2" field="education_level" header="Nivel de Educación" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Estado Civil</span>
-                            {{ user.data.marital_status }}
+                           <h6>
+                            {{ user.data.education_level || '............................'}}
+                           </h6>
+                         
+                        </template>
+                    </Column>
+                    <Column class="py-2" field="contract_type" header="Tipo de Contrato" :sortable="true"
+                        headerStyle="width:18%; min-width:10rem;">
+                        <template #body="user">
+                           <h6>
+                            {{ user.data.contract_type_name || 'N/a'}}
+                           </h6>
+                         
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="education_level" header="Nivel de Educación" :sortable="true"
-                        headerStyle="width:18%; min-width:10rem;">
-                        <template #body="user">
-                            <span class="p-column-title">Nivel de Educación</span>
-                            {{ user.data.education_level }}
-                        </template>
-                    </Column>
-                    <Column class="p-2" field="contract_type" header="Tipo de Contrato" :sortable="true"
-                        headerStyle="width:18%; min-width:10rem;">
-                        <template #body="user">
-                            <span class="p-column-title">Tipo de Contrato</span>
-                            {{ user.data.contract_type }}
-                        </template>
-                    </Column>
-
-                    <Column class="p-2" field="eps" header="EPS" :sortable="true"
+                    <Column class="py-2" field="eps" header="EPS" :sortable="true"
                         headerStyle="width:18%; min-width:15rem;">
                         <template #body="user">
-                            <span class="p-column-title">EPS</span>
-                            {{ user.data.eps }}
+                            <h6>
+                                {{ user.data.eps || 'N/a'}}
+                            </h6>
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="pension_fund" header="Fondo de Pensión" :sortable="true"
+                    <Column class="py-2" field="pension_fund" header="Fondo de Pensión" :sortable="true"
                         headerStyle="width:18%; min-width:15rem;">
                         <template #body="user">
                             <span class="p-column-title">Fondo de Pensión</span>
-                            {{ user.data.pension_fund }}
+                           <h6>
+                            {{ user.data.pension_fund || 'N/a' }}
+                           </h6> 
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="severance_fund" header="Fondo de Cesantías" :sortable="true"
+                    <Column class="py-2" field="severance_fund" header="Fondo de Cesantías" :sortable="true"
                         headerStyle="width:18%; min-width:15rem;">
                         <template #body="user">
-                            <span class="p-column-title">Fondo de Cesantías</span>
-                            {{ user.data.severance_fund }}
+                    <h6>
+                        {{ user.data.severance_fund || 'N/a'}}
+                    </h6>
+                          
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="has_children" header="Tiene Hijos" :sortable="true"
+                    <Column class="py-2" field="has_children" header="Tiene Hijos" :sortable="true"
                         headerStyle="width:18%; min-width:15rem;">
                         <template #body="user">
-                            <span class="p-column-title">Tiene Hijos</span>
-                            {{ user.data.has_children == 1 ? 'si' : 'no' }}
+                            <h6>
+                                {{ user.data.has_children == 1 ? 'si' : 'no' }}
+                            </h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="housing_type" header="Tipo de Vivienda" :sortable="true"
+                    <Column class="py-2" field="housing_type" header="Tipo de Vivienda" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Tipo de Vivienda</span>
-                            {{ user.data.housing_type }}
+             
+                            <h6>
+                                {{ user.data.housing_type || '..............................'}}
+                            </h6>
+             
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="has_vehicle" header="Tiene Vehiculo" :sortable="true"
+                    <Column class="py-2" field="has_vehicle" header="Tiene Vehiculo" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Tiene Vehiculo</span>
-                            {{ user.data.has_vehicle == 1 ? "si" : "no" }}
+                            <h6>
+                                {{ user.data.has_vehicle == 1 ? "si" : "no" }}
+                            </h6>
+                            
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="vehicle_type" header="Tipo de Vehiculo" :sortable="true"
+                    <Column class="py-2" field="vehicle_type" header="Tipo de Vehiculo" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Tipo de Vehiculo</span>
-                            {{ user.data.vehicle_type }}
+                         <h6>
+                            {{ user.data.vehicle_type || 'N/a' }}
+                         </h6>
+                        
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="household_size" header="Tamaño del Hogar" :sortable="true"
+                    <Column class="py-2" field="household_size" header="Tamaño del Hogar" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Tamaño del Hogar</span>
+                         <h6>
                             {{ user.data.household_size }}
+                         </h6>
+                    
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="emergency_contact" header="Contacto de Emergencia" :sortable="true"
+                    <Column class="py-2" field="emergency_contact" header="Contacto de Emergencia" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Contacto de Emergencia</span>
-                            {{ user.data.emergency_contact }}
+                           <h6>
+                            {{ user.data.emergency_contact || 'No proporcionado'}}
+                           </h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="shirt_size" header="Talla de Camisa" :sortable="true"
+                    <Column class="py-2" field="shirt_size" header="Talla de Camisa" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Talla de Camisa</span>
-                            {{ user.data.shirt_size }}
+                  <h6>
+                    {{ user.data.shirt_size || 'N/a'}}
+                  </h6>
+                           
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="jeans_sweater_size" header="Talla de Pantalón" :sortable="true"
+                    <Column class="py-2" field="jeans_sweater_size" header="Talla de Pantalón" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Talla de Pantalón/Suéter</span>
-                            {{ user.data.jeans_sweater_size }}
+                         <h6>
+                            {{ user.data.jeans_sweater_size || 'N/a'}}
+                         </h6>
+                       
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="food_handling_certificate" header="Certificado de Manejo de Alimentos"
-                        :sortable="true" headerStyle="width:18%; min-width:10rem;">
+                    <Column class="py-2" field="food_handling_certificate" header="Cert. Man. de Alimentos"
+                        :sortable="true" headerStyle="width:30rem; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Certificado de Manejo de Alimentos</span>
-                            {{ user.data.food_handling_certificate == 1 ? 'si' : 'no' }}
+                                <h6>
+                                    {{ user.data.food_handling_certificate == 1 ? 'si' : 'no' }}
+                                </h6>
+                                            
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="food_handling_certificate_number"
+                    <!-- <Column class="py-2" field="food_handling_certificate_number"
                         header="Número de Certificado de Manejo de Alimentos" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Número de Certificado de Manejo de Alimentos</span>
+                           
                             {{ user.data.food_handling_certificate_number }}
                         </template>
-                    </Column>
+                    </Column> -->
 
-                    <Column class="p-2" field="salary" header="Salario" :sortable="true"
+                    <Column class="py-2" field="salary" header="Salario" :sortable="true"
                         headerStyle="width:18%; min-width:10rem;">
                         <template #body="user">
-                            <span class="p-column-title">Salario</span>
-                            {{ user.data.salary }}
+         
+                           <h6>
+                            {{ formatoPesosColombianos(user.data.contract_salary) }}
+     
+                           </h6> 
                         </template>
                     </Column>
 
-                    <Column class="p-2" field="comments_notes" header="Comentarios/Notas" :sortable="false"
+                    <Column class="py-2" field="comments_notes" header="Comentarios/Notas" :sortable="false"
                         headerStyle="width:500px; min-width:15rem;">
                         <template #body="user">
-                            <span class="p-column-title">Comentarios/Notas</span>
-                            {{ user.data.comments_notes }}
+<h6>
+    {{ user.data.comments_notes }}
+</h6>
+
                         </template>
                     </Column>
 
-                    <Column class="p-2" headerStyle="min-width:5rem;" style="" header="Acciones" frozen
+                    <Column class="py-2" headerStyle="min-width:5rem;" style="" header="Acciones" frozen
                         alignFrozen="right">
                         <template #body="user" style="margin: auto;">
-                            <div style="width:auto; display: flex;justify-content: center
+                            <div style="width:auto; display: flex;gap:1rem; justify-content: center
                             ;">
-                                <Button style="width: 2rem; aspect-ratio: 1 / 1;margin: auto; border-radius: 10rem;"
+                                <Button  style="width: 2rem; aspect-ratio: 1 / 1;margin: auto;"
                                     icon="pi pi-pencil" class=" p-button-warning " @click="editProduct(user.data)" />
 
-                                    <Button style="width: 2rem; aspect-ratio: 1 / 1;margin: auto; border-radius: 10rem;"
+                                    <Button style="width: 2rem; aspect-ratio: 1 / 1;margin: auto;"
         icon="pi pi-trash" class="p-button-danger" @click="deleteUser(user.data.id)" />
 
                             </div>
@@ -1730,14 +1766,7 @@ const verIMagen = (dni) => {
                             obligatorio.</small>
                     </div>
 
-                    <div class="field">
-                        <label for="contract_type">Tipo de Contrato</label>
-                        <Dropdown v-model="currentUser.contract_type" :options="employmentContractTypeDropValues"
-                            placeholder="" required="true"
-                            :class="{ 'p-invalid': submitted && !currentUser.contract_type }" />
-                        <small class="p-invalid" v-if="submitted && !currentUser.contract_type">Tipo de Contrato es
-                            obligatorio.</small>
-                    </div>
+            
 
                     <div class="field">
                         <label for="eps">EPS</label>
@@ -1827,7 +1856,7 @@ const verIMagen = (dni) => {
                         <label for="food_handling_certificate">Certificado de Manejo de Alimentos</label>
                         <InputSwitch id="food_handling_certificate" v-model="currentUser.food_handling_certificate" />
                     </div>
-
+<!-- 
                     <div class="field" v-show="currentUser.food_handling_certificate">
                         <label for="food_handling_certificate_number">Número de Certificado de Manejo de
                             Alimentos</label>
@@ -1837,12 +1866,9 @@ const verIMagen = (dni) => {
                         <small class="p-invalid"
                             v-if="submitted && !currentUser.food_handling_certificate_number">Número de
                             certificado es obligatorio.</small>
-                    </div>
+                    </div> -->
 
-                    <div class="field">
-                        <label for="salary">Salario</label>
-                        <InputNumber id="salary" v-model.number="currentUser.salary" />
-                    </div>
+                
 
                     <div class="field">
                         <label for="description">Comentarios</label>
@@ -1881,14 +1907,6 @@ const verIMagen = (dni) => {
                             obligatoria
 
                         </small>
-                    </div>
-
-                    <div class="field inputSwith">
-                        <label for="authorization_data">Autorización de Datos</label>
-                        <div class="input-with-label">
-                            <InputSwitch id="authorization_data" v-model="currentUser.authorization_data" />
-
-                        </div>
                     </div>
 
 
@@ -1976,6 +1994,16 @@ Button {
 }
 
 
+h6{
+    padding: 0;
+    margin: 0;
+    text-transform: lowercase;
+}
+
+h6::first-letter{
+    text-transform: uppercase;
+}
+
 
 .img-profile::before {
     content: "";
@@ -1990,7 +2018,7 @@ Button {
     /* Opacidad deseada (0.5 = 50%) */
     z-index: -1;
     /* Asegura que el fondo esté detrás del contenido */
-    background-image: url('https://novatocode.online/assets/logo-f2daca0e.png');
+    
 }
 
 .img-profile-add {

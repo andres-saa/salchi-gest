@@ -10,7 +10,7 @@ export const videoSequenceService = {
 
     store:useReportesStore(),
 
-    async getVideoSequencesBySesiond() {
+    async getVideoSequencesBySesion() {
         try {
             this.store.setLoading(true,'Buscando cursos')
             const response = await axios.get(`${URI}/list-video-training-sequence-video`);
@@ -33,6 +33,25 @@ export const videoSequenceService = {
         try {
             this.store.setLoading(true,'Buscando cursos')
             const response = await axios.get(`${URI}/list-video-training-sequence-video-by-sesion-id/${sesion_id}`);
+            if (response.status === 200) {
+                this.store.setLoading(false)
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the recipes:', response.status);
+                this.store.setLoading(false)
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the recipes:', error);
+            this.store.setLoading(false)
+            return null;
+        }
+    },
+
+    async getVideoSequencesBySesionIdAndStudentId(student_id) {
+        try {
+            this.store.setLoading(true,'Buscando cursos')
+            const response = await axios.get(`${URI}/list-video-training-sequence-video-by-student-id/${student_id}`);
             if (response.status === 200) {
                 this.store.setLoading(false)
                 return response.data;
@@ -277,6 +296,28 @@ export const videoSequenceService = {
             this.store.setLoading(true,'cargando clases')
 
             const response = await axios.get(`${URI}/list-video-by-sequence-id/${sequence_id}`);
+            if (response.status === 200) {
+                this.store.setLoading(false)
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the recipes:', response.status);
+                this.store.setLoading(false)
+                return null;
+            }
+        } catch (error) {
+            this.store.setLoading(false)
+            console.error('An error occurred while fetching the recipes:', error);
+            return null;
+        }
+    },
+
+
+        
+    async getVideosBySequenceIdAndStudentId(sequence_id,student_id) {
+        try {
+            this.store.setLoading(true,'cargando clases')
+
+            const response = await axios.get(`${URI}/list-video-by-sequence-id-and-student-id/${sequence_id}/${student_id}`);
             if (response.status === 200) {
                 this.store.setLoading(false)
                 return response.data;

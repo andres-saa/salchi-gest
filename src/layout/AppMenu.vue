@@ -217,6 +217,10 @@ async function fetchAndUpdateRoles() {
 
                 },
                 {
+                    label: 'Contratos', icon: 'fa-database fa-solid', to: '/contracts/contracts-to-finish',
+
+                },
+                {
                     label: 'Gestion de cargos', icon: 'fa-database fa-solid', to: '/cargos',
 
                 },
@@ -428,10 +432,10 @@ async function fetchAndUpdateRoles() {
                 //     label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
 
                 // },
-                // {
-                //     label: 'Mi formacion', icon: 'fa-solid fa-calendar', to: '/video-training-sequences/',
+                {
+                    label: 'Mi formacion', icon: 'fa-solid fa-calendar', to: '/video-training-sequences/',
 
-                // },
+                },
 
                 {
                     label: 'Administrar Escuelas', icon: 'fa-solid fa-calendar', to: '/video-training-video-sesion',

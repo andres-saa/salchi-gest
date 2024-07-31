@@ -17,9 +17,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useDialogStore } from '../../../../../../store/trainingVideo/dialogs';
+import { useDialogStore } from '@/store/trainingVideo/dialogs';
 import { videoSequenceService } from '@/service/video_training/videoTrainingService';
-import { useDataToInteract } from '../../../../../../store/trainingVideo/dataToInteract';
+import { useDataToInteract } from '@/store/trainingVideo/dataToInteract';
 import { loginStore } from '@/store/user.js'
 const emit = defineEmits(['update']);
 const user = loginStore()

@@ -2634,13 +2634,13 @@
   }
   .p-datatable .p-datatable-thead > tr > th {
     text-align: left;
-    padding: .5rem .5rem !important; 
+    padding: .5rem 1rem !important; 
     margin-bottom: 1rem !important;
     border: 1px solid #e5e7eb;
     border-width: 0 0 1px 0;
     font-weight: 700;
     /* color: #fff; */
-    /* background-color: var(--primary-color); */
+    background-color: #f9fafb;
     transition: box-shadow 0.2s;
   }
   .p-datatable .p-datatable-tfoot > tr > td {

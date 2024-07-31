@@ -202,6 +202,55 @@ const router = createRouter({
           name: 'video-training-sequence-admin',
           component: () => import('@/views/pages/training_video/admin/training_video_sequence.vue')
         },
+        {
+          path: '/contracts',
+          name: 'contracts',
+          component: () => import('@/views/pages/contract/contracts.vue'),
+          children:[
+            {
+              path: '/contracts/contracts-all/',
+              name: 'contracts-all',
+              component: () => import('@/views/pages/contract/ContractAll.vue')
+            },
+            {
+              path: '/contracts/contracts-to-finish/',
+              name: 'contracts-to-finish',
+              component: () => import('@/views/pages/contract/ContractToFinish.vue')
+            },
+            {
+              path: '/contracts/contracts-user-list/',
+              name: 'contracts-user-list',
+              component: () => import('@/views/pages/contract/userList.vue')
+            },
+            {
+              path: '/contracts/new-contract/',
+              name: 'contracts-new-contract',
+              component: () => import('@/views/pages/contract/newContract.vue')
+            },
+            {
+              path: '/contracts/contracts-vigent/',
+              name: 'contracts-vigent',
+              component: () => import('@/views/pages/contract/contractVigent.vue')
+            },
+            {
+              path: '/contracts/contracts-ended/',
+              name: 'contracts-ended',
+              component: () => import('@/views/pages/contract/contractEnded.vue')
+            },
+            {
+              path: '/contracts/contracts-next/',
+              name: 'contracts-next',
+              component: () => import('@/views/pages/contract/contractNext.vue')
+            },
+            {
+              path: '/contracts/configuracion/',
+              name: 'contracts-configuracion',
+              component: () => import('@/views/pages/contract/configuracion.vue')
+            },
+
+
+          ]
+        },
         
 
         {
