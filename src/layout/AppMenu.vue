@@ -217,10 +217,7 @@ async function fetchAndUpdateRoles() {
 
                 },
 
-                {
-                    label: 'Recetas', icon: 'fa-solid fa-envelope', to: '/recipes',
-
-                }
+                
 
             ]
         },
