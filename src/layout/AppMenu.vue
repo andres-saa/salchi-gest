@@ -90,6 +90,24 @@ async function fetchAndUpdateRoles() {
             items: [
 
 
+            
+            {
+                    label: 'Recetario', icon: 'fa-solid fa-calendar',
+                    items: [
+                        {
+                            label: 'Ingredientes', icon: 'fa-solid fa-calendar', to: '/recetario/ingredientes/',
+
+                        },
+                        {
+                            label: 'recetas', icon: 'fa-solid fa-calendar', to: '/recetario/recetas/',
+
+                        },
+                     
+                    ]
+
+                },
+
+
 
                 {
                     label: 'Reportes de inventario diario', icon: 'fa-solid fa-calendar',
