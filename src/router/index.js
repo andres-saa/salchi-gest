@@ -247,10 +247,39 @@ const router = createRouter({
               name: 'contracts-configuracion',
               component: () => import('@/views/pages/contract/configuracion.vue')
             },
-
+           
 
           ]
         },
+
+        {
+          path: '/recetario/',
+          name: 'recetario',
+          component: () => import('@/views/pages/inventory/recetario/recetario.vue'),
+          children:[
+            {
+              path: '/recetario/recetas',
+              name: 'recetario-recetas',
+              component: () => import('@/views/pages/inventory/recetario/recetas.vue')
+            },
+            {
+              path: '/recetario/ingredientes/',
+              name: 'recetario-ingredientes',
+              component: () => import('@/views/pages/inventory/recetario/ingredientes.vue')
+            },
+            {
+              path: '/recetario/configuracion/',
+              name: 'recetario-configuracion',
+              component: () => import('@/views/pages/inventory/recetario/configuracion.vue')
+            },
+            {
+              path: '/recipe-data-sheet/:product_id/:recipe_name',
+              name: 'recipe_data_sheet',
+              component: () => import('@/views/pages/inventory/recetario/recipeDataSheet.vue')
+            },
+          ]
+        },
+
         
 
         {
@@ -759,11 +788,11 @@ const router = createRouter({
         },
 
 
-        {
-          path: '/recipe-data-sheet/:recipe_id',
-          name: 'recipe-data-sheet',
-          component: () => import('@/views/pages/inventory/recipeDataSheet.vue'),
-        },
+        // {
+        //   path: '/recipe-data-sheet/:recipe_id',
+        //   name: 'recipe-data-sheet',
+        //   component: () => import('@/views/pages/inventory/recipeDataSheet.vue'),
+        // },
 
 
 
