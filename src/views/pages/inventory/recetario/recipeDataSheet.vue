@@ -77,11 +77,8 @@
             <Dropdown v-model="newIngredient.unitMeasure" :options="unitMeasures" optionLabel="name" style="width: 100%;"></Dropdown>
             <h6 > Cantidad</h6>
             <InputNumber v-model="newIngredient.quantity" max-fraction-digits="3" style="width: 100%;"></InputNumber>
-<<<<<<< HEAD
             <h6 > Cantidad antes de merma</h6>
             <InputNumber v-model="newIngredient.quantity_before_shrinkage" max-fraction-digits="3" style="width: 100%;"></InputNumber>
-=======
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
 
             <template #footer>
                 <div style="display:  flex;justify-content: end;">
@@ -105,11 +102,8 @@
             <Dropdown v-model="newIngredient.unitMeasure" :options="unitMeasures" optionLabel="name" style="width: 100%;"></Dropdown>
             <h6 > Cantidad</h6>
             <InputNumber v-model="newIngredient.quantity" max-fraction-digits="3" style="width: 100%;"></InputNumber>
-<<<<<<< HEAD
             <h6 > Cantidad antes de merma</h6>
             <InputNumber v-model="newIngredient.quantity_before_shrinkage" max-fraction-digits="3" style="width: 100%;"></InputNumber>
-=======
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
 
             <template #footer>
                 <div style="display:  flex;justify-content: end;">
@@ -239,13 +233,8 @@
 
                         <h6 v-else-if="column.type == 'calc_percent'" style="text-transform: lowercase;"
                             :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">
-<<<<<<< HEAD
                             {{ `${((data.data[column.value] / recipe.recipe_data_sheet.recipe_total)*100).toFixed(2)}%` ||
                             '-----------' }} </h6>
-=======
-                            {{ (data.data[column.value] / recipe.recipe_data_sheet.recipe_total).toFixed(3) ||
-                            '-----------' }}</h6>
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
 
 
 
@@ -367,12 +356,8 @@ const addIngredintToRecipe = async() => {
         "ingredient_id": data.ingredient.id,
         "recipe_data_sheet_id": recipe.value.recipe_data_sheet.id,
         "unit_measure_id": data.unitMeasure.id,
-<<<<<<< HEAD
         "quantity": data.quantity,
         "quantity_before_shrinkage":data.quantity_before_shrinkage
-=======
-        "quantity": data.quantity
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
     }
 
     await fetchService.post(`${URI}/create-recipe-data-ingredient/`,newData, 'Agregando ingrediente')
@@ -441,7 +426,6 @@ const data_sheet_columns = ref([
         type: 'percent'
     },
 
-<<<<<<< HEAD
     {
         label: '% Costo de la receta',
         field: 'percent_recipe_total_cost',
@@ -464,18 +448,10 @@ const data_sheet_columns = ref([
     {
         label: 'Margen de veneficio neto',
         field: 'net_benefic_margin',
-=======
-
-    {
-        label: 'Precio de venta Neto',
-        field: 'selling_price',
-        calc: ['selling_price', 'taxes'],
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
         type: 'money'
     },
 
 
-<<<<<<< HEAD
     // {
     //     label: 'Precio de venta Neto',
     //     field: 'selling_price',
@@ -486,19 +462,12 @@ const data_sheet_columns = ref([
 
     {
         label: 'Costo cotal de la receta',
-=======
-    {
-        label: 'Total de la reaceta',
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
         field: 'recipe_total',
         type: 'money'
     },
 
-<<<<<<< HEAD
   
 
-=======
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
 
 ])
 
@@ -571,12 +540,8 @@ const updateIngredient = async() => {
         "ingredient_id": data.ingredient.id,
         "recipe_data_sheet_id": recipe.value.recipe_data_sheet.id,
         "unit_measure_id": data.unitMeasure.id,
-<<<<<<< HEAD
         "quantity": data.quantity,
         "quantity_before_shrinkage":data.quantity_before_shrinkage
-=======
-        "quantity": data.quantity
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
     }
 
     await fetchService.put(`${URI}/update-recipe-data-ingredient/${newIngredient.value.id}`,newData, 'modificando ingrediente')
@@ -607,14 +572,11 @@ const columns = [
         value: 'quantity',
         width: 'number'
     },
-<<<<<<< HEAD
     {
         header: 'Cantidad Antes de merma',
         value: 'quantity_before_shrinkage',
         type: 'max-content'
     },
-=======
->>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
 
     {
         header: 'Costo unitario',
