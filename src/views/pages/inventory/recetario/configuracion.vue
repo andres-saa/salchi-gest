@@ -5,6 +5,7 @@
 
 
 
+<<<<<<< HEAD
     <!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/Wh4tL3dkmR0" frameborder="0" allowfullscreen></iframe> -->
 
 
@@ -13,6 +14,12 @@
         <i class=" fa fa-gear"></i>
             <b>
                 Configuracion del recetario
+=======
+    <h3 style="margin-top: 6rem;" class="text-center p-0 mx-0">
+        <i class=" fa fa-gear"></i>
+            <b>
+                Configuracion Del recetario
+>>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
             </b>
     </h3>
 

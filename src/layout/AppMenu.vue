@@ -102,6 +102,7 @@ async function fetchAndUpdateRoles() {
                             label: 'recetas', icon: 'fa-solid fa-calendar', to: '/recetario/recetas/',
 
                         },
+<<<<<<< HEAD
                         {
                             label: 'Configuracion', icon: 'fa-solid fa-calendar', to: '/recetario/configuracion/',
 
@@ -110,6 +111,8 @@ async function fetchAndUpdateRoles() {
                             label: 'Resumen Beneficio', icon: 'fa-solid fa-calendar', to: '/recetario/recipe-sumary-benefit/',
 
                         },
+=======
+>>>>>>> f305ac0ac9b0c258999af462a4fb3e6cc20cc11f
                      
                     ]
 
@@ -225,10 +228,7 @@ async function fetchAndUpdateRoles() {
 
                 },
 
-                {
-                    label: 'Recetas', icon: 'fa-solid fa-envelope', to: '/recipes',
-
-                }
+                
 
             ]
         },
