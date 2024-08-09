@@ -77,6 +77,8 @@
             <Dropdown v-model="newIngredient.unitMeasure" :options="unitMeasures" optionLabel="name" style="width: 100%;"></Dropdown>
             <h6 > Cantidad</h6>
             <InputNumber v-model="newIngredient.quantity" max-fraction-digits="3" style="width: 100%;"></InputNumber>
+            <h6 > Cantidad antes de merma</h6>
+            <InputNumber v-model="newIngredient.quantity_before_shrinkage" max-fraction-digits="3" style="width: 100%;"></InputNumber>
 
             <template #footer>
                 <div style="display:  flex;justify-content: end;">
@@ -100,6 +102,8 @@
             <Dropdown v-model="newIngredient.unitMeasure" :options="unitMeasures" optionLabel="name" style="width: 100%;"></Dropdown>
             <h6 > Cantidad</h6>
             <InputNumber v-model="newIngredient.quantity" max-fraction-digits="3" style="width: 100%;"></InputNumber>
+            <h6 > Cantidad antes de merma</h6>
+            <InputNumber v-model="newIngredient.quantity_before_shrinkage" max-fraction-digits="3" style="width: 100%;"></InputNumber>
 
             <template #footer>
                 <div style="display:  flex;justify-content: end;">
@@ -229,8 +233,8 @@
 
                         <h6 v-else-if="column.type == 'calc_percent'" style="text-transform: lowercase;"
                             :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">
-                            {{ (data.data[column.value] / recipe.recipe_data_sheet.recipe_total).toFixed(3) ||
-                            '-----------' }}</h6>
+                            {{ `${((data.data[column.value] / recipe.recipe_data_sheet.recipe_total)*100).toFixed(2)}%` ||
+                            '-----------' }} </h6>
 
 
 
@@ -352,7 +356,8 @@ const addIngredintToRecipe = async() => {
         "ingredient_id": data.ingredient.id,
         "recipe_data_sheet_id": recipe.value.recipe_data_sheet.id,
         "unit_measure_id": data.unitMeasure.id,
-        "quantity": data.quantity
+        "quantity": data.quantity,
+        "quantity_before_shrinkage":data.quantity_before_shrinkage
     }
 
     await fetchService.post(`${URI}/create-recipe-data-ingredient/`,newData, 'Agregando ingrediente')
@@ -421,20 +426,47 @@ const data_sheet_columns = ref([
         type: 'percent'
     },
 
+    {
+        label: '% Costo de la receta',
+        field: 'percent_recipe_total_cost',
+        type: 'percent'
+    },
+
+    {
+        label: 'Margen de beneficio',
+        field: 'benefit_margin',
+        type: 'percent'
+    },
+
 
     {
         label: 'Precio de venta Neto',
-        field: 'selling_price',
-        calc: ['selling_price', 'taxes'],
+        field: 'net_selling_price',
         type: 'money'
     },
+
+    {
+        label: 'Margen de veneficio neto',
+        field: 'net_benefic_margin',
+        type: 'money'
+    },
+
+
+    // {
+    //     label: 'Precio de venta Neto',
+    //     field: 'selling_price',
+    //     calc: ['selling_price', 'taxes'],
+    //     type: 'money'
+    // },
 
 
     {
-        label: 'Total de la reaceta',
+        label: 'Costo cotal de la receta',
         field: 'recipe_total',
         type: 'money'
     },
+
+  
 
 
 ])
@@ -508,7 +540,8 @@ const updateIngredient = async() => {
         "ingredient_id": data.ingredient.id,
         "recipe_data_sheet_id": recipe.value.recipe_data_sheet.id,
         "unit_measure_id": data.unitMeasure.id,
-        "quantity": data.quantity
+        "quantity": data.quantity,
+        "quantity_before_shrinkage":data.quantity_before_shrinkage
     }
 
     await fetchService.put(`${URI}/update-recipe-data-ingredient/${newIngredient.value.id}`,newData, 'modificando ingrediente')
@@ -538,6 +571,11 @@ const columns = [
         header: 'Cantidad',
         value: 'quantity',
         width: 'number'
+    },
+    {
+        header: 'Cantidad Antes de merma',
+        value: 'quantity_before_shrinkage',
+        type: 'max-content'
     },
 
     {

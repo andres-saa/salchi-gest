@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 m-auto " style="max-width:1024px ;height:max-content;background-color ">
+    <div class="col-12 m-auto my-0" style="max-width:1024px ;height:max-content;background-color ">
 
         <Dialog v-model:visible="sending" modal header="Enviando datos" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     
@@ -13,13 +13,13 @@
 </Dialog>
 
 
-{{ capacitacion }}
+
         <!-- {{ usersSelected }} -->
     <!-- {{ groupedUsersByPosition }} {{ groupedUsersBySite }} -->
 
     <div class="col-12 p" style="display:flex;justify-content: end;">
 
-        <Button v-if="getUserId() == capacitacion.creator_id" @click="updateCapacitacion">Guardar cambios</Button>
+        <Button severity="help" v-if="getUserId() == capacitacion.creator_id" @click="updateCapacitacion">Guardar cambios</Button>
 
 
         <!-- {{ asistentes }} -->
@@ -30,12 +30,13 @@
 
 
       
-            <div class="col-12 lg:col-6     ">
+            <div class="col-12 lg:col-6 ">
 
 
                 <p class="col-12 text-3xl" style="font-weight: bold;"> Configuración </p>
-                <div class="col-12  m-auto pb-4 p-4 "
-                    style="background-color: var(--primary-color); box-shadow: 0 0 10px rgba(0, 0, 0, 0.137) ;height: max-content; border-radius: 1rem;">
+
+                <div class="col-12  mx-auto pb-4 p-4 "
+                    style="background-color: var(--primary-color); box-shadow: 0 0 10px rgba(0, 0, 0, 0.137) ;position: sticky;top: 5rem; height: max-content; border-radius: .5rem;">
 
 
                     <div class="col-12 m-0 mb-3  " style=";">
@@ -156,7 +157,7 @@
 
 
 
-    <div class="grid" style="height: 70vh; overflow-y: auto;">
+    <div class="grid" style="height: 100%; overflow-y: auto;">
 
 
     <div class="col-12 grid py-4" v-for="grupo in groupedUsersBySite" style="border-bottom: 2px solid rgba(0, 0, 0, 0.375);">
@@ -189,7 +190,7 @@
 
 
 
-</div>
+            </div>
 
 
 

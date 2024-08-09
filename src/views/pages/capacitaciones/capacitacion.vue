@@ -1,31 +1,38 @@
 <template>
-    <div class="col-12" style="display: flex;justify-content: center;gap: 1rem;">
+    <div class="col-12  my-6" style="display: flex;justify-content: center;flex-direction: column; gap: 1rem;">
 
 
         <!-- {{ capacitacion }} -->
 
 
-        <div v-for="btn in btns" class="" style="display: flex; gap: 1rem;">
+
+        <div style="display: flex; min-width: max-content;position: sticky;top: 3rem;background-color: white;z-index: 99;" class="shadow-3">
+
+      
+            <div v-for="btn in btns" class="" >
 
 
-            <RouterLink :to="btn.to" v-if="btn.name == 'CONFIGURACION' && getUserId() == capacitacion.creator_id">
-                <Button outlined style="font-weight: bold;"> {{ btn.name }}</Button>
-            </RouterLink>
+                <RouterLink :to="btn.to" v-if="btn.name == 'CONFIGURACION' && getUserId() == capacitacion.creator_id">
+                    <Button :class="route.path?.toUpperCase().includes('CONFIGURACION')? 'selected': ''" text style="font-weight: bold;" :label=" btn.name"> </Button>
+         
+                </RouterLink>
 
-            
-            <RouterLink :to="btn.to" v-if="btn.name !== 'CONFIGURACION'">
-                <Button outlined style="font-weight: bold;"> {{ btn.name }}</Button>
-            </RouterLink>
+                
+                <RouterLink  :to="btn.to" v-if="btn.name !== 'CONFIGURACION'">
+                    <Button :class="route.path?.toUpperCase().includes(btn.name)? 'selected': ''" text style="font-weight: bold" :label=" btn.name"> </Button>
+                 
+                </RouterLink>
 
-
-            <!-- <Button> hola</Button> -->
+          
         </div>
+    </div>
+        <RouterView>
+
+        </RouterView>
     </div>
 
 
-    <RouterView>
-
-    </RouterView>
+  
 </template>
 
 <script setup>
@@ -88,3 +95,21 @@ const btns = [
 
 
 </script>
+
+<style scoped>
+
+
+
+button{
+    outline: none;
+    box-shadow: none;
+    color: var(--text-color);
+}
+
+
+.selected{
+    outline: none;
+    font-weight: bold;
+    color: var(--primary-color);
+    }
+</style>

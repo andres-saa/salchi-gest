@@ -1,7 +1,7 @@
 <template>
 
-    <!-- {{ totalList.length }} -->
-<div class="grid shadow-3 mx-2 py-0 px-0 md:px-1 my-4" style="align-items: center; border-radius: 0.5rem;
+<div>
+    <div class="grid shadow-1 mx-2 py-0 px-0 md:px-1 my-4" style="align-items: center;position: sticky;top:3rem;background-color: white;z-index: 900; border-radius: 0.5rem;
 " >
     <span class="px-4 col" style="font-weight: bold; ">
         CALIDOMETRO
@@ -456,6 +456,8 @@
             <p>Información de la auditoría no disponible.</p>
         </template>
     </Dialog>
+</div>
+
 
 </template>
 

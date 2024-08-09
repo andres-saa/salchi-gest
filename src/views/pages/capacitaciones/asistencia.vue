@@ -1,7 +1,7 @@
 <template>
-    <div class="col-12 m-auto " style="max-width:1024px ;height:max-content;background-color ">
+    <div class="col-12 mx-auto " style="max-width:1024px ;height:max-content;background-color ">
 
-{{ capacitacion }}
+<!-- {{ capacitacion }} -->
 
         <!-- {{ usersSelected }} -->
         <!-- {{ asistentes }} -->
@@ -22,8 +22,8 @@
 
                 <p class="col-12  my-0 text-3xl" style="font-weight: bold;">  Asistencia a la capacitacion 
                     
-                    <Button  class="lg:ml-6 mt-4 md:mt-0"  @click="editando = true" v-if="!editando && getUserId() == capacitacion.creator_id"> Tomar asistencia</Button > 
-                    <Button class="lg:ml-6  mt-4 md:mt-0" v-if="editando" @click="editando = false" style="background-color:var(--green-600   );"> Todo ready
+                    <Button severity="help" class="lg:ml-6 mt-4 md:mt-0"  @click="editando = true" v-if="!editando && getUserId() == capacitacion.creator_id"> Tomar asistencia</Button > 
+                    <Button class="lg:ml-6  mt-4 md:mt-0" v-if="editando" @click="editando = false" style="background-color:var(--green-500   );"> Todo ready
 </Button>
                     
                      </p>

@@ -10,7 +10,8 @@ export const urlService = {
             return '';
         }
     
-        const match = videoLink.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)(?:\?.*)?/);
+        // Ajuste en la expresión regular para capturar correctamente el ID del video
+        const match = videoLink.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)(?:\S*)?/);
     
         if (match && match[1]) {
             const videoId = match[1];
@@ -27,7 +28,7 @@ export const urlService = {
             if (!videoLink){
                 return null
             }
-            const match = videoLink.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)(?:\?.*)?/);
+            const match = videoLink.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)(?:\S*)?/);
     
             if (match && match[1]) {
                 const videoId = match[1];

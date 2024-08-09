@@ -7,7 +7,7 @@
                 animationDuration=".5s" aria-label="Custom ProgressSpinner" />
                 </div>
 
-                {{ capacitacion }}
+       
 
     <DataTable style="max-width: 900px; margin: auto    ;" ref="dt" :value="archivos" v-model:selection="selectedFiles" dataKey="id" :paginator="true"
                     
@@ -18,12 +18,18 @@
                     responsiveLayout="scroll" scrollable scroll-height="62vh" >
                     <template #header style="z-index:200">
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" >
-                            <p class="m-0  text-2xl my-4" >Archivos de la capacitacion <Button v-if="getUserId() == capacitacion.creator_id" label="Subir archivo"  icon="pi pi-upload" class="p-button-success ml-4 p-2" @click="showDialog" />
+                            <p class="m-0  text-2xl my-4" >Archivos de la capacitacion 
  </p> 
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
+                              
                                 <i class="pi pi-search" />
                                 <InputText class="" v-model="filters['global'].value" placeholder="Buscar..." />
                             </span>
+                            
+                        </div>
+                        <div style="display: flex; justify-content: end;">
+                          <Button v-if="getUserId() == capacitacion.creator_id" label="Subir archivo"  icon="pi pi-upload" class="p-button-success " @click="showDialog" />
+
                         </div>
                     </template>
 
@@ -108,15 +114,26 @@
     </div>
     <div class="field">
       <!-- <label for="file">Archivo</label> -->
-      <input type="file" id="file" ref="fileInput" @change="handleFileUpload" required  style="display: none;"/>
-      <Button @click="()=> {fileInput.click()}" outlined> Cargar archivo</Button>
+      
 
       <div style="background-color: var(--green-100);border-radius: 0.2rem;" class="col-12  my-4" v-if="form.file">{{ form.file.name }}</div>
 
     </div>
-    <Button label="Enviar" class="" @click="submitFile" />
+
+    
+   
   </form>
+
+
+  <template #footer>
+      <div>
+        <input type="file" id="file" ref="fileInput" @change="handleFileUpload" required  style="display: none;"/>
+      <Button @click="()=> {fileInput.click()}" text label=" Cargar archivo"></Button>
+      <Button label="Enviar" class="" severity="help" @click="submitFile" />
+      </div>
+    </template>
 </Dialog>
+
 
 </template>
 

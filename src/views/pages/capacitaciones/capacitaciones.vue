@@ -1,7 +1,7 @@
 <template>
 
 
-<div class="col-12 m-auto " >
+<div class="col-12 m-auto my-8 px-2" >
 
 
 
@@ -35,9 +35,6 @@
     <Dialog style="max-width: 1024px;" v-model:visible="openNew" modal header="Agendar capacitacion" :style="{ width: '90%' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     
 
-        {{ newCapacitacion }}
-
-        {{ usersSelected }}
     <div style="display: flex;">
     </div>
 
@@ -49,54 +46,54 @@
     <div class="col-12 lg:col-6     ">
 
 
-        <p class="col-12 text-3xl" style="font-weight: bold;"> Configuración </p>
-        <div class="col-12  m-auto pb-4 p-4 "
-            style="background-color: var(--orange-400); box-shadow: 0 0 10px rgba(0, 0, 0, 0.137) ;height: max-content; border-radius: 1rem;">
+        <p class="col-12 text-3xl" style="font-weight: bold;color: black"> Configuración </p>
+        <div class="col-12  m-auto pb-2 p-4 "
+            style="background-color: ; box-shadow: 0 0 10px rgba(0, 0, 0, 0.137) ;height: max-content; border-radius: .5rem;">
 
 
-            <div class="col-12 m-0 mb-3  " style=";">
+            <div class="col-12 m-0 mb-0  " style=";">
                 <p class="text-2xl" style="font-weight: bold;text-transform: capitalize; color: white;"> </p>
             </div>
 
 
 
 
-            <div class="flex flex-column gap-2 my-4 text-white">
-                <label for="username" >Nombre de  la capacitacion</label>
+            <div class="flex flex-column gap-2 mb-4 ">
+                <h6 for="username" >Nombre de  la capacitacion</h6>
                 <InputText id="username"  v-model="newCapacitacion.name" aria-describedby="username-help" />
                 <!-- <small id="username-help">Enter your username to reset your password.</small> -->
             </div>
 
 
-            <div class="flex flex-column gap-2 my-4 text-white">
-                <label for="username" >Tematica</label>
+            <div class="flex flex-column gap-2 my-4 ">
+                <h6 for="username" >Tematica</h6>
                 <InputText id="username"  v-model="newCapacitacion.topic" aria-describedby="username-help" />
                 <!-- <small id="username-help">Enter your username to reset your password.</small> -->
             </div>
 
 
-            <div class="flex flex-column gap-2 my-4 text-white">
-    <label for="switch-incluir-link">¿Incluir enlace de la reunión?</label>
+            <div class="flex flex-column gap-2 my-4 ">
+    <h6 for="switch-incluir-link">¿Incluir enlace de la reunión?</h6>
     <InputSwitch id="switch-incluir-link" v-model="incluirLink" />
 </div>
 
-<div v-if="incluirLink" class="flex flex-column gap-2 my-4 text-white">
-    <label for="input-enlace-reunion">Enlace de la reunión</label>
+<div v-if="incluirLink" class="flex flex-column gap-2 my-4 ">
+    <h6 for="input-enlace-reunion">Enlace de la reunión</h6>
     <InputText id="input-enlace-reunion" v-model="newCapacitacion.material_url" />
 </div>
 
 
        
-            <div class="flex flex-column gap-2 my-4 text-white">
-                <label for="username" >Ubicacion</label>
+            <div class="flex flex-column gap-2 my-4 ">
+                <h6 for="username" >Ubicacion</h6>
                 <InputText id="username"  v-model="newCapacitacion.location" aria-describedby="username-help" />
                 <!-- <small id="username-help">Enter your username to reset your password.</small> -->
             </div>
 
 
 
-            <div class="flex flex-column gap-2 my-4 text-white">
-                <label for="username" >Fecha de la capacitacion</label>
+            <div class="flex flex-column gap-2 my-4 ">
+                <h6 for="username" >Fecha de la capacitacion</h6>
                 <Calendar id="username"  v-model="newCapacitacion.scheduled_time" aria-describedby="username-help" />
                 <!-- <small id="username-help">Enter your username to reset your password.</small> -->
             </div>
@@ -116,7 +113,7 @@
 
         </div>
 
-        <Button @click="crearCapacitacion" class="my-6 col-12" outlined > <span class="col-12 p-0">Agendar</span> </Button>
+        <Button @click="crearCapacitacion" class="my-6 col-12" severity="help" > <span class="col-12 p-0">Agendar</span> </Button>
 
 
 
@@ -150,11 +147,11 @@
 </div>
 
 <div class="col-12  m-auto pb-4 p-5 "
-style="background-color: rgba(255, 255, 255, 0); ;height: 100%; border-radius: 1rem;height overflow: hidden">
+style="background-color: rgba(255, 255, 255, 0); ;height: 100%; border-radius: .3rem;height overflow: hidden">
 
 
 
-<div class="grid" style="height: 70vh; overflow-y: auto;">
+<div class="grid" style="height: 60vh; overflow-y: auto;">
 
 
 <div class="col-12 grid py-4" v-for="grupo in groupedUsersBySite" style="border-bottom: 2px solid rgba(0, 0, 0, 0.375);">
@@ -208,7 +205,7 @@ style="background-color: rgba(255, 255, 255, 0); ;height: 100%; border-radius: 1
                     responsiveLayout="scroll" scrollable scroll-height="62vh" :frozenValue="lockedCustomers">
                     <template #header style="z-index:200">
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" >
-                            <p class="m-0  text-2xl my-4">Capacitaciones <Button @click="openNew = ! openNew" class="ml-3 p-2"  > Agendar nueva</Button> </p> 
+                            <p class="m-0  text-2xl my-4">Capacitaciones <Button severity="help" @click="openNew = ! openNew" class="ml-3 p-2"  > Agendar nueva</Button> </p> 
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
                                 <InputText class="" v-model="filters['global'].value" placeholder="Buscar..." />
@@ -216,7 +213,7 @@ style="background-color: rgba(255, 255, 255, 0); ;height: 100%; border-radius: 1
                         </div>
                     </template>
 
-                    <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen  ></Column>
+                    <!-- <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen  ></Column> -->
 
                     <Column class="p-2" field="id" header="Id" :sortable="true"
                         headerStyle="width:min-content; min-width:min-content; ">
@@ -278,9 +275,9 @@ style="background-color: rgba(255, 255, 255, 0); ;height: 100%; border-radius: 1
                         headerStyle="width:min-content; min-width:min-content; ">
                         <template #body="capacitacion">
                             <span  class="p-column-title">Code</span>
-                           <p class="p-2 text-center" :class="capacitacion.data.status">
+                           <Tag class="p-2 text-center" :class="capacitacion.data.status">
                             {{ capacitacion.data.status }}
-                           </p> 
+                           </Tag> 
                         </template>
                     </Column>
 
@@ -861,6 +858,10 @@ onMounted(() => {
         justify-content: center;
         
     }
+
+    h6{
+        margin: 0;
+    }
     
     .licencia{
         display: flex;
@@ -903,17 +904,17 @@ onMounted(() => {
 
 
     .Agendada{
-        background-color: var(--yellow-200) ;
-        border-radius: 5rem;
+        background-color: var(--yellow-500) ;
+     
     }
 
     .Completada{
-        background-color: var(--green-200) ;
-        border-radius: 5rem;
+        background-color: var(--green-500) ;
+    
     }
 
     .Cancelada{
-        background-color: var(--red-200) ;
-        border-radius: 5rem;
+        background-color: var(--red-500) ;
+ 
     }
     </style>

@@ -1,7 +1,10 @@
 <template>
 
 
-    <div class="col-12 m-auto " >
+    <div class="col-12 m-auto my-8 px-3" >
+
+
+        <h3 class="my-5"> <b> Mis capacitaciones</b></h3>
     
     
         <Dialog v-model:visible="sending" modal header="Enviando datos" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
@@ -19,9 +22,7 @@
         <Dialog style="max-width: 1024px;" v-model:visible="openNew" modal header="Agendar capacitacion" :style="{ width: '90%' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" >
         
     
-            {{ newCapacitacion }}
     
-            {{ usersSelected }}
         <div style="display: flex;">
         </div>
     
@@ -209,7 +210,7 @@
                         responsiveLayout="scroll" scrollable scroll-height="62vh" :frozenValue="lockedCustomers">
                         <template #header style="z-index:200">
                             <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" >
-                                <p class="m-0  text-2xl my-4"> Invitaciones <Button @click="openNew = ! openNew" class="ml-0 p-2 col-12 lg:ml-0 lg:col-12 mt-4"  > Agendar nueva capacitacion</Button> </p> 
+                                <!-- <p class="m-0  text-2xl my-4"> Invitaciones <Button @click="openNew = ! openNew" class="ml-0 p-2 col-12 lg:ml-0 lg:col-12 mt-4"  > Agendar nueva capacitacion</Button> </p>  -->
                                 <span class="block mt-2 md:mt-0 p-input-icon-left">
                                     <i class="pi pi-search" />
                                     <InputText class="" v-model="filters['global'].value" placeholder="Buscar..." />
@@ -217,7 +218,7 @@
                             </div>
                         </template>
     
-                        <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen  ></Column>
+                        <!-- <Column class="p-2" selectionMode="multiple" headerStyle="width: 3rem; " frozen  ></Column> -->
     
                         <Column class="p-2" field="id" header="Id" :sortable="true"
                             headerStyle="width:min-content; min-width:min-content; ">
@@ -279,9 +280,9 @@
                             headerStyle="width:min-content; min-width:min-content; ">
                             <template #body="capacitacion">
                                 <span  class="p-column-title">Code</span>
-                               <p class="p-2 text-center" :class="capacitacion.data.status">
-                                {{ capacitacion.data.status }}
-                               </p> 
+                                <Tag class="p-2 text-center" :class="capacitacion.data.status">
+                            {{ capacitacion.data.status }}
+                           </Tag> 
                             </template>
                         </Column>
     
@@ -905,18 +906,19 @@
           
     
     
+      
         .Agendada{
-            background-color: var(--yellow-200) ;
-            border-radius: 5rem;
+            background-color: var(--yellow-500) ;
+      
         }
     
         .Completada{
-            background-color: var(--green-200) ;
-            border-radius: 5rem;
+            background-color: var(--green-500) ;
+           
         }
     
         .Cancelada{
-            background-color: var(--red-200) ;
-            border-radius: 5rem;
+            background-color: var(--red-500) ;
+        
         }
         </style>

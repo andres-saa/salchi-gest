@@ -50,6 +50,11 @@ const navItems = [
         icon:'fa fa-gear',
         path:'configuracion'
     },  
+    {
+        label:'Resumen Beneficio',
+        icon:'fa fa-chart-column',
+        path:'recipe-sumary-benefit'
+    }, 
 
 
 

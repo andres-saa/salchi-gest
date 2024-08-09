@@ -102,6 +102,14 @@ async function fetchAndUpdateRoles() {
                             label: 'recetas', icon: 'fa-solid fa-calendar', to: '/recetario/recetas/',
 
                         },
+                        {
+                            label: 'Configuracion', icon: 'fa-solid fa-calendar', to: '/recetario/configuracion/',
+
+                        },
+                        {
+                            label: 'Resumen Beneficio', icon: 'fa-solid fa-calendar', to: '/recetario/recipe-sumary-benefit/',
+
+                        },
                      
                     ]
 
@@ -263,10 +271,10 @@ async function fetchAndUpdateRoles() {
             items: [
 
 
-                {
-                    label: 'Innovacion ', icon: 'fa-solid fa-folder', to: '/innovation',
+                // {
+                //     label: 'Innovacion ', icon: 'fa-solid fa-folder', to: '/innovation',
 
-                },
+                // },
                 {
                     label: 'Auditorias ', icon: 'fa-solid fa-folder', to: '/auditorias/lista',
 
@@ -446,10 +454,10 @@ async function fetchAndUpdateRoles() {
 
                 //     },
 
-                // {
-                //     label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
+                {
+                    label: 'Agendar', icon: 'fa-solid fa-calendar', to: '/capacitaciones',
 
-                // },
+                },
                 {
                     label: 'Mi formacion', icon: 'fa-solid fa-calendar', to: '/video-training-sequences/',
 
@@ -461,10 +469,10 @@ async function fetchAndUpdateRoles() {
                 },
 
 
-                // {
-                //     label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones',
+                {
+                    label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones',
 
-                // },
+                },
                 {
                     label: 'Principal', icon: 'fa-solid fa-envelope',
                     items: [
@@ -472,6 +480,12 @@ async function fetchAndUpdateRoles() {
                             label: 'Recetario cucharas', icon: 'fa-solid fa-calendar', to: '/cucharas',
 
                         },
+                        {
+                            label: 'Organizacion', icon: 'fa-solid fa-envelope', to: '/samovar',
+
+                        },
+
+                       
                         {
                             label: 'Organizacion', icon: 'fa-solid fa-envelope', to: '/samovar',
 

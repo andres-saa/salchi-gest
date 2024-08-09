@@ -268,6 +268,11 @@ const router = createRouter({
               component: () => import('@/views/pages/inventory/recetario/ingredientes.vue')
             },
             {
+              path: '/recetario/recipe-sumary-benefit/',
+              name: 'recetario-recipe-sumary-benefit',
+              component: () => import('@/views/pages/inventory/recetario/recipeSummaryBenefit.vue')
+            },
+            {
               path: '/recetario/configuracion/',
               name: 'recetario-configuracion',
               component: () => import('@/views/pages/inventory/recetario/configuracion.vue')

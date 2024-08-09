@@ -300,7 +300,7 @@ const openToSeeViews = (id) => {
 
 
 const formattedVideoLink = (link) => {
-    const match = link.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)(?:\?.*)?/);
+    const match = link.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)(?:\?.*)?/);
 
     if (match && match[1]) {
         const videoId = match[1];

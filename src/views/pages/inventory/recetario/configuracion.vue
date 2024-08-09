@@ -5,10 +5,14 @@
 
 
 
+    <!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/Wh4tL3dkmR0" frameborder="0" allowfullscreen></iframe> -->
+
+
+
     <h3 style="margin-top: 6rem;" class="text-center p-0 mx-0">
         <i class=" fa fa-gear"></i>
             <b>
-                Configuracion Del recetario
+                Configuracion del recetario
             </b>
     </h3>
 
