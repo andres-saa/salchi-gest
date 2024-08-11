@@ -41,7 +41,7 @@ const updateApp = async() => {
 
 
     const currentVersion = await fetchService.get(`${URI}/get-salchigest-version/`)
-    appStore.version = currentVersion
+    appStore.version_store = currentVersion.version
     window.location.href = window.location.href
 
 }
@@ -49,12 +49,12 @@ const updateApp = async() => {
 onMounted( async() => {
 
         const currentVersion = await fetchService.get(`${URI}/get-salchigest-version/`)
-        const locateVersion = appStore.version
-        console.log(locateVersion.version)
+        
+        console.log(appStore.version_store)
         console.log(currentVersion.version)
 
 
-        if(currentVersion.version > locateVersion.version){
+        if(currentVersion.version > appStore.version_store || isNaN(appStore.version_store) ){
             newVersion.value = true
          
         }

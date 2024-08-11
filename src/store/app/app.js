@@ -2,21 +2,21 @@ import { defineStore } from "pinia";
 import { URI } from "../../service/conection";
 
 
-export const useAppStore = defineStore('app-store', {
+export const useAppStore = defineStore('version-store', {
    
     persist: {
        
-                key: 'app-store', 
+                key: 'version-store', 
                 // storage: localStorage,
                 paths:[
-                        'version'
+                        'version_store'
                     ]
     },
     state: () => {
 
         return {
 
-            version:0.1
+            version_store:0.1
  
         }
     },
