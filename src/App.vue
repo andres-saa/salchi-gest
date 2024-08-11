@@ -5,6 +5,10 @@ import { onBeforeMount,onMounted,ref } from 'vue';
 import Loading from './components/Loading.vue';
 import {orderService} from '@/service/menu/orderService.js'
 import { useOrderStore } from './store/order';
+import {useAppStore} from './store/app/app'
+import {fetchService} from './service/utils/fetchService'
+import { URI } from './service/conection';
+
 
 const sonido4 = new Audio('/sound/pip4.wav')
 const orderStore = useOrderStore()
@@ -12,8 +16,11 @@ const orderStore = useOrderStore()
 const sonido1 = new Audio('/sound/pip1.wav')
 const sonido2 = new Audio('/sound/pip2.wav')
 const sonido3 = new Audio('/sound/pip3.wav')
+const appStore = useAppStore()
 
 
+
+const newVersion = ref(false)
 
 onBeforeMount(async() => {
     obtenerRolesYActualizar( )
@@ -28,7 +35,29 @@ const intervalId2 = ref()
 const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
 
 
+
+
+const updateApp = async() => {
+
+
+    const currentVersion = await fetchService.get(`${URI}/get-salchigest-version/`)
+    appStore.version = currentVersion
+    window.location.href = window.location.href
+
+}
+
 onMounted( async() => {
+
+        const currentVersion = await fetchService.get(`${URI}/get-salchigest-version/`)
+        const locateVersion = appStore.version
+
+
+        if(currentVersion.version > locateVersion.version){
+            newVersion.value = true
+         
+        }
+  
+    
 
 
 
@@ -66,6 +95,27 @@ onMounted( async() => {
 </script>
 
 <template>
+
+
+
+    <div v-if="newVersion" class="p-4" style="width: 100vw;height: 100vh; position: absolute;left: 0; top: 0;border-radius: .5rem; background-color: rgba(0, 0, 0, .5);z-index: 100000;justify-content: center; align-items:center;display: flex;">
+
+
+        <div class="p-4" style="width: 100%; max-width: 20rem;background-color: white;border-radius: .5rem;display: flex; flex-direction: column;">
+
+            <h5>
+                <b>
+                    Nueva version del salchigest disponible
+                </b>
+              
+            </h5>
+
+            <Button @click="updateApp()" severity="help" label="Actualizar"></Button>
+
+        </div>
+
+
+    </div>
    
 
    <loading class="col-12" style=" z-index: 9;"></loading>

@@ -3,8 +3,37 @@ import { ref, onBeforeMount, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
 
+
+
+
+
+
+import {loginStore} from '@/store/user.js'
+
+
+
+const login = loginStore()
+
+const permissions = ref([])
+
+
+onBeforeMount( async() => {
+     permissions.value =  await login.rawUserData.permissions
+    //  console.log(permissions.value)
+    // alert(permissions.value?.[0])
+})
+
+
+
+
+
+
+
+
+
+
 const route = useRoute();
-const visibleMenus = ref(true)
+const visibleMenus = ref(false)
 
 const { layoutConfig, layoutState, setActiveMenuItem, onMenuToggle } = useLayout();
 
@@ -87,7 +116,7 @@ const checkActiveRoute = (item) => {
 
 
         <Transition name="layout-submenu">
-            <a v-if="(!item.to || item.items) && item.visible !== false" :href="item.url" @click="itemClick($event, item, index)" :class="item.class" :target="item.target" tabindex="0" class="layout-submenu pr-2">
+            <a v-if="(!item.to || item.items) && item.visible !== false && item.items.some( i => permissions.includes(i.permision_id))" :href="item.url" @click="itemClick($event, item, index)" :class="item.class" :target="item.target" tabindex="0" class="layout-submenu pr-2">
                 <i :class="item.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
                 <i style="transition: all .3s ease;" class="pi pi-fw pi-angle-down layout-submenu-toggler text-l" v-if="item.items"></i>
@@ -96,14 +125,14 @@ const checkActiveRoute = (item) => {
             
 
         
-            <router-link  v-if="item.to && !item.items && item.visible !== false" @click="itemClick($event, item, index)" :class="[item.class, { 'active-route': checkActiveRoute(item) }]" tabindex="0" :to="item.to">
+            <router-link  v-if="item.to && !item.items && item.visible !== false && item.permision_id && permissions.includes(item.permision_id)" @click="itemClick($event, item, index)" :class="[item.class, { 'active-route': checkActiveRoute(item) }]" tabindex="0" :to="item.to">
                 <i :class="item.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
             </router-link>
 
             <Transition v-if="item.items && item.visible !== false" name="layout-submenu">
-                <ul  v-show="root ? true : isActiveMenu" class="layout-submenu">
-                    <app-menu-item style="transition: .2s all ease;" :class="visibleMenus ? 'open layout-submenu'  : 'close layout-submenu'" v-for="(child, i) in item.items" :key="child" :index="i+1" :item="child" :parentItemKey="itemKey" :root="false"></app-menu-item>
+                <ul  v-show="root ? true : isActiveMenu && permissions.includes(item.permision_id)" class="layout-submenu">
+                    <app-menu-item  style="transition: .2s all ease;" :class="!visibleMenus && props.root && !props.parentItemKey ? 'close layout-submenu'  : 'open layout-submenu'" v-for="(child, i) in item.items" :key="child" :index="i+1" :item="child" :parentItemKey="itemKey" :root="false"></app-menu-item>
                 </ul>
             </Transition>
     

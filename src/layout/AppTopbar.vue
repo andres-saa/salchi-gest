@@ -98,7 +98,7 @@ const cerrar = () => {
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
             
-            <Button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
+            <Button @click="onTopBarMenuButton()" class="p-link layout-topbar-button ">
                 <img style="height: 32px;width: 32px; border-radius: 50%;border: 2px solid var(--primary-color); object-fit: cover;" :src="getImageUrl()" alt="">
               
             </Button>
@@ -128,5 +128,9 @@ const cerrar = () => {
  * {
     display: none !important;
   }
+}
+
+button:focus{
+    box-shadow: none
 }
 </style>

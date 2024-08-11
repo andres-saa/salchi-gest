@@ -10,9 +10,9 @@
             <h6 class="m-0 my-3">{{field.name}} </h6>
             <inputText v-model="newIngredient[field.fiel]" v-if="field.type == 'text'" style="width: 100%;"></inputText>
            <Dropdown  :options="field.Options" optionLabel="name" v-model="newIngredient[field.fiel]" style="width: 100%;" v-if="field.type == 'drop'"></Dropdown>
-           <InputNumber v-model="newIngredient[field.fiel]" style="width: 100%;" v-if="field.type == 'money'" prefix="$"></InputNumber>
-           <InputNumber v-model="newIngredient[field.fiel]" style="width: 100%;" v-if="field.type == 'number'" ></InputNumber>
-           <InputNumber v-model="newIngredient[field.fiel]" style="width: 100%;" v-if="field.type == 'persent'" suffix="%" ></InputNumber>
+           <InputNumber v-model="newIngredient[field.fiel]" style="width: 100%;" v-if="field.type == 'money' " locale="es-ES" max-fraction-digits="3"  prefix="$"></InputNumber>
+           <InputNumber v-model="newIngredient[field.fiel]" style="width: 100%;" v-if="field.type == 'number'" locale="es-ES" max-fraction-digits="3" ></InputNumber>
+           <InputNumber v-model="newIngredient[field.fiel]" style="width: 100%;" v-if="field.type == 'persent'" locale="es-ES" max-fraction-digits="3" suffix="%" ></InputNumber>
            
         </div>
 

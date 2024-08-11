@@ -5,7 +5,6 @@ import router from "../../router";
 export const fetchService = {
 
     router:router,
-    store: useReportesStore(),
 
     async get(url, loadingMessage) {
         const store = useReportesStore();

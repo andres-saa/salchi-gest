@@ -26,9 +26,7 @@
             margin-right: .5rem;
         }
 
-        &:focus {
-            @include focused();
-        }
+       
     }
 
     .layout-topbar-button {
@@ -37,7 +35,7 @@
         align-items: center;
         position: relative;
         color: var(--text-color-secondary);
-        border-radius: 50%;
+        border-radius: 0%;
         width: 3rem;
         height: 3rem;
         cursor: pointer;
@@ -45,11 +43,11 @@
 
         &:hover {
             color: var(--text-color);
-            background-color: var(--surface-hover);
+            background-color: rgba(255,255,255,.2);
         }
 
         &:focus {
-            @include focused();
+            // @include focused();
         }
 
         i {
