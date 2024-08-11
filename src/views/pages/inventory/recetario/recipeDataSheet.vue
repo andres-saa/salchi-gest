@@ -25,14 +25,14 @@
                 </Calendar>
 
 
-                <InputNumber v-model="newIRecipe[field.fiel]" style="width: 100%;" v-if="field.type == 'money'"
+                <InputNumber v-model="newIRecipe[field.fiel]" style="width: 100%;" v-if="field.type == 'money'" locale="es-ES" max-fraction-digits="3"
                     prefix="$"></InputNumber>
 
 
-                <InputNumber v-model="newIRecipe[field.fiel]" style="width: 100%;" v-if="field.type == 'number'">
+                <InputNumber locale="es-ES" max-fraction-digits="3" v-model="newIRecipe[field.fiel]" style="width: 100%;" v-if="field.type == 'number'">
                 </InputNumber>
 
-                <InputNumber v-model="newIRecipe[field.fiel]" style="width: 100%;" v-if="field.type == 'percent'"
+                <InputNumber locale="es-ES" max-fraction-digits="3" v-model="newIRecipe[field.fiel]" style="width: 100%;" v-if="field.type == 'percent'"
                     suffix="%"></InputNumber>
 
             </div>
@@ -72,13 +72,14 @@
 
        
             <h6> Ingrediente</h6>
-            <Dropdown v-model="newIngredient.ingredient" :options="ingredients" optionLabel="ingredient_name" style="width: 100%;"></Dropdown>
-            <h6> Unidad de medida</h6>
+            <Dropdown v-model="newIngredient.ingredient" :options="ingredients" filter optionLabel="ingredient_name" style="width: 100%;"></Dropdown>
+            <h6> Unidad de medida</
+                h6>
             <Dropdown v-model="newIngredient.unitMeasure" :options="unitMeasures" optionLabel="name" style="width: 100%;"></Dropdown>
             <h6 > Cantidad</h6>
-            <InputNumber v-model="newIngredient.quantity" max-fraction-digits="3" style="width: 100%;"></InputNumber>
+            <InputNumber  v-model="newIngredient.quantity" locale="es-ES" max-fraction-digits="3" style="width: 100%;"></InputNumber>
             <h6 > Cantidad antes de merma</h6>
-            <InputNumber v-model="newIngredient.quantity_before_shrinkage" max-fraction-digits="3" style="width: 100%;"></InputNumber>
+            <InputNumber v-model="newIngredient.quantity_before_shrinkage" locale="es-ES" max-fraction-digits="3" style="width: 100%;"></InputNumber>
 
             <template #footer>
                 <div style="display:  flex;justify-content: end;">
@@ -101,9 +102,9 @@
             <h6> Unidad de medida</h6>
             <Dropdown v-model="newIngredient.unitMeasure" :options="unitMeasures" optionLabel="name" style="width: 100%;"></Dropdown>
             <h6 > Cantidad</h6>
-            <InputNumber v-model="newIngredient.quantity" max-fraction-digits="3" style="width: 100%;"></InputNumber>
+            <InputNumber v-model="newIngredient.quantity" locale="es-ES" max-fraction-digits="3" style="width: 100%;"></InputNumber>
             <h6 > Cantidad antes de merma</h6>
-            <InputNumber v-model="newIngredient.quantity_before_shrinkage" max-fraction-digits="3" style="width: 100%;"></InputNumber>
+            <InputNumber v-model="newIngredient.quantity_before_shrinkage" locale="es-ES" max-fraction-digits="3" style="width: 100%;"></InputNumber>
 
             <template #footer>
                 <div style="display:  flex;justify-content: end;">
@@ -233,8 +234,15 @@
 
                         <h6 v-else-if="column.type == 'calc_percent'" style="text-transform: lowercase;"
                             :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">
-                            {{ `${((data.data[column.value] / recipe.recipe_data_sheet.recipe_total)*100).toFixed(2)}%` ||
+                            {{ `${((data.data[column.value] / recipe.recipe_data_sheet.recipe_total)*100)?.toFixed(2)?.replace('.', ',')}%` ||
                             '-----------' }} </h6>
+
+
+                        <h6 v-else-if="column.type == 'number'" style="text-transform: lowercase;"
+                            :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">
+                            {{ formatoDecimal(data.data[column.value]) || '-----------' }}</h6>
+
+                            
 
 
 
@@ -333,7 +341,7 @@ import { fetchService } from '../../../../service/utils/fetchService';
 import { URI } from '../../../../service/conection';
 import { watch } from 'vue';
 import { computed } from 'vue';
-import { formatoPesosColombianos } from '@/service/formatoPesos.js'
+import { formatoPesosColombianos,formatoDecimal } from '@/service/formatoPesos.js'
 import router from '../../../../router';
 import { useRoute } from 'vue-router';
 import InputNumber from 'primevue/inputnumber';
@@ -425,11 +433,29 @@ const data_sheet_columns = ref([
         field: 'taxes',
         type: 'percent'
     },
+    
+    {
+        label: 'Precio de venta Neto',
+        field: 'net_selling_price',
+        type: 'money'
+    },
+
+    {
+        label: 'Costo cotal de la receta',
+        field: 'recipe_total',
+        type: 'money'
+    },
 
     {
         label: '% Costo de la receta',
         field: 'percent_recipe_total_cost',
         type: 'percent'
+    },
+    
+    {
+        label: 'Margen de beneficio neto',
+        field: 'net_benefic_margin',
+        type: 'money'
     },
 
     {
@@ -439,17 +465,7 @@ const data_sheet_columns = ref([
     },
 
 
-    {
-        label: 'Precio de venta Neto',
-        field: 'net_selling_price',
-        type: 'money'
-    },
 
-    {
-        label: 'Margen de veneficio neto',
-        field: 'net_benefic_margin',
-        type: 'money'
-    },
 
 
     // {
@@ -460,11 +476,7 @@ const data_sheet_columns = ref([
     // },
 
 
-    {
-        label: 'Costo cotal de la receta',
-        field: 'recipe_total',
-        type: 'money'
-    },
+   
 
   
 
@@ -570,12 +582,14 @@ const columns = [
     {
         header: 'Cantidad',
         value: 'quantity',
-        width: 'number'
+        width: 'number',
+        type:'number',
     },
     {
         header: 'Cantidad Antes de merma',
         value: 'quantity_before_shrinkage',
-        type: 'max-content'
+        type: 'max-content',
+        type:'number',
     },
 
     {

@@ -76,8 +76,8 @@
                
 
                 <h6 v-if="column.type == 'money'" style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{formatoPesosColombianos(data.data[column.value] ) || '-----------'}}</h6>
-
-                <h6 v-else style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{ data.data[column.value] || '-----------'}}</h6>
+                <h6 v-if="column.type == 'number'" style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{formatoDecimal(data.data[column.value] ) || '-----------'}}</h6>
+                <h6 v-else-if=" column.type!= 'money' && column.type != 'number'" style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{ data.data[column.value] || '-----------'}}</h6>
             </template>
         </column>
 
@@ -118,7 +118,7 @@ import { fetchService } from '../../../../service/utils/fetchService';
 import { URI } from '../../../../service/conection';
 import { watch } from 'vue';
 import { computed } from 'vue';
-import {formatoPesosColombianos} from '@/service/formatoPesos.js' 
+import {formatoPesosColombianos,formatoDecimal} from '@/service/formatoPesos.js' 
 
 
 const ingredientToDelete = ref({})
@@ -208,7 +208,8 @@ const columns = [
     {
         header:'No. Un. por compra',
         value:'number_units_purchasing',
-        width:'10'
+        width:'10',
+        type:'number'
     },
     {
         header:'Form de compra',
@@ -216,9 +217,10 @@ const columns = [
         width:'10'
     },
     {
-        header:'Peso bruto (Kg/Li)',
+        header:'Presentacion convertir a gramos',
         value:'net_gross_weight',
-        width:'10'
+        width:'10',
+        type:'number'
     },
 
     {
@@ -229,7 +231,8 @@ const columns = [
     {
         header:'Costo unitario',
         value:'unit_cost',
-        type:'max-content'
+        type:'number',
+        
     },
 
 
@@ -269,7 +272,7 @@ const newIngredientsFields = ref([
 
 
     {
-        name:'Peso Bruto (Kg/Litros)',
+        name:'Presentacion convertir a gramos',
         fiel:'net_gross_weight',
         type:'number'
     },

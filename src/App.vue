@@ -50,6 +50,8 @@ onMounted( async() => {
 
         const currentVersion = await fetchService.get(`${URI}/get-salchigest-version/`)
         const locateVersion = appStore.version
+        console.log(locateVersion.version)
+        console.log(currentVersion.version)
 
 
         if(currentVersion.version > locateVersion.version){
