@@ -154,9 +154,10 @@
                     </h4>
                 </div>
 
-                <div v-for="column in data_sheet_columns" class="justify-content-start"
-                    style="display: flex; gap: 1rem; border: 1px solid black; align-items: center; justify-content: space-between">
-                    <h6 class="m-0 p-2" style="background-color: rgb(231 231 231); width: 100%;">
+                <div :class="column.separe? 'mt-4' : ''" v-for="column in data_sheet_columns" class="justify-content-start" style="display: flex; gap: 1rem; border: 1px solid black; align-items: center; justify-content: space-between">
+
+                  
+                    <h6 class="m-0 p-2" style="background-color: var(--primary-color); width: 100%;color: white;font-weight: bold;">
                         {{ column.label }}
                     </h6>
 
@@ -225,6 +226,9 @@
                     :field="column.value" class="py-2">
                     <template #body="data">
 
+
+
+                    
 
                         <h6 v-if="column.type == 'money'" style="text-transform: lowercase;"
                             :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">
@@ -419,11 +423,13 @@ const data_sheet_columns = ref([
     {
         label: 'Temperatura de servicio',
         field: 'service_temperature',
+       
     },
     {
         label: 'Precio de venta al publico',
         field: 'selling_price',
-        type: 'money'
+        type: 'money',
+        separe:true
     },
 
 
@@ -437,13 +443,15 @@ const data_sheet_columns = ref([
     {
         label: 'Precio de venta Neto',
         field: 'net_selling_price',
-        type: 'money'
+        type: 'money',
+        
     },
 
     {
         label: 'Costo cotal de la receta',
         field: 'recipe_total',
-        type: 'money'
+        type: 'money',
+        separe:true
     },
 
     {
