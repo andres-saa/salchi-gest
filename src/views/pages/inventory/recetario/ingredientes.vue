@@ -71,7 +71,7 @@
 
         </template>
 
-        <column v-for="column in columns" :header="column.header" :style="`min-width:${column.width}rem`"  :field="column.value" class="py-2" >
+        <column v-for="column in columns" :header="column.header" :style="`min-width:${column.width}rem`"  :field="column.value" class="py-1" >
             <template #body="data" >
                
 
@@ -82,7 +82,7 @@
         </column>
 
         
-        <column header="Accion" style="width: min-content;" field="name" class="py-2" frozen alignFrozen="right">
+        <column header="Accion" style="width: min-content;" field="name" class="py-1" frozen alignFrozen="right">
         
         
         <template #body="data" >
@@ -201,7 +201,7 @@ const columns = [
     },
     {
         header:'Precio de compra',
-        value:'purchasing_price',
+        value:'main_value',
         width:'10',
         type:'money'
     },
@@ -231,7 +231,7 @@ const columns = [
     {
         header:'Costo unitario',
         value:'unit_cost',
-        type:'number',
+        type:'money',
         
     },
 

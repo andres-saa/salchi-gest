@@ -275,12 +275,29 @@ const router = createRouter({
             {
               path: '/recetario/configuracion/',
               name: 'recetario-configuracion',
-              component: () => import('@/views/pages/inventory/recetario/configuracion.vue')
+              component: () => import('@/views/pages/inventory/recetario/configuracion.vue'),
+              children:[
+                {
+                  path: '/recetario/configuracion/productos-con-receta',
+                  name: 'recetario-recipe-sumary-benefit-productos-con-receta',
+                  component: () => import('@/views/pages/inventory/recetario/configuracionRecetas.vue')
+                },
+                {
+                  path: '/recetario/configuracion/comparation-percents',
+                  name: 'recetario-recipe-comparation-percents',
+                  component: () => import('@/views/pages/inventory/recetario/configuracionPercents.vue')
+                },
+              ]
             },
             {
               path: '/recipe-data-sheet/:product_id/:recipe_name',
               name: 'recipe_data_sheet',
               component: () => import('@/views/pages/inventory/recetario/recipeDataSheet.vue')
+            },
+            {
+              path: '/recetario/prices-cdi-table',
+              name: 'prices_cdi_table',
+              component: () => import('@/views/pages/inventory/recetario/pricesCdiTable.vue')
             },
           ]
         },

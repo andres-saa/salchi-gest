@@ -103,7 +103,7 @@ const checkActiveRoute = (item) => {
 
 <template>
     <li :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
-        <div  @click="visibleMenus = !visibleMenus"  style="cursor: pointer; border-radius: 1rem; display: flex;background-color: #ffffff15;min-width: max-content; justify-content: space-between;align-items: center;" v-if="root && item.visible !== false" class="layout-menuitem-root-text p-2 border-radius-1">{{ item.label }} 
+        <div  @click="visibleMenus = !visibleMenus"  style="cursor: pointer; border-radius: .3rem; display: flex;background-color: #ffffff15;min-width: max-content; justify-content: space-between;align-items: center;" v-if="root && item.visible !== false" class="layout-menuitem-root-text p-2 border-radius-1">{{ item.label }} 
             
             <i   :class="!visibleMenus?  'pi pi-angle-down t-up' :  'pi pi-angle-down t-down' " v-if="item.items"></i>
         
@@ -116,7 +116,7 @@ const checkActiveRoute = (item) => {
 
 
         <Transition name="layout-submenu">
-            <a v-if="(!item.to || item.items) && item.visible !== false && item.items.some( i => permissions.includes(i.permision_id))" :href="item.url" @click="itemClick($event, item, index)" :class="item.class" :target="item.target" tabindex="0" class="layout-submenu pr-2">
+            <a  v-if="(!item.to || item.items) && item.visible !== false && item.items.some( i => permissions.includes(i.permision_id))" :href="item.url" @click="itemClick($event, item, index)" :class="item.class" :target="item.target" tabindex="0" class="layout-submenu pr-2">
                 <i :class="item.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
                 <i style="transition: all .3s ease;" class="pi pi-fw pi-angle-down layout-submenu-toggler text-l" v-if="item.items"></i>
@@ -132,7 +132,7 @@ const checkActiveRoute = (item) => {
 
             <Transition v-if="item.items && item.visible !== false" name="layout-submenu">
                 <ul  v-show="root ? true : isActiveMenu && permissions.includes(item.permision_id)" class="layout-submenu">
-                    <app-menu-item  style="transition: .2s all ease;" :class="!visibleMenus && props.root && !props.parentItemKey ? 'close layout-submenu'  : 'open layout-submenu'" v-for="(child, i) in item.items" :key="child" :index="i+1" :item="child" :parentItemKey="itemKey" :root="false"></app-menu-item>
+                    <app-menu-item class=""  style="transition: .2s all ease;" :class="!visibleMenus && props.root && !props.parentItemKey ? 'close layout-submenu'  : 'open layout-submenu'" v-for="(child, i) in item.items" :key="child" :index="i+1" :item="child" :parentItemKey="itemKey" :root="false"></app-menu-item>
                 </ul>
             </Transition>
     

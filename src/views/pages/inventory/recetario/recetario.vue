@@ -3,7 +3,7 @@
 
     <div style="margin-top: 3rem;  max-width: 1366px;" class="m-auto" >
 
-        <nav  class="nav-bar shadow-1 ">
+        <nav  class="nav-bar shadow-1 mb-5 ">
             <ul>
                 <li class="nav-bar--item" v-for="(button, index) in navItems" :key="index">
                     <router-link :to="`/recetario/${button.path}/`">
@@ -45,16 +45,23 @@ const navItems = [
         icon:'fa fa-bowl-rice',
         path:'recetas'
     },  
+ 
+    {
+        label:'Resumen Beneficio',
+        icon:'fa fa-chart-column',
+        path:'recipe-sumary-benefit'
+    },
+    {
+        label:'Precios cdi',
+        icon:'fa fa-chart-column',
+        path:'prices-cdi-table'
+    }, 
+
     {
         label:'Configuracion',
         icon:'fa fa-gear',
         path:'configuracion'
     },  
-    {
-        label:'Resumen Beneficio',
-        icon:'fa fa-chart-column',
-        path:'recipe-sumary-benefit'
-    }, 
 
 
 
