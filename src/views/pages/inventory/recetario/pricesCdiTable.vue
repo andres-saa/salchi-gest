@@ -40,7 +40,7 @@
         </template>
     </Dialog>
 
-    <Dialog v-model:visible="visibleCharge" modal header="Actualizar ultimos precios de compra">
+    <Dialog v-model:visible="visibleCharge" modal header="Actualizar ultimos precios de compra" class="px-0" style="max-width: 60rem;width: 95%;">
 
         <DataTable :paginator="true" :rows="15" style="width: 100%;"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -72,6 +72,7 @@
 
             <column header="ID" field="ID" class="py-1" ></column>
             <column header="INGREDIENTE" field="INGREDIENTE" class="py-1" ></column>
+            <column header="IVA" field="IVA (%)" class="py-1" ></column>
             <column header="ULTIMO PRECIO DE COMPRA" field="ULTIMO PRECIO DE COMPRA" class="py-1" >
             
                 <template #body="data">
@@ -93,8 +94,10 @@
 
        <template #footer>
 
-                <div>
-                    <Button @click="updatePrices()" label="Actualizar" severity="help"></Button>
+                <div class="p-2" style="display: flex;flex-wrap: wrap;justify-content: end; gap: 1rem
+                ;">
+                    <Button size="small" icon="pi pi-upload" severity="help" @click="openFileInput" label="Cargar otro archivo"></Button>
+                    <Button size="small" @click="updatePrices()" label="Actualizar (Tener cuidado)" severity="danger"></Button>
                 </div>
 
             </template>
@@ -133,9 +136,9 @@
                 <MultiSelect optionLabel="percent" v-model="visibleColumnsIvas" placeholder="Columnas visibles" :options="column_ivas"></MultiSelect>
 
                 <Button size="small" icon="pi pi-plus" severity="help" @click="openNewIngredient" label="Nuevo ingredinte"></Button>
-                <Button size="small" icon="pi pi-download" severity="help" @click="downloadAll" label="descargar plantilla"></Button>
-                <Button size="small" icon="pi pi-upload" severity="help" @click="openFileInput" label="Cargar precios"></Button>
-                <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
+                <Button size="small" icon="pi pi-download" severity="help" @click="downloadAll" label="Descargar plantilla"></Button>
+                <Button size="small" icon="pi pi-upload" severity="danger" @click="openFileInput" label="Cargar precios"></Button>
+                <input type="file" ref="fileInput" accept=".xlsx, .csv" style="display: none;" @change="handleFileChange">
 
             </div>
 
@@ -227,7 +230,16 @@ const fileInput = ref(null);
 const visibleCharge = ref(false)
 
 const openFileInput = () => {
+  // Mostrar el indicador de carga, si es necesario
+  visibleCharge.value = true;
+
+  // Asegúrate de que la referencia al campo de entrada de archivos está disponible
+  if (fileInput.value) {
+    // Vaciar el valor del campo de entrada de archivos para permitir la selección del mismo archivo
+    fileInput.value.value = '';
+    // Abrir el selector de archivos
     fileInput.value.click();
+  }
 };
 
 const handleFileChange = async (event) => {
@@ -244,6 +256,8 @@ const handleFileChange = async (event) => {
             console.error("Error al leer el archivo:", error);
         }
     }
+
+    
 };
 
 const fileToJson = (file) => {
@@ -252,11 +266,17 @@ const fileToJson = (file) => {
 
         reader.onload = (e) => {
             try {
-                const workbook = XLSX.read(e.target.result, { type: 'binary' });
+                // Convert ArrayBuffer to binary string
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-                const data = XLSX.utils.sheet_to_json(worksheet);
-                resolve(data);
+                const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+                // Filter out records without an ID
+                const filteredData = rawData.filter(record => record['ID'] && record['ID'].toString().trim() !== '');
+
+                resolve(filteredData);
             } catch (error) {
                 reject(error);
             }
@@ -266,7 +286,8 @@ const fileToJson = (file) => {
             reject(error);
         };
 
-        reader.readAsBinaryString(file);
+        // Read the file as an ArrayBuffer
+        reader.readAsArrayBuffer(file);
     });
 };
 
@@ -511,12 +532,12 @@ const sendIngredient = async() => {
 
 
 const updatePrices = async() => {
-    const data = unjson.value?.map(i => {
-        return {
-            "ingredient_id":i['ID'],
-            "last_price_purchase": i['ULTIMO PRECIO DE COMPRA'] || 0
-
-        }})
+    const data = unjson.value
+    .map(i => ({
+        "ingredient_id": i['ID'],
+        "iva": i['IVA (%)'] || 0,
+        "last_price_purchase": parseFloat(i['ULTIMO PRECIO DE COMPRA']) || 0
+    }));
     console.log(data)
 
 

@@ -1,6 +1,6 @@
 <template>
 
-    <div style="max-width: 900px;" class="m-auto px-3 my-8">
+    <div style="max-width: 1280px;" class="m-auto px-3 my-8">
 
 
 
@@ -133,7 +133,7 @@
         <div class="grid mx-0 md:mx-0" style="margin-top: 3rem;">
 
             <div class="col-12  my-4 px-0" style="display: flex;justify-content: end;">
-                <Button v-if="!recipe.recipe_data_sheet.init" size="small" severity="danger"
+                <Button v-if="!recipe.recipe_data_sheet.init" size="small" severity="info"
                     @click="openEditIRecipe(recipe.recipe_data_sheet)" label="Modificar la Receta"></Button>
             </div>
 
@@ -143,7 +143,7 @@
                     :src="`${URI}/read-product-image/600/${route.params.recipe_name}`" alt="">
             </div>
 
-            <div class="col-12 md:col-6 py-0 px-0 md:pl-4" style="">
+            <div class="col-12 md:col-6 py-0 px-0 md:pl-4 " style="">
 
 
                 <div class="col-12 py-4 md:p-0">
@@ -154,7 +154,7 @@
                     </h4>
                 </div>
 
-                <div :class="column.separe? 'mt-4' : ''" v-for="column in data_sheet_columns" class="justify-content-start" style="display: flex; gap: 1rem; border: 1px solid black; align-items: center; justify-content: space-between">
+                <div :class="column.separe? 'mt-4 ' : ''" v-for="column in data_sheet_columns" class="justify-content-start" style="display: flex; background-color: white   ; gap: 1rem; border: 1px solid black; align-items: center; justify-content: space-between">
 
                   
                     <h6 class="m-0 p-2" style="background-color: var(--primary-color); width: 100%;color: white;font-weight: bold;">
