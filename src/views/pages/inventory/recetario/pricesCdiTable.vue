@@ -134,10 +134,7 @@
 
                 <Button size="small" icon="pi pi-plus" severity="help" @click="openNewIngredient" label="Nuevo ingredinte"></Button>
                 <Button size="small" icon="pi pi-download" severity="help" @click="downloadAll" label="descargar plantilla"></Button>
-                <Button size="small" icon="pi pi-upload" severity="help" @click="openNewIngredient" label="Cargar precios"></Button>
-
-
-                <Button size="small" icon="pi pi-upload" severity="help" @click="openFileInput" label="Cargar archivo"></Button>
+                <Button size="small" icon="pi pi-upload" severity="help" @click="openFileInput" label="Cargar precios"></Button>
                 <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
 
             </div>
