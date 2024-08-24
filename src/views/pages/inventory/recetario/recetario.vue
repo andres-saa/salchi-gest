@@ -34,17 +34,41 @@ const isActive = PathService.isActiveRoute
 const navItems = [
 
 
-{
-        label:'Ingredientes',
+    {
+        label:'Todos los ingredientes',
         icon:'fa fa-carrot',
         path:'ingredientes',
         color:'green'
     }, 
+
+    
     {
-        label:'Recetas',
+        label:'Producto Terminado',
+        icon:'fa fa-bowl-rice',
+        path:'producto-terminado'
+    }, 
+
+    {
+        label:'Pasamanos',
+        icon:'fa fa-bowl-rice',
+        path:'pasamanos'
+    },
+
+
+    {
+        label:'Recetas Sedes',
         icon:'fa fa-bowl-rice',
         path:'recetas'
     },  
+
+    // {
+    //     label:'Ingredientes CDI',
+    //     icon:'fa fa-carrot',
+    //     path:'ingredientes',
+    //     color:'green'
+    // }, 
+
+
  
     {
         label:'Resumen Beneficio',

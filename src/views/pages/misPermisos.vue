@@ -137,8 +137,8 @@
     </div>
 
 
-    <Dialog style="border: none; box-shadow: none;" v-model:visible="show" :style="{ width: '700px' }" header="Revizar permiso" :modal="true"
-        class="p-fluid m-2 pt-8">
+    <Dialog :closable="false" style="border: none; box-shadow: none;position:relative;" v-model:visible="show" :style="{ width: '700px' }"  :modal="true"
+        class="p-fluid m-2 pt-8  ">
 
        
         <div class=" a4-size p-0 lg:p-6 mi-clase mt-4" >
@@ -268,7 +268,7 @@
       </div>
 
       <div class="mb-1" >
-        <span style="font-weight: bold;"> Responsable:</span> {{ allUsersBasic.filter(u => u.id == currentPermiso.status?.responsable )[0].name}}
+        <span style="font-weight: bold;"> Responsable:</span> {{ allUsersBasic.filter(u => u.id == currentPermiso.status?.responsable )?.[0]?.name}}
       </div>
 
       <div v-if="currentPermiso.status.status == 'rechazado'">
@@ -277,16 +277,18 @@
 
     </div>
 
-    <div class=" col-12 md:col-6 m-auto p-0 botonera" style="z-index: 999; display: flex;gap: 1rem;; overflow: hidden; justify-content: space-around; position: absolute;top: 4rem;right: 0; background-color:rgba(255, 255, 255, 0)te;"> 
+   
             <!-- <Button style="background-color: rgb(255, 255, 168);color: rgba(0, 0, 0, 0.864); border: none;" @click="open(permiso)"> REVISAR</Button> -->
             <!-- <Button class="text-center" @click="openAceptar(currentPermiso)" severity="success" style="; border: none;display: flex; justify-content: center;" > APROBAR </Button> -->
             <!-- <Button @click="openRechazar(currentPermiso)" severity="danger"  style=" border: none;display: flex; justify-content: center;"> RECHAZAR</Button> -->
 
-            <Button @click="imprimir" severity="warning"  style=" border: none;display: flex;border-radius: 10rem 3rem 0 0; justify-content: center;"> IMPRIMIR</Button>
-        </div>
+            
+
 
 
 </div>
+
+
 
 
 
@@ -304,6 +306,15 @@
         </div>
 
         
+
+        <div style="display:  flex; position: absolute;top: 3.5rem;right: -1rem; gap:1rem">
+
+          <Button class="botonera" style=" width: min-content;" label="Imprimir" icon="pi pi-print"  @click="imprimir" severity="help"   > </Button>
+
+          <Button class="botonera" rounded style="" label="" icon="pi pi-times"  @click="show = false" severity="danger"   > </Button>
+        </div>
+
+       
     </Dialog>
 
 

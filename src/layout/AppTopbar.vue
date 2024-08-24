@@ -74,21 +74,44 @@ const cerrar = () => {
     router.push('/auth/login')
 
 
-
-
-
 }
+
+
+
+const isSmallScreen = ref(window.innerWidth < 991);
+
+
+
+const checkScreenWidth = () => {
+      isSmallScreen.value = window.innerWidth < 991;
+    };
+
+    onMounted(() => {
+      window.addEventListener('resize', checkScreenWidth);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', checkScreenWidth);
+    });
+
+
 </script>
 
 <template>
     <div  class="layout-topbar md:px-4" style="background-color:   rgba(0, 1, 22, 1);max-width: 100vw; ">
+
+
+        
+
+
+
         <router-link to="/" class="layout-topbar-logo">
             <img style="height: 1.5rem;" src="/images/logo.png" alt="logo" />
             <!-- <span>SAKAI</span> -->
            <span class="pl-4 text-sm text-white">{{ getUserRole() }}</span> 
         </router-link>
 
-        <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
+        <button v-if="isSmallScreen" class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle() ">
             <i class="pi pi-bars text-white"></i>
         </button>
 

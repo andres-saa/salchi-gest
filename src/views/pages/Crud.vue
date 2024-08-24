@@ -36,6 +36,18 @@ import Loading from '../../components/Loading.vue';
 // import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 const toast = useToast();
 const users = ref([]);
+const visible_disabled = ref(false)
+const allUsers = ref([]);
+
+
+
+
+
+
+
+
+
+
 const adding = ref(false);
 const productDialog = ref(false);
 const currentUser = ref(null);
@@ -448,7 +460,8 @@ const cambiar2 = (event) => {
 
 onMounted(async () => {
     getUsers().then(data => {
-        users.value = data
+        allUsers.value = data
+        users.value = data.filter(u => u.status == 'activo')
         charging.value = false
 
     })
@@ -460,9 +473,18 @@ onMounted(async () => {
 
 
 
-// const formatCurrency = (value) => {
-//     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-// };
+
+
+const seeDisableUsers = (status) => {
+
+    if (status) {
+        users.value = [... allUsers.value]
+
+    }else{
+
+        users.value = [... allUsers.value.filter(u => u.status == 'activo')]
+    } 
+}
 
 const resetValuesNewEntry = () => {
     statusDropValue.value = {}
@@ -1104,12 +1126,26 @@ const verIMagen = (dni) => {
           
                            </h5>
 
+                           <h6 class="p-0 m-0" style="display: flex; align-items: center;text-transform: capitalize; gap:1rem">
+                            <b>
+                                Ver inactivos
+                            </b>
+                           
+                            <inputSwitch @change="seeDisableUsers(visible_disabled)" v-model="visible_disabled"></inputSwitch>
+                           </h6>
+                          
+                           
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
-                                <i class="pi pi-search" />
+                         
+                                <!-- <i class="pi pi-search" /> -->
                                 <InputText class="" v-model="filters['global'].value"
                                     placeholder="Buscar empleado..." />
                             </span>
+
                         </div>
+
+
+                       
                     </template>
 
                     <Column class="py-2" selectionMode="multiple" headerStyle="width: 3rem; " ></Column>

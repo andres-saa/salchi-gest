@@ -262,6 +262,19 @@ const router = createRouter({
               name: 'recetario-recetas',
               component: () => import('@/views/pages/inventory/recetario/recetas.vue')
             },
+
+            {
+              path: '/recetario/producto-terminado',
+              name: 'producto-terminado',
+              component: () => import('@/views/pages/inventory/recetario/recetasCDI.vue')
+            },
+
+            {
+              path: '/recetario/pasamanos',
+              name: 'producto-pasamanos',
+              component: () => import('@/views/pages/inventory/recetario/Pasamanos.vue')
+            },
+
             {
               path: '/recetario/ingredientes/',
               name: 'recetario-ingredientes',
@@ -294,6 +307,30 @@ const router = createRouter({
               name: 'recipe_data_sheet',
               component: () => import('@/views/pages/inventory/recetario/recipeDataSheet.vue')
             },
+            {
+              path: '/cdi-recipe-data-sheet/:product_id/:recipe_name',
+              name: 'cdi_recipe_data_sheet',
+              component: () => import('@/views/pages/inventory/recetario/CDIrecipeDataSheet.vue')
+            },
+
+            {
+              path: '/cdi-recipe-data-sheet-pasamanos/:product_id/:recipe_name',
+              name: 'cdi_recipe_data_sheet_pasamanos',
+              component: () => import('@/views/pages/inventory/recetario/CDIrecipeDataSheetPasamanos.vue')
+            }, 
+
+            {
+              path: '/new-cdi-recipe-data-sheet/',
+              name: 'new-cdi_recipe_data_sheet',
+              component: () => import('@/views/pages/inventory/recetario/NewCDIrecipeDataSheet.vue')
+            },
+
+            {
+              path: '/new-cdi-recipe-data-sheet-pasamanos/',
+              name: 'new-cdi_recipe_data_sheet-pasamanos',
+              component: () => import('@/views/pages/inventory/recetario/NewCDIrecipeDataSheetPasamanos.vue')
+            },
+            
             {
               path: '/recetario/prices-cdi-table',
               name: 'prices_cdi_table',

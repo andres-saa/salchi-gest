@@ -609,7 +609,13 @@ onBeforeMount(async () => {
 
 <template>
 
-    <ul class="layout-menu" style="position: relative;">
+    <ul class="layout-menu" style="">
+
+
+        
+
+
+
         <div v-for="(item, i) in model" :key="item">
             <app-menu-item 
             v-if="item.items.some( i => permissions.includes(i.permision_id))"   :item="item" :index="i"></app-menu-item>

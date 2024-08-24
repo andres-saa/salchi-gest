@@ -205,17 +205,17 @@ const columns = [
         width:'10',
         type:'money'
     },
-    {
-        header:'No. Un. por compra',
-        value:'number_units_purchasing',
-        width:'10',
-        type:'number'
-    },
-    {
-        header:'Form de compra',
-        value:'purchasing_format',
-        width:'10'
-    },
+    // {
+    //     header:'No. Un. por compra',
+    //     value:'number_units_purchasing',
+    //     width:'10',
+    //     type:'number'
+    // },
+    // {
+    //     header:'Form de compra',
+    //     value:'purchasing_format',
+    //     width:'10'
+    // },
     {
         header:'Presentacion convertir a gramos',
         value:'net_gross_weight',
@@ -223,11 +223,11 @@ const columns = [
         type:'number'
     },
 
-    {
-        header:'porcentaje de Merma (%)',
-        value:'shrinkage_persent',
-        width:'8'
-    },
+    // {
+    //     header:'porcentaje de Merma (%)',
+    //     value:'shrinkage_persent',
+    //     width:'8'
+    // },
     {
         header:'Costo unitario',
         value:'unit_cost',

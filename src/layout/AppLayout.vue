@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch, ref } from 'vue';
+import { computed,onMounted, watch, onBeforeUnmount, ref } from 'vue';
 import AppTopbar from './AppTopbar.vue';
 import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
@@ -9,9 +9,11 @@ import Loading from '../components/Loading.vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
-const { layoutConfig, layoutState, isSidebarActive } = useLayout();
+const { layoutConfig, layoutState,onMenuToggle, isSidebarActive,onmenuHide } = useLayout();
 
 const outsideClickListener = ref(null);
+
+// document.removeEventListener('hover', onmenuHide);
 
 watch(isSidebarActive, (newVal) => {
     if (newVal) {
@@ -41,6 +43,8 @@ const bindOutsideClickListener = () => {
                 layoutState.overlayMenuActive.value = false;
                 layoutState.staticMenuMobileActive.value = false;
                 layoutState.menuHoverActive.value = false;
+                isSidebarActive = false
+                
             }
         };
         document.addEventListener('click', outsideClickListener.value);
@@ -58,13 +62,40 @@ const isOutsideClicked = (event) => {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
+
+
+
+
+const isSmallScreen = ref(window.innerWidth < 991);
+
+
+
+    const checkScreenWidth = () => {
+      isSmallScreen.value = window.innerWidth < 991;
+    };
+
+    onMounted(() => {
+      window.addEventListener('resize', checkScreenWidth);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', checkScreenWidth);
+    });
+
 </script>
 
 <template>
 
     <div class="layout-wrapper " :class="containerClass">
+
+       
         <app-topbar></app-topbar>
+
+
+      
+        <Button class="pl-2 shadow-5 " @click="onMenuToggle()" icon="fa-solid fa-bars text-xl text-bold" :style=" isSidebarActive? 'left   : 20.5rem;' : 'left:-1rem' " severity="danger" v-if="!isSmallScreen"  style="position: fixed;transition: all .2s ease;border-radius: 0 10rem 10rem 0;justify-content: ;background-color: var(--primary-color); top: 50vh;z-index: 100;width: 3.5rem; font-weight: bold"></Button>
         <div class="layout-sidebar">
+            
             <app-sidebar></app-sidebar>
         </div>
 
@@ -73,7 +104,7 @@ const isOutsideClicked = (event) => {
 
             <div class="layout-main p-0" style="position: relative;content:paint;">
   
-                    
+                
                 
                 <router-view v-slot="{ Component }">
                 <transition name="fade" mode="out-in">

@@ -103,12 +103,12 @@ const startTokenValidation = () => {
           startTokenValidation();
           // localStorage.setItem('token', data.access_token);
           router.push('/')
-          toast.add({ severity: 'success', summary: 'Bienvenido', detail: 'Hoy es un gran dia', life: 10000 });
+          toast.add({ severity: 'success', summary: 'Bienvenido', detail: 'Hoy es un gran dia', life: 3000 });
 
 
           // Redireccionar a la página de inicio o donde sea necesario
         } catch (error) {
-          toast.add({ severity: 'error', summary: 'Algo salio mal', detail: 'Revisate los datos monstruo', life: 10000 });
+          toast.add({ severity: 'error', summary: 'Algo salio mal', detail: 'Revisate los datos monstruo', life: 3000 });
 
           console.error(error);
         }
