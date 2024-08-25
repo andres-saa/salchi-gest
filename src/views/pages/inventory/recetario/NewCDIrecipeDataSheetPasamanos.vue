@@ -435,6 +435,7 @@ const createCdiRecipeDataShee = async () => {
     const newData = {
     "cdi_recipe_data_sheet": {
         "name": newIngredient.value.ingredient_name,
+       
         "iva": data.iva,
         "pasamanos": true
     },
@@ -472,50 +473,51 @@ console.log(newData)
 }
 
 
-const createCdiRecipeDataSheetAll = async () => {
-    const data = { ...newIRecipe.value }
+// const createCdiRecipeDataSheetAll = async () => {
+//     const data = { ...newIRecipe.value }
 
 
 
 
-    ingredients.value.forEach(async(p) => {
+//     ingredients.value.forEach(async(p) => {
 
 
-        const newData = {
-        "cdi_recipe_data_sheet": {
-        "name": p.ingredient_name,
-        "iva": 0,
-        "pasamanos": true
-    },
-    "cdi_recipe_data_sheet_on_ingredient": {
-        "unit_measure_id": p.purchasing_unit_measure_id,
-        "convert_value": p.net_gross_weight ,
-    },
+//         const newData = {
+//         "cdi_recipe_data_sheet": {
+//         "name": p.ingredient_name,
+//         "ingredient_id":p.id,
+//         "iva": 0,
+//         "pasamanos": true
+//     },
+//     "cdi_recipe_data_sheet_on_ingredient": {
+//         "unit_measure_id": p.purchasing_unit_measure_id,
+//         "convert_value": p.net_gross_weight ,
+//     },
 
 
 
-    "cdi_recipe_data_Ingredient":{
-        ingredient_id:p.id,
-        unit_measure_id: p.purchasing_unit_measure_id,
-        quantity:1,
-        cdi_recipe_data_sheet_id:0
-    } 
+//     "cdi_recipe_data_Ingredient":{
+//         ingredient_id:p.id,
+//         unit_measure_id: p.purchasing_unit_measure_id,
+//         quantity:1,
+//         cdi_recipe_data_sheet_id:0
+//     } 
   
 
     
-    } 
+//     } 
 
 
-    const recipe_id = await fetchService.post(`${URI}/create-cdi-recipe-data-sheet-pasamanos/`, newData, 'Creando receta')
-
-
-
-
-    })
+//     const recipe_id = await fetchService.post(`${URI}/create-cdi-recipe-data-sheet-pasamanos/`, newData, 'Creando receta')
 
 
 
-}
+
+//     })
+
+
+
+// }
 
 
 const route = useRoute()

@@ -136,7 +136,7 @@
 
             </i>
             <b style="text-transform: uppercase;">
-               Pasamanos - {{ route.params?.recipe_name }} 
+               Pasamanos -  {{ recipe?.recipe?.name }} 
             </b>
         </h2>
 
@@ -462,13 +462,13 @@ const showNewRecipe = ref(false)
 
 const newIRecipe = ref({
     "id": 1,
-        "name": "SALSA TUSSI SM",
-        "iva": 19,
-        "purchase_price": 15267.07,
-        "convert_value": 1000,
-        "unit_cost": 15.267,
+        "name": "cargando...",
+        "iva": 0,
+        "purchase_price": 0,
+        "convert_value": 0,
+        "unit_cost": 0,
         "pasamanos": null,
-        "unit_measure": "Kilogramos"
+        "unit_measure": "Cargando..."
 })
 
 const ingredients = ref([{}])

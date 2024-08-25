@@ -93,7 +93,7 @@ const isSmallScreen = ref(window.innerWidth < 991);
 
 
       
-        <Button class="pl-2 shadow-5 " @click="onMenuToggle()" icon="fa-solid fa-bars text-xl text-bold" :style=" isSidebarActive? 'left   : 20.5rem;' : 'left:-1rem' " severity="danger" v-if="!isSmallScreen"  style="position: fixed;transition: all .2s ease;border-radius: 0 10rem 10rem 0;justify-content: ;background-color: var(--primary-color); top: 50vh;z-index: 100;width: 3.5rem; font-weight: bold"></Button>
+        <Button class="pr-0 pl-3 shadow-5 " @click="onMenuToggle()" :icon="isSidebarActive? 'fa fa-arrow-left text-xl text-bold' :' fa-solid fa-arrow-right text-xl text-bold'" :style=" isSidebarActive? 'left   : 20rem;top:50vh' : 'left:-1.5rem ;   top: 50vh;'  " severity="danger" v-if="!isSmallScreen"  style="position: fixed;transition: all .2s ease;border-radius: 0 10rem 10rem 0;justify-content: ;background-color: var(--primary-color); z-index: 100;width: 3.5rem; font-weight: bold"></Button>
         <div class="layout-sidebar">
             
             <app-sidebar></app-sidebar>

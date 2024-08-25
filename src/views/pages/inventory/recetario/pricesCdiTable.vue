@@ -535,6 +535,7 @@ const updatePrices = async() => {
     const data = unjson.value
     .map(i => ({
         "ingredient_id": i['ID'],
+        "name":i['INGREDIENTE'],
         "iva": i['IVA (%)'] || 0,
         "last_price_purchase": parseFloat(i['ULTIMO PRECIO DE COMPRA']) || 0
     }));

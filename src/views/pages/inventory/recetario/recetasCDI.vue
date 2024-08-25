@@ -5,6 +5,20 @@
 
 
 
+
+    <Dialog class="mx-2" header="Mover" v-model:visible=" visible_to_pt" modal>
+
+<h6>seguro que desea convertir  <b>{{ ingredient_to_pt?.name }}</b> en un Pasamanos ?</h6>
+
+<template #footer>
+    <div style="display:  flex;justify-content: end;">
+        <Button size="small" label="cancelar" @click="visible_to_pt = false" severity="help"></Button>
+        <Button size="small" @click="convert_to_pt(ingredient_to_pt.id)" label="Convertir en Pasamanos" severity="danger" text ></Button>
+    </div>
+</template>
+</Dialog>
+
+
     <Dialog style="width: 30rem;" :header="editing? 'Actualizar Ingrediente' : 'Nuevo Ingrediente'" class="mx-2" v-model:visible="showNewIngredinetDialog" modal>
 
 
@@ -101,16 +115,20 @@
         </column>
 
         
-        <column header="Accion" style="max-width: 6rem;" field="name" class="py-0 px-0 m-0" frozen alignFrozen="right">
+        <column header="Accion" style="max-width: max-content;" field="name" class="py-0 px-0 m-0" frozen alignFrozen="right">
         
         
         <template #body="data" >
 
-            <div style="display: flex;gap: .5rem;justify-content: center;">
+            <div class="px-2" style="display: flex;gap: .5rem;justify-content: center;">
 
-                <Button text disabled style="height: 2rem; width: 2rem;" severity="warning" icon="pi pi-pencil"></Button>
-                <Button text  disabled style="height: 2rem; width: 2rem;" severity="danger" icon="pi pi-trash"></Button>
-                <Button @click="navigateToRecipeDataSheet(data.data.id,data.data.name)" text severity="help" style="height: 2rem; width: 2rem;" icon="pi pi-eye"></Button>
+                <Button text disabled style="height: 1rem; width: 1rem;" severity="warning" icon="pi pi-pencil"></Button>
+                <Button text  disabled style="height: 1rem; width: 1rem;" severity="danger" icon="pi pi-trash"></Button>
+                <Button @click="navigateToRecipeDataSheet(data.data.id,data.data.name)" text severity="help" style="height: 1rem; width: 1rem;" icon="pi pi-eye"></Button>
+                <Button severity="danger" @click="open_to_pt(data.data)" style="min-width: max-content;" class="px-1 py-0 mx-1" size="small" label="-> Pasam."></Button>
+
+      
+
 
             </div>
 
@@ -142,6 +160,8 @@ import {formatoPesosColombianos, formatoDecimal} from '@/service/formatoPesos.js
 import router from '../../../../router';
 
 
+const visible_to_pt = ref(false)
+const ingredient_to_pt = ref({})
 
 
 const navigateToRecipeDataSheet =  (product_id,recipe_name) => {
@@ -344,6 +364,21 @@ const update = async() => {
 onMounted( async() =>{
     update()
 })
+
+
+const convert_to_pt = async(id) => {
+    await fetchService.post(`${URI}/pt_to_pasamanos/${id}`,{},'Convirtiendo')
+    update()
+    visible_to_pt.value = false
+}
+
+
+const open_to_pt = (ingredient) => {
+
+    visible_to_pt.value = true
+    ingredient_to_pt.value = ingredient
+}
+
 
 const filters = ref(null);
 const initFilters = () => {

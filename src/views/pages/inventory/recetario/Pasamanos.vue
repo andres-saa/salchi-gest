@@ -32,14 +32,14 @@
     </Dialog>
 
 
-    <Dialog class="mx-2" header="Eliminar ingrediente" v-model:visible=" showDeleIngredientDialog" modal>
+    <Dialog class="mx-2" header="Mover" v-model:visible=" visible_to_pt" modal>
 
-        <h6>seguro que desea eliminar el Ingrediente <b>{{ ingredientToDelete.ingredient_name }}</b> ?</h6>
+        <h6>seguro que desea convertir  <b>{{ ingredient_to_pt?.name }}</b> en un PT ?</h6>
 
         <template #footer>
             <div style="display:  flex;justify-content: end;">
-                <Button size="small" label="cancelar" @click="showDeleIngredientDialog = false" severity="help"></Button>
-                <Button size="small" @click="DeleteIngredient()" label="Eliminar ingrediente" severity="danger" text ></Button>
+                <Button size="small" label="cancelar" @click="visible_to_pt = false" severity="help"></Button>
+                <Button size="small" @click="convert_to_pt(ingredient_to_pt.id)" label="Convertir en PT" severity="danger" text ></Button>
             </div>
         </template>
     </Dialog>
@@ -101,17 +101,17 @@
         </column>
 
         
-        <column header="Accion" style="max-width: 6rem;" field="name" class="py-0 px-0 m-0" frozen alignFrozen="right">
+        <column header="Accion" style="max-width: min-content;" field="name" class="py-0 px-0 m-0" frozen alignFrozen="right">
         
         
         <template #body="data" >
 
-            <div style="display: flex;gap: .5rem;justify-content: center;">
+            <div class="px-2" style="display: flex;gap: .3rem;justify-content: center;align-items: center;">
 
                 <!-- <Button text disabled style="height: 2rem; width: 2rem;" severity="warning" icon="pi pi-pencil"></Button> -->
-                <Button text  disabled style="height: 2rem; width: 2rem;" severity="danger" icon="pi pi-trash"></Button>
-                <Button @click="navigateToRecipeDataSheet(data.data.id,data.data.name)" text severity="help" style="height: 2rem; width: 2rem;" icon="pi pi-eye"></Button>
-
+                <Button text  disabled style="height: 1rem; width: 1em;" severity="danger" icon="pi pi-trash"></Button>
+                <Button @click="navigateToRecipeDataSheet(data.data.id,data.data.name)" text severity="help" style="height: 1rem; width: 1rem;" icon="pi pi-eye"></Button>
+                <Button style="min-width: max-content;" severity="danger" @click="open_to_pt(data.data)" class="p-1 mx-1" size="small" label="-> PT"></Button>
             </div>
 
         </template>
@@ -163,7 +163,8 @@ const unitMeasures = ref([])
 const editing = ref(false)
 const showDeleIngredientDialog  = ref(false)
 
-
+const visible_to_pt = ref(false)
+const ingredient_to_pt = ref({})
 
 const openToDeletIngredient = (ingredient) => {
     showDeleIngredientDialog.value = true
@@ -313,6 +314,20 @@ watch(newIngredient, async(newval,oldval) => {
     newIngredient.value.purchasing_unit_measure_id = newval.purchasing_unit_measure?.id || null
 }, {deep:true})
 
+
+
+const convert_to_pt = async(id) => {
+    await fetchService.post(`${URI}/pasamanos_to_pt/${id}`,{},'Convirtiendo')
+    update()
+    visible_to_pt.value = false
+}
+
+
+const open_to_pt = (ingredient) => {
+
+    visible_to_pt.value = true
+    ingredient_to_pt.value = ingredient
+}
 
 
 const sendIngredient = async() => {
