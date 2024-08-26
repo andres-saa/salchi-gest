@@ -30,7 +30,7 @@
 
     <Dialog class="mx-2" header="Eliminar ingrediente" v-model:visible=" showDeleIngredientDialog" modal>
 
-        <h6>seguro que desea eliminar el Ingrediente <b>{{ ingredientToDelete.ingredient_name }}</b> ?</h6>
+        <h6>seguro que desea eliminar el Ingrediente <b>{{ ingredientToDelete.name }}</b> ?</h6>
 
         <template #footer>
             <div style="display:  flex;justify-content: end;">
@@ -190,7 +190,24 @@
         </div>
        
 
+        <column header="Accion" style="width: min-content;" field="name" class="py-1" frozen alignFrozen="right">
+        
+        
+        <template #body="data" >
 
+            <div style="display: flex; justify-content: end;gap: .5rem;">
+
+                <Button text @click="openEditIngredient(data.data)" class="m-0 p-0" severity="warning" style="height: 2rem; width: 2rem;" icon="pi pi-pencil"></Button>
+                <Button text @click="openToDeletIngredient(data.data)" class="m-0 p-0" severity="danger" style="height: 2rem; width: 2rem;" icon="pi pi-trash"></Button>
+
+
+
+            </div>
+
+
+        </template>
+    
+    </column>
       
         
 
@@ -442,6 +459,12 @@ const newIngredientsFields = ref([
         fiel:'net_gross_weight',
         type:'number'
     },
+
+    {
+        name:'iva (%)',
+        fiel:'iva',
+        type:'persent'
+    }
     // {
     //     name:'porcentaje de merma (%)',
     //     fiel:'shrinkage_persent',

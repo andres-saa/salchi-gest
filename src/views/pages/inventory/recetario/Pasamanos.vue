@@ -110,7 +110,7 @@
 
                 <!-- <Button text disabled style="height: 2rem; width: 2rem;" severity="warning" icon="pi pi-pencil"></Button> -->
                 <Button text  disabled style="height: 1rem; width: 1em;" severity="danger" icon="pi pi-trash"></Button>
-                <Button @click="navigateToRecipeDataSheet(data.data.id,data.data.name)" text severity="help" style="height: 1rem; width: 1rem;" icon="pi pi-eye"></Button>
+                <!-- <Button @click="navigateToRecipeDataSheet(data.data.id,data.data.name)" text severity="help" style="height: 1rem; width: 1rem;" icon="pi pi-eye"></Button> -->
                 <Button style="min-width: max-content;" severity="danger" @click="open_to_pt(data.data)" class="p-1 mx-1" size="small" label="-> PT"></Button>
             </div>
 
@@ -246,18 +246,36 @@ const columns = [
         width:'10',
         type:'money'
     },
+
     {
-        header:'presentacion convertir a gramos',
-        value:'convert_value',
+        header:'Precio de venta a las sedes + IVA',
+        value:'purchase_price_with_iva',
         width:'10',
         type:'money'
     },
+
+
     {
         header:'Costo unitario',
         value:'unit_cost',
         width:'10',
           type:'money'
     },
+
+    {
+        header:'Costo unitario + IVA',
+        value:'unit_cost_with_iva',
+        width:'10',
+          type:'money'
+    },
+
+    {
+        header:'presentacion convertir a gramos',
+        value:'convert_value',
+        width:'10',
+        type:'money'
+    },
+   
     
 
 

@@ -248,7 +248,7 @@ const columns = [
         width:''
     },
     {
-        header:'Unidad de medida de PT',
+        header:'Unidad de medida',
         value:'unit_measure',
         type:'max-content',
         width:''
@@ -265,23 +265,42 @@ const columns = [
         width:'10',
         type:'money'
     },
+
     {
-        header:'presentacion convertir a gramos',
-        value:'convert_value',
+        header:'Precio de venta a las sedes + IVA',
+        value:'purchase_price_with_iva',
         width:'10',
         type:'money'
     },
+
+
     {
         header:'Costo unitario',
         value:'unit_cost',
         width:'10',
           type:'money'
     },
+
+    {
+        header:'Costo unitario + IVA',
+        value:'unit_cost_with_iva',
+        width:'10',
+          type:'money'
+    },
+
+    {
+        header:'presentacion convertir a gramos',
+        value:'convert_value',
+        width:'10',
+        type:'money'
+    },
+   
     
 
 
 
 ]
+
 
 
 const visibleColumns = ref ([...columns])

@@ -5,10 +5,13 @@
 
         <nav  class="nav-bar shadow-1 mb-5 ">
             <ul>
-                <li class="nav-bar--item" v-for="(button, index) in navItems" :key="index">
+                <li class="nav-bar--item" v-for="(button, index) in navItems" :key="index" style="display: flex;align-items: center;">
                     <router-link :to="`/recetario/${button.path}/`">
                         <Button :icon="`${button.icon}  'text-green'`"  text :class="isActive(button.path)? 'nav-var--item-button-selected': '' " severity="help" class=" nav-var--item-button" :label="button.label" />
                     </router-link>
+                    <b>
+                        <i class="pi pi-arrow-right p-1"></i>
+                    </b>
                 </li>
 
             </ul>
@@ -34,12 +37,24 @@ const isActive = PathService.isActiveRoute
 const navItems = [
 
 
+    // {
+    //     label:'Ingredientes base',
+    //     icon:'fa fa-carrot',
+    //     path:'ingredientes',
+    //     color:'green'
+    // }, 
+
     {
-        label:'Todos los ingredientes',
-        icon:'fa fa-carrot',
-        path:'ingredientes',
-        color:'green'
+        label:'Master',
+        icon:'fa fa-chart-column',
+        path:'prices-cdi-table'
     }, 
+
+    {
+        label:'Pasamanos',
+        icon:'fa fa-bowl-rice',
+        path:'pasamanos'
+    },
 
     
     {
@@ -48,11 +63,7 @@ const navItems = [
         path:'producto-terminado'
     }, 
 
-    {
-        label:'Pasamanos',
-        icon:'fa fa-bowl-rice',
-        path:'pasamanos'
-    },
+
 
 
     {
@@ -75,11 +86,7 @@ const navItems = [
         icon:'fa fa-chart-column',
         path:'recipe-sumary-benefit'
     },
-    {
-        label:'Precios cdi',
-        icon:'fa fa-chart-column',
-        path:'prices-cdi-table'
-    }, 
+
 
     {
         label:'Configuracion',

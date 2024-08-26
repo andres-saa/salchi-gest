@@ -76,8 +76,9 @@
                
 
                 <h6 v-if="column.type == 'money'" style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{formatoPesosColombianos(data.data[column.value] ) || '-----------'}}</h6>
-                <h6 v-if="column.type == 'number'" style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{formatoDecimal(data.data[column.value] ) || '-----------'}}</h6>
-                <h6 v-else-if=" column.type!= 'money' && column.type != 'number'" style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{ data.data[column.value] || '-----------'}}</h6>
+                <h6 v-else-if="column.type == 'number'" style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{formatoDecimal(data.data[column.value] ) || '-----------'}}</h6>
+                <h6 v-else-if="column.type == 'percent'" style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{`${formatoDecimal(data.data[column.value] )}%` || '-----------'}}</h6>
+                <h6 v-else style="text-transform: lowercase;" :style="column.type == 'max-content' ? 'min-width:max-content' : ''" class="my-0 p-0">{{ data.data[column.value] || '-----------'}}</h6>
             </template>
         </column>
 
@@ -180,8 +181,6 @@ const openEditIngredient = (ingredient) =>{
 }
 
 
-
-
 const columns = [
     {
         header:'Id',
@@ -201,41 +200,17 @@ const columns = [
     },
     {
         header:'Precio de compra',
-        value:'main_value',
+        value:'purchasing_price',
         width:'10',
         type:'money'
     },
-    // {
-    //     header:'No. Un. por compra',
-    //     value:'number_units_purchasing',
-    //     width:'10',
-    //     type:'number'
-    // },
-    // {
-    //     header:'Form de compra',
-    //     value:'purchasing_format',
-    //     width:'10'
-    // },
     {
-        header:'Presentacion convertir a gramos',
-        value:'net_gross_weight',
+        header:'Iva',
+        value:'iva',
         width:'10',
-        type:'number'
+        type:'percent'
     },
-
-    // {
-    //     header:'porcentaje de Merma (%)',
-    //     value:'shrinkage_persent',
-    //     width:'8'
-    // },
-    {
-        header:'Costo unitario',
-        value:'unit_cost',
-        type:'money',
-        
-    },
-
-
+  
 
 ]
 
@@ -276,11 +251,11 @@ const newIngredientsFields = ref([
         fiel:'net_gross_weight',
         type:'number'
     },
-    // {
-    //     name:'porcentaje de merma (%)',
-    //     fiel:'shrinkage_persent',
-    //     type:'persent'
-    // }
+    {
+        name:'iva (%)',
+        fiel:'iva',
+        type:'persent'
+    }
 
 ]) 
 
