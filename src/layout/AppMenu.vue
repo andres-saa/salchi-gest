@@ -112,7 +112,7 @@ async function fetchAndUpdateRoles() {
                         permision_id: get_id([8,13,14]),
                         items: [
                             {
-                                label: 'Ingredientes', icon: 'fa-solid fa-calendar', to: '/recetario/ingredientes/',permision_id:8
+                                label: 'Ingredientes', icon: 'fa-solid fa-calendar', to: '/recetario/prices-cdi-table/',permision_id:8
 
                             },
                             {
