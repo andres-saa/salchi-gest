@@ -22,11 +22,11 @@
         <div v-for="section in categories" :key="section.id" class="p-1">
             
 
-            <button @click="navigateToCategory(section.category_name,section.category_id)"
+            <Button @click="navigateToCategory(section.category_name,section.category_id)"
                 :class="checkSelected(section.category_id) ? 'selected menu-button' : 'menu-button'"
-                class="p-2   text-lg titulo" style="font-weight: 400; text-transform: uppercase;min-width: max-content;">
+                class="p-0 mx-3   text-lg titulo" style="font-weight: 400; text-transform: uppercase;border-radius: 0; min-width: max-content;">
                 <span class="text-lg" style="min-width: max-content;"> {{ section.category_name }}</span>
-            </button>
+            </Button>
         </div>
     </div>
     </div>
@@ -123,7 +123,7 @@ const checkSelected = (section) => {
 }
 
 .selected {
-    box-shadow: 0 0.5rem var(--primary-color);
+    box-shadow: 0 0.3rem var(--primary-color);
 
 }
 .col-12 {

@@ -27,6 +27,11 @@ export const purchaseOrderService = {
         }
     },
 
+
+
+
+
+
     async getAllMypurchaseOrderReports(responsible_id) {
         this.report.setLoading(true, 'cargando mis ordenes')
         try {
@@ -207,7 +212,7 @@ export const purchaseOrderService = {
                     alert(response.data.inventory_id.message)
                     return
                 }
-                router.push('/purchase-order/purchase-order-my-orders/')
+                
 
                 return response.data;
 

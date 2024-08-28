@@ -1,101 +1,107 @@
 <template>
 
 
-
+<div>
     <Dialog v-model:visible="show_access" style="width: 40rem;" modal header="gestion de permisos">
 
-        <!-- {{ store.rawUserData.permissions }} -->
+<!-- {{ store.rawUserData.permissions }} -->
 
-        <h5 class="text-center my-3"><b> ACCESOS - {{ rol_to_edit.name }}</b> </h5>
+<h5 class="text-center my-3"><b> ACCESOS - {{ rol_to_edit.name }}</b> </h5>
 
-        <div style="display: flex;flex-direction: column;gap: .5rem;" v-for="(group, roles) in all_roles">
-             <h6 class="m-0 p-0 mt-2"><b> {{ group.name }}</b></h6>
-             <div class="pl-4" v-for="rol in group.permissions" style="display: flex;gap: 1rem;align-items: center;">
-                <InputSwitch @change="toggle_permision(rol,rol.enrolled)" v-model="rol.enrolled" style="min-width: 3rem;"></InputSwitch>
-                <h6 class="m-0" style="text-transform: uppercase;"> {{ rol.name }}</h6>
-                <!-- {{ rol }} -->
-             </div>
+<div style="display: flex;flex-direction: column;gap: .5rem;" v-for="(group, roles) in all_roles">
+     <h6 class="m-0 p-0 mt-2"><b> {{ group.name }}</b></h6>
+     <div class="pl-4" v-for="rol in group.permissions" style="display: flex;gap: 1rem;align-items: center;">
+        <InputSwitch @change="toggle_permision(rol,rol.enrolled)" v-model="rol.enrolled" style="min-width: 3rem;"></InputSwitch>
+        <h6 class="m-0" style="text-transform: uppercase;"> {{ rol.name }}</h6>
+        <!-- {{ rol }} -->
+     </div>
 
-           
-        </div>
+   
+</div>
 
-    </Dialog>
+</Dialog>
 
-    <div class="mx-auto mb-4" style="margin-top:6rem;max-width: 50rem;">
+<div class="mx-auto mb-4" style="margin-top:6rem;max-width: 50rem;">
 
-        <h2 class="my-6 text-center"> <b> Gestion de cargos y accesos</b></h2>
+<h2 class="my-6 text-center"> <b> Gestion de cargos y accesos</b></h2>
 
-        <div style="margin-top: 3rem;">
-        <DataTable :paginator="true" :rows="15" style="width: 100%;"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Roles"
-        :rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines scrollHeight="60vh" stripedRows class="col-12 m-auto"
-        :value="rols" tableStyle="" :filters="filters">
-
-
-        <template #header>
-            <div class="grid p-3" style="align-items:center;justify-content: space-between; display: flex;gap: 1rem;">
-                <h3 class="px-2">  <b>Cargos</b></h3>
-
-                <InputText class="" v-model="filters['global'].value"
-                placeholder="Buscar Cargo ..." />
-
-               
+<div style="margin-top: 3rem;">
+<DataTable :paginator="true" :rows="15" style="width: 100%;"
+paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Roles"
+:rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines scrollHeight="60vh" stripedRows class="col-12 m-auto"
+:value="rols" tableStyle="" :filters="filters">
 
 
-            </div>
+<template #header>
+    <div class="grid p-3" style="align-items:center;justify-content: space-between; display: flex;gap: 1rem;">
+        <h3 class="px-2">  <b>Cargos</b></h3>
 
-            <div style="display: flex; width: 100%; justify-content: end;flex-wrap: wrap;gap: 1rem;align-items: center;" >
-                <!-- <MultiSelect v-model="visibleColumns" :options="columns" optionLabel="header" style="width: min-content; max-width: 300px;" placeholder="Columnas visibles"></MultiSelect> -->
-                <Button size="small" severity="help" @click="openNewIngredient" label="Nuevo Cargo"></Button>
-            </div>
+        <InputText class="" v-model="filters['global'].value"
+        placeholder="Buscar Cargo ..." />
 
-
-        
-
-        </template>
-
-
-
-        <column class="py-2" style="width: 80%;" header="CARGO" field="name">
-        
-            <template #body="data">
-
-                <h6 class="m-0 p-0" style="text-transform: uppercase;min-width: max-content;">
-                    {{ data.data.name }}
-                </h6>
-
-            </template>
-        
-        </column>
-
-
-
-
-
-        <column class="py-2" style="width: 20%;" header="Accion" field="name">
-        
-        <template #body="data">
-
-           <Button  @click="openToEdit(data.data.id, data.data)" icon="pi pi-eye" text class="p-0" label="Accesos"></Button>
-
-        </template>
-    
-    </column>
-
-
-
-
-
-
-
-        </Datatable>
-        </div>
-
-
+       
 
 
     </div>
+
+    <div style="display: flex; width: 100%; justify-content: end;flex-wrap: wrap;gap: 1rem;align-items: center;" >
+        <!-- <MultiSelect v-model="visibleColumns" :options="columns" optionLabel="header" style="width: min-content; max-width: 300px;" placeholder="Columnas visibles"></MultiSelect> -->
+        <!-- <Button size="small" severity="help" @click="openNewIngredient" label="Nuevo Cargo"></Button> -->
+    </div>
+
+
+
+
+</template>
+
+
+
+<column class="py-2" style="width: 80%;" header="CARGO" field="name">
+
+    <template #body="data">
+
+        <h6 class="m-0 p-0" style="text-transform: uppercase;min-width: max-content;">
+            {{ data.data.name }}
+        </h6>
+
+    </template>
+
+</column>
+
+
+
+
+
+<column class="py-2" style="width: 20%;" header="Accion" field="name">
+
+<template #body="data">
+
+   <Button  @click="openToEdit(data.data.id, data.data)" icon="pi pi-eye" text class="p-0" label="Accesos"></Button>
+
+</template>
+
+</column>
+
+
+
+
+
+
+
+</Datatable>
+</div>
+
+
+
+
+</div>
+
+</div>
+
+
+
+
 </template>
 
 

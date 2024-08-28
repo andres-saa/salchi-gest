@@ -616,7 +616,7 @@ onBeforeMount(async () => {
 
 
 
-        <div v-for="(item, i) in model" :key="item">
+        <div class="" v-for="(item, i) in model" :key="item">
             <app-menu-item 
             v-if="item.items.some( i => permissions.includes(i.permision_id))"   :item="item" :index="i"></app-menu-item>
       

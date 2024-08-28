@@ -102,10 +102,10 @@ const checkActiveRoute = (item) => {
 </script>
 
 <template>
-    <li :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
+    <li  :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
         <div  @click="visibleMenus = !visibleMenus"  style="cursor: pointer; border-radius: .3rem; display: flex;background-color: #ffffff15;min-width: max-content; justify-content: space-between;align-items: center;" v-if="root && item.visible !== false" class="layout-menuitem-root-text p-2 border-radius-1">{{ item.label }} 
             
-            <i   :class="!visibleMenus?  'pi pi-angle-down t-up' :  'pi pi-angle-down t-down' " v-if="item.items"></i>
+            <i   :class="!visibleMenus?  'pi pi-angle-down t-up ' :  'pi pi-angle-down t-down' " v-if="item.items"></i>
         
             <!-- {{ visibleMenus }} -->
         </div>

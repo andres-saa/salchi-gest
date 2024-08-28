@@ -43,7 +43,7 @@ const bindOutsideClickListener = () => {
                 layoutState.overlayMenuActive.value = false;
                 layoutState.staticMenuMobileActive.value = false;
                 layoutState.menuHoverActive.value = false;
-                isSidebarActive = false
+                // isSidebarActive = false
                 
             }
         };
@@ -60,7 +60,7 @@ const isOutsideClicked = (event) => {
     const sidebarEl = document.querySelector('.layout-sidebar');
     const topbarEl = document.querySelector('.layout-menu-button');
 
-    return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+    // return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
 
 
