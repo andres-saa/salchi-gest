@@ -13,7 +13,7 @@ const { layoutConfig, layoutState,onMenuToggle, isSidebarActive,onmenuHide } = u
 
 const outsideClickListener = ref(null);
 
-// document.removeEventListener('hover', onmenuHide);
+// document.addEventListener('click', isOutsideClicked);
 
 watch(isSidebarActive, (newVal) => {
     if (newVal) {
@@ -59,8 +59,9 @@ const unbindOutsideClickListener = () => {
 const isOutsideClicked = (event) => {
     const sidebarEl = document.querySelector('.layout-sidebar');
     const topbarEl = document.querySelector('.layout-menu-button');
+    const butonSIdeBar = document.querySelector('.button-toggle-sidebar')
 
-    // return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+    return !((sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target)) || butonSIdeBar.isSameNode(event.target) || butonSIdeBar.contains(event.target)) ;
 };
 
 
@@ -93,7 +94,7 @@ const isSmallScreen = ref(window.innerWidth < 991);
 
 
       
-        <Button class="pr-0 pl-3 shadow-5 " @click="onMenuToggle()" :icon="isSidebarActive? 'fa fa-arrow-left text-xl text-bold' :' fa-solid fa-arrow-right text-xl text-bold'" :style=" isSidebarActive? 'left   : 20rem;top:50vh' : 'left:-1.5rem ;   top: 50vh;'  " severity="danger" v-if="!isSmallScreen"  style="position: fixed;transition: all .2s ease;border-radius: 0 10rem 10rem 0;justify-content: ;background-color: var(--primary-color); z-index: 100;width: 3.5rem; font-weight: bold"></Button>
+        <Button class="pr-0 pl-3 shadow-5 button-toggle-sidebar" @click="onMenuToggle()" :icon="isSidebarActive? 'fa fa-arrow-left text-xl text-bold' :' fa-solid fa-arrow-right text-xl text-bold'" :style=" isSidebarActive? 'left   : 20rem;top:50vh' : 'left:-1.5rem ;   top: 50vh;'  " severity="danger" v-if="!isSmallScreen"  style="position: fixed;transition: all .2s ease;border-radius: 0 10rem 10rem 0;justify-content: ;background-color: var(--primary-color); z-index: 100;width: 3.5rem; font-weight: bold"></Button>
         <div class="layout-sidebar">
             
             <app-sidebar></app-sidebar>

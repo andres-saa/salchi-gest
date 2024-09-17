@@ -54,19 +54,19 @@
 
         <div class="col-12 pb-6" style="">
                     <div style="display: flex; gap: 0rem; flex-direction: column">
-                        <div class="p-0 m-0" v-for="workDay in workDays" :key="workDay.id" style="position: relative">
+                        <div class="p-0 m-0" v-for="workDay in workDays.filter(day => day.users.length>0)" :key="workDay.id" style="position: relative">
                             <div class=" shadow-2" :style="{ 'background-color': getDayColor(workDay.date), color: 'white', 'border-radius': '0.5rem 0.5rem 0 0', display: 'flex', 'align-items': 'center', 'justify-content': 'space-beetwen' }">
                                 <p class="py-0 px-4 text-center col-12 m-0 p-0 text" style="font-weight: bold; text-shadow: 0 0 3px black; text-transform: uppercase">
                                     {{ workDay.date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Bogota' }) }}
                                     <!-- {{ workDay.da }} -->
                                 </p>
                             </div>
-                            <div style="overflow-x: auto;" >
+                            <div style="" >
 
-                                <div style="min-width: max-content; ">
+                                <div style=" ">
                                     <div
                                         class="shadow-5  p-3 m-0 p-4"
-                                        style=" border-radius: 0 0 0.5rem 0.5rem; display: flex; overflow-x: auto; flex-wrap: wrap; align-items: flex-start; gap: 2rem; justify-content: start; padding: 10px"
+                                        style=" border-radius: 0 0 0.5rem 0.5rem; display: flex;  flex-wrap: wrap; gap: 2rem; justify-content: start; padding: 10px"
                                         @dragover.prevent
                                         @drop="handleDrop(workDay)"
                                     >

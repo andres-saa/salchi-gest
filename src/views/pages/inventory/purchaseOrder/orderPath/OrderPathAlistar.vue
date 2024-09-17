@@ -111,7 +111,7 @@
 
 
 
-            <DataTable showGridlines style="max-width: 1024px;" stripedRows v-model:filters="filters"
+            <DataTable showGridlines  style="max-width: 1024px;" stripedRows v-model:filters="filters"
                 class="col-12 m-auto p-0 m-0" :value="itemsToPrepare.filter(order => order.quantity != 0)"
                 tableStyle="min-width: 50rem;" >
 
@@ -224,7 +224,7 @@
     <div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
 
 
-        <DataTable showGridlines style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
+        <DataTable stripedRows showGridlines style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
             :value="invetnoryDailyReports" tableStyle="min-width: 50rem;" :paginator="true"
             :rows="15"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -261,7 +261,7 @@
 
                 <template #body="data">
                     <span style="min-width: max-content;">
-                        {{ data.data.expedition_date?.split('T')[1] }}
+                        {{ data.data.expedition_date?.split('T')[1]?.split(':')?.slice(0,2)?.join(' : ') }}
 
                     </span>
 
@@ -272,7 +272,7 @@
             <Column class="py-1" field="date" header="Estado actual">
 
                 <template #body="data">
-                    <Tag style="width: 100%;height:2.7rem"
+                    <Tag style="width: 100%"
                         :style="`background-color:${color_status[data.data.current_status]}`">
                         {{ data.data.current_status }}
 
@@ -294,14 +294,14 @@
 
             </Column> -->
 
-            <Column style="width: 20px;" class="py-1 mx-0 px-0" field="date" header="Acciones">
+            <Column style="justify-content: center;" class="py-0 mx-0 px-0" field="date" header="Actuar">
                 <template #body="data">
 
                     <div class="m-0 p-0"
-                        style="display: flex;width:min-content; justify-content:start; align-items:center;gap:0.5rem">
+                        style="display: flex;width: 100%;  justify-content:center; align-items:center;gap:0.5rem">
 
-                        <Button label="Interactuar" @click="openDataInteract(data.data)" severity="help" class=""
-                            icon="pi " />
+                        <Button  label="" style="width: min-content;" text  @click="openDataInteract(data.data)" severity="" class="text-center p-1"
+                            icon="fa-solid fa-hand" />
 
                     </div>
 

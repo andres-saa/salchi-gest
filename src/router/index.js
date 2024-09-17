@@ -10,7 +10,6 @@ import pixel from './pixel';
 
 
 
-
 const getRoles = async () => {
   try {
       const response = await fetch(`${URI}/formatted-rolegroups`)
@@ -32,20 +31,22 @@ const router = createRouter({
     {
       path: '/',
       component: AppLayout,
+
       children: [
         {
           path: '/',
-          name: 'dashboard',
+          name: 'home',
           component: () => import('@/views/pages/home.vue'),
+        
         },
-
-
 
 
         {
           path: '/call-center-vender',
           name: 'call-center-vender',
           component: () => import('@/views/pages/callCenter/MenuView.vue'),
+          matched:{permision_id: 6},
+          
           children: [
             {
               path: '/call-center-vender/:menu_name/:category_id',
@@ -57,6 +58,7 @@ const router = createRouter({
               path: '/call-center-vender/cart',
               name: 'cart',
               component: () => import('@/views/pages/callCenter/cart.vue'),
+             
              
             },
             {
@@ -75,17 +77,11 @@ const router = createRouter({
 
         },
 
-
-
-
-
-
-
-        
         {
           path: '/pqrs',
           name: 'pqrs',
           component: () => import('@/views/pages/pqrs/pqrs.vue'),
+          meta:{permision_id: 32},
           children:[
             {
               path: '/pqrs/:section/:section_id',
@@ -101,62 +97,48 @@ const router = createRouter({
           path: '/pqrs-user',
           name: 'pqrs-user',
           component: () => import('@/views/pages/pqrs/pqrUser.vue'),
+          meta:{permision_id: 43}
           
         },
-
-
-
-
-
-
-
-
-
 
         {
           path: '/informacion-empresarial',
           name: 'informacion-empresarial',
           component: () => import('@/views/pages/infoSalchi.vue'),
+          meta:{permision_id: 43}
         },
-        {
-          path: '/ingresar-pedido',
-          name: 'ingresar-pedido',
-          component: () => import('@/views/pages/cocina/salchiweb.vue'),
-        },
+
         {
           path: '/tienda-menu',
           name: 'menuTienda',
+          meta:{permision_id: 2},
           component: () => import('@/views/pages/tienda/MenuTienda.vue'),
           children:[
               {
                 path: 'productos/:menu_name/:category_id',
                 name: 'sesion',
                 component: () => import('@/views/pages/tienda/sesion.vue')
-                // meta: { requireMenu: true },
-                // meta: { requiresAuth: true },
+         
               },
 
               {
                 path: 'productos/adicionales',
                 name: 'adicionales',
                 component: () => import('@/views/pages/tienda/adicionales.vue')
-                // meta: { requireMenu: true },
-                // meta: { requiresAuth: true },
+            
               },
-              // {
-              //     path: '/tienda-menu/productos/:sesion',
-              //     name: 'tienda-productos',
-              //     component: () => import('@/views/pages/tienda/sesion.vue')
-              // },
+            
               
 
           ]
       },
 
+
         {
           path: '/domicilios/',
           name: 'domicilios',
           component: () => import('@/views/pages/domicilios.vue'),
+          meta:{permision_id: 4},
           children: [
             {
               path: '/domicilios/:site_id',
@@ -166,12 +148,12 @@ const router = createRouter({
           ]
         },
 
+        
         {
           path: '/cargos/',
           name: 'cargos',
           component: () => import('@/views/pages/gestionCargos.vue')
         },
-
 
         {
           path: '/video-training-sequences/',
@@ -368,6 +350,7 @@ const router = createRouter({
           path: '/reporte-ventas/',
           name: 'reporte-ventas',
           component: () => import('@/views/pages/reporteVentas.vue'),
+          meta:{permision_id: 3},
           children: [
             {
               path: '/reporte-ventas/valor-ventas',
@@ -408,6 +391,7 @@ const router = createRouter({
           path: '/cocina',
           name: 'cocina',
           component: () => import('@/views/pages/cocina/pedidos.vue'),
+          meta:{permision_id: 1}
           
         },
        
@@ -847,15 +831,6 @@ const router = createRouter({
         },
 
 
-        // {
-        //   path: '/recipe-data-sheet/:recipe_id',
-        //   name: 'recipe-data-sheet',
-        //   component: () => import('@/views/pages/inventory/recipeDataSheet.vue'),
-        // },
-
-
-
-
         {
           path: '/nevera-triple',
           name: 'nevera-triple',
@@ -873,8 +848,6 @@ const router = createRouter({
           name: 'innovation',
           component: () => import('@/views/pages/innovation/innovation.vue')
         },
-
-
 
         {
           path: '/site/:site_id',
@@ -900,7 +873,8 @@ const router = createRouter({
         {
           path: '/certificado-laboral',
           name: 'certificado-laboral',
-          component: () => import('@/views/pages/generarCertificado.vue')
+          component: () => import('@/views/pages/generarCertificado.vue'),
+          meta:{permission:41},
         },
         {
           path: '/permisos',
@@ -922,16 +896,6 @@ const router = createRouter({
           name: 'permiso-licencia',
           component: () => import('@/views/pages/permiso-licencia.vue')
         },
-
-
-
-
-
-
-
-
-
-
 
         {
           path: '/capacitaciones',
@@ -1057,106 +1021,6 @@ const router = createRouter({
           ]
         },
 
-
-
-        // {
-        //     path: '/uikit/button',
-        //     name: 'button',
-        //     component: () => import('@/views/uikit/Button.vue')
-        // },
-        // {
-        //     path: '/uikit/table',
-        //     name: 'table',
-        //     component: () => import('@/views/uikit/Table.vue')
-        // },
-        // {
-        //     path: '/uikit/list',
-        //     name: 'list',
-        //     component: () => import('@/views/uikit/List.vue')
-        // },
-        // {
-        //     path: '/uikit/tree',
-        //     name: 'tree',
-        //     component: () => import('@/views/uikit/Tree.vue')
-        // },
-        // {
-        //     path: '/uikit/panel',
-        //     name: 'panel',
-        //     component: () => import('@/views/uikit/Panels.vue')
-        // },
-
-        // {
-        //     path: '/uikit/overlay',
-        //     name: 'overlay',
-        //     component: () => import('@/views/uikit/Overlay.vue')
-        // },
-        // {
-        //     path: '/uikit/media',
-        //     name: 'media',
-        //     component: () => import('@/views/uikit/Media.vue')
-        // },
-        // {
-        //     path: '/uikit/menu',
-        //     component: () => import('@/views/uikit/Menu.vue'),
-        //     children: [
-        //         {
-        //             path: '/uikit/menu',
-        //             component: () => import('@/views/uikit/menu/PersonalDemo.vue')
-        //         },
-        //         {
-        //             path: '/uikit/menu/seat',
-        //             component: () => import('@/views/uikit/menu/SeatDemo.vue')
-        //         },
-        //         {
-        //             path: '/uikit/menu/payment',
-        //             component: () => import('@/views/uikit/menu/PaymentDemo.vue')
-        //         },
-        //         {
-        //             path: '/uikit/menu/confirmation',
-        //             component: () => import('@/views/uikit/menu/ConfirmationDemo.vue')
-        //         }
-        //     ]
-        // },
-        // {
-        //     path: '/uikit/message',
-        //     name: 'message',
-        //     component: () => import('@/views/uikit/Messages.vue')
-        // },
-        // {
-        //     path: '/uikit/file',
-        //     name: 'file',
-        //     component: () => import('@/views/uikit/File.vue')
-        // },
-        // {
-        //     path: '/uikit/charts',
-        //     name: 'charts',
-        //     component: () => import('@/views/uikit/Chart.vue')
-        // },
-        // {
-        //     path: '/uikit/misc',
-        //     name: 'misc',
-        //     component: () => import('@/views/uikit/Misc.vue')
-        // },
-        // {
-        //     path: '/blocks',
-        //     name: 'blocks',
-        //     component: () => import('@/views/utilities/Blocks.vue')
-        // },
-        // {
-        //     path: '/utilities/icons',
-        //     name: 'icons',
-        //     component: () => import('@/views/utilities/Icons.vue')
-        // },
-        // {
-        //     path: '/pages/timeline',
-        //     name: 'timeline',
-        //     component: () => import('@/views/pages/Timeline.vue')
-        // },
-        // {
-        //     path: '/pages/empty',
-        //     name: 'empty',
-        //     component: () => import('@/views/pages/Empty.vue')
-        // },
         {
           path: '/pages/crud',
           name: 'crud',
@@ -1170,23 +1034,9 @@ const router = createRouter({
           component: () => import('@/views/pages/autorizar-permisos.vue'),
 
         },
-        // {
-        //     path: '/documentation',
-        //     name: 'documentation',
-        //     component: () => import('@/views/utilities/Documentation.vue')
-        // }
+
       ]
     },
-    // {
-    //     path: '/landing',
-    //     name: 'landing',
-    //     component: () => import('@/views/pages/Landing.vue')
-    // },
-    // // {
-    //     path: '/pages/notfound',
-    //     name: 'notfound',
-    //     component: () => import('@/views/pages/NotFound.vue')
-    // },
 
     {
       path: '/auth/login',
@@ -1228,58 +1078,52 @@ const validateToken = (token) => {
 
 
 
-router.beforeEach(async(to, from, next) => {
-  const store = loginStore()
-  const token = store.userData.access_token
-  const validToken = await validateToken(token)
-  
-  if (!token || !validToken.access_token ) {
-    if (to.path !== '/auth/login' ) {
-      next({ path: '/auth/login' });
+router.beforeEach(async (to, from, next) => {
+  const store = loginStore();
+  const token = store.userData.access_token;
+
+  // Validar si el token es válido
+  const validToken = await validateToken(token);
+
+  if (!validToken.access_token) {
+    if (to.path !== '/auth/login') {
+      return next({ path: '/auth/login' });
     } else {
-      next(); // Si ya está en la página de login, continúa
-    }
-  } else {
-
-    try {
-
-      const decoded = jwtDecode(token);
-      if (!decoded || !decoded.rol) {
-        console.error("Rol no encontrado en el token");
-        next({ path: '/login' });
-        return;
-      }
-
-      const userRole = decoded.rol?.split(" ").join('').toLowerCase();
-
-
-      const isRoleAuthorized = to.matched.some(record => {
-        if (!record.meta || !record.meta.roles) {
-          return false;
-        }
-
-        const routeRoles = record.meta.roles.map(role => role?.split(" ").join('').toLowerCase());
-        return routeRoles.includes(userRole);
-      });
-
-      if (isRoleAuthorized || !to.matched.some(record => record.meta?.roles)) {
-        next(); // Rol permitido o no se requiere control de rol
-      } else {
-        alert(`No tienes permitido entrar aqui`)
-        next('./'); // Rol no permitido
-      }
-    } catch (error) {
-      console.error("Error al decodificar el token:", error);
-      next({ path: '/error' }); // Error en el token o en la decodificación
+      return next(); // Si ya está en la página de login, continuar
     }
   }
+
+  try {
+    // Decodificar el token para obtener el rol del usuario
+    const decoded = jwtDecode(token);
+    if (!decoded?.rol) {
+      console.error("Rol no encontrado en el token");
+      return next({ path: '/auth/login' });
+    }
+
+    const userRole = decoded.rol.trim().toLowerCase();
+    const permissions = decoded.permissions || [];
+
+    // Verificar si el rol del usuario está autorizado para acceder a la ruta
+    const isRoleAuthorized = to.matched.some(record => {
+      const routeRol = record.meta?.permission || -1;
+      return permissions.includes(routeRol);
+    });
+
+    // Permitir acceso si el rol está autorizado o si la ruta no tiene permisos específicos
+    if (isRoleAuthorized || !to.matched.some(record => record.meta?.permission)) {
+      next(); // Rol permitido o la ruta no requiere permisos específicos
+    } else {
+      store.NoAuthorized = true
+   
+      // toast.add({ severity: 'error', summary: 'Algo salio mal', detail: 'No tienes permiso para entrar ahi', life: 3000 });
+      next(from); // Continuar a la ruta aunque no tenga el permiso específico
+    }
+  } catch (error) {
+    console.error("Error al decodificar el token:", error);
+    next({ path: '/error' }); // Error en el token o en la decodificación
+  }
 });
-
-
-
-
-
-
 
 
 export default router;

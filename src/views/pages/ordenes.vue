@@ -1,10 +1,12 @@
 <template>
 
 
-    <Button size="small" class="py-2"  severity="success" @click="exportCSV"> <i class="pr-3 m-0 " :class="PrimeIcons.DOWNLOAD" ></i> Descargar reporte</Button>
+
+<div>
+    <Button size="small" class="py-2"  severity="help" @click="exportCSV" label=" Descargar reporte" icon="pi pi-download"> </Button>
 
     <div class="flex flex-wrap align-items-center justify-content-between gap-2 my-5 pl-0 ml-0">
-                    <span class="text-l p-0  text-900 font-bold">Ordenes {{ store.order_status }}s entre {{ store.formatDate(store.dateRange.startDate)  }} y {{ store.formatDate(store.dateRange.endDate)  }} </span>
+                    <span class="text-l p-0  text-900 font-bold">Ordenes {{ store.order_status }}s entre {{store.dateRange.startDate.split('T')[0]  }} y {{store.dateRange.endDate.split('T')[0]  }} </span>
                     <div class="flex p-0  flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
                            
                             <span class="block mt-2 md:mt-0 py-0">
@@ -152,7 +154,7 @@
         
             <Column class="px-1 py-0" header="" frozen alignFrozen="right" headerStyle="width:0.5rem; max-width:0.5rem ">
                 <template #body="slotProps">
-                    <Button style="width: min-content;" @click="store.setVisibleOrder(true,slotProps.data)" text ><i class="text-2xl  p-0" :class="PrimeIcons.EYE"></i></Button>
+                    <Button style="width: min-content;" @click="store.setVisibleOrder(true,slotProps.data)" text severity="help" icon="pi pi-eye" ></Button>
                 </template>
             </Column>
 
@@ -173,11 +175,19 @@
         </DataTable>
 
 
+        <!-- <iframe src="https://agent.lety.ai/es/chatbot/embed/3939e556-be3d-4c2a-81f3-d3743b0e4c07" width="100%" height="600" frameborder="0" allow='microphone' ></iframe>
+ -->
 
+
+        
 
     <OrderDialog>
 
     </OrderDialog>
+
+
+
+    </div>
 
 </template>
 

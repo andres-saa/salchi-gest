@@ -142,7 +142,7 @@
 
 
 
-        <img class="m-auto" src="https://salchimonster.com/images/logo.png" style="width: 10%;" alt="">
+        <img class="m-auto" src="https://salchimonster.com/images/logo.png" style="width: 10%; object-fit: cover;" alt="">
 
         <h6 style="font-size: 14pt; font-weight: normal;color: black; font-family: Arial, Helvetica, sans-serif;">
 

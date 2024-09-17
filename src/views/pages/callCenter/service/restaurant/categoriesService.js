@@ -12,7 +12,7 @@ export const categoriesService = {
    
         if(site_id){
             try {
-                const response = await axios.get(`${URI}/categories/${site_id}`);
+                const response = await axios.get(`${URI}/categories/${site_id}/1`);
                 if (response.status === 200) {
                     return response.data;
                 } else {
@@ -28,7 +28,7 @@ export const categoriesService = {
             store.visibles.currentSite = true
 
             try {
-                const response = await axios.get(`${URI}/categories/${site_id}`);
+                const response = await axios.get(`${URI}/categories/${site_id}/1`);
                 if (response.status === 200) {
                     return response.data;
                 } else {

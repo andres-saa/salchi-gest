@@ -11,12 +11,22 @@
           <img  src="/images/logo.png" alt="" style="width: 48px;" class="m-3">
           <p class="text-2xl" style="font-weight: bold;">Iniciar sesión</p>
        
-            <InputText class="my-3  m-0" v-model="credentials.username" type="text" 
+            <InputText class="my-3  m-0" v-model="credentials.username" type="text" autocomplete="username"
                      placeholder="identificación" style="width: 100%;" />
          
           
-          <Password class="" toggleMask   v-model="credentials.password" placeholder="Clave" 
-                      />
+                     <input
+                      class="p-inputtext p-component p-password-input"
+                      type="password"
+                      v-model="credentials.password"
+                      autocomplete="current-password"
+                      aria-controls="pv_id_3_panel"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      placeholder="Clave"
+                      value/>
+
+                      
           <Button size="samll"  style="width: 100%;background-color: rgb(255, 98, 0); border: none;color:#fff" label="Iniciar sesion" class="my-3 " type="submit" ></Button>
       </form>
   </div>
@@ -74,7 +84,7 @@ const startTokenValidation = () => {
             store.userData = {  };
             router.push('/auth/login');
         }
-    }, 60000); // 60000 ms = 1 minuto
+    }, 30000); // 60000 ms = 1 minuto
 };
 
 

@@ -45,10 +45,179 @@
     </Dialog>
 
 
+    <Dialog class="mx-2" v-model:visible="showAddNotesDialog" modal header="Notas de Transporte de orden"
+        :style="{ width: '25rem' }">
+
+
+        <p>Desea ageregar notas?</p>
+
+        <div>
+
+            <Textarea v-model="notesToSend" style="width: 100%;resize: none;height: 10rem"></Textarea>
+        </div>
+        <template #footer>
+            <div class="pt-3" style="display: flex;justify-content: end;align-items: end;">
+                <Button text @click="showAddNotesDialog = false" severity="danger" label="cancelar"></Button>
+                <Button @click="sendData(itemsToPrepare.filter(order => order.quantity != 0))" severity="help"
+                    label="Alistar orden"></Button>
+
+            </div>
+
+        </template>
+
+    </Dialog>
+
+    
+<Dialog class="mx-2 " v-model:visible="showNotesDialog" modal header="Notas de la orden" :style="{ width: '28rem' }">
+
+<div>
+    <p>
+        <b>Autor de la nota: </b>{{currentNoteToShow.item.name}} 
+    </p>
+
+    <p>
+        <b>Fecha: </b>{{currentNoteToShow.item.status_timestamp.split('T')[0]}} 
+    </p>
+
+    <p style="border: 1px solid;border-radius: 0.3rem;" class="p-2">
+        <b>Contenido de la Observacion: </b> <br>{{currentNoteToShow.item.notes}} 
+    </p>
+
+</div>
+
+</Dialog>
+
+
+    <Dialog class="mx-2" v-model:visible="showActionDialog" modal header="Interactuar con la orden"
+        :style="{ width: '25rem' }">
+
+        <div class="m-0 p-0"
+            style="display: flex;width:min-content;width: 100%; flex-direction: column; justify-content:start;gap:0.5rem">
+            <router-link :to="`/purchase-order/recorrido/purchase-order-view/${dataToInract.purchase_order_id}`">
+                <Button text style="width: 100%;" severity="help" class="" label="Ver detalles" icon="pi pi-eye" />
+            </router-link>
+
+            <Button text label="Descargar en excel" style=""
+                @click="prepareDownload(dataToInract.purchase_order_id, dataToInract.site_name, dataToInract.expedition_date?.split('T')[0])"
+                severity="success" class="" icon="pi pi-download" />
+
+                <Button @click="chargeHistory(dataToInract.purchase_order_id)" text label="Ver Historial" style="" severity="warning" class="" icon="pi pi-history p-0 m-0" />
+
+
+            <Button @click="openPrepare(dataToInract.purchase_order_id)" label="Transportar orden" style=""
+                severity="help" class="" icon="pi  p-0 m-0" />
+
+        </div>
+
+    </Dialog>
+
+
+    <Dialog class="px-2" v-model:visible="showPrepare" modal header="Transportar orden"
+        :style="{ width: 'max-content', 'max-width': '100vw' }">
+
+
+
+        <div class="m-0 p-0"
+            style="display: flex;width:min-content;width: 100%; flex-direction: column; justify-content:start;gap:0.5rem">
+
+
+
+            <p class="m-0 p-0"><b>Autorizada por:</b> {{ dataToInract.responsible_lap }} </p>
+            <p class="m-0 p-0"><b>Sede:</b> {{ dataToInract.site_name }} </p>
+            <p class="mt-0 p-0"><b>Fecha de autorizacion:</b> {{ dataToInract.status_timestamp.split('T')[0] }} </p>
+
+
+
+            <div style="display: flex;flex-direction: column;align-items: start;gap: 0.5rem;">
+                <div v-for="color in color_code" style="display: flex;align-items: center;gap: 1rem;">
+                    <Tag :style="`background-color:${color.color}`" style="height: 2rem; aspect-ratio: 4 / 3;">
+                    </Tag>
+                    <span> {{ color.description }}</span>
+                </div>
+            </div>
+
+
+            <DataTable showGridlines style="max-width: 1024px;" stripedRows v-model:filters="filters"
+                class="col-12 m-auto p-0 m-0" :value="itemsToPrepare.filter(order => order.quantity != 0)"
+                tableStyle="min-width: 50rem;">
+
+
+
+
+
+                <Column class="py-0" field="item_id" header="id"></Column>
+
+
+
+                <Column class="py-0" field="item_name" header="Item">
+
+
+                    <template #body="data">
+                        <p
+                            :style="data.data.ajustment === 0 ? 'text-decoration: line-through;background-color:#ffc9d1' : ''">
+                            {{ data.data.item_name }}</p>
+                    </template>
+
+                </Column>
+
+                <Column class="py-0 " field="quantity_adjusted" header="cant. Aprobada en despacho">
+                    <template #body="data">
+                        <p class="text-right">
+                            {{ data.data.quantity_adjusted }}
+                        </p>
+                    </template>
+                </Column>
+
+                <Column class="py-0 px-0" field="quantity" header="cant. realmente recibida">
+
+
+                    <template #body="data">
+                        <input @keydown="handleKeydown" class=" text-right"
+                            :max="data.data.quantity" :min="0" v-model="data.data.ajustment"
+                            style="background-color: transparent; height: 2rem; width:100%; border: none;"
+                            :style="data.data.quantity_adjusted === data.data.ajustment ? 'background-color: aquamarine;' : data.data.ajustment === 0 ? 'background-color:#ffc9d1' :
+                                data.data.ajustment < data.data.quantity ? 'background-color:#FFAF33;border:2px solid #FF7A33' : data.data.ajustment > data.data.quantity ? 'background-color:#FF3393;border:2px solid #FF3342' : ''"
+                            type="number" />
+                    </template>
+
+                </Column>
+                <Column class="py-0" field="unit_measure" header="Und. de medida"></Column>
+
+                <Column class="py-0" field="quantity" header="interactuar">
+
+                    <template #body="data">
+                        <Button @click="data.data.ajustment = data.data.quantity_adjusted"
+                            style="min-width: max-content;" text class="px-0 py-1" label="Esta completo"></Button>
+                    </template>
+
+                </Column>
+
+
+
+
+            </DataTable>
+
+
+
+
+        </div>
+
+
+
+        <template #footer>
+            <div class="pt-3" style="display: flex;justify-content: end;align-items: end;">
+                <Button outlined @click="complete_all" severity="help" label="Todo esta completo"></Button>
+                <Button @click="openShowNote(itemsToPrepare.filter(order => order.quantity != 0))" severity="help"
+                    label="Transportar orden"></Button>
+
+            </div>
+
+        </template>
+    </Dialog>
 
     <!-- {{ invetnoryDailyReports }} -->
     <div class=" m-auto" style="max-width: 1024px;">
-        <div class=" m-0 col-12 " style="align-items: center;">
+        <!-- <div class=" m-0 col-12 " style="align-items: center;">
 
 
 
@@ -64,7 +233,7 @@
                 <span class="text-xl"> <b>Periodo</b></span>
                 <InputText class="" @click="showDateDialog = true" style="height: 2.7rem;"
                     :value="`${formatDate(startDate)}  |  ${formatDate(endDate)}`" placeholder="periodo" />
-                <!-- {{ dateRange }} -->
+         
 
                 <Button @click="getFiltered" icon="pi pi-search" severity="help" class="text-center p-0 col-12  md:p-0"
                     style="height: 2.5rem;width:min-content;aspect-ratio:  1 / 1;font-weight: bold; border-radius: 50%; display: flex;justify-content:center ; "></Button>
@@ -74,7 +243,7 @@
 
 
 
-        </div>
+        </div> -->
 
         <div class="col-12 px-3 mt-4 pack-butons" style="display: flex;justify-content:end;gap: 1rem;">
             <Button severity="help" icon="pi pi-download" label="Descargar Todo" @click="downloadAll"></Button>
@@ -88,31 +257,32 @@
     <div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
 
 
-        <DataTable style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
+        <DataTable stripedRows showGridlines style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
             :value="invetnoryDailyReports" tableStyle="min-width: 50rem;" :paginator="true"
             :rows="15"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reportes">
             <template #header>
                 <div class="grid" style="align-items:center">
-                    <div class="col-12 md:col-6 p-3"> 
-                        <span  class="text-xl" style="width: 100%;"> Gestionar ordenes de compra</span>
+                    <div class="col-12 md:col-6 p-3">
+                        <span class="text-xl" style="width: 100%;"> Ordenes pendientes por alistar</span>
                     </div>
-                    <div class="col-12 md:col-6 p-3"> 
-                        <InputText style="width: 100%;" class="" v-model="filters['global'].value" placeholder="Buscar..." />
+                    <div class="col-12 md:col-6 p-3">
+                        <InputText style="width: 100%;" class="" v-model="filters['global'].value"
+                            placeholder="Buscar..." />
                     </div>
-                    
+
 
                 </div>
             </template>
             <Column class="py-1" field="purchase_order_id" header="ID"></Column>
-            <Column class="py-1" field="employer_name" header="Responsable"></Column>
+            <Column class="py-1" field="employer_name" header="Solicitante"></Column>
             <Column class="py-1" field="site_name" header="Sede"></Column>
-            <Column  class="py-1" field="date" header="Fecha">
+            <Column class="py-1" field="date" header="Fecha">
 
                 <template #body="data">
                     <p style="min-width: max-content">
-                        {{ data.data.expedition_date?.split('T')[0]}}
+                        {{ data.data.expedition_date?.split('T')[0] }}
 
                     </p>
 
@@ -124,7 +294,7 @@
 
                 <template #body="data">
                     <span style="min-width: max-content;">
-                        {{ data.data.expedition_date?.split('T')[1]}}
+                        {{ data.data.expedition_date?.split('T')[1]?.split(':')?.slice(0,2)?.join(' : ') }}
 
                     </span>
 
@@ -135,15 +305,16 @@
             <Column class="py-1" field="date" header="Estado actual">
 
                 <template #body="data">
-                    <Tag   style="width: 100%;height:2.7rem" :style="`background-color:${color_status[data.data.current_status]}`">
-                        {{ data.data.current_status}}
+                    <Tag style="width: 100%"
+                        :style="`background-color:${color_status[data.data.current_status]}`">
+                        {{ data.data.current_status }}
 
                     </Tag>
 
                 </template>
 
             </Column>
-<!-- 
+            <!-- 
             <Column class="py-1" field="date" header="Prosima etapa">
 
                 <template #body="data">
@@ -156,30 +327,53 @@
 
             </Column> -->
 
-            <Column style="width: 20px;" class="py-1 mx-0 px-0" field="date" header="Acciones">
+            <Column style="justify-content: center;" class="py-0 mx-0 px-0" field="date" header="Actuar">
                 <template #body="data">
 
-                    <div class="m-0 p-0" style="display: flex;width:min-content; justify-content:start; align-items:center;gap:0.5rem">
-                        <router-link :to="`/purchase-order/purchase-order-view/${data.data.purchase_order_id}`">
-                            <Button style="height: 2rem;" severity="help" class="p-1" icon="pi pi-eye" />
-                        </router-link>
-    
-                        <Button style="height: 2rem;" @click="prepareDownload(data.data.purchase_order_id,data.data.site_name,data.data.expedition_date?.split('T')[0])" severity="success" class="p-1"
-                            icon="pi pi-download" />
-    
-                            <Button style="height: 2rem;" severity="warning"  class="p-1"
-                            icon="pi pi-history p-0 m-0" />
-    
+                    <div class="m-0 p-0"
+                        style="display: flex;width: 100%;  justify-content:center; align-items:center;gap:0.5rem">
+
+                        <Button  label="" style="width: min-content;" text  @click="openDataInteract(data.data)" severity="" class="text-center p-1"
+                            icon="fa-solid fa-hand" />
+
                     </div>
-                    
-                  
+
+
 
                 </template>
             </Column>
         </DataTable>
 
+
     </div>
 
+
+    <Dialog class="mx-2 " v-model:visible="showHistoryDialog" modal header="Historial de la orden" :style="{ width: 'min-content' }">
+    
+    <Timeline :value="currentOrderHistory">
+        <template #opposite="data" align="">
+            <p  style="min-width: max-content;" class="p-text-secondary m-0 p-0">{{data.item.status_timestamp.split('T')[0]}}</p> <br>
+            <p  style="min-width: max-content;" class="p-text-secondary m-0 p-0">{{data.item.status_timestamp.split('T')[1]?.split(':').slice(0,2).join(':')}}</p>
+        </template>
+        <template #content="data">
+            <p class="m-0"> <b>{{data.item.lap_name}}</b></p>
+            <p class="m-0">{{data.item.name}}</p>
+
+            <p v-if="data.item.notes">
+                <b>Notas</b>
+                {{ data.item.notes }}
+            </p>
+            <div style="display: flex;gap: 1rem; ">
+
+                <Button  :disabled="!data.item.notes"  style="height: 2rem;opacity: 0; border-radius: 0.3rem;" cla severity="help" class="" label="Notas"></Button>
+                <Button :disabled="!data.item.conflict" style="height: 2rem;border-radius: 0.3rem;" severity="danger" class="mb-4" label="Conflictos"></Button>
+            </div>
+            
+        </template>
+    </Timeline>
+
+
+</Dialog>
 
 </template>
 
@@ -188,23 +382,111 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
-import { siteService } from '../../../../service/siteService.js'
-import { dailyInventoryReportsService } from '../../../../service/inventory/dailyInventoryService.js'
-import {purchaseOrderService} from '../../../../service/inventory/purchaseOrderService'
+import { siteService } from '@/service/siteService.js'
+import { dailyInventoryReportsService } from '@/service/inventory/dailyInventoryService.js'
+import { purchaseOrderService } from '@/service/inventory/purchaseOrderService'
 import * as XLSX from 'xlsx';
 
 import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { da, es } from 'date-fns/locale';
 // import * as xlsxstyle from 'xlsx-style';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useReportesStore } from '@/store/reportes';
-import { loginStore } from '../../../../store/user.js'
+import { loginStore } from '@/store/user.js'
 const loadingStore = useReportesStore()
+const showActionDialog = ref(false)
+const itemsToPrepare = ref([])
+const showAddNotesDialog = ref(false)
+const currentNoteToShow = ref({})
+
+
+const openNote = (note) => {
+    if (note){
+        showNotesDialog.value = true
+        currentNoteToShow.value = note  
+    }
+
+}
 
 
 
+const openShowNote = (itemsData) => {
+    
 
+
+    if (itemsData.some(item => !item.ajustment && item.ajustment !== 0)) {
+        alert("por favor complete todos los campos")
+        return
+    }
+
+    if (itemsData.some(item => item.ajustment > item.quantity_adjusted)) {
+        alert("No puedes enviar mas de lo solicitado")
+        return
+    }
+
+    showAddNotesDialog .value = true
+
+
+}
+
+const notesToSend = ref('')
+const dataToInract = ref({})
+const showNotesDialog = ref(false)
+
+const showHistoryDialog = ref(false)
+
+const currentOrderHistory = ref([])
+
+const chargeHistory = async(purchase_order_id) => {
+     showHistoryDialog.value = true
+    currentOrderHistory.value = await purchaseOrderService.getPurchaseOrderHistory(purchase_order_id)
+}
+
+const complete_all = () => {
+    itemsToPrepare.value.forEach(element => {
+        element.ajustment = element.quantity_adjusted
+    });
+}
+
+
+const showPrepare = ref(false)
+
+const openDataInteract = (data) => {
+    showActionDialog.value = true
+    dataToInract.value = data
+}
+
+
+const openPrepare = async (order_id) => {
+    showPrepare.value = true
+    itemsToPrepare.value = await purchaseOrderService.getpurchaseOrderEntriesBypurchaseOrderID(order_id)
+
+}
+
+const color_status = {
+    Generada: '#FF0000', // Rojo
+    Lista: '#FFA500', // Naranja
+    "Entregada al transportista": '#FFFF00', // Amarillo
+    Completada: '#00FF00' // Verde
+};
+
+const color_code = [
+    {
+        color: '#7fffd4',
+        description: 'Esta todo bien'
+    },
+    {
+        color: 'rgb(251 53 146)',
+        description: 'Cuidado estan enviando mas de lo que reportan'
+    },
+    {
+        color: ' rgb(255, 175, 51)',
+        description: 'Recibiste menos de lo reportado'
+    }
+]
+
+const lap_id = 3
 const store = loginStore()
 const sites = ref([])
 const selectedSites = ref([{}])
@@ -219,16 +501,6 @@ const setDateRangeDirect = (start, end) => {
     startDate.value = start
     endDate.value = end
 }
-
-
-
-const color_status = {
-    Generada: '#FF0000', // Rojo
-    Lista: '#FFA500', // Naranja
-    "Entregada al transportista": '#FFFF00', // Amarillo
-    Completada: '#00FF00' // Verde
-};
-
 
 const setDateRange = (days) => {
     const today = new Date();
@@ -259,7 +531,6 @@ const setDateRange = (days) => {
 
     getFiltered()
 }
-
 onMounted(async () => {
     sites.value = await siteService.getSites()
     selectedSites.value = sites.value
@@ -304,12 +575,12 @@ const getFiltered = async () => {
 
 const entries = ref([])
 
-const prepareDownload = async (purchase_order_id,site_name,date) => {
+const prepareDownload = async (purchase_order_id, site_name, date) => {
     entries.value = await purchaseOrderService.getpurchaseOrderEntriesBypurchaseOrderID(purchase_order_id)
     const data = entries.value.map(product => ({
         "Producto": product.item_name,
         "Cantidad": product.quantity,
-        "Unidad de medida":product.unit_measure
+        "Unidad de medida": product.unit_measure
     }));
 
 
@@ -326,15 +597,72 @@ const prepareDownload = async (purchase_order_id,site_name,date) => {
 };
 
 
+const prepareItemsToSend = (itemsData) => {
 
 
-const downloadAll3 = async() => {
 
-const reportes = invetnoryDailyReports.value
+    const prepareItemsToAdjustQuantity = itemsData.map(data => {
+        if (data.quantity != data.ajustment) {
+            return {
+                "order_purchase_entry_id": data.entry_id,
+                "quantity_adjusted": data.ajustment
+            }
+        }
 
-reportes.forEach(reporte => {
-    prepareDownload(reporte.purchase_order_id,reporte.site_name,reporte.expedition_date?.split('T')[0])
-});
+    }).filter(data => data)
+
+    return prepareItemsToAdjustQuantity
+
+}
+
+const sendData = async (itemsData) => {
+
+
+
+    if (itemsData.some(item => !item.ajustment && item.ajustment !== 0)) {
+        alert("por favor complete todos los campos")
+        return
+    }
+
+
+
+
+    loadingStore.setLoading(true, 'Transportando orden')
+    const dataToSend = {
+        "purchase_order_id": dataToInract.value.purchase_order_id,
+        "lap_id": dataToInract.value.lap_id,
+        "responsible_id": store.rawUserData.id,
+
+        "ajusts": prepareItemsToSend(itemsData),
+        order_purchase_notes:notesToSend.value
+    }
+
+
+
+    await purchaseOrderService.PreparePurchaserOrder(dataToSend)
+    invetnoryDailyReports.value = await purchaseOrderService.getPurchaseOrderByLap_id(lap_id)
+
+    showActionDialog.value = false
+    showPrepare.value = false
+    loadingStore.setLoading(false, 'Transportando orden')
+    showNotesDialog.value = false
+    showAddNotesDialog.value = false
+}
+
+
+
+
+
+
+
+
+const downloadAll3 = async () => {
+
+    const reportes = invetnoryDailyReports.value
+
+    reportes.forEach(reporte => {
+        prepareDownload(reporte.purchase_order_id, reporte.site_name, reporte.expedition_date?.split('T')[0])
+    });
 
 }
 
@@ -387,7 +715,7 @@ const downloadAll2 = async () => {
     if (formattedStartDate == formattedEndDate) {
         data.push([`ORDENES DE COMPRA DEL ${formattedStartDate.toUpperCase()}`, ...Array(allSites.length + 2).fill('')]);
 
-    }else {
+    } else {
         data.push([`ORDENES DE COMPRA DEL${formattedStartDate.toUpperCase()} AL ${formattedEndDate.toUpperCase()}`, ...Array(allSites.length + 2).fill('')]);
 
     }
@@ -418,16 +746,16 @@ const downloadAll2 = async () => {
         const worksheetRow = worksheet.addRow(row);
         if (index === 0) {
             worksheetRow.height = 40; // Mayor altura para la fila del título
-            worksheetRow.font = { name: 'Arial', bold: true, size: 14}; // Texto en negrita y en mayúsculas
-            worksheetRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true   }; // Texto centrado vertical y horizontalmente
+            worksheetRow.font = { name: 'Arial', bold: true, size: 14 }; // Texto en negrita y en mayúsculas
+            worksheetRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }; // Texto centrado vertical y horizontalmente
             worksheet.mergeCells(`A1:${worksheet.getColumn(allSites.length + 3).letter}1`);
             worksheet.getRow(1).eachCell(cell => {
-            cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FFFF00' }
-        };
-    });
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FFFF00' }
+                };
+            });
         } else if (index === 1) {
             worksheetRow.font = { name: 'Arial', bold: true };
         }
@@ -445,7 +773,7 @@ const downloadAll2 = async () => {
                 bottom: { style: 'thin' },
                 right: { style: 'thin' }
             };
-            
+
         });
     });
 
@@ -454,7 +782,7 @@ const downloadAll2 = async () => {
         cell.font = { name: 'Arial', bold: true };
     });
     worksheet.getRow(1).eachCell(cell => {
-        cell.font = { name: 'Arial', bold: true,size:16 };
+        cell.font = { name: 'Arial', bold: true, size: 16 };
     });
 
     // Ocultar líneas de cuadrícula
@@ -466,60 +794,80 @@ const downloadAll2 = async () => {
 
     // Descargar el archivo Excel
     if (formattedStartDate == formattedEndDate) {
-            saveAs(blob, `Reporte de inventario del ${formattedStartDate}.xlsx`);
+        saveAs(blob, `Reporte de inventario del ${formattedStartDate}.xlsx`);
     } else {
         saveAs(blob, `Reporte de inventario del ${formattedStartDate} al ${formattedEndDate} .xlsx`);
 
     }
-        loadingStore.setLoading(false, "generando descargas");
-    };
+    loadingStore.setLoading(false, "generando descargas");
+};
 
 
 
 const downloadAll = async () => {
 
-loadingStore.setLoading(true,"generando descargas")
-const reportes = invetnoryDailyReports.value
+    loadingStore.setLoading(true, "generando descargas")
+    const reportes = invetnoryDailyReports.value
 
 
 
-for (const reporte of reportes) {
-    const reports = await purchaseOrderService.getpurchaseOrderEntriesBypurchaseOrderID(reporte.purchase_order_id)
-    entries.value.push(...reports);    
-}
+    for (const reporte of reportes) {
+        const reports = await purchaseOrderService.getpurchaseOrderEntriesBypurchaseOrderID(reporte.purchase_order_id)
+        entries.value.push(...reports);
+    }
 
-console.log(entries.value)
+    console.log(entries.value)
 
-const data = entries.value.map(product => ({
-    "Fecha":product.date.split('T')[0],
-    "Hora":product.date.split('T')[1],
-    "Sede":product.site_name,
-    "Producto": product.item_name,
-    "Cantidad": product.quantity,
-    "Unidad de medida":product.unit_measure
-}));
+    const data = entries.value.map(product => ({
+        "Fecha": product.date.split('T')[0],
+        "Hora": product.date.split('T')[1],
+        "Sede": product.site_name,
+        "Producto": product.item_name,
+        "Cantidad": product.quantity,
+        "Unidad de medida": product.unit_measure
+    }));
 
 
-const worksheet = XLSX.utils.json_to_sheet(data);
-worksheet["!cols"] = [
-{ wch: Math.max(0, "Unidad de medida".length) },
-{ wch: Math.max(0, "Unidad de medida".length) },
-{ wch: Math.max(0, "Unidad de medida".length) },
-    { wch: Math.max(30, "Producto".length) },
-    { wch: Math.max(0, "Cantidad".length) },
-   ]
-const workbook = XLSX.utils.book_new();
-XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    worksheet["!cols"] = [
+        { wch: Math.max(0, "Unidad de medida".length) },
+        { wch: Math.max(0, "Unidad de medida".length) },
+        { wch: Math.max(0, "Unidad de medida".length) },
+        { wch: Math.max(30, "Producto".length) },
+        { wch: Math.max(0, "Cantidad".length) },
+    ]
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
 
-XLSX.writeFile(workbook, `Compras de todas las sedes.xlsx`);
-loadingStore.setLoading(false,"generando descargas")
+    XLSX.writeFile(workbook, `Compras de todas las sedes.xlsx`);
+    loadingStore.setLoading(false, "generando descargas")
 
 
 };
 
 
+function handleKeydown(event) {
+    // Comprobar si la tecla presionada es la coma
+    if (event.key === ',') {
+        alert('Por favor usa punto ( . ) para los decimales, gracias');
+        event.preventDefault(); // Prevenir que la tecla tenga efecto en el input
+    }
+
+
+
+}
+
+
+const verify = (data) => {
+    if (data.ajustment > data.quantity) {
+        alert('Estas seguro de que hay mas de lo reportado?')
+        data.ajustment == data.quantity
+    }
+}
 
 </script>
+
+
 
 
 <style scoped>
@@ -534,7 +882,7 @@ loadingStore.setLoading(false,"generando descargas")
         width: 80%;
     }
 
-    .pack-butons{
+    .pack-butons {
         flex-direction: column;
     }
 

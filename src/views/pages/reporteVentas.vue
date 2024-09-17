@@ -76,7 +76,7 @@
 
             <div class="col-12 px-0 py-0 my-0 p-0 m-auto" style="overflow-x:auto; background-color: #fafafa;">
                 <div class="px-0 mx-0"
-                    style="width: max-content; background-color:#fafafa; display:  flex;color: ; justify-content: start;gap: 2rem;min-width: max-content;">
+                    style="width: max-content; background-color:#fafafa; display:  flex;align-items: center; color: ; justify-content: start;gap: 2rem;min-width: max-content;">
                     <div v-for="boton in menus" style="background-color: ;">
 
 
@@ -89,7 +89,7 @@
                                 <i class="mr-2" :class="boton.icon"></i>
                                 {{ boton.name }}
 
-                                <!-- {{ ruta.fullPath }} -->
+                    
 
 
                             </Button>

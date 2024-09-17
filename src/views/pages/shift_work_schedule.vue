@@ -2,9 +2,9 @@
     
 
 
-    <div style="margin-top: 6rem;" class="px-2 mx-0 col-12">
+    <div style="margin-top: 4rem;" class="px-2 mx-0 col-12">
         
-        <Dialog v-model:visible="showUserDialog" modal style="width: 30rem">
+        <Dialog v-model:visible="showUserDialog" modal :closable="false" style="width: 30rem">
         <h4>{{ selectedUser.name }}</h4>
 
         <div v-if="selectedUser" class="user-info" style="display: flex; flex-direction: column; align-items: center">
@@ -32,7 +32,7 @@
         </div>
 
         <template #footer>
-            <Button label="Cerrar" @click="showUserDialog = false" />
+            <Button label="Cerrar" severity="help" @click="showUserDialog = false" />
         </template>
     </Dialog>
 
@@ -105,29 +105,29 @@
             <Button label="Agregar" @click="addNewWorkDay(newWorkDayDate)" class="p-button-success" />
         </template>
     </Dialog>
-        <div class="col-12 p-0 m-0 mb-8">
 
 
-            <p class="texto" ref="texto">
 
-            </p>
+
+
+    
+        <div class="col-12 p-0 m-0 mb-2 shadow-3" style="">
 
 
     
 
-            <div class="grid p-0 mx-auto">
+            <div class="grid px-8 md:mx-auto " style="max-width: 800px;">
                 <div class="col-12 md:col-5 py-2" style="height: 4rem">
                     <Dropdown :disabled="!roles['Horarios de trabajo admin']?.includes(loginData?.rawUserData?.rol) && getUserId()!=1104" style="height: 100%" class="col-12 p-0 m-0" v-model="currentSite" :options="sites" optionLabel="site_name"></Dropdown>
                 </div>
-                <!-- <div class="col-3"> <Calendar class="col-12 p-0 m-0" v-model="start_date"></Calendar></div> -->
                 <div class="col-12 md:col-5 py-2" style="height: 4rem"><InputText style="height: 100%" class="col-12 text-center m-0" readonly v-model="formattedDateRange" @click="openDateRangeDialog" /></div>
 
-                <div class="col-12 md:col-2 py-2" style="display: flex; height: 4rem; justify-content: end"><Button severity="help" rounded class="mb-3" icon="pi pi-search" @click="fetchWorkDays" /></div>
+                <div class="col-12 md:col-2 py-2 m-0" style=" height: 4rem;"><Button severity="help"  class="mb-3" label="Buscar" icon="pi pi-search" @click="fetchWorkDays" /></div>
             </div>
         </div>
 
         <div class="grid" style=" margin: auto;">
-            <div class="col-2 p-0" style="height: 80vh;max-width: min-content; overflow-y: auto">
+            <div class="col-2 p-0 px-2" style="height: 80vh;width: min-content; overflow-y: auto">
                 <div class="p-0 text-sm" style="display: flex; justify-content: center">
                     <div style="display: flex; gap: 1rem; flex-direction: column" class="pb-3 m-auto">
                         <div v-for="user in users" :key="user.id" draggable="true" style="display: flex; flex-direction: column; align-items: center" @dragstart="handleDragStart(user)">
@@ -149,7 +149,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col" style="height: 80vh; overflow-y: auto">
+            <div class="col" style="height: 80vh;min-width: 300px; overflow-y: auto">
                 <div class="col-12 pb-6" >
                     <div style="display: flex; gap: 0rem; flex-direction: column">
                         <div class="p-0 m-0" v-for="workDay in workDays" :key="workDay.id" style="position: relative">
@@ -162,10 +162,10 @@
                             <div style="overflow-x: auto">
                                 <Button style="position: absolute; right: -1rem; top: -1rem" icon="pi pi-trash text-2xl " class="p-button-rounded p-button-danger shadow-5" @click="confirmDeleteWorkDay(workDay.id)"></Button>
 
-                                <div style="min-width: max-content">
+                                <div style="">
                                     <div
                                         class="shadow-5 p-3 m-0 p-4"
-                                        style="border-radius: 0 0 0.5rem 0.5rem; display: flex; overflow-x: auto; flex-wrap: wrap; align-items: flex-start; gap: 2rem; justify-content: start; padding: 10px"
+                                        style="border-radius: 0 0 0.5rem 0.5rem; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 2rem; justify-content: start; padding: 10px"
                                         @dragover.prevent
                                         @drop="handleDrop(workDay)"
                                     >

@@ -5,7 +5,7 @@
 
         <!-- {{ store.visibleOrder.order }} -->
 
-        <div style="border-radius: 1rem; overflow: hidden;">
+        <div style="border-radius: .3rem; overflow: hidden;">
             <div class=" P-0 mt-0" style="background-color: var(--orange-500);">
 
                 <div class="header p-4" style="display: flex; ;justify-content: space-between;align-items: center;">
@@ -20,8 +20,7 @@
                         <span class="text-left text-sm"
                             style="text-align: end; width: min-content;font-weight: bold;color: white;">TERMINOS Y
                             CONDICIONES </span>
-                        <small class="mt-2  text-left" style="color: white; max-width: ;">Lorem ipsum dolor sit amet
-                            consectetur, adipisi</small>
+                        <small class="mt-2  text-left" style="color: white;"></small>
                     </div>
 
                 </div>
@@ -60,14 +59,18 @@
                             <div style="display: flex;font-weight: 400; flex-direction: column;">
                                 <span> {{ store.visibleOrder.order.order_id }}</span>
                                 <span> {{ store.visibleOrder.order.site_name }}</span>
-                                <span> {{ store.visibleOrder.order?.status?.timestamp.split(' ')[0] }}</span>
+                                <span> {{ store.visibleOrder.order.latest_status_timestamp.split('T')[0] }}</span>
                                 <span> {{ store.visibleOrder.order?.payment_method }}</span>
                             </div>
 
                         </div>
+                        
 
 
                     </div>
+
+
+                    
 
 
                     <div style="font-weight: bold; display: flex;flex-direction: column; max-width: 40%;">
@@ -83,7 +86,7 @@
                             <div style="display: flex; flex-direction: column;">
                                 <span> Subtotal</span>
                                 <span> Domicilio</span>
-                                <span class="text-2xl"> Total</span>
+                                <span class="text-l"> Total</span>
                             </div>
 
                             <div style="display: flex;font-weight: 200; flex-direction: column;">
@@ -95,12 +98,12 @@
 
                             <div style="display: flex; font-weight: 400; flex-direction: column;">
 
-                                <span> {{ formatToColombianPeso(store.visibleOrder.order.total_price) }}</span>
+                                <span class="px-2"> {{ formatToColombianPeso(store.visibleOrder.order.total_order_price) }} </span>
 
-                                <span> {{ formatToColombianPeso(store.visibleOrder.order.delivery_price) }}</span>
+                                <span class="px-2"> {{ formatToColombianPeso(store.visibleOrder.order.delivery_price) }}</span>
 
-                                <span class="text-xl" style="font-weight: bold; border-top: 2px solid red;">
-                                    {{ formatToColombianPeso(store.visibleOrder.order.total_price +
+                                <span class="text-l px-2" style="font-weight: bold; border-top: 1px solid ;">
+                                    {{ formatToColombianPeso(store.visibleOrder.order.total_order_price +
                                         store.visibleOrder.order.delivery_price) }}</span>
                             </div>
 
@@ -116,6 +119,24 @@
                 </div>
                 
 
+                <div class="mb-4 mx-4" style="border: 2px dotted #4b5563;">
+                    <h5 class="p-2 m-0">
+                    
+                    
+                    <b>
+                        Notas
+                    </b>
+                    
+                    </h5>
+
+                <div class="col-12 px-2 m-0">
+                    <h6 class="m-0">
+                        {{store.visibleOrder.order.order_notes}}
+                    </h6>
+        
+                </div>
+                </div>
+               
 
 
 
@@ -125,8 +146,7 @@
 
 
 
-
-<p class="text-xl text-center" style="font-weight: bold; color: rgb(255, 255, 255);background-color: black;">Datos de usuario</p>
+<p class="text-xl text-center" style="font-weight: bold; color: rgb(255, 255, 255);background-color: #4b5563;">Datos del usuario</p>
 
                 <div class="p-4" style="display: flex;gap: 1rem; justify-content: start; ">
 
@@ -142,13 +162,15 @@
 </div>
 
 <div style="display: flex; flex-direction: column;">
-    <span style="text-transform: capitalize;">  <span style="font-weight: bold;"> Nombre :</span> {{ store.visibleOrder.order.user_data?.user_name }}</span>
-    <span style="text-transform: capitalize;"> <span style="font-weight: bold;" >DIRECCION :</span>   {{ store.visibleOrder.order.user_data?.user_address }}</span>
-    <span > <span style="font-weight: bold;"> TELEFONO : </span>  {{ store.visibleOrder.order.user_data?.user_phone }}</span>
+    <span style="text-transform: capitalize;">  <span style="font-weight: bold;"> Nombre :</span> {{ store.visibleOrder.order.user_name }}</span>
+    <span style="text-transform: capitalize;"> <span style="font-weight: bold;" >DIRECCION :</span>   {{ store.visibleOrder.order.user_address }}</span>
+    <span > <span style="font-weight: bold;"> TELEFONO : </span>  {{ store.visibleOrder.order?.user_phone }}</span>
 </div>
 
 
 </div>
+
+
 
 
 
@@ -187,7 +209,7 @@
 
                         <div class="m-0 p-0" v-for="producto in store.visibleOrder.order.products">
                             <p class=" text-l  p-1 text-center my-2"
-                                style="font-weight: bold;width: 100; background-color:var(--gray-200);color: black;">
+                                style="font-weight: bold;width: 100; background-color:var(--gray-200);color: #4b5563;">
                                 {{ producto.name }} <span>{{ formatToColombianPeso(producto.price) }}</span></p>
 
                             <div class="px-4 py-0"

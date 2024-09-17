@@ -16,6 +16,7 @@ export const useReportesStore = defineStore('reportes', {
                     'salesReport',
                     'selectedSites',
                     'order_status',
+                    'sumaryData',
                      // Estado por defecto si no hay nada en localStorage
                     // 'ventasCharData',
                     'visibleNotifications',
@@ -205,22 +206,24 @@ export const useReportesStore = defineStore('reportes', {
                 });
 
                 if (!response.ok) {
-                    this.setLoading(false, 'cargando reporte')
+                    // this.setLoading(false, 'cargando reporte')
                     throw new Error(`HTTP error! status: ${response.status}`);
                     
                 }
 
                 const data = await response.json();
                 this.salesReport = data
+              
                 this.fetchDilyReport()
                 this.fetchDilyOrdersReport()
                 this.fetchTicketsReport()
                 this.fetchSumaryReport()
+                
 
 
                 // Maneja la respuesta
                 console.log(data);
-                this.setLoading(false, 'cargando reporte')
+               
             } catch (error) {
                 console.error('Fetch error:', error);
                 this.setLoading(false, 'cargando reporte')
@@ -433,12 +436,14 @@ export const useReportesStore = defineStore('reportes', {
 
       if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
+          this.setLoading(false, 'cargando reporte')
       }
 
       const data = await response.json();
       // salesReport.value = data
 
       this.sumaryData = data
+      this.setLoading(false, 'cargando reporte')
       return (data)
 
 
@@ -446,6 +451,7 @@ export const useReportesStore = defineStore('reportes', {
       console.log(data);
   } catch (error) {
       console.error('Fetch error:', error);
+      this.setLoading(false, 'cargando reporte')
   }
 },
 

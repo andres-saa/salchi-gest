@@ -3,10 +3,15 @@
 
         <nav  class="nav-bar shadow-1 ">
             <ul>
-                <li class="nav-bar--item" v-for="(button, index) in navItems" :key="index">
+                <li class="nav-bar--item" v-for="(button, index) in navItems" :key="index" style="display: flex;align-items: center;">
                     <router-link :to="`/purchase-order/recorrido/${button.path}/`">
                         <Button :icon="button.icon" text :class="isActive(button.path)? 'nav-var--item-button-selected': '' " severity="help" class=" nav-var--item-button" :label="button.label" />
                     </router-link>
+
+
+                    <i class=" ml-2 fa-solid text-xl  fa-arrow-right">
+
+</i>
 
                     
                 </li>

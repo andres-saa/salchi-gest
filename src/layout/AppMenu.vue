@@ -170,22 +170,22 @@ async function fetchAndUpdateRoles() {
 
                 },
 
-                {
-                    label: 'Reportes de inventario Cdi', icon: 'fa-solid fa-calendar',
-                    permision_id:get_id([19,20]),
-                    items: [
-                        {
-                            label: 'Reportar inventario ', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/report-inventory/',permision_id:20
+                // {
+                //     label: 'Reportes de inventario Cdi', icon: 'fa-solid fa-calendar',
+                //     permision_id:get_id([19,20]),
+                //     items: [
+                //         {
+                //             label: 'Reportar inventario ', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/report-inventory/',permision_id:20
 
-                        },
-                        {
-                            label: 'Revisar reportes', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/cdi-inventory-reports/',permision_id:19
+                //         },
+                //         {
+                //             label: 'Revisar reportes', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/cdi-inventory-reports/',permision_id:19
 
-                        },
+                //         },
                      
-                    ]
+                //     ]
 
-                },
+                // },
 
 
                 {
@@ -273,10 +273,10 @@ async function fetchAndUpdateRoles() {
                     label: 'Gestion de cargos', icon: 'fa-database fa-solid', to: '/cargos',permision_id: 30,
 
                 },
-                {
-                    label: 'Directorio ', icon: 'fa-solid fa-folder', to: '/directorio',permision_id: 31,
+                // {
+                //     label: 'Directorio ', icon: 'fa-solid fa-folder', to: '/directorio',permision_id: 31,
 
-                },
+                // },
 
                 {
                     label: 'Administrar PQRS ', icon: 'fa-solid fa-folder',to:'/pqrs/pagina_web/1' ,permision_id: 32,
@@ -300,19 +300,19 @@ async function fetchAndUpdateRoles() {
                     label: 'Auditorias ', icon: 'fa-solid fa-folder', to: '/auditorias/lista',permision_id: 33,
 
                 },
-                {
-                    label: 'Registrar horas ', icon: 'fa-solid fa-folder', to: '/horarios-trabajo',permision_id: 34,
+                // {
+                //     label: 'Registrar horas ', icon: 'fa-solid fa-folder', to: '/horarios-trabajo',permision_id: 34,
 
-                },
+                // },
 
                 {
                     label: 'Configurar turnos ', icon: 'fa-solid fa-folder', to: '/turnos-trabajo',permision_id: 35,
 
                 },
-                {
-                    label: 'Mantenimientos ', icon: 'fa-solid fa-folder', to: '/maintenance/equipment',permision_id: 36,
+                // {
+                //     label: 'Mantenimientos ', icon: 'fa-solid fa-folder', to: '/maintenance/equipment',permision_id: 36,
 
-                },
+                // },
 
 
 

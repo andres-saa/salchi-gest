@@ -115,7 +115,7 @@ const checkActiveRoute = (item) => {
 
 
 
-        <Transition name="layout-submenu">
+        <Transition name="layout-submenu ">
             <a  v-if="(!item.to || item.items) && item.visible !== false && item.items.some( i => permissions.includes(i.permision_id))" :href="item.url" @click="itemClick($event, item, index)" :class="item.class" :target="item.target" tabindex="0" class="layout-submenu pr-2">
                 <i :class="item.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
@@ -126,7 +126,7 @@ const checkActiveRoute = (item) => {
 
         
             <router-link  v-if="item.to && !item.items && item.visible !== false && item.permision_id && permissions.includes(item.permision_id)" @click="itemClick($event, item, index)" :class="[item.class, { 'active-route': checkActiveRoute(item) }]" tabindex="0" :to="item.to">
-                <i :class="item.icon" class="layout-menuitem-icon"></i>
+                <i :class="item.icon" class="layout-menuitem-icon layout-menu-button"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
             </router-link>
 

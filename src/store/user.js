@@ -20,7 +20,8 @@ export const loginStore = defineStore('user', {
 
 
         return {
-            userData:{}
+            userData:{},
+            NoAuthorized:false
             
         }
     },

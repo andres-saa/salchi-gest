@@ -1,5 +1,5 @@
 <template>
-  <div class="grid xl:mx-0 mx-0  py-0 mt-6 px-0" style="background-color: white;">
+  <div class="grid xl:mx-0 mx-0  py-0 mt-6 px-0" style="background-color: white;width: 100%;">
 
     <div  :class="sites.length>0? 'apear' : 'hide'" class="col-12 py-0 px-2 shadow-1 my-0" >
 

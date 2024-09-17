@@ -129,8 +129,8 @@
 
 
 
-    <div  style="display:flex;flex-direction:column;justify-content:center;align-items:center">
-        <nav  class=" nav-bar  p-2 " style="width:100%; max-width:1024px">
+    <div class="m-auto"  style="display:flex;flex-direction:column;justify-content:center;align-items:center;max-width:900px">
+        <nav  class=" nav-bar  p-2 " style="width:100%; ">
             <ul class="p-2  " style="display:flex;gap:1rem;flex-wrap:wrap;">
              
 
@@ -146,16 +146,6 @@
        
                 
                
-                <li class="p-0" style="display: flex;gap:1rem">
-                    <Button label="ITEM" class="nav-bar--button-black m-0 shadow-2" @click="dialogVisible = true" icon="pi pi-plus" ></Button>
-
-                </li>
-
-                <li class="p-0" style="display: flex;gap:1rem">
-                    <Button style="height: 2rem;" label="UNIDADES DE MEDIDA" severity="warning" class="nav-bar--button-primary m-0 shadow-2" @click="dialogVisibleMeasure = true" icon="pi pi-plus" ></Button>
-                    <Button  @click="deleting = !deleting" :style="!deleting? 'background-color: red;' : 'background-color: #22c55e;'"  class="nav-bar--button-black m-0 shadow-2" :icon="deleting? 'pi pi-check' : 'pi pi-trash'" ></Button>
-
-                </li>
             </ul>
         </nav>
 
@@ -163,10 +153,12 @@
 
         <img v-if="routing.path == '/daily-inventory/daily-inventory-settings/'" style="height:60vh;object-fit:contain" src="/images/dailyMan.png" alt="">
     
+
+        <router-view >
+        </router-view>
     </div>
   
-    <router-view >
-    </router-view>
+   
 
 </template>
 

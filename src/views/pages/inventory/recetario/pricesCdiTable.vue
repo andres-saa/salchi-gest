@@ -362,11 +362,12 @@ const openEditIngredient = (ingredient) =>{
 
     newIngredient.value = { 
         "id":ingredient.id ,
-        "name": ingredient.ingredient_name,
-        "purchasing_unit_measure": unitMeasures.value.find(um => um.name == ingredient.purchasing_unit_measure),
-        purchasing_unit_measure_id:unitMeasures.value.find(um => um.name == ingredient.purchasing_unit_measure)[0]?.id,
-        "purchasing_price": ingredient.purchasing_price, 
-        "net_gross_weight": ingredient.net_gross_weight } 
+        "name": ingredient.name,
+        "purchasing_unit_measure": unitMeasures.value.find(um => um.name == ingredient.unit_measure),
+        purchasing_unit_measure_id:unitMeasures.value.find(um => um.name == ingredient.unit_measure)[0]?.id,
+        "purchasing_price": ingredient.last_price_purchase, 
+        "net_gross_weight": ingredient.net_gross_weight ,
+        "iva": ingredient.iva } 
         console.log(newIngredient.value)
 
 
@@ -418,6 +419,9 @@ const columns = [
         type:'percent',
         frozen:false
     },
+
+
+    
     
 
 ]

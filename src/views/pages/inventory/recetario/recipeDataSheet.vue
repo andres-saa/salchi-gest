@@ -273,8 +273,10 @@
 
 
                         
-                                <Button v-if="!data.data.pasamanos" @click="navigateToRecipeDataSheet(data.data.id,data.data.name)" text severity="help" style="height: 2rem; width: 2rem;" icon="pi pi-eye"></Button>
-        
+                                <Button v-if="!data.data.pasamanos" @click="navigateToRecipeDataSheet(data.data.recipe_id, data.data.ingredient_name)" text severity="help" style="height: 2rem; width: 2rem;" icon="pi pi-eye"></Button>
+
+                          
+                               
                         </div>
 
 
@@ -355,6 +357,8 @@ import InputNumber from 'primevue/inputnumber';
 
 
 const navigateToRecipeDataSheet =  (product_id,recipe_name) => {
+
+    alert(recipe_name)
     router.push({
         name:'cdi_recipe_data_sheet',
         params:{

@@ -33,8 +33,8 @@
         </template>
     </Dialog>
 
-    <div class="m-2">
-        <DataTable stripedRows style="max-width:1000px;border-radius:0.5rem;min-height:70vh"  v-model:filters="filters" class="col-12 shadow-3 my-0 mx-auto" :value=" items" tableStyle="min-width:30rem">
+    <div class="m-2" style="width: 100%;">
+        <DataTable stripedRows style=";border-radius:0.5rem;min-height:70vh"  v-model:filters="filters" class="col-12 shadow-3 my-0 mx-auto" :value=" items" tableStyle="min-width:30rem">
             <template #header>
                 <div style="display: flex;justify-content:center;align-items:center;">
                     <span style="text-transform: uppercase;"> {{router.params.sesion}} </span>
@@ -48,9 +48,9 @@
 
             <Column style="width: 20%;" class="py-1 pl-2 pr-0" field="item_name" header="">
             <template #body="item"  >
-                <div style="display: flex; justify-content:end">
+                <div style="display: flex;height: 1.5rem; justify-content:end">
                     <!-- <Button text severity="warning" class="p-0" icon="pi pi-pencil"></Button> -->
-                    <Button @click="prepareToDelete(item.data)" text severity="danger" class="p-0 nav-bar--button-black m-0 shadow-2" icon="pi pi-trash"></Button>
+                    <Button  @click="prepareToDelete(item.data)"   severity="danger" class="p-0  m-0 shadow-2" icon="pi pi-trash"></Button>
                     
                 </div>
              
@@ -63,7 +63,7 @@
             <template #footer> 
 
                 <div class="col-12 p-0" style="display: flex; justify-content:end">
-                    <Button @click="open" class="p-0"  severity="help" style="border-radius: 0.5rem;height:2rem; padding:0.3rem 0" icon="pi pi-plus"></Button>
+                    <Button @click="open" class="" label="Nuevo item" severity="help" style="border-radius: 0.5rem;height:2rem; " icon="pi pi-plus"></Button>
 
                 </div>
             </template>

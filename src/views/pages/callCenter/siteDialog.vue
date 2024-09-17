@@ -117,9 +117,9 @@
 
         </div>
  
-        <Button @click="store.setVisible('currentSite',false)" icon="pi pi-times" severity="danger" rounded
-            style="width: 2.5rem;height: 2.5rem; border: none; position: absolute; right: -1rem; top:-1rem;"/>
-            
+            <!-- <Button @click="store.setVisible('currentSite',false)" icon="pi pi-times" severity="danger" rounded
+                style="width: 2.5rem;height: 2.5rem; border: none; position: absolute; right: -1rem; top:-1rem;"/>
+                -->
 
 
 

@@ -1,9 +1,9 @@
 <template>
 
-<div class="  mx-2 my-8 m-auto ">
+<div class="  my-8 m-auto " style="">
   
 <p class="text-2xl lg:text-3xl text-center my-4 mt-8 " style="font-weight: bold;">Generar Certificado Laboral</p>
-<span class=" mb-6 col-12" style="display: flex; height: auto;">
+<span class=" mb-6 col-12 m0-" style="display: flex; height: auto;">
   
   
   

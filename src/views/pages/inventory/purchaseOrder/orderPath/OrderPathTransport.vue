@@ -257,7 +257,7 @@
     <div class="mt-3" style="min-height:20vh; display: flex; justify-content:center;align-items:center">
 
 
-        <DataTable showGridlines style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
+        <DataTable stripedRows showGridlines style="max-width: 1024px;" v-model:filters="filters" class="col-12 m-auto"
             :value="invetnoryDailyReports" tableStyle="min-width: 50rem;" :paginator="true"
             :rows="15"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -265,7 +265,7 @@
             <template #header>
                 <div class="grid" style="align-items:center">
                     <div class="col-12 md:col-6 p-3">
-                        <span class="text-xl" style="width: 100%;"> Ordenes pendientes por Transportar</span>
+                        <span class="text-xl" style="width: 100%;"> Ordenes pendientes por alistar</span>
                     </div>
                     <div class="col-12 md:col-6 p-3">
                         <InputText style="width: 100%;" class="" v-model="filters['global'].value"
@@ -276,13 +276,13 @@
                 </div>
             </template>
             <Column class="py-1" field="purchase_order_id" header="ID"></Column>
-            <Column class="py-1" field="responsible_lap" header="Autorizada por"></Column>
+            <Column class="py-1" field="employer_name" header="Solicitante"></Column>
             <Column class="py-1" field="site_name" header="Sede"></Column>
-            <Column class="py-1" field="date" header="Fecha de autorizacion">
+            <Column class="py-1" field="date" header="Fecha">
 
                 <template #body="data">
                     <p style="min-width: max-content">
-                        {{ data.data.status_timestamp?.split('T')[0] }}
+                        {{ data.data.expedition_date?.split('T')[0] }}
 
                     </p>
 
@@ -294,7 +294,7 @@
 
                 <template #body="data">
                     <span style="min-width: max-content;">
-                        {{ data.data.status_timestamp?.split('T')[1] }}
+                        {{ data.data.expedition_date?.split('T')[1]?.split(':')?.slice(0,2)?.join(' : ') }}
 
                     </span>
 
@@ -305,7 +305,7 @@
             <Column class="py-1" field="date" header="Estado actual">
 
                 <template #body="data">
-                    <Tag style="width: 100%;height:2.7rem"
+                    <Tag style="width: 100%"
                         :style="`background-color:${color_status[data.data.current_status]}`">
                         {{ data.data.current_status }}
 
@@ -327,14 +327,14 @@
 
             </Column> -->
 
-            <Column style="width: 20px;" class="py-1 mx-0 px-0" field="date" header="Acciones">
+            <Column style="justify-content: center;" class="py-0 mx-0 px-0" field="date" header="Actuar">
                 <template #body="data">
 
                     <div class="m-0 p-0"
-                        style="display: flex;width:min-content; justify-content:start; align-items:center;gap:0.5rem">
+                        style="display: flex;width: 100%;  justify-content:center; align-items:center;gap:0.5rem">
 
-                        <Button label="Interactuar" @click="openDataInteract(data.data)" severity="help" class=""
-                            icon="pi " />
+                        <Button  label="" style="width: min-content;" text  @click="openDataInteract(data.data)" severity="" class="text-center p-1"
+                            icon="fa-solid fa-hand" />
 
                     </div>
 
@@ -343,6 +343,7 @@
                 </template>
             </Column>
         </DataTable>
+
 
     </div>
 

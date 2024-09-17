@@ -27,8 +27,8 @@
                     <div class="d-flex" style="display: ;">
                         <p class="m-0  text-2xl my-4">Entrega de dotacion </p>
 
-                        <Button  class="py-2 rounded" rounded severity="" label="Small" @click="openNew = true"
-                            style="display: flex;justify-content: center;"> Registrar nueva entrega </Button>
+                        <Button  severity="help" class="py-2 "   size="small" label="Registrar nueva entrega" @click="openNew = true"
+                            style="display: flex;justify-content: center;">  </Button>
                     </div>
 
 
@@ -155,7 +155,7 @@
             <!-- {{ selectedReceivers }} -->
 
         <div class="grid">
-            <div class="col py-1" v-for="user in selectedReceivers"  style="min-width: max-content; display: flex; gap: 1rem; align-items: center;">
+            <div class="col-12 md:col-6 py-1" v-for="user in selectedReceivers"  style="min-width: max-content; display: flex; gap: 1rem; align-items: center;">
      
 
                 <img @click="verImagen(user.dni)"
@@ -169,11 +169,11 @@
         </div>
 
     
-    <!-- {{ users }} -->
+
     <MultiSelect v-model="selectedReceivers" display="chip" filter
              :options="allUsersBasic.filter(user => user.id != getUserId())"
              optionLabel="shortName" placeholder="Seleccione los receptores"
-             class="my-4 p-1" style="width: 100%;border-radius: 10rem;"
+             class="my-4 p-1" style="width: 100%;"
              :class="{ 'p-invalid': submitted && !currentUser.position } ">
 
 
@@ -203,10 +203,10 @@
 
 
         <div v-for="(item, index) in deliveryItems" :key="index" class="my-3" style="display: flex; align-items: center;">
-    <span style="border-radius: 0.5rem; overflow: hidden; display: flex; width: 100%; border-radius: 10rem; gap; align-items: center; border: 1px solid rgb(186, 186, 186)">
-        <InputText v-model="item.name" placeholder="Nombre" style="width: 90%; border: none;" />
+    <span style=" overflow: hidden; display: flex; width: 100%; gap; align-items: center; border: 1px solid rgb(186, 186, 186)">
+        <InputText v-model="item.name" placeholder="Nombre" style="width: 90%; border: none;box-shadow: none;" />
         <div style="width: 2px; height: 2rem; border: none; background-color: rgb(187, 187, 187);"></div>
-        <InputText v-model.number="item.quantity" type="number" placeholder="cant" style="width: 20%; border: none;" />
+        <InputText v-model.number="item.quantity" type="number" placeholder="cant" style="width: 20%;box-shadow: none; border: none;" />
     </span>
     <Button text class="p-0 m-0" severity="danger" @click="removeDeliveryItem(index)">
         <i class="text-3xl p-2 m-0" style="font-weight: " :class="PrimeIcons.TRASH"></i>
@@ -231,8 +231,8 @@
         <div class="flex justify-content-end gap-2 p-4" style="position: absolute;    background-color: rgb(255, 255, 255);
 
  width: 100%; right: 0; bottom: 0rem; ">
-            <Button type="button" label="Cancelar" severity="danger" @click="openNew = false"></Button>
-            <Button type="button" label="Guardar" @click="saveDelivery()"></Button>
+            <Button type="button" text label="Cancelar" severity="danger" @click="openNew = false"></Button>
+            <Button type="button" severity="help" label="Guardar" @click="saveDelivery()"></Button>
         </div>
 
     </Dialog>

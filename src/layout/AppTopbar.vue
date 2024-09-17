@@ -5,6 +5,11 @@ import { useRouter } from 'vue-router';
 import { getUserDni, getUserRole } from '../service/valoresReactivosCompartidos';
 import { URI } from '../service/conection';
 const { layoutConfig, onMenuToggle } = useLayout();
+import {loginStore} from '../store/user.js'
+import { storeToRefs } from 'pinia';
+
+const User_store = loginStore()
+
 
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
@@ -70,7 +75,9 @@ const getImageUrl = () => {
 
 
 const cerrar = () => {
-    localStorage.removeItem('token')
+    
+
+    User_store.userData = {}
     router.push('/auth/login')
 
 
@@ -112,7 +119,7 @@ const checkScreenWidth = () => {
         </router-link>
 
         <button v-if="isSmallScreen" class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle() ">
-            <i class="pi pi-bars text-white"></i>
+            <i class="pi pi-bars button-toggle-sidebar text-white"></i>
         </button>
 
         <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">

@@ -8,7 +8,7 @@ import { useOrderStore } from './store/order';
 import {useAppStore} from './store/app/app'
 import {fetchService} from './service/utils/fetchService'
 import { URI } from './service/conection';
-
+import NoPermission from './views/pages/NoPermission.vue';
 
 const sonido4 = new Audio('/sound/pip4.wav')
 const orderStore = useOrderStore()
@@ -125,7 +125,7 @@ onMounted( async() => {
 
     <Toast style="z-index: 999;" ></Toast>
     
-   
+   <NoPermission/>
         <RouterView></RouterView>
 
 </template>

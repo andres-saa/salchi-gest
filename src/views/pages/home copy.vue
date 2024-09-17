@@ -1,0 +1,384 @@
+<template>
+
+
+
+<div>
+
+
+<div class="aux-back"  style="background-color: white;  object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
+    
+</div> 
+
+
+<div class="aux-back"  style="background-color: rgb(0, 1, 22);opacity:0.9 ;background-size: cover;height: 100vh;  width: 100vw; object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
+    
+</div> 
+
+
+<div style="height: calc(100vh - 3rem); display: flex;margin-top:2rem; align-items: center;">
+    
+
+
+
+    
+    <div class="ipad-container col-12   " style="max-width: 800px;border-radius:0.5rem; ">
+
+        <div  style="z-index: 99; width: min-content; display: flex;justify-content: start; gap: 1rem; align-items: center;" class=" knobi">
+            
+            <div style="position: relative;width: min-content; height: min-content; display: flex;align-items: center; justify-content: center;">
+                <Knob  v-model="valor" valueTemplate=""></Knob>
+                <img  style="height:3.5rem; position: absolute; border-radius: 50%;width: 3.5rem; object-fit: cover;" :src="`${URI}/read-product-image/96/employer-${store.rawUserData?.dni}`" alt="">
+
+            </div>
+
+           
+            <div style="display: flex; flex-direction: column;gap:0.5rem ;   ">
+                <span  class="text-xl md:text-3xl" style=" min-width: max-content;color:white;text-transform:capitalize;  text-shadow: 
+">
+
+
+{{store.rawUserData?.name.split(' ').slice(0,3).join(' ').toLowerCase()}}</span>
+
+<span style=" color:white;text-transform:capitalize;
+"> {{store.rawUserData?.rol.toLowerCase()}}</span>
+            </div>
+
+                
+        </div>
+        
+
+<div class="ipad-screen "
+    style=" ">
+
+
+
+    <!-- <div class="px-3 py-1 m-0 text-xl barra"
+        style="position: absolute;background-color: rgba(0, 0, 0, 0.5); z-index: 99;width: 100%;  justify-content: space-between; align-items: center; font-weight: bold;">
+
+        <p class="p-0  m-0" style="color: white;">sm <i class="fa-solid fa-wifi"></i></p>
+        <p class="p-0 m-0" style="color: white;"> {{ new Date().toLocaleTimeString() }}</p>
+        <p class="p-0 m-0" style="color: white;"><i class="fa-solid fa-battery-half"></i></p>
+
+    </div> -->
+
+
+    <div class="grid  mx-0  p-5" style="z-index: 99;align-items: start;">
+
+        <div class=" col-4  p-0 md:col-3 xl:col-2 px-2 item" v-for="menu in menus"
+            style="display: flex; transition: .2s all ease; flex-direction: column; justify-content: center; align-items: center;">
+            <div class="p-0   " outlined style="border: none;">
+
+                <a class="" v-if="menu.a" :href="menu.to">
+                    <Button  class="p-0 " style="background-color: transparent;border: none;">
+                        <img class="m-0 p-4" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
+                    </Button>
+                </a>
+
+                <router-link v-else  :to="menu.to">
+                    <Button  class="p-0" style="background-color: transparent;border: none;">
+                        <img class="m-0 p-4" :src="menu.imagen" style="width: 100%;aspect-ratio: 1/1; object-fit: cover;" alt="">
+                    </Button>
+                </router-link>
+
+            </div>
+
+            <span class="texto-apps text-sm md:text-l" style="text-align: center; z-index: 99; color: white; text-shadow: 
+-1px -1px 0 #000,  
+1px -1px 0 #000,
+-1px  1px 0 #000,
+1px  1px 0 #000;">{{
+menu.name }}</span>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+
+
+</template>
+
+
+
+
+
+<script setup>
+import { ref } from 'vue';
+import {URI} from '@/service/conection'
+import { loginStore } from '@/store/user.js'
+const store = loginStore()
+const valor = ref(90)
+const items = ref([
+    {
+        label: 'Finder',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/finder.svg",
+        command: () => {
+            displayFinder.value = true;
+        }
+    },
+    {
+        label: 'Terminal',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/terminal.svg",
+        command: () => {
+            displayTerminal.value = true;
+        }
+    },
+    {
+        label: 'App Store',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/appstore.svg",
+        command: () => {
+            toast.add({ severity: 'error', summary: 'An unexpected error occurred while signing in.', detail: 'UNTRUSTED_CERT_TITLE', group: 'tc', life: 3000 });
+        }
+    },
+    {
+        label: 'Safari',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/safari.svg",
+        command: () => {
+            toast.add({ severity: 'warn', summary: 'Safari has stopped working', group: 'tc', life: 3000 });
+        }
+    },
+    {
+        label: 'Photos',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/photos.svg",
+        command: () => {
+            displayPhotos.value = true;
+        }
+    },
+    {
+        label: 'GitHub',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/github.svg",
+    },
+    {
+        label: 'Trash',
+        icon: "https://primefaces.org/cdn/primevue//images/dock/trash.png",
+        command: () => {
+            toast.add({ severity: 'info', summary: 'Empty Trash', life: 3000 });
+        }
+    }
+]);
+
+
+const menus = [
+    {
+        name: 'Certificado laboral',
+        to: '/certificado-laboral',
+        imagen: "/images/icons/certify.png"
+    },
+
+    {
+        name: 'Capacitaciones',
+        to: 'capacitaciones-invitaciones',
+        imagen: "/images/icons/capacitation.png"
+    },
+
+    {
+        name: 'Mis permisos',
+        to: '/mis-permisos',
+        imagen: "/images/icons/permission.png"
+    },
+    {
+        name: 'Actualizar mis datos',
+        to: '/actualizar-datos',
+        imagen: "/images/icons/data.png"
+    },
+    {
+        name: 'Solicitar permiso general',
+        to: '/permiso',
+        imagen: "/images/icons/general.png"
+    },
+    {
+        name: 'Solicitar permiso por licencia',
+        to: '/permiso-licencia',
+        imagen: "/images/icons/licencia.png"
+    },
+    {
+        name: 'Solicitar vacaciones',
+        to: '/permiso-vacaciones',
+        imagen: "/images/icons/vacaciones.png"
+    },
+    {
+        name: 'Mi carnet digital',
+        to: '/mi-carnet',
+        imagen: "/images/icons/carnet.png"
+    },
+
+    {
+        name: 'Un verdadero Monstruo',
+        to: '/informacion-empresarial',
+        imagen: "/images/icons/monster.png"
+    },
+
+    {
+        name: 'Mis turnos',
+        to: '/turnos-trabajo-empleados',
+        imagen: "/images/icons/turno.png"
+    },
+    {
+        name: 'Facebook Salchimonster',
+        to: 'https://www.facebook.com/salchimonsterr',
+        imagen: "/images/icons/facebook.webp",
+        a:true
+    },
+    {
+        name: 'Instagram Salchimonster',
+        to: 'https://www.instagram.com/salchimonsterr/',
+        imagen: "/images/icons/insta.webp",
+        a:true
+    },
+
+    {
+        name: 'Youtube salchimonster',
+        to: 'https://www.youtube.com/@Salchimonster/videos',
+        imagen: "/images/icons/youtube.png",
+        a:true
+    },
+
+
+
+]
+
+</script>
+
+
+
+<style scoped>
+.imagen::before {
+
+    content: '';
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(2px);
+    object-fit: cover;
+
+
+}
+
+.knobi{
+    margin: 0 0rem;
+}
+
+.bg{
+    background-image: url('/images/bg-ipad.jpg'); background-size: cover; width: 100%; object-fit: cover; height: 100%;z-index:0; top: 0; left: 0;opacity: 1; background-size: cover;
+}
+
+
+Button img {
+    transition: all .3s ease;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.208); */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+
+}
+
+Button img:hover {
+    /* transform: scale(1.03); */
+
+}
+
+.ipad-container {
+    /* aspect-ratio: 4/5; */
+    /* border-radius: 1rem; */
+    /* max-width: 1080px; */
+    height: max-content;
+    /* max-height: 1920px; */
+    /* background-color: rgb(255, 255, 255); */
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+    align-items: start;
+    justify-content: center;
+
+    /* border: 1rem solid black; */
+    /* box-shadow: 0 0 10px; */
+    margin: auto;
+ 
+}
+
+
+
+
+.ipad-screen {
+    border-radius: 0.5rem;
+    box-shadow: 0 0 10px var(--primary-color) ; border-radius: 0.5rem;
+    outline: 2px solid red;
+
+}
+
+.barra{
+    display: flex;
+}
+
+.ipad-screen{
+    width: 100%; position: relative;display: flex;flex-direction: column; align-items: center; justify-content: space-between;background-color:transparent;height: 100%;
+   /* box-shadow: 0 0 20px var(--primary-color) ; border-radius: 0.5rem;
+     overflow: hidden; */
+}
+
+@media (max-width: 600px) {
+    .texto-apps {
+        font-size: 0.8rem;
+        /* Tamaño de letra reducido para pantallas pequeñas */
+    }
+
+    .ipad-container {
+        border: none;
+        box-shadow: none;
+
+
+        margin-top: 2rem;
+
+
+    }
+
+    .knobi{
+        margin: 1rem;
+    }
+    .dock{
+        display: none;
+    }
+
+    .ipad-screen {
+  
+    
+
+    }
+
+    .bg{
+        position: fixed;
+        /* display: none; */
+        bottom: 0;
+        height: 100%;
+    }
+    .barra{
+        /* display: none; */
+    }
+    .aux-back{
+        display: inline;
+    }
+    
+
+
+}
+
+.item:hover{
+    transform: scale(1.1);
+   
+}
+</style>
