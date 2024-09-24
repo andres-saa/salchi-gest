@@ -29,13 +29,13 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,watch } from 'vue';
 import router from '@/router/index.js';
 import { useRoute } from 'vue-router';
 import { categoriesService } from '../service/restaurant/categoriesService'
-
+import { useSitesStore } from '../store/site';
  
-
+const siteStore = useSitesStore()
 const categories = ref([]);
 
 
@@ -48,8 +48,16 @@ const navigateToCategory = (categoryName,category_id) => {
 };
 
 
+const update = async() => {
+    categories.value = await categoriesService.getCategories()
+}
+
+
 onMounted(async () => {
-    categories.value = await categoriesService.getCategories()});
+    update()
+    
+}
+    );
 
 
 const checkSelected = (section) => {
@@ -58,6 +66,10 @@ const checkSelected = (section) => {
 };
 
 
+watch(() => siteStore.restaurant, (newval) => {
+    update()
+    router.push('/tienda-menu/')
+}, {depth:true})
 
 </script>
 

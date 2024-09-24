@@ -39,7 +39,7 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,watch } from 'vue';
 import router from '@/router/index.js';
 import { useRoute } from 'vue-router';
 import { categoriesService } from './service/restaurant/categoriesService'
@@ -64,7 +64,10 @@ const checkSelected = (section) => {
     return route.path.includes(section); // Verifica si el path actual contiene la cadena section
 };
 
-
+watch(() => store.restaurant, async(newval) => {
+    categories.value = await categoriesService.getCategories();
+    router.push('/call-center-vender')
+}, {depth:true})
 
 </script>
 

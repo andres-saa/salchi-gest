@@ -84,10 +84,11 @@ watch(() => route.params.category_id, async () => {
 const getProducts = async (category_name) => {
     const site_id = siteStore.location.site.site_id
     const category_id = route.params.category_id
+    const restaurant = siteStore.restaurant
     if(category_id && site_id){
         store.setLoading(true, 'cargando productos')
         try {
-        let response = await fetch(`${URI}/products-active/category-id/${category_id}/site/${site_id}/1`);
+        let response = await fetch(`${URI}/products-active/category-id/${category_id}/site/${site_id}/${restaurant}`);
         if (!response.ok) {
             store.setLoading(false, 'cargando productos')
 
@@ -109,7 +110,6 @@ const getProducts = async (category_name) => {
 
 
 
-// Opcional: Observar cambios en el parámetro de la rou
 
 
 const currentCity = ref(JSON.parse(localStorage.getItem('currentNeigborhood')));

@@ -25,6 +25,18 @@
        
   
   <VistaProducto></VistaProducto>
+
+  <div style="position: fixed;overflow: hidden;background-color: white; border-radius: 0 1rem 1rem 0; left: 0;top:12rem;display: flex;flex-direction: column; ">
+
+<div v-for="(i, index) in [{name:'S',id:1,imagen:'https://www.salchimonster.com/images/logo.png'},{name:'B',id:2,imagen:'https://burgermonsterr.com/images/LOGO.png'},{name:'P',id:4,imagen:'https://papasmonster.com/images/LOGO.png'}]" style="display: flex;align-items: center;width: 2rem; flex-direction: column;">
+    <Button size="small" text :label="i.name" class="text-white" @click="siteStore.restaurant = i.id">
+        <img style="width: 2rem;" :src="i.imagen" alt="">
+    </Button>
+    <span   v-if="index != 2" style="border-top: .1rem solid white;"></span>
+</div>
+
+
+</div>
 </div>
 
 

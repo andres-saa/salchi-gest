@@ -12,8 +12,8 @@ export const useSitesStore = defineStore('call-center-site', {
                 key: 'call-center-site', 
                 storage: localStorage,
                 paths:[
-                    'location'
-
+                    'location',
+                    'restaurant'
                     ]
     },
     state: () => {
@@ -29,7 +29,8 @@ export const useSitesStore = defineStore('call-center-site', {
             },
             current_delivery:0,
             webSocket: null,
-            status:'closed'
+            status:'closed',
+            restaurant:1
 
 
         }

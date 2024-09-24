@@ -9,8 +9,8 @@ export const useSitesStore = defineStore('site', {
                 key: 'site', 
                 storage: localStorage,
                 paths:[
-                    'site'
-
+                    'site',
+                    'restaurant'
                     ]
     },
     state: () => {
@@ -19,9 +19,8 @@ export const useSitesStore = defineStore('site', {
 
             site:{
 
-            }
-
-
+            },
+            restaurant:1
         }
     },
 

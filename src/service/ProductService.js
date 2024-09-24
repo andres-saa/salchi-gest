@@ -2,12 +2,16 @@ import axios from "axios";
 import { URI } from "./conection";
 import { useProductStore } from "../store/productStore";
 import {useReportesStore} from "../store/reportes"
+import { useSitesStore } from "../store/site";
+
+const site = useSitesStore()
 
 export const productService = {
     
+    
     async getProductsByCategorySite(category_id,site_id) {
         try {
-            const response = await axios.get(`${URI}/products-all/category-id/${category_id}/site/${site_id}`);
+            const response = await axios.get(`${URI}/products-all/category-id/${category_id}/site/${site_id}/${site.restaurant}`);
             if (response.status === 200) {
                 return response.data;
             } else {
