@@ -6,19 +6,22 @@ export const fetchService = {
 
     router:router,
 
-    async get(url, loadingMessage) {
+    async get(url, loadingMessage, options = {}) {
         const store = useReportesStore();
         try {
-            
             if( loadingMessage ) {
                 store.setLoading(true, loadingMessage);
             } else {
                 store.setLoading(true, 'cargando');
             }
-            
     
-            // Realizar la solicitud GET
-            const response = await axios.get(url);
+            // Configura los headers si están presentes en las opciones
+            const config = {
+                headers: options.headers || {}
+            };
+    
+            // Realizar la solicitud GET con los headers configurados
+            const response = await axios.get(url, config);
     
             // Comprobar el estado de la respuesta
             if (response.status === 200) {
@@ -38,6 +41,7 @@ export const fetchService = {
             return null;
         }
     },
+    
 
     async post(url, data, loadingMessage, redirectPath = null) {
         const store = useReportesStore();

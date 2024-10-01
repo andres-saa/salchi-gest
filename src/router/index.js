@@ -40,6 +40,13 @@ const router = createRouter({
         
         },
 
+        {
+          path: '/chat-bot/train',
+          name: 'chatbot-train',
+          component: () => import('@/views/pages/salchibot/train.vue'),
+        
+        },
+
 
         {
           path: '/call-center-vender',
@@ -187,47 +194,49 @@ const router = createRouter({
         {
           path: '/contracts',
           name: 'contracts',
-          component: () => import('@/views/pages/contract/contracts.vue'),
+          component: () => import('@/views/pages/Contract/Contracts.vue'),
           children:[
             {
               path: '/contracts/contracts-all/',
               name: 'contracts-all',
-              component: () => import('@/views/pages/contract/ContractAll.vue')
+              component: () => import('@/views/pages/Contract/ContractAll.vue')
             },
             {
               path: '/contracts/contracts-to-finish/',
               name: 'contracts-to-finish',
-              component: () => import('@/views/pages/contract/ContractToFinish.vue')
+              component: () => import('@/views/pages/Contract/ContractToFinish.vue')
+             
             },
             {
               path: '/contracts/contracts-user-list/',
               name: 'contracts-user-list',
-              component: () => import('@/views/pages/contract/userList.vue')
+              component: () => import('@/views/pages/Contract/userLIst.vue')
+  
             },
             {
               path: '/contracts/new-contract/',
               name: 'contracts-new-contract',
-              component: () => import('@/views/pages/contract/newContract.vue')
+              component: () => import('@/views/pages/Contract/newContract.vue')
             },
             {
               path: '/contracts/contracts-vigent/',
               name: 'contracts-vigent',
-              component: () => import('@/views/pages/contract/contractVigent.vue')
+              component: () => import('@/views/pages/Contract/contractVigent.vue')
             },
             {
               path: '/contracts/contracts-ended/',
               name: 'contracts-ended',
-              component: () => import('@/views/pages/contract/contractEnded.vue')
+              component: () => import('@/views/pages/Contract/contractEnded.vue')
             },
             {
               path: '/contracts/contracts-next/',
               name: 'contracts-next',
-              component: () => import('@/views/pages/contract/contractNext.vue')
+              component: () => import('@/views/pages/Contract/contractNext.vue')
             },
             {
               path: '/contracts/configuracion/',
               name: 'contracts-configuracion',
-              component: () => import('@/views/pages/contract/configuracion.vue')
+              component: () => import('@/views/pages/Contract/configuracion.vue')
             },
            
 
@@ -398,7 +407,8 @@ const router = createRouter({
         {
           path: '/purchase-order/recorrido',
           name: 'purchase-order-recorrido',
-          component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/orderPath.vue'),
+          component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/OrderPath.vue'),
+          
           children:[
             {
               path: '/purchase-order/recorrido/purchase-order-reports',
@@ -418,7 +428,7 @@ const router = createRouter({
               path: '/purchase-order/recorrido/transport',
               name: 'purchase-order-recorrido-transport',
               meta:{roles: roles.value['Inventario diario admin'] },
-              component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/orderPathTransport.vue')
+              component: () => import('@//views/pages/inventory/purchaseOrder/orderPath/OrderPathTransport.vue')
             },
 
 
@@ -439,7 +449,7 @@ const router = createRouter({
               path: '/purchase-order/recorrido/completed',
               name: 'purchase-order-recorrido-completed',
               meta:{roles: roles.value['Inventario diario admin'] },
-              component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/orderPathComplete.vue')
+              component: () => import('@/views/pages/inventory/purchaseOrder/orderPath/OrderPathComplete.vue')
             },
             
             
@@ -554,7 +564,7 @@ const router = createRouter({
         {
           path: '/guias',
           name: 'guias',
-          component: () => import('@/views/pages/Guias.vue')
+          component: () => import('@/views/pages/guias.vue')
         },
 
 
@@ -782,30 +792,30 @@ const router = createRouter({
 
           ]
         },
-        {
-          path: '/dev-tasks',
-          name: 'dev-tasks',
-          component: () => import('@/views/pages/dev/DevTask.vue'),
-          children:[
+        // {
+        //   path: '/dev-tasks',
+        //   name: 'dev-tasks',
+        //   component: () => import('@/views/pages/dev/DevTask.vue'),
+        //   children:[
 
-            {
-              path: '/dev-tasks/current',
-              name: 'current-dev-tasks',
-              component: () => import('@/views/pages/dev/CurrentDevTasks.vue'),
-            },
-            {
-              path: '/dev-tasks/scheduled',
-              name: 'scheduled-dev-tasks',
-              component: () => import('@/views/pages/dev/ScheduleDevTasks.vue'),
-            },
-            {
-              path: '/dev-tasks/history',
-              name: 'history-dev-tasks',
-              component: () => import('@/views/pages/dev/HistoryDevTasks.vue'),
-            },
+        //     {
+        //       path: '/dev-tasks/current',
+        //       name: 'current-dev-tasks',
+        //       component: () => import('@/views/pages/dev/CurrentDevTasks.vue'),
+        //     },
+        //     {
+        //       path: '/dev-tasks/scheduled',
+        //       name: 'scheduled-dev-tasks',
+        //       component: () => import('@/views/pages/dev/ScheduleDevTasks.vue'),
+        //     },
+        //     {
+        //       path: '/dev-tasks/history',
+        //       name: 'history-dev-tasks',
+        //       component: () => import('@/views/pages/dev/HistoryDevTasks.vue'),
+        //     },
 
-          ]
-        },
+        //   ]
+        // },
 
         {
           path: '/samovar',

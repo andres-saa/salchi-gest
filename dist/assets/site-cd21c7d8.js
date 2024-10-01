@@ -1,0 +1,1 @@
+import{I as e}from"./index-caf3b98c.js";const r=e("site",{persist:{key:"site",storage:localStorage,paths:["site","restaurant"]},state:()=>({site:{},restaurant:1}),getters:{},actions:{setSite(t){this.site=t}}});export{r as u};
