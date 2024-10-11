@@ -1,9 +1,8 @@
 <template>
     
 
-
-
-     <p class="text-center text-3xl col-12" style="font-weight: bold;display: flex;gap: 1rem;align-items: center;">
+<div>
+    <p class="text-center text-3xl col-12" style="font-weight: bold;display: flex;gap: 1rem;align-items: center;">
       <div style="width: 100%;height: 3px; background-color: #ff6200">
     
       </div>
@@ -38,6 +37,9 @@
         Selecciona una sede y una categoria.
     </p>
     
+</div>
+
+   
 
     
 </template>

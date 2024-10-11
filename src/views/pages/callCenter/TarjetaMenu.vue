@@ -12,7 +12,7 @@
     <div class="imagen" style="display: flex; overflow: hidden;align-items: center; " @click="open(props.product)">
   
         <transition name="fade">
-        <img   v-show="loaded" @load="see" :class="loaded? 'cargado': 'sin-cargar'" style="width: 100%; aspect-ratio: 1 / 1 ; border-radius: 1rem;cursor: pointer;  background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.5rem;" :src="`https://backend.salchimonster.com/read-product-image/300/${props.product.product_name}`" alt="" >
+        <img   v-show="loaded" @load="see" :class="loaded? 'cargado': 'sin-cargar'" style="width: 100%; aspect-ratio: 1 / 1 ; border-radius: 1rem;cursor: pointer;  background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.5rem;"  :src="`${URI}/read-photo-product/${props.product.img_identifier}/600`" alt="" >
     </transition>
     
         <div v-if="!loaded" style="width: 100%;display: flex;justify-content: center; align-items: center; aspect-ratio: 1 / 1; background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.5rem;">
@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-
+import { URI } from './service/conection';
 import  {formatoPesosColombianos} from './service/formatoPesos'
 import { computed,ref,onMounted } from 'vue';
 import {usecartStore} from './store/shoping_cart'

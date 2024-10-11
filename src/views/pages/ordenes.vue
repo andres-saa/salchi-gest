@@ -6,7 +6,7 @@
     <Button size="small" class="py-2"  severity="help" @click="exportCSV" label=" Descargar reporte" icon="pi pi-download"> </Button>
 
     <div class="flex flex-wrap align-items-center justify-content-between gap-2 my-5 pl-0 ml-0">
-                    <span class="text-l p-0  text-900 font-bold">Ordenes {{ store.order_status }}s entre {{store.dateRange.startDate.split('T')[0]  }} y {{store.dateRange.endDate.split('T')[0]  }} </span>
+                    <span class="text-l p-0  text-900 font-bold">Ordenes {{ store.order_status }}s entre {{store.dateRange?.startDate  }} y {{store.dateRange?.endDate }} </span>
                     <div class="flex p-0  flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
                            
                             <span class="block mt-2 md:mt-0 py-0">
@@ -35,9 +35,9 @@
             <Column field="order_id" header="Id" class="py-0" headerStyle="width:12rem;min-width:6rem">
             
                 <template #body="slotProps">
-                 <P style="min-width: max-content;">
+                 <p style="min-width: max-content;">
                     {{slotProps.data.order_id}}
-                 </P>   
+                 </p>   
                 </template>
             </Column>
             <Column field="total_price" header="Monto" class="py-0" headerStyle="min-width:max-content; width:5rem">
@@ -125,7 +125,7 @@
             <Column class="px-1 py-0" v-if="store.order_status == 'cancelada'" headerStyle="width:20rem; min-width:8rem; " field="status.reazon" header="Responsable">
                 <template #body="slotProps">
                 
-                   <span class="motivo">{{ slotProps.data.responsible?.toLowerCase()}}.</span> 
+                   <span class="motivo">{{ slotProps.data?.responsible?.toLowerCase()}}.</span> 
                 </template>
             </Column>
 

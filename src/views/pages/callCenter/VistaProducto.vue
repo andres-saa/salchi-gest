@@ -4,8 +4,6 @@
     style="justify-content: center; background-color: white;position: relative ; border-radius: 1rem;padding-top: 2rem;">
 
 
-
-
     <div class="header col-12    "
       style=" display: flex;justify-content: space-between; ; background-color: rgb(255, 255, 255);z-index:99; position:absolute;top:0rem;left: 0;height: min-content;">
       <p class=" mayuscula md:pl-4 nombre col-9 text-l lg:text-xl p-0 text-left" style="color:black;font-weight: bold"> {{
@@ -48,7 +46,7 @@
         style="display: flex;align-items: center; max-height: 45rem; background-color:white;border-radius: 0.5rem; ">
 
 
-        <img :class="see? 'cargado': 'sin-cargar'" :onload="seeImage" class="col-12 p-2 m-0" :src="`https://backend.salchimonster.com/read-product-image/600/${store.currentProduct.product_name}`"
+        <img :class="see? 'cargado': 'sin-cargar'" :onload="seeImage" class="col-12 p-2 m-0"  :src="`${URI}/read-photo-product/${store.currentProduct.img_identifier}/600`"
           alt="" v-show="see" style="width: 100%;object-fit: contain; aspect-ratio: 1/1;">
 
       </div>

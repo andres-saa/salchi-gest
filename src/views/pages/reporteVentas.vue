@@ -125,10 +125,10 @@
 
             <div class="p-0" :class="store.visibleNotifications ? 'col-9' : 'col-12'">
 
-                <transition name="fade">
+ 
                     <RouterView>
                     </RouterView>
-                </transition>
+
             </div>
 
 

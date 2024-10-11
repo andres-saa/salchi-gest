@@ -7,6 +7,21 @@
 
         <!-- {{ store.currentProductToEdit }} -->
 
+        <div class="image" style="display: flex;flex-direction: column; justify-content: end; align-items: end;">
+            <img v-if="imagePreview" :src="imagePreview" alt="Preview"
+                style="width: 100%; aspect-ratio: 1 / 1; background-color: rgb(255, 255, 255); object-fit: contain; border-radius: 0.2rem;" />
+
+            <!-- Mostrar la imagen del servidor si no hay imagen cargada -->
+            <img v-else class=""
+                style="width: 100%; aspect-ratio: 1 / 1; background-color: rgb(255, 255, 255); object-fit: contain; border-radius: 0.2rem;"
+                :src="`${URI}/read-photo-product/${store.currentProductToEdit.img_identifier}/600`" alt="">
+
+            <Button style="" class="my-3" severity="help" @click="fileInput.click()">Cambiar foto</Button>
+            <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" />
+        </div>
+
+
+
         <div style="display: flex; flex-direction: column; gap: 1rem;">
             <div>
                 <span>Nombre:</span>
@@ -15,12 +30,14 @@
             </div>
             <div>
                 <span>descripcion:</span>
-                <Textarea v-model="store.currentProductToEdit.product_description" rows="3"  style="width: 100%;resize: none;">
+                <Textarea v-model="store.currentProductToEdit.product_description" rows="3"
+                    style="width: 100%;resize: none;">
                 </Textarea>
             </div>
             <div>
                 <span>Precio:</span>
-                <InputNumber v-model="store.currentProductToEdit.price" prefix="$" maxFractionDigits="0" rows="3"  style="width: 100%;resize: none;">
+                <InputNumber v-model="store.currentProductToEdit.price" prefix="$" maxFractionDigits="0" rows="3"
+                    style="width: 100%;resize: none;">
                 </InputNumber>
             </div>
         </div>
@@ -34,7 +51,7 @@
                 <!-- {{ currentAditions }} -->
                 <InputSwitch :modelValue="allSelected(grupo)" @update:modelValue="toggleGroup(grupo, $event)" />
             </p>
-            <DataTable  stripedRows :value="items" class="p-0">
+            <DataTable stripedRows :value="items" class="p-0">
                 <Column style="text-transform: capitalize;" class="p-0" field="aditional_item_name" header="Nombre">
                     <template #body="adicion">
                         <span style="text-transform: uppercase;"> {{ adicion.data.item_name }} </span>
@@ -64,7 +81,7 @@
         </template>
     </Dialog>
 
-     
+
 </template>
 
 
@@ -75,7 +92,7 @@ import { adicionalesService } from '../../service/restaurant/aditionalService';
 import { formatoPesosColombianos } from '../../service/formatoPesos';
 import { onMounted } from 'vue';
 import { productService } from '../../service/ProductService';
-
+import { URI } from '../../service/conection';
 
 
 const currentAditions = ref([]);
@@ -90,6 +107,39 @@ const adicionales = ref([]);
 // });
 
 // Función para actualizar el estado de los items en `adicionales` basado en `currentAditions`
+// Mantener la vista previa de la imagen localmente
+const imagePreview = ref(null);  // Aquí se almacena la URL de la imagen seleccionada
+
+const fileInput = ref(null);
+
+
+
+const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    // Crear una URL temporal para mostrar la imagen seleccionada
+    imagePreview.value = URL.createObjectURL(file);
+
+    // Llamar al servicio para subir la imagen
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await productService.uploadPhoto(formData);
+        const newImageIdentifier = response.image_identifier;
+
+        // Actualizar el identificador de la imagen en el producto actual
+        store.currentProductToEdit.img_identifier = newImageIdentifier;
+
+        // Limpiar la URL temporal después de que se haya subido la imagen
+        URL.revokeObjectURL(imagePreview.value);
+    } catch (error) {
+        console.error("Error al subir la imagen:", error);
+    }
+};
+
 const updateAdicionalesStatus = () => {
     // Asegurar que adicionales está completo y listo para ser procesado
     if (!adicionales.value || adicionales.value.length === 0) return;
@@ -98,8 +148,8 @@ const updateAdicionalesStatus = () => {
     Object.entries(adicionales.value).forEach(([grupo, items]) => {
         items.forEach(item => {
             // Buscar coincidencia en currentAditions
-            const match = currentAditions.value.some(addition => 
-                addition.items.some(aditional => 
+            const match = currentAditions.value.some(addition =>
+                addition.items.some(aditional =>
                     aditional.aditional_item_name.toLowerCase() === item.item_name.toLowerCase()
                     && aditional.aditional_item_price === item.item_price &&
                     aditional.aditional_item_type_name === item.type_name
@@ -165,22 +215,20 @@ const prepareToSend = () => {
 
 
 const send = () => {
-    
-    
-  const product = {
-    "product_id": store.currentProductToEdit.id,
-    "name": store.currentProductToEdit.product_name,
-    "price":store.currentProductToEdit.price,
-    "description": store.currentProductToEdit.product_description,
-    "category_id": store.currentProductToEdit.category_id,
-    "status": true
-  }
+    const product = {
+        "product_id": store.currentProductToEdit.id,
+        "name": store.currentProductToEdit.product_name,
+        "price": store.currentProductToEdit.price,
+        "description": store.currentProductToEdit.product_description,
+        "category_id": store.currentProductToEdit.category_id,
+        "status": true,
+        "img_identifier": store.currentProductToEdit.img_identifier,
+        "parent_id": store.currentProductToEdit.product_id // Incluir el nuevo identificador
+    };
 
-  const additional_item_ids = seleccionados.value
+    const additional_item_ids = seleccionados.value;
 
-  productService.updateProductInstance(product,additional_item_ids)
-
-
-
-}
+    // Llamar al servicio para actualizar el producto
+    productService.updateProductInstance(product, additional_item_ids);
+};
 </script>

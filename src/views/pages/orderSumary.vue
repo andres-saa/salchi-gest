@@ -83,49 +83,49 @@
             <Column field="order_id" header="SEDE   " class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
 
                 <template #body="slotProps">
-                    <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                    <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
                         style="min-width: max-content;">
                         {{ slotProps.data.site_name }}
-                    </P>
+                    </p>
                 </template>
             </Column>
             <Column field="order_id" header="ENVIADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
 
                 <template #body="slotProps">
-                    <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                    <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
                         style="min-width: max-content;">
                         {{ slotProps.data.total_orders_sent }}
-                    </P>
+                    </p>
                 </template>
             </Column>
             <Column field="order_id" header="$ ENVIADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:2rem">
 
                 <template #body="slotProps">
-                    <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                    <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
                         style="min-width: max-content;">
                         {{ formatToColombianPeso(slotProps.data.total_sales_sent) }}
-                    </P>
+                    </p>
                 </template>
             </Column>
 
             <Column field="order_id" header="CANCELADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
 
                 <template #body="slotProps">
-                    <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                    <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
                         style="min-width: max-content;">
                         {{ slotProps.data.total_orders_cancelled || 0 }}
-                    </P>
+                    </p>
                 </template>
             </Column>
             <Column field="order_id" header="$ CANCELADAS" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
 
                 <template #body="slotProps">
-                    <P class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                    <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
                         style="min-width: max-content;">
                         {{ formatToColombianPeso(slotProps.data.total_sales_cancelled) ||
                             '$ 0.0'
                         }}
-                    </P>
+                    </p>
                 </template>
             </Column>
 
@@ -165,6 +165,20 @@
 
                 </template>
             </Column>
+
+            <Column style="text-transform: uppercase;" field="orders_sent" header="VENTA" class="py-0 px-0"
+                headerStyle="width:12rem;min-width:3rem">
+
+                <template #body="data">
+
+                    <div class="py-1" :class="data.data.name == 'TOTAL' ? 'bold' : ''">
+
+                        {{ formatToColombianPeso( data.data.sales) }}
+                    </div>
+                </template>
+
+            </Column>
+            
             <Column style="text-transform: uppercase;" field="orders_generated" header="ingresadas" class="py-0 p-0"
                 headerStyle="width:12rem;min-width:3rem">
                 <template #body="data">
@@ -190,6 +204,7 @@
                 </template>
 
             </Column>
+
 
             <Column style="text-transform: uppercase;" field="orders_cancelled" header="canceladas" class="py-0 px-0"
                 headerStyle="width:12rem;min-width:3rem">

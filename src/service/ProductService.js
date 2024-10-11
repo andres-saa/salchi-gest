@@ -65,6 +65,26 @@ export const productService = {
     },
 
 
+    async uploadPhoto(formData) {
+        try {
+            const response = await axios.post(`${URI}/upload-photo-product`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            if (response.status === 200) {
+                console.log('Image uploaded successfully:', response.data);
+                return response.data; // Devuelve el identificador de la imagen
+            } else {
+                console.error('Failed to upload image:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            return null;
+        }
+    },
+
 
 
 

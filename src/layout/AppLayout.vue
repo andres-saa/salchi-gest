@@ -108,9 +108,9 @@ const isSmallScreen = ref(window.innerWidth < 991);
                 
                 
                 <router-view v-slot="{ Component }">
-                <transition name="fade" mode="out-in">
+               
                     <component :is="Component" class="p-0" />
-                </transition>
+              
                 </router-view>
                   
 

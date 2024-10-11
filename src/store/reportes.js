@@ -13,13 +13,13 @@ export const useReportesStore = defineStore('reportes', {
                 storage: localStorage,
                 paths:[
                     'dateRange',
-                    'salesReport',
+                    // 'salesReport',
                     'selectedSites',
                     'order_status',
-                    'sumaryData',
+                    // 'sumaryData',
                      // Estado por defecto si no hay nada en localStorage
                     // 'ventasCharData',
-                    'visibleNotifications',
+                    // 'visibleNotifications',
                     'sites']
 
         
@@ -163,7 +163,6 @@ export const useReportesStore = defineStore('reportes', {
         
     },
 
-    // actions y el resto de tu configuración...
 
    
 
@@ -214,15 +213,14 @@ export const useReportesStore = defineStore('reportes', {
                 const data = await response.json();
                 this.salesReport = data
               
-                this.fetchDilyReport()
-                this.fetchDilyOrdersReport()
-                this.fetchTicketsReport()
+                // this.fetchDilyReport()
+                // this.fetchDilyOrdersReport()
+                // this.fetchTicketsReport()
                 this.fetchSumaryReport()
-                
+                this.setLoading(false, 'cargando reporte')
 
 
-                // Maneja la respuesta
-                console.log(data);
+
                
             } catch (error) {
                 console.error('Fetch error:', error);
@@ -443,12 +441,7 @@ export const useReportesStore = defineStore('reportes', {
       // salesReport.value = data
 
       this.sumaryData = data
-      this.setLoading(false, 'cargando reporte')
-      return (data)
 
-
-      // Maneja la respuesta
-      console.log(data);
   } catch (error) {
       console.error('Fetch error:', error);
       this.setLoading(false, 'cargando reporte')

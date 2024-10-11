@@ -1,8 +1,8 @@
 <template>
 
 
-    <div class="mx-auto shadow-5 px-0 py-0 my-0" style="max-width: 900px;background-color: rgb(21 67 96 / 31%);position: relative;">
-        <h1 class="text-center mb-1 p-1 shadow-4" style="margin-top: 4rem; ; color:white; background-color: rgb(21, 67, 96);"><b>Entrenador Salchi🤖bot</b></h1>
+    <div class="mx-auto shadow-5 px-0 py-0 my-0" style="max-width: 900px; background-color: rgb(21 67 96 / 31%);position: relative;">
+        <h1 class="text-center mb-1 p-5 shadow-4" style="margin-top: 3rem; ; color:white; background-color: rgb(21, 67, 96);"><b>Entrenador Salchi🤖bot</b></h1>
         <h2 class="m-0 text-center " style="color:rgb(21, 67, 96);"> <b>{{ etapa == 1 ? 'Patrones' :etapa == 2 ? 'Respuestas':'Chat' }}</b> </h2>
 
         <div class="m-auto" style="display: flex; align-items: center;width: max-content;">
@@ -23,12 +23,12 @@
 
                 <div class=" col-12 md:col-6 px-2 py-0">
                     <Textarea rows="10" class=" p-3 shadow-4" v-model="patterns"
-                        style="height: max-content;width: 100%;max-width: 100%;height: 70vh; resize: none;"></Textarea>
+                        style="height: max-content;width: 100%;max-width: 100%;height: 60vh; resize: none;"></Textarea>
 
                 </div>
 
 
-                <div class="col-12 md:col-6 px-2 py-0 "  style="height: 70vh;overflow: auto;">
+                <div class="col-12 md:col-6 px-2 py-0 "  style="height: 60vh;overflow: auto;">
                     <div class="mb-2" v-for="(patter, index) in patterns.split('\n').filter(p => p !== '')"
                         :key="index">
                         <div cla :style="`background-color: ${getRandomPastelColor()};`"
@@ -51,12 +51,11 @@
 
                 <div class=" col-12 md:col-6 px-2 py-0">
                     <Textarea rows="10" class=" p-3 shadow-4" v-model="responses"
-                        style="height: max-content;width: 100%;max-width: 100%;height: 70vh; resize: none;"></Textarea>
-
+                        style="height: max-content;width: 100%;max-width: 100%;height: 60vh; resize: none;"></Textarea>
                 </div>
 
 
-                <div class="col-12 md:col-6 px-2 py-0" style="height: 70vh;overflow: auto;">
+                <div class="col-12 md:col-6 px-2 py-0" style="height: 60vh;overflow: auto;">
                     <div class="mb-2" v-for="(response, index) in responses.split('\n').filter(p => p !== '')"
                         :key="index">
                         <div :style="`background-color: ${getRandomPastelColor()};`"
@@ -75,11 +74,11 @@
 
 
             <div :style="etapa == 1 ? 'transform: translateX(0)' :etapa == 2 ? 'transform: translateX(-100%)' : 'transform: translateX(-200%)'"
-                style="min-width: 100%;  overflow-y: auto;" class="grid m-0 " >
+                style="min-width: 100%;  overflow-y: auto;" class="grid m-0 pb-8 mb-8" >
 
                 <div class="col-12 m-0 pr-7">
-                    <div style="border-radius: .3rem;background-color: white;" v-for="message in messages" :key="message.id" class="p-3 shadow-4 my-3">
-                        <p>{{ message.text }}</p>
+                    <div  :style="index % 2 == 0? 'background-color: rgb(21, 67, 96);color:white ' : 'background-color: white;justify-content:end'" style="border-radius: .3rem;display: flex;"  v-for="(message,index) in messages" :key="message.id" class="p-3 shadow-4 my-3">
+                        <p   style="width: max-content;" :style="index % 2 == 0? '' : 'text-align:end'">{{ message.text }}</p>
                     </div>
                 </div>
                 
@@ -87,7 +86,7 @@
             </div>
 
             <div v-if="etapa == 3" class="p-3" style="position: absolute;background-color: rgba(21, 67, 96, 0.31); bottom: 0;width: 97%;" >
-                <InputText style="width: 100%;" type="text" v-model="newMessage" @keyup.enter="sendMessage" placeholder="Escribe un mensaje..." />
+                <Textarea style="width: 100%;" type="text" v-model="newMessage" @keyup.enter="sendMessage" placeholder="Escribe un mensaje..." />
 
             </div>
 
@@ -149,7 +148,7 @@ const tags = ref([])
 const selectedTag = ref({})
 
 const update = async () => {
-    tags.value = await fetchService.get('https://chatbot.salchimonster.com/get_tags', 'cargando Etiquedas')
+    tags.value = await fetchService.get('http://localhost:9700/get_tags', 'cargando Etiquedas')
 }
 
 onMounted(() => {
@@ -201,7 +200,7 @@ const sendNewTag = async() => {
 
     }
 
-    await fetchService.post('https://chatbot.salchimonster.com/create_tag',data,'creando etiqueta')
+    await fetchService.post('http://localhost:9700/create_tag',data,'creando etiqueta')
     await update()
     show_new_tag.value = false
 
@@ -225,7 +224,7 @@ const sendData = async () => {
 
     const data = {
         "intent_id": selectedTag.value.id,
-        "paterns":patterns.value.split('\n').filter(p => p !== '').map(p => p.split(' ').filter(b => b !== ' '))
+        "paterns":patterns.value.split('\n').filter(p => p.trim() !== '').map(p => p.split(' ').map(p => p.trim()).filter(b => b.trim() !== ''))
             
         ,
         "responses":responses.value.split('\n')
@@ -233,7 +232,7 @@ const sendData = async () => {
     }
 
 
-    await fetchService.post('https://chatbot.salchimonster.com/train',data,'enviando respuesta')
+    await fetchService.post('http://localhost:9700/train',data,'enviando respuesta')
     patterns.value = ''
     responses.value = ' '
 }
@@ -241,7 +240,7 @@ const sendData = async () => {
 
 
 
-const messages = ref([]);
+    const messages = ref([]);
 const newMessage = ref('');
 
 const sendMessage = () => {
@@ -273,7 +272,7 @@ const apiCall = async (messageText) => {
   };
 
   try {
-    const response = await fetch('https://chatbot.salchimonster.com/chat', requestOptions);
+    const response = await fetch('http://localhost:9700/chat', requestOptions);
     if (!response.ok) {
       throw new Error('Respuesta de red no fue ok');
     }

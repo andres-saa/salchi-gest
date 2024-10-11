@@ -91,12 +91,9 @@ const getProducts = async (category_name) => {
         let response = await fetch(`${URI}/products-active/category-id/${category_id}/site/${site_id}/${restaurant}`);
         if (!response.ok) {
             store.setLoading(false, 'cargando productos')
-
             throw new Error(`HTTP error! status: ${response.status}`);
-
         }
         store.setLoading(false, 'cargando productos')
-
         let data = await response.json();
         products.value = data;
     } catch (error) {

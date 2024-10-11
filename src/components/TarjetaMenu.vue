@@ -18,15 +18,10 @@
 
             <img  v-show="loaded" @load="see" :class="loaded? 'cargado': 'sin-cargar'" class=""
                 style="width: 100%;aspect-ratio: 1 / 1; background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.2rem;"
-                :src="`https://backend.salchimonster.com/read-product-image/300/${props.product.product_name}`" alt=""
+                :src="`${URI}/read-photo-product/${props.product.img_identifier}/600`" alt=""
                 >
 
-                <div v-if="!loaded" style="width: 100%;display: flex;justify-content: center; align-items: center; aspect-ratio: 1 / 1; background-color: rgb(255, 255, 255);object-fit: contain; border-radius: 0.5rem;">
-        
-        <ProgressSpinner   style="width: 60px; height: 60px" strokeWidth="8" 
-        animationDuration=".2s" aria-label="Custom ProgressSpinner" />
-    
-    </div>
+                
 
 
         </div>
@@ -84,6 +79,7 @@ import { computed,ref } from 'vue';
 import { productService } from '../service/ProductService';
 
 import { useProductStore } from '../store/productStore';
+import { URI } from '../service/conection';
 
 const store = useProductStore()
 
