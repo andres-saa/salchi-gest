@@ -183,8 +183,8 @@ const prepareToSend = () => {
 const send = () => {
     const product = {
         "name": newProduct.value.product_name,
-        "price": newProduct.value.price,
-        "last_price": newProduct.value.last_price,
+        "price": newProduct.value.price || 0,
+        "last_price": newProduct.value.last_price || 0,
         "description": newProduct.value.product_description,
         "category_id": newProduct.value.category_id,
         "restaurant_id": newProduct.value.restaurant_id,
@@ -217,6 +217,6 @@ const resetForm = () => {
         });
     });
 
-    
+
 };
 </script>
