@@ -31,7 +31,7 @@ export const categoriesService = {
         const site_id = 1
         if(site_id){
             try {
-                const response = await axios.get(`${URI}/categories/${site_id}/all/${restaurant_id}`);
+                const response = await axios.get(`${URI}/categories-add-product/${restaurant_id}`);
                 if (response.status === 200) {
                    
                     return response.data;

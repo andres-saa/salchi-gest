@@ -18,7 +18,7 @@
 
             <div>
                 <span>ID de Categoría:</span>
-                <Dropdown v-model="newProduct.category_id" :options="categories" optionLabel="category_name" optionValue="category_id" placeholder="Selecciona una categoría" style="width: 100%;" />
+                <Dropdown v-model="newProduct.category_id" :options="categories" optionLabel="name" optionValue="id" placeholder="Selecciona una categoría" style="width: 100%;" />
             </div>
 
             <div>

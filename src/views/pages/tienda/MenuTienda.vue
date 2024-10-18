@@ -11,13 +11,9 @@
         <Dropdown v-model="siteStore.site" :options="sites.filter(site => site.show_on_web)" optionLabel="site_name" class="" style="width: 100%;"/> 
           
         <Button @click="open_to_add" class="ml-3" style="min-width: max-content;" severity="help" label="Nuevo producto"></Button>
-         
+
     </div>
-
-
-
     <router-view class=""></router-view>
-
     <dialogEditProduct class="m-3"></dialogEditProduct>
     <dialogDeleteProduct></dialogDeleteProduct> 
     <dialogAddProduct></dialogAddProduct>
