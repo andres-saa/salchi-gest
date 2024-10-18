@@ -6,11 +6,32 @@ export const categoriesService = {
     
     async getCategories() {
       
-        const site_id = 3
+        const site_id = 1
         const restaurant_id = store.restaurant
         if(site_id){
             try {
                 const response = await axios.get(`${URI}/categories/${site_id}/${restaurant_id}`);
+                if (response.status === 200) {
+                   
+                    return response.data;
+                } else {
+                    console.error('An error occurred while fetching the ingredients:', response.status);
+                    return null;
+                }
+            } catch (error) {
+                console.error('An error occurred while fetching the ingredients:', error);
+                return null;
+            }
+        }else return []
+        
+    },
+
+    async getCategoriesByRestaurantId(restaurant_id) {
+      
+        const site_id = 1
+        if(site_id){
+            try {
+                const response = await axios.get(`${URI}/categories/${site_id}/all/${restaurant_id}`);
                 if (response.status === 200) {
                    
                     return response.data;
