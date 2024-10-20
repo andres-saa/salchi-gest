@@ -34,12 +34,22 @@
                     style="width: 100%;resize: none;">
                 </Textarea>
             </div>
+
+
             <div>
-                <span>Precio:</span>
+                <span>Precio anterior:</span>
+                <InputNumber v-model="store.currentProductToEdit.last_price" prefix="$" maxFractionDigits="0" rows="3"
+                    style="width: 100%;resize: none;">
+                </InputNumber>
+            </div>
+            <div>
+                <span>Precio actual:</span>
                 <InputNumber v-model="store.currentProductToEdit.price" prefix="$" maxFractionDigits="0" rows="3"
                     style="width: 100%;resize: none;">
                 </InputNumber>
             </div>
+
+           
         </div>
 
 
@@ -219,6 +229,7 @@ const send = () => {
         "product_id": store.currentProductToEdit.id,
         "name": store.currentProductToEdit.product_name,
         "price": store.currentProductToEdit.price,
+        "last_price": store.currentProductToEdit.last_price || 0,
         "description": store.currentProductToEdit.product_description,
         "category_id": store.currentProductToEdit.category_id,
         "status": true,

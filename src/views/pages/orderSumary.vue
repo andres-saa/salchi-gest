@@ -73,7 +73,7 @@
                 convertirFechaUTCaColombia(store.formatDate(store.dateRange.endDate)) }} </p>
 
 
-        <DataTable :loading="store.loading.visible" stripedRows :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
+        <DataTable :loading="store.loading.visible" stripedRows showGridLines :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
             :rows="11" :filters="filters" responsiveLayout="scroll" scrollable>
 
 
@@ -89,39 +89,108 @@
                     </p>
                 </template>
             </Column>
-            <Column field="order_id" header="ENVIADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
+
+
+            <Column field="order_id" header="#_BOT" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem;color:var(--green-500)">
+
+            <template #body="slotProps">
+                <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                    style="min-width: max-content;background-color: #22c55e5c;">
+                    {{ slotProps.data.orders_chatbot }}
+                </p>
+            </template>
+            </Column>
+
+            <Column field="order_id" header="$_BOT" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem;color:var(--green-500)">
 
                 <template #body="slotProps">
                     <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
-                        style="min-width: max-content;">
+                        style="min-width: max-content;background-color: #22c55e5c;">
+                        {{formatToColombianPeso(slotProps.data.sales_chatbot) || '$ 0'  }}
+                    </p>
+                </template>
+            </Column>
+
+
+            <Column field="order_id" header="#_WEB" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem;color:var(--primary-color)">
+            <template #body="slotProps">
+                <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                    style="min-width: max-content;background-color: #ff620061;">
+                    {{ slotProps.data.orders_web }}
+                </p>
+            </template>
+            </Column>
+
+            <Column field="order_id" header="$_WEB" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem;color:var(--primary-color)">
+
+                <template #body="slotProps">
+                    <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                        style="min-width: max-content;background-color: #ff620061;">
+                        {{formatoPesosColombianos(slotProps.data.sales_web) || '$ 0'  }}
+                    </p>
+                </template>
+            </Column>
+
+
+            <Column field="order_id" header="#_C.CENTER" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
+            <template #body="slotProps">
+                <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                    style="min-width: max-content;background-color: var(--blue-100);">
+                    {{ slotProps.data.orders_callcenter }}
+                </p>
+            </template>
+            </Column>
+
+            <Column field="order_id" header="$_C.CENTER" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
+
+                <template #body="slotProps">
+                    <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                        style="min-width: max-content;background-color:  var(--blue-100);;">
+                        {{ formatoPesosColombianos(slotProps.data.sales_callcenter)  }}
+                    </p>
+                </template>
+            </Column>
+
+
+
+
+
+
+
+
+            <Column field="order_id" header="#_TOTAL_ENV" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem; min-width:max-content" >
+
+                <template #body="slotProps">
+                    <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
+                        style="min-width: max-content;background-color: #ffff0042;">
                         {{ slotProps.data.total_orders_sent }}
                     </p>
                 </template>
             </Column>
-            <Column field="order_id" header="$ ENVIADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:2rem">
+            <Column field="order_id" header="$_TOTAL_ENV" class="py-0 px-0" headerStyle="width:3rem;min-width:2rem">
 
                 <template #body="slotProps">
                     <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
-                        style="min-width: max-content;">
-                        {{ formatToColombianPeso(slotProps.data.total_sales_sent) }}
+                        style="min-width: max-content;background-color: #ffff0042;">
+                        {{ formatToColombianPeso(slotProps.data.total_sales_sent) || '$ 0'}} 
                     </p>
                 </template>
             </Column>
 
-            <Column field="order_id" header="CANCELADAS" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
+            <Column field="order_id" header="CANC" class="py-0 px-0" headerStyle="width:3rem;min-width:3rem">
 
                 <template #body="slotProps">
                     <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
-                        style="min-width: max-content;">
+                        style="min-width: max-content;background-color: var(--red-100);">
                         {{ slotProps.data.total_orders_cancelled || 0 }}
                     </p>
                 </template>
             </Column>
-            <Column field="order_id" header="$ CANCELADAS" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
+            <Column field="order_id" header="$_CANC" class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
 
                 <template #body="slotProps">
                     <p class="text" :class="slotProps.data.site_name == 'TOTAL' ? 'bold' : ''"
-                        style="min-width: max-content;">
+                        style="min-width: max-content;background-color: var(--red-100);">
                         {{ formatToColombianPeso(slotProps.data.total_sales_cancelled) ||
                             '$ 0.0'
                         }}
@@ -136,122 +205,6 @@
 
         </DataTable>
 
-
-
-        <p class="text-l px-0 my-4  text-900 font-bold">REPORTE CALL CENTER </p>
-
-
-
-        <DataTable stripedRows :value="store.sumaryData.creators" tableStyle="min-width: 100%  max-width:500px"
-            :rows="11" :filters="filters" responsiveLayout="scroll" scrollable>
-
-
-            <template>
-
-            </template>
-            <Column style="text-transform: uppercase;" field="name" header="Acesor" class="py-0 px-0"
-                headerStyle="width:30rem;min-width:10rem">
-                <template #body="data">
-                    <div class="py-1" style="display: flex; align-items: center;"  :class="data.data.name == 'TOTAL' ? 'bold' : ''" >
-                        <img class="pr-2"  v-if="data.data.name !== 'pagina web'" style="height: 1rem;" src="/images/WhatsApp.svg.webp"
-                            alt="">
-
-                        <i style="font-weight: bold;" v-if="data.data.name == 'TOTAL'" class="pi pi-plus mr-2"></i>
-
-                        <img class="mr-2" v-if="data.data.name == 'pagina web' || data.data.name == 'TOTAL'" style="height: 1rem;"
-                            src="/images/logo.png" alt="">
-                        {{ data.data.name }}
-                    </div>
-
-                </template>
-            </Column>
-
-            <Column style="text-transform: uppercase;" field="orders_sent" header="VENTA" class="py-0 px-0"
-                headerStyle="width:12rem;min-width:3rem">
-
-                <template #body="data">
-
-                    <div class="py-1" :class="data.data.name == 'TOTAL' ? 'bold' : ''">
-
-                        {{ formatToColombianPeso( data.data.sales) }}
-                    </div>
-                </template>
-
-            </Column>
-            
-            <Column style="text-transform: uppercase;" field="orders_generated" header="ingresadas" class="py-0 p-0"
-                headerStyle="width:12rem;min-width:3rem">
-                <template #body="data">
-
-                    <div class="py-1 " :class="data.data.name == 'TOTAL' ? 'bold' : ''">
-
-                        {{ data.data.orders_sent + data.data.orders_cancelled }}
-                    </div>
-                </template>
-
-
-            </Column>
-
-            <Column style="text-transform: uppercase;" field="orders_sent" header="enviadas" class="py-0 px-0"
-                headerStyle="width:12rem;min-width:3rem">
-
-                <template #body="data">
-
-                    <div class="py-1" :class="data.data.name == 'TOTAL' ? 'bold' : ''">
-
-                        {{ data.data.orders_sent }}
-                    </div>
-                </template>
-
-            </Column>
-
-
-            <Column style="text-transform: uppercase;" field="orders_cancelled" header="canceladas" class="py-0 px-0"
-                headerStyle="width:12rem;min-width:3rem">
-
-                <template #body="data">
-
-                    <div class="py-1"  :class="data.data.name == 'TOTAL' ? 'bold' : ''">
-
-                        {{ data.data.orders_cancelled }}
-                    </div>
-                </template>
-
-            </Column>
-
-            <Column style="text-transform: uppercase;" field="orders_cancelled" header="Transferencias" class="py-0 px-0"
-                headerStyle="width:12rem;min-width:3rem">
-
-                <template #body="data">
-
-                    <div class="py-1"   :class="data.data.name == 'TOTAL' ? 'bold' : ''">
-
-                        {{ data.data.concreted_transferences || 0}}
-                    </div>
-                </template>
-
-            </Column>
-
-
-            <Column style="text-transform: uppercase;" field="orders_cancelled" header="Rendimiento" class="py-0 px-0"
-                headerStyle="width:12rem;min-width:3rem">
-
-                <template #body="data">
-
-                    <div class="py-1"   :class="data.data.name == 'TOTAL' ? 'bold' : ''">
-
-                        {{ data.data.name != 'TOTAL' ? data.data.concreted_transferences +   data.data.orders_sent + data.data.orders_cancelled : '--'}}
-                    </div>
-                </template>
-
-            </Column>
-
-
-
-
-
-
-        </DataTable>
 
 
 
@@ -270,6 +223,7 @@ import { FilterMatchMode } from 'primevue/api';
 import { ref } from 'vue'
 import OrderDialog from '../../components/orderDialog.vue';
 import * as XLSX from 'xlsx';
+import { formatoPesosColombianos } from '../../service/formatoPesos';
 
 const filters = ref(null);
 
@@ -409,6 +363,7 @@ const exportCSV = async () => {
 <style scoped>
 * {
     transition: all ease .3s;
+    color: black;
 }
 
 .motivo {
@@ -425,6 +380,6 @@ const exportCSV = async () => {
 }
 
 .text {
-    padding: 0 1rem 0 0;
+    padding: 0 1rem 0 1rem;
 }
 </style>

@@ -119,6 +119,33 @@ export const productService = {
             console.error('Error updating product instance status:', error);
             return null;
         }
+    },
+
+
+
+    async createProductInstance(product, additional_item_ids) {
+        const productStore = useProductStore();
+        const store = useReportesStore();
+        store.setLoading(true, 'creando producto en todas las sedes');
+        try {
+            const response = await axios.post(`${URI}/products/create/`, {
+                product,
+                additional_item_ids
+            });
+            if (response.status === 200) {
+                store.setLoading(false, 'creando producto en todas las sedes');
+                console.log('Product created successfully:', response.data);
+                return response.data;
+            } else {
+                console.error('Failed to create product:', response.status);
+                store.setLoading(false, 'creando producto en todas las sedes');
+                return null;
+            }
+        } catch (error) {
+            store.setLoading(false, 'creando producto en todas las sedes');
+            console.error('Error creating product:', error);
+            return null;
+        }
     }
 
 }

@@ -20,6 +20,7 @@ export const useProductStore = defineStore('product', {
             },
             visibles: {
                 dialogEditProduct: false,
+                dialogAddProduct: false,
                 dialogDeleteProduct: false
             }
         }
