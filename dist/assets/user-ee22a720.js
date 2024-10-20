@@ -1,0 +1,1 @@
+import{I as e}from"./index-e7a37f9b.js";const n=e("client",{persist:{key:"client",storage:localStorage,paths:["user"]},state:()=>({user:{name:"",neigborhood:"",address:"",phone_number:"",payment_method_option:""}}),getters:{fucion:t=>0},actions:{async func(){return func}}});export{n as u};
