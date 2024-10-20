@@ -148,7 +148,7 @@ const tags = ref([])
 const selectedTag = ref({})
 
 const update = async () => {
-    tags.value = await fetchService.get('http://localhost:9700/get_tags', 'cargando Etiquedas')
+    tags.value = await fetchService.get('https://chatbot.salchimonster.com/get_tags', 'cargando Etiquedas')
 }
 
 onMounted(() => {
@@ -200,7 +200,7 @@ const sendNewTag = async() => {
 
     }
 
-    await fetchService.post('http://localhost:9700/create_tag',data,'creando etiqueta')
+    await fetchService.post('https://chatbot.salchimonster.com/create_tag',data,'creando etiqueta')
     await update()
     show_new_tag.value = false
 
@@ -232,7 +232,7 @@ const sendData = async () => {
     }
 
 
-    await fetchService.post('http://localhost:9700/train',data,'enviando respuesta')
+    await fetchService.post('https://chatbot.salchimonster.com/train',data,'enviando respuesta')
     patterns.value = ''
     responses.value = ' '
 }
@@ -269,10 +269,10 @@ const apiCall = async (messageText) => {
     method: 'POST',
     headers: headers,
     body: JSON.stringify(data)
-  };
+  };npm
 
   try {
-    const response = await fetch('http://localhost:9700/chat', requestOptions);
+    const response = await fetch('https://chatbot.salchimonster.com/chat', requestOptions);
     if (!response.ok) {
       throw new Error('Respuesta de red no fue ok');
     }

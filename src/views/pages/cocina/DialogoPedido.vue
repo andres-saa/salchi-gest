@@ -1,24 +1,27 @@
 <template>
   <div>
-    <Dialog v-model:visible="cancelDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
+
+
+
+
+  <Dialog v-model:visible="travelDialog" closeOnEscape :closable="true" modal style="width: 30rem;">
       <template #header>
-        <h3> <b>Cancelar Orden</b> </h3>
+        <h3> <b>TRASLADO DE SEDE</b> </h3>
       </template>
       <form @submit.prevent="submitCancel" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
   
-        <span for="responsible">Responsable</span>
-        <Dropdown style="width: 100%;" id="responsible" v-model="cancelData.responsible" :options="responsibles" optionLabel="name"
-          placeholder="Selecciona un responsable"></Dropdown>
+        <span for="responsible">SELECCIONE LA SEDE DESTINO</span>
+
+
+        
+        <Dropdown style="width: 100%;" id="responsible" v-model="sede_destino" optionValue="site_id"  :options="sites.filter(s => s.show_on_web)" optionLabel="site_name"
+          placeholder="Seleccione la sede destino"></Dropdown>
   
   
-        <span for="reason">Razón</span>
-        <Textarea style="resize: none; text-transform: lowercase; width:100%" id="reason" v-model="cancelData.reason" rows="5"
-          placeholder="Escribe la razón de la cancelación"></Textarea>
-  
-        <Button style="width: 100%;border-radius:0.5rem" label="cancelar" type="submit" class="p-button-danger" />
+        
+        <Button @click="traslate_order()" style="width: 100%;border-radius:0.5rem" label="Trasladar" type="submit" class="p-button-danger" />
       </form>
   </Dialog>
-
 
 
   <Dialog v-model:visible="cancelDialogVisibleAdmin" closeOnEscape :closable="true" modal style="width: 30rem;">
@@ -412,8 +415,11 @@
       </div> -->
 
 
-      <div  class="col-12 px-0">
-        <Button severity="help" @click="showDeleteDeliveryPrice = true" style="width: 100%;" label="domicilio $0.00">
+      <div  class="col-12 px-0" style="display: flex;gap: 1rem;">
+        <Button severity="help" @click="showDeleteDeliveryPrice = true" style="width: 50%;" label="domicilio $0.00">
+
+        </Button>
+        <Button severity="warning" @click="travelDialog = true" style="width: 50%;" icon="pi pi-airplane" label="traslado">
 
         </Button>
       </div>
@@ -440,7 +446,17 @@ import { onMounted, ref } from 'vue'
 import { useOrderStore } from '@/store/order'
 import { orderService } from '@/service/cocina/orderService';
 import printJS from 'print-js';
+import { fetchService } from '../../../service/utils/fetchService';
+import { URI } from '../../../service/conection';
+import { showProductDialog } from '../../../../papasmonster/src/service/state';
 
+
+
+
+
+
+
+const sede_destino =ref(0)
 const cancelDialogVisibleAdmin = ref(false)
 const store = useOrderStore()
 
@@ -521,13 +537,17 @@ const IMPRIMIR = () => {
 //   });
 // };
 
+const sites = ref([])
 
 onMounted(async () => {
   store.currentOrder.value = store.currentOrder
+  sites.value = await fetchService.get(`${URI}/sites`)
+
 })
 
 
 const cancelDialogVisible = ref(false);
+const travelDialog = ref(false);
 
 const cancelData = ref({
   responsible: null,
@@ -560,6 +580,21 @@ const submitCancel = () => {
 
 const deliveryZero = async(order_id) => {
     await orderService.deliveryZero(order_id)
+}
+
+
+const traslate_order = async() => {
+  const order_id = store.currentOrder.order_id
+  const site_id = sede_destino.value
+
+
+  await fetchService.put(`${URI}/traslate-order`,{
+                                                    "site_id": site_id,
+                                                    "order_id": order_id
+                                                  },`trasladando orden ${order_id}`)
+
+  store.visibles.currentOrder= false
+  travelDialog.value = false
 }
 
 
