@@ -29,7 +29,7 @@
             </div>
 
             <Button style="" v-if="currentChecklist.checklist_id" @click="prepareItemsForWarnings" size="small"
-                class="my-5 col-12 md:col-4" severity="warning" label="Revisar y Enviar Auditoría"></Button>
+                class="my-5 col-12 md:col-4" severity="help" label="Revisar y Enviar Auditoría"></Button>
 
             <Dialog style="width: 40rem;" v-model:visible="dialogVisible" header="Añadir Observaciones" modal
                 :closable="false">

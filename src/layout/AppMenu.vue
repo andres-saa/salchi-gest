@@ -283,6 +283,25 @@ async function fetchAndUpdateRoles() {
                     
 
                 },
+                {
+                    label: 'Requisicion de personal', icon: 'fa-solid fa-folder' ,permision_id: 32,
+                    items:
+                    [
+                            {
+                                label: 'Solicitudes', icon: 'fa-solid fa-folder',to:'/hiring/request-people/' ,permision_id: 32,
+                            },
+                            {
+                                label: 'Aprobacion de solicitudes', icon: 'fa-solid fa-folder',to:'/hiring-authorize/requests' ,permision_id: 32,
+                                
+                            },
+                            {
+                                label: 'Seleccion y contratacion', icon: 'fa-solid fa-folder',to:'/hiring-hr/selection' ,permision_id: 32,
+                            },
+
+                        ]
+                    
+
+                },
 
 
             ]

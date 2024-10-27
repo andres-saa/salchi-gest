@@ -41,6 +41,127 @@ const router = createRouter({
         },
 
         {
+          path: '/hiring/',
+          name: 'hiring',
+          component: () => import('@/views/pages/hiring/requester/Vacancies.vue'),
+          children:[
+            {
+              path: '/hiring/request-people',
+              name: 'hiring-request',
+              component: () => import('@/views/pages/hiring/requester/requests.vue'),
+              
+            },
+            {
+              path: '/hiring/my-requests',
+              name: 'my-requests',
+              component: () => import('@/views/pages/hiring/requester/myRequests.vue'),
+              
+            }
+          ]
+        
+        },
+
+        {
+          path: '/hiring-authorize',
+          name: 'hiring-authorize',
+          component: () => import('@/views/pages/hiring/authorizer/autorizer.vue'),
+          children:[
+            {
+              path: '/hiring-authorize/requests',
+              name: 'hiring-authorize-requests',
+              component: () => import('@/views/pages/hiring/authorizer/requests.vue'),
+            },
+            {
+              path: '/hiring-authorize/acepted',
+              name: 'hiring-auhorize-acepted',
+              component: () => import('@/views/pages/hiring/authorizer/acepted.vue'),
+            },
+            {
+              path: '/hiring-authorize/rejected',
+              name: 'hiring-autorize-rejected',
+              component: () => import('@/views/pages/hiring/authorizer/rejected.vue'),
+            }
+          ]
+        
+        },
+
+
+        {
+          path: '/hiring-hr/',
+          name: 'hiring-hr',
+          component: () => import('@/views/pages/hiring/hr/hr.vue'),
+          children:[
+            {
+              path: '/hiring-hr/news',
+              name: 'hiring-authorize-hr',
+              component: () => import('@/views/pages/hiring/hr/news.vue'),
+            },
+            {
+              path: '/hiring-hr/selection',
+              name: 'hiring-auhorize-acepted-hr',
+              component: () => import('@/views/pages/hiring/hr/selection.vue'),
+            },
+            {
+              path: '/hiring-hr/vacancies',
+              name: 'hiring-autorize-rejected-hr',
+              component: () => import('@/views/pages/hiring/hr/vacancies.vue'),
+            }
+          ]
+        
+        },
+
+        {
+          path: '/hiring-hr-follow/:vacancy_id',
+          name: 'hiring-hr-follow',
+          component: () => import('@/views/pages/hiring/hr/follow/follow.vue'),
+          children: [
+            {
+              path: "/hiring-hr-follow/resume-review:vacancy_id",
+              name: "resume-review",
+              component: () => import('@/views/pages/hiring/hr/follow/ResumeReview/ResumeReview.vue'),
+              children: [
+                  { path: "/hiring-hr-follow/resume-review/accepted/:vacancy_id", name: "resume-review-accepted", component: () => import('@/views/pages/hiring/hr/follow/ResumeReview/Accepted.vue') },
+                  { path: "/hiring-hr-follow/resume-review/rejected/:vacancy_id", name: "resume-review-rejected", component: () => import('@/views/pages/hiring/hr/follow/ResumeReview/Rejected.vue') }
+              ]
+          },
+          {
+              path: "/hiring-hr-follow/preliminary-filter:vacancy_id",
+              name: "preliminary-filter",
+              component: () => import('@/views/pages/hiring/hr/follow/PreliminaryFilter/PreliminaryFilter.vue'),
+              children: [
+                  { path: "/hiring-hr-follow/preliminary-filter/accepted/:vacancy_id", name: "preliminary-filter-accepted", component: () => import('@/views/pages/hiring/hr/follow/PreliminaryFilter/Accepted.vue') },
+                  { path: "/hiring-hr-follow/preliminary-filter/rejected/:vacancy_id", name: "preliminary-filter-rejected", component: () => import('@/views/pages/hiring/hr/follow/PreliminaryFilter/Rejected.vue') }
+              ]
+          },
+          {
+              path: "/hiring-hr-follow/first-interview:vacancy_id",
+              name: "first-interview",
+              component: () => import('@/views/pages/hiring/hr/follow/FirstInterview/FirstInterview.vue'),
+              children: [
+                  { path: "/hiring-hr-follow/first-interview/accepted/:vacancy_id", name: "first-interview-accepted", component: () => import('@/views/pages/hiring/hr/follow/FirstInterview/Accepted.vue') },
+                  { path: "/hiring-hr-follow/first-interview/rejected/:vacancy_id", name: "first-interview-rejected", component: () => import('@/views/pages/hiring/hr/follow/FirstInterview/Rejected.vue') }
+              ]
+          },
+          {
+              path: "/hiring-hr-follow/second-interview/:vacancy_id",
+              name: "second-interview",
+              component: () => import('@/views/pages/hiring/hr/follow/SecondInterview/SecondInterview.vue'),
+              children: [
+                  { path: "/hiring-hr-follow/second-interview/accepted/:vacancy_id", name: "second-interview-accepted", component: () => import('@/views/pages/hiring/hr/follow/SecondInterview/Accepted.vue') },
+                  { path: "/hiring-hr-follow/second-interview/rejected/:vacancy_id", name: "second-interview-rejected", component: () => import('@/views/pages/hiring/hr/follow/SecondInterview/Rejected.vue') }
+              ]
+          },
+          
+            { path: "/hiring-hr-follow/exam-review/:vacancy_id", name: "exam-review", component: () => import('@/views/pages/hiring/hr/follow/ExamReview.vue') },
+            { path: "/hiring-hr-follow/document-reception/:vacancy_id", name: "document-reception", component: () => import('@/views/pages/hiring/hr/follow/DocumentReception.vue') },
+            { path: "/hiring-hr-follow/hiring-completed/:vacancy_id", name: "hiring-completed", component: () => import('@/views/pages/hiring/hr/follow/HiringCompleted.vue') }
+        ]
+        
+        },
+
+
+
+        {
           path: '/chat-bot/train',
           name: 'chatbot-train',
           component: () => import('@/views/pages/salchibot/train.vue'),

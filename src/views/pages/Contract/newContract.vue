@@ -102,7 +102,8 @@
             <div class="my-8" style="display: flex;gap: 1rem; justify-content: end; width: 100%;">
 
 
-<Button @click="sendData()" severity="help" label="Confirmar y enviar"></Button>
+                <Button @click="sendData()" severity="help" label="cargar PDF"></Button>
+<Button @click="sendData()" severity="danger" label="Confirmar y enviar"></Button>
 </div>
         </div>
    

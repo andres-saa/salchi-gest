@@ -10,7 +10,7 @@
 </Dialog>
 <!-- {{ checklist }} -->
         <!-- {{ audits }} -->
-        <DataTable  :value="checklist" tableStyle="min-width: 50rem" class="p-0" 
+        <DataTable  :value="checklist" tableStyle="min-width: 50rem" class="p-0"  style="max-width: 800px;margin: auto;"
         
        dataKey="id" :paginator="true"
                     :rows="10" :filters="filters"
@@ -24,20 +24,20 @@
                 <div class="flex flex-wrap align-items-center justify-content-between gap-2">
                     <span class="text-xl text-900 font-bold">Checklists</span>
                     <!-- <Button icon="pi pi-refresh" rounded raised /> -->
-                    <Button  icon="pi pi-plus" rounded raised @click="showCreateChecklistDialog" />
+                    <Button severity="help" icon="pi pi-plus" label="Nuevo Checklist"  raised @click="showCreateChecklistDialog" />
 
                 </div>
             </template>
 
 
-            <Column header="Id">
+            <Column header="Id" class="py-0">
                 <template #body="slotProps">
                     <!-- <img :src="`${URI}/read-product-image/96/employer-1032`"> -->
                     {{ slotProps.data.checklist_id }}
                 </template>
             </Column>
 
-            <Column header="Nombre del checklist" >
+            <Column header="Nombre del checklist" class="py-0" >
                 <template #body="slotProps" >
                     <!-- <img :src="`${URI}/read-product-image/96/employer-1032`"> -->
                     <p style="text-transform: uppercase;">{{ slotProps.data.checklist_name }}</p>
@@ -45,7 +45,7 @@
                 </template>
             </Column>
 
-            <Column header="Grupos de Items" class="">
+            <Column header="Grupos de Items" class="py-0">
                 <template #body="slotProps">
                     <!-- <img :src="`${URI}/read-product-image/96/employer-1032`"> -->
                     
@@ -66,7 +66,7 @@
             <Column class="p-0 m-0" field="inventoryStatus" header="Acciones" style="min-width:9rem;">
     <template #body="slotProps">
         <!-- Botón para más detalles -->
-        <Button @click="openCheckList(slotProps.data.checklist_id)" text severity="help">
+        <Button @click="openCheckList(slotProps.data.checklist_id)" text style="color: black;" severity="help">
             <i class="fa-solid fa-eye text-2xl"></i>
         </Button>
         <!-- Botón para eliminar -->
@@ -177,7 +177,7 @@
         <div class="grid gap-2 my-4">
 
             <div class="col-12 py-0">  <Button severity="help" class="col-12" label="Añadir Grupo" @click="addGroup" /></div>
-            <div class="col-12 py-0">  <Button severity="success" class="col-12" label="Guardar" @click="saveChecklist" /></div>
+            <div class="col-12 py-0">  <Button severity="help" class="col-12" label="Guardar" @click="saveChecklist" /></div>
             <div class="col-12 py-0">  <Button severity="danger" class="col-12" label="Cancelar" @click="cancelChecklistCreation" /></div>
            
         <!-- Botones para guardar o cancelar -->

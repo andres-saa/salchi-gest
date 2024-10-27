@@ -47,7 +47,7 @@
 
             <div class="">
                 <RouterLink to="/auditorias/checklist">
-                    <Button :style="ruta.path.includes('checklist')? 'color:black;' : 'color:gray;'" class="text-xl"  text label="checkList" :outlined="!ruta.path.includes('check')"
+                    <Button :style="ruta.path.includes('checklist')? 'color:black;' : 'color:gray;'" class="text-xl"  text label="CheckLists" :outlined="!ruta.path.includes('check')"
                         style="display: flex;  justify-content: center;align-items: center;box-shadow: none; "
                        >
                  

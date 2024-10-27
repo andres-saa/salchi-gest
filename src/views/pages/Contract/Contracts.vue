@@ -16,7 +16,7 @@
 
         </nav>
 
-        <RouterView >
+        <RouterView class="m-auto">
 
         </RouterView>
 

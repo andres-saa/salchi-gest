@@ -67,7 +67,8 @@ export const useReportesStore = defineStore('reportes', {
                 tittle:'Cargando',
                 progress:0
             },
-            sitesStatus:[]
+            sitesStatus:[],
+            visible_add_pqr:false
             
 
 
