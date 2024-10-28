@@ -52,6 +52,9 @@
     <Dialog class="mx-2 " v-model:visible="showPqrGest" modal  :header="`Gestion de la pqr  ID    ${currentPqrGest.pqr_request_id}`" :style="{ width: '50rem',  }">
     
         <div style="display: flex; flex-direction: column;">
+            
+
+
 
 
 
@@ -79,7 +82,7 @@
             </div>
              <p v-if="data.item.responsible_name"  class="m-0" style="text-transform: capitalize;"> <b>Responsable:</b>  {{data.item.responsible_name?.toLowerCase()}}</p>
 
-             <p class="p-0 m-0" v-if="data.item.value">Le costo a la empresa <b>{{ formatToColombianPeso(data.item.value)  }}</b> </p> 
+             <p class="p-0 m-0" v-if="data.item.value">Le costo a la empresa <b>{{ formatToColombianPeso()  }}</b> </p> 
              <p  class="p-0 m-0" v-if="data.item.order_id">Orden entregada <b>{{ data.item.order_id}}</b> </p> 
             <p v-if="data.item.notes">
                 <b>Notas</b>
@@ -116,7 +119,7 @@
 
             <div  v-if="(selecte_status_update == 4 || selecte_status_update == 7) && costo"  >
                 <h6>Cuanto?</h6>
-                <InputNumber  style="width: 100%;"></InputNumber>
+                <InputNumber   v-model="costovalue" style="width: 100%;"></InputNumber>
             </div>
 
 
@@ -127,13 +130,13 @@
 
             <div  v-if="(selecte_status_update == 4 || selecte_status_update == 7) && order"   >
                 <h6>Id de la orden</h6>
-                <InputText style="width: 100%;"></InputText>
+                <InputText v-model="inputOrder" style="width: 100%;"></InputText>
             </div>
 
 
             <div>
                 <h6 class="m-0 my-3">Detalles</h6>
-                <Textarea rows="5" style="resize: none;width: 100%;">
+                <Textarea v-model="notes" rows="5" style="resize: none;width: 100%;">
 
                 </Textarea>
             </div>
@@ -149,7 +152,7 @@
 
     <template #footer>
         <div style="display: flex;justify-content: end;margin-top: 2rem" >
-                <Button label="Enviar" severity="help"></Button>
+                <Button @click="sendPqrUpdate" label="Enviar" severity="help"></Button>
             </div>
     </template>
 
@@ -291,9 +294,10 @@ import { useReportesStore } from '@/store/reportes';
     const store = useReportesStore()
 
 
+const notes = ref('')
 
 
-
+const inputOrder = ref()
 
 const isActive = PathService.isActiveRoute
 
@@ -517,6 +521,7 @@ const editing = ref(false);
 const visibleAnswers = ref({});
 
 const costo = ref(false)
+const costovalue = ref()
 const order = ref(false)
 
 const open_to_edit = (pq) => {
@@ -568,6 +573,46 @@ const deletePqrs = async (id) => {
 onMounted(async () => {
     update();
 });
+
+
+watch(selecte_status_update, () => {
+    resetPqrForm()
+})
+
+const resetPqrForm = () => {
+    // selecte_status_update.value = null;  
+    costovalue.value = null;
+    notes.value = '';
+    inputOrder.value = null;
+    costo.value = false;
+    order.value = false;
+};
+
+
+const sendPqrUpdate = async () => {
+    // Recolectar los datos del formulario
+    const dataToSend = {
+        pqr_request_id: currentPqrGest.value.pqr_request_id,
+        status_id: selecte_status_update.value,
+        responsible_id: login.rawUserData.id, // Usa el ID del usuario actual
+        value: costovalue.value || null,
+        notes: notes.value || '',
+        order_id: inputOrder.value || null
+    };
+
+    try {
+        // Realizar el POST usando el servicio de PQRS
+        await fetchService.post( `${URI}/change-pqr-status`,dataToSend);
+
+        // Actualizar la lista de PQRS y cerrar el diálogo
+        update();
+        showPqrGest.value = false;
+        resetPqrForm()
+    } catch (error) {
+        console.error('Error al enviar la actualización de la PQR:', error);
+    }
+};
+
 
 watch(() => route.params.section_id, () => {
     update();
