@@ -3,7 +3,7 @@
 
 
 <div class="container px-2">
-
+<!-- 
     <p class="text-3xl my-4" > <b>PQRS</b> </p>
     <nav class="nav_bar shadow-2 p-0 my-0 mx-2" style="position: sticky;top: 0rem;max-width: 900px;border-radius:10rem; background-color: white;z-index: 99;">
         <ul class="nav_bar--buttons p-0 m-1" style="">
@@ -17,7 +17,7 @@
      
             
         </ul>
-    </nav>
+    </nav> -->
 
     <router-view> </router-view>
 

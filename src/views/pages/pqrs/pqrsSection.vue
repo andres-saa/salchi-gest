@@ -170,16 +170,14 @@
                     <Button  @click="() => active_button_nav = button" class="nav_bar--buttons-button p-2" :class="button.id == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" :label="button.name"></Button>
 
                 </li>
-     
-            
         </ul>
     </nav>
 
-    <DataTable :paginator="true" :rows="15" style="width: 100%;max-width: 1280px;"
+    <DataTable :paginator="true" :rows="15" style="width: 100%;;"
        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes"
        :rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto"
-       :value="pqrsUser.filter((p =>  (p.current_status?.status == active_button_nav?.name || active_button_nav?.name == 'Todos') && route.params.section_id == p?.channel_id))" tableStyle="min-width: 50rem;" :filters="filters">
+       :value="pqrsUser.filter(p =>  p.current_status?.status == active_button_nav?.name )" tableStyle="min-width: 50rem;" :filters="filters">
        <template #header>
            <div class="grid p-3" style="align-items:center;justify-content: space-between; display: flex;gap: 1rem;">
                <h4 class="px-2"> <i class="fa-regular fa-bars-progress"></i>  <b style="text-transform: uppercase;">PQRS <b>{{ route.params.section }}</b> </b> </h4>
@@ -245,6 +243,18 @@
            </div>
 
 
+
+              
+
+           <div class="p-2" v-if="column.columnValue == 'channel'" style="display: flex;gap: .1rem;flex-direction:column;align-items:start;" > 
+            <Tag  style="color: white;;" :style="`background-color:${contract.data.channel_color}`">
+
+               
+               {{ contract.data[column.columnValue]}}  
+           </Tag>
+        
+                
+           </div>
            
        
        </column>
@@ -267,7 +277,7 @@
        </DataTable>
 
 
-       <pqrUser></pqrUser>
+       <pqrUser @reload="update()"></pqrUser>
    
 </template>
 
@@ -304,30 +314,21 @@ const isActive = PathService.isActiveRoute
 const route = useRoute();
 const nav_buttons = ref( [
 
-    {
-        "id": 0,
-        "name": "Todos",
-        "description": "Estado inicial de la pqr",
-        "exist": true,
-        "color": "#3498DB"
-    }
 
 ]
 )
 
 const columview = (colums) => {
-    if (route.params.section_id != 2) {
-        return colums.filter(c => c.columnValue !== 'red');
-    } else {
+ 
         return colums;
-    }
+    
 }
 
 const active_button_nav = ref(
 
     {
         "id": 2,
-        "name": "Todos",
+        "name": "Generada",
         "description": "Estado inicial de la pqr",
         "exist": true,
         "color": "#3498DB"
@@ -387,6 +388,23 @@ const dataColumns = ref( [
        vif:true
    },
 
+   {
+       columnName:'Id orden',
+       columnValue:'order_id',
+       columnType:'other',
+       size:'1rem',
+       vif:true
+   },
+
+
+   {
+       columnName:'Canal',
+       columnValue:'channel',
+       columnType:'tag',
+       size:'4rem',
+       vif:true
+   },
+
 
    {
        columnName:'Sede',
@@ -411,6 +429,7 @@ const dataColumns = ref( [
         size:'10rem',
         vif:true
    },
+
 
    {
        columnName:'Tipo',
@@ -552,17 +571,8 @@ const update = async () => {
     pqrsUser.value = await fetchService.get(`${URI}/get-all-pqrs`);
     const status = await fetchService.get(`${URI}/get-all-pqrs-status`);
 
-    if (status) {
-        const uniqueStatus = new Set(nav_buttons.value.map(e => e.id)); // Asume que cada elemento tiene una propiedad 'id' para identificar duplicados
-        status.forEach(element => {
-            if (!uniqueStatus.has(element.id)) { // Verifica si ya existe
-                nav_buttons.value.push(element);
-                uniqueStatus.add(element.id);
-            }
-        });
-    }
-
     allStatus.value = status;
+    nav_buttons.value = status
 };
 const deletePqrs = async (id) => {
     visibles.value.showDeleteDialog = false;

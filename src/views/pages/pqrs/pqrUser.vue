@@ -48,6 +48,12 @@
           <h5 class="field">Categoria</h5>
           <Dropdown v-model="selectedType" optionValue="id" style="width: 100%; text-transform: uppercase;" :options="types.filter(e => e.id != 8)" optionLabel="name"></Dropdown>
         </div>
+
+
+        <div class="input p-3" v-if="(selectedType )" style="background-color: #00f3ff29;">
+          <h5 class="field">Califícanos</h5>
+          <Rating v-model="rating" :cancel="false"></Rating>
+        </div>
   
         <!-- Selección de Sede -->
         <div class="input" v-if="(selectedType)">
@@ -57,8 +63,8 @@
   
         <!-- ID de la Orden -->
         <div class="input" v-if="selectedType && selectedType == 9">
-          <h5 class="field">ID de la orden ejemplo <b>BRE-0554</b></h5>
-          <InputText v-model="orderId" style="width: 100%;" placeholder="Escriba el número de la orden"></InputText>
+          <h5 class="field" >ID de la orden ejemplo <b>BRE-0554</b></h5>
+          <InputText  v-model="orderId" style="width: 100%;" placeholder="Escriba el número de la orden"></InputText>
         </div>
   
 
@@ -108,11 +114,14 @@
     import { URI } from '@/service/conection';
     import router from '@/router';
     
+    const emit = defineEmits(['inFocus', 'reload'])
 
+ 
 
     import { useReportesStore } from '@/store/reportes';
     const store = useReportesStore()
 
+    const order_id = ref()
 
     const visible = ref(true)
     const last_id = ref()
@@ -194,9 +203,10 @@ watch(() => store.visible_add_pqr, (newVal) => {
           reques_type_id: selectedType.value,
           content: comments.value || 'Sin comentarios',
           channel_id: 2, // Ajustar según el canal,
-          rating: null,
+          rating: rating.value,
           site_id: selecteSite.value || null,
-          network_id:selectet_networks.value || null
+          network_id:selectet_networks.value || null,
+          order_id:orderId.value  || null
         },
         user: {
           user_name: userName.value || '',
@@ -213,7 +223,8 @@ watch(() => store.visible_add_pqr, (newVal) => {
        last_id.value = result?.pqr_id[0]?.id
        if (selectedType.value == 8){
         visibleDialogGRacias.value = true
-       } else {
+        emit('reload')
+        } else {
         visibleDialog.value = true
        }
 
@@ -222,6 +233,8 @@ watch(() => store.visible_add_pqr, (newVal) => {
       } catch (error) {
         
       }
+
+      emit('reload')
     };
     
     onMounted(async () => {
