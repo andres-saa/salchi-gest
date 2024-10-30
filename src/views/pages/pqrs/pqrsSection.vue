@@ -59,8 +59,9 @@
 
 
             <h6 v-if="currentPqrGest.user_name || currentPqrGest.user_phone"><b>Datos del cliente</b> </h6>
-            <span v-if="currentPqrGest.user_name"><b>Nombre: {{ currentPqrGest.user_name }}</b></span>
-            <span v-if="currentPqrGest.user_phone"><b>Telefono: {{ currentPqrGest.user_phone }}</b></span>
+            <span v-if="currentPqrGest.user_name"><b>Nombre: </b> {{ currentPqrGest.user_name }}</span>
+            <span v-if="currentPqrGest.user_phone"><b>Telefono: </b> {{ currentPqrGest.user_phone }}</span>
+            <span v-if="currentPqrGest.order_id"><b>Orden: </b> {{ currentPqrGest.order_id }}</span>
             <!-- <span><b>Direccion: {{ currentPqrGest.user_address }} </b></span> -->
 
             <h6><b>Historial</b> </h6>
@@ -164,11 +165,11 @@
     <nav class="nav_bar shadow-2 p-0 my-0 mx-2" style="position: sticky;top: 3rem;max-width: 900px;border-radius:10rem; background-color: white;z-index: 99;">
         <ul class="nav_bar--buttons p-0 m-1" style="">
        
-                <li v-for="button in nav_buttons" key="" class="">
+                <li v-for="button in nav_buttons" key="" class="" style="display: flex;align-items: center  ;" >
                   
                     
-                    <Button  @click="() => active_button_nav = button" class="nav_bar--buttons-button p-2" :class="button.id == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" :label="button.name"></Button>
-
+                   <Tag :style="`background-color:${button.color}`"  style="height: 1.3rem;aspect-ratio: 1 / 1;border-radius: 50%;"></Tag> <Button  @click="() => active_button_nav = button" class="nav_bar--buttons-button p-2" :class="button.id == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" :label="button.name"></Button>
+ 
                 </li>
         </ul>
     </nav>
@@ -205,18 +206,18 @@
        <column   #body="contract" :header="column.columnName" :style="`min-width:${column.size}`" v-for="column in columview(dataColumns)" :field="column.columnValue" class="my-0 py-0">
 
            <h6  style="min-width: max-content;" v-if="column.columnType=='date'" class="m-0 p-0">
-               {{ contract.data[column.columnValue]?.split('-').reverse().join('-') }}
+               {{ contract.data[column.columnValue]?.split('-').reverse().join('-') || '---------'  }}
            </h6>
 
 
            
 
            <h6 :style="column.columnType == 'max-content'? 'min-width: max-content' : ''" v-if="column.columnType == 'max-content'" class="m-0 p-0">
-               {{ contract.data[column.columnValue] }}
+               {{ contract.data[column.columnValue] || '---------'  }}
            </h6>
 
            <h6  v-if="column.columnType == 'other'" class="m-0 p-0">
-               {{ contract.data[column.columnValue] }}
+               {{ contract.data[column.columnValue] || '---------'  }}
            </h6>
 
 
@@ -225,7 +226,7 @@
            </h6>
 
            <h6 :style="column.columnType == 'max-content'? 'min-width: max-content' : ''" v-if="column.columnType == 'money'" class="m-0 p-0">
-               {{formatoPesosColombianos(contract.data[column.columnValue])  }}
+               {{formatoPesosColombianos(contract.data[column.columnValue]) || '---------'  }}
            </h6>
 
        
@@ -234,10 +235,10 @@
             <Tag  style="color: white;;" :style="`background-color:${contract.data[column.columnValue]?.color}`">
 
                
-               {{ contract.data[column.columnValue]?.status}}  
+               {{ contract.data[column.columnValue]?.status || '---------' }}  
            </Tag>
            <b>
-            {{ contract.data[column.columnValue]?.timestamp}}   
+            {{ contract.data[column.columnValue]?.timestamp || '---------' }}   
            </b>
                 
            </div>
@@ -250,7 +251,19 @@
             <Tag  style="color: white;;" :style="`background-color:${contract.data.channel_color}`">
 
                
-               {{ contract.data[column.columnValue]}}  
+               {{ contract.data[column.columnValue] || '---------' }}  
+           </Tag>
+        
+                
+           </div>
+
+
+
+           <div class="p-2" v-if="column.columnValue == 'tag_name'" style="display: flex;gap: .1rem;flex-direction:column;align-items:start;" > 
+            <Tag  style="color: white;;" :style="`background-color:${contract.data.tag_color}`">
+
+               
+               {{ contract.data[column.columnValue]  }}  
            </Tag>
         
                 
@@ -264,7 +277,7 @@
           <template #body="data" >
  
              <div style="display: flex;gap: .5rem;justify-content: center;" class="px-2">
-                  <Button @click="chargeHistory(data.data)"  severity="info" icon="pi pi-history p-0" class="my-0 p-2"></Button>
+                  <!-- <Button @click="chargeHistory(data.data)"  severity="info" icon="pi pi-history p-0" class="my-0 p-2"></Button> -->
                   <Button @click="chargePqr(data.data)" label="Gestionar"  severity="help" icon="pi pi-check p-0" class="my-0 py-2"></Button>
                   <!-- <Button @click="chargeRequest(data.data)"  severity="danger" icon="pi pi-times p-0" class="my-1 p-1"></Button> -->
              </div>
@@ -387,6 +400,16 @@ const dataColumns = ref( [
        size:'1rem',
        vif:true
    },
+
+
+   {
+       columnName:'Clasificacion',
+       columnValue:'tag_name',
+       columnType:'tag',
+       size:'1rem',
+       vif:true
+   },
+
 
    {
        columnName:'Id orden',

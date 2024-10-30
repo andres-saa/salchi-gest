@@ -61,6 +61,36 @@ const router = createRouter({
         
         },
 
+
+        
+        {
+          path: '/cachier-money/',
+          name: 'cachier-money',
+          component: () => import('@/views/pages/cachierMoney/cachierMoney.vue'),
+          children:[
+
+            {
+              path: '/cachier-money/reportes',
+              name: 'cachier-money-reportes',
+              component: () => import('@/views/pages/cachierMoney/Reportes.vue'),
+            },
+            {
+              path: '/cachier-money/registros',
+              name: 'cachier-money-registros',
+              component: () => import('@/views/pages/cachierMoney/Registros.vue'),
+            },
+            {
+              path: '/cachier-money/salidas',
+              name: 'cachier-money-salidas',
+              component: () => import('@/views/pages/cachierMoney/Salidas.vue'),
+            }
+
+
+            
+          ]
+          
+        
+        },
         {
           path: '/hiring-authorize',
           name: 'hiring-authorize',

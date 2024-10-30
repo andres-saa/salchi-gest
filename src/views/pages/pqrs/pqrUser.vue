@@ -49,6 +49,33 @@
           <Dropdown v-model="selectedType" optionValue="id" style="width: 100%; text-transform: uppercase;" :options="types.filter(e => e.id != 8)" optionLabel="name"></Dropdown>
         </div>
 
+                 <!-- Selección de Sede -->
+                 <div class="input" v-if="(selectedType && selectedType != 8)" >
+          <h5 class="field">Por favor clasifica tu inconveniente</h5>
+          <Dropdown :options="tags" v-model="selecte_tag"   style="width: 100%;">
+  
+            <template #option="option">
+                <div style="display: flex;align-items: center;gap: 1rem; ">
+                  <Tag :style="`background-color:${option.option.color}`" style="height: 1.5rem;aspect-ratio: 1 / 1; border-radius:50%;">
+                    
+                  </Tag> <h6 class="p-0 m-0">{{ option.option.name }}</h6>
+                </div>
+            </template>
+
+
+
+            <template #value="value">
+                <div style="display: flex;align-items: center;gap: 1rem; ">
+                  <Tag :style="`background-color:${value.value.color}`" style="height: 1.5rem;aspect-ratio: 1 / 1; border-radius:50%;">
+                    
+                  </Tag> <h6 class="p-0 m-0">{{ value.value.name }}</h6>
+                </div>
+            </template>
+            
+          </Dropdown>
+        </div>
+  
+
 
         <div class="input p-3" v-if="(selectedType )" style="background-color: #00f3ff29;">
           <h5 class="field">Califícanos</h5>
@@ -117,6 +144,8 @@
     const emit = defineEmits(['inFocus', 'reload'])
 
  
+    const tags = ref([{}])
+    const selecte_tag = ref({})
 
     import { useReportesStore } from '@/store/reportes';
     const store = useReportesStore()
@@ -170,6 +199,13 @@ watch(() => store.visible_add_pqr, (newVal) => {
         alert('Por favor, ingrese el ID de la orden.');
         return;
       }
+
+      if ( selectedType.value != 8 && !selecte_tag.value) {
+    alert('Por favor, Clasifica tu inconveniente');
+    return;
+  }
+
+
     
     
       if (selectedType.value != 8 && !comments.value) {
@@ -206,7 +242,8 @@ watch(() => store.visible_add_pqr, (newVal) => {
           rating: rating.value,
           site_id: selecteSite.value || null,
           network_id:selectet_networks.value || null,
-          order_id:orderId.value  || null
+          order_id:orderId.value  || null,
+          tag_id:selecte_tag.value?.id || 7
         },
         user: {
           user_name: userName.value || '',
@@ -242,6 +279,7 @@ watch(() => store.visible_add_pqr, (newVal) => {
       types.value = await fetchService.get(`${URI}/get-all-pqrs-types`);
       sites.value = await fetchService.get(`${URI}/sites`);
       networs.value = await fetchService.get(`${URI}/get-all-networks`)
+      tags.value = await fetchService.get(`${URI}/get-all-pqr-tags`);
 
       selectedType.value = 8;
     });

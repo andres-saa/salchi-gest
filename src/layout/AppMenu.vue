@@ -63,7 +63,17 @@ async function fetchAndUpdateRoles() {
                         { label: 'Transferencias', icon: ' fa-solid fa-truck-fast', to: '/transfer/' ,permision_id: 5 },
                         { label: 'Ingresar pedido', icon: ' fa-solid fa-burger', to: '/call-center-vender',permision_id: 6 },
                         { label: 'Solicitudes de cancelacion', icon: ' fa-solid fa-burger', to: '/cancellation-requests/revisar/' ,permision_id: 7  },
+                        { label: 'Control', icon: ' fa-solid fa-burger', to: '/cancellation-requests/revisar/'  },
 
+                    ],
+                    permision_id: get_id([1,2,3,4,5,6,7]),
+                },
+                {
+                    label: 'Cajeros', icon: 'fa-solid fa-cart-shopping',
+                    items: [
+                        { label: 'Reportes', icon: ' fa-solid fa-burger', to: '/cachier-money/reportes/',permision_id: 1 },
+                        { label: 'Registros', icon: ' fa-solid fa-burger', to: '/cachier-money/registros/',permision_id: 1 },
+                        { label: 'Salidas', icon: ' fa-solid fa-burger', to: '/cachier-money/salidas/',permision_id: 1 },
                     ],
                     permision_id: get_id([1,2,3,4,5,6,7]),
                 }]
