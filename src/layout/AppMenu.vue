@@ -64,7 +64,7 @@ async function fetchAndUpdateRoles() {
                         { label: 'Ingresar pedido', icon: ' fa-solid fa-burger', to: '/call-center-vender',permision_id: 6 },
                         { label: 'Solicitudes de cancelacion', icon: ' fa-solid fa-burger', to: '/cancellation-requests/revisar/' ,permision_id: 7  },
                         { label: 'Control', icon: ' fa-solid fa-burger', to: '/cancellation-requests/revisar/'  },
-
+                        { label: 'Horario sedes ', icon: 'fa-solid fa-folder', to: '/directorio',permision_id: 31},
                     ],
                     permision_id: get_id([1,2,3,4,5,6,7]),
                 },
@@ -283,11 +283,7 @@ async function fetchAndUpdateRoles() {
                     label: 'Gestion de cargos', icon: 'fa-database fa-solid', to: '/cargos',permision_id: 30,
 
                 },
-                // {
-                //     label: 'Directorio ', icon: 'fa-solid fa-folder', to: '/directorio',permision_id: 31,
-
-                // },
-
+             
                 {
                     label: 'Administrar PQRS ', icon: 'fa-solid fa-folder',to:'/pqrs/pagina_web/1' ,permision_id: 32,
                     
@@ -574,11 +570,12 @@ async function fetchAndUpdateRoles() {
 
         {
             label: 'Revisar',
+            permision_id:get_id([50]),
   
             items: [
 
                 {
-                    label: 'Permisos', icon: 'fa-solid fa-person-through-window', to: '/permisos',
+                    label: 'Permisos', icon: 'fa-solid fa-person-through-window', to: '/permisos',permision_id:50
 
                 },
 

@@ -13,7 +13,7 @@
 
 
 
-    <div class="col-12 mx-auto md:shadow-3 py-6 md:p-3 p-0 px-2 mb-8" style="max-width: 700px;margin-top: 3rem; background-color: white; border-radius: 0.5rem;">
+    <div class="col-12 mx-auto md:shadow-3 py-6 md:p-3 p-0 px-2 mb-8 my-8" style="max-width: 700px;margin-top: 3rem; background-color: white; border-radius: 0.5rem;">
 
             <!-- Botón para abrir el diálogo de actualización -->
 
@@ -144,13 +144,18 @@
 
         <!-- {{ directories }} -->
         <p class="p-3 text-2xl text-center" style="font-weight: bold;"> <i class="fa-solid fa-folder-open"></i>
-            Directorio</p>
-
+            CONTROL HORARIOS EN SEDES</p>
         <div class="p-0" style="overflow: hidden;">
             <!-- <span> <b> SEDE</b></span> -->
-            <Dropdown v-model="store.currentSite" :options="sites" optionLabel="site_name" style="max-width: 30rem;"
-                class="col-12 p-0 " placeholder="Sede">
+
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <Dropdown v-model="store.currentSite" :options="sites?.filter(s => s.show_on_web)" optionLabel="site_name" style="max-width: 30rem; min-width: 80%;"
+                class=" p-0 " placeholder="Sede">
             </Dropdown>
+
+            <InputSwitch v-model="is_open" binary="true"></InputSwitch>
+            </div>
+        
 
             <div class="col-12 p-0 my-5 ">
 
@@ -240,7 +245,7 @@
                 
 
 
-                <div class="col-12  mt-4 mb-1 col-12"
+                <!-- <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: #f6f7c1;border-radius: 0.5rem;position: relative">
 
 
@@ -293,11 +298,11 @@
 
                     </div>
 
-                </div>
+                </div> -->
 
 
 
-
+<!-- 
                 <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: #84e4ff;position: relative;border-radius: 0.5rem;">
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
@@ -352,14 +357,14 @@
                         </div>
 
                     </div>
-                </div>
+                </div> -->
 
 
 
 
 
 
-
+<!-- 
                 <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: #d0f5be;position: relative;border-radius: 0.5rem;">
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
@@ -422,10 +427,10 @@
                     </div>
 
 
-                </div>
+                </div> -->
 
 
-
+<!-- 
                 <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: #e7ceff; position: relative;border-radius: 0.5rem;">
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
@@ -477,9 +482,9 @@
 
 
                     </div>
-                </div>
+                </div> -->
 
-
+<!-- 
                 <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: rgb(237 120 85 / 43%);border-radius: 0.5rem;position: relative">
 
@@ -499,7 +504,7 @@
                             class="p-button-rounded p-button-danger p-0 text-2xl"
                             @click="confirmDeleteWebPage(item.web_page_id)" />
 
-                        <!-- {{ item }} -->
+             
                         <div style="display: flex; align-items: center; gap: 1rem;">
                             <div class="p-0">
                                 <p style="font-weight: bold; min-width: 10rem;">Nombre :</p>
@@ -548,13 +553,13 @@
 
                     </div>
 
-                </div>
+                </div> -->
 
 
 
 
 
-                <div class="col-12  mt-4 mb-1 col-12"
+                <!-- <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: #ddedea;border-radius: 0.5rem;position: relative">
 
 
@@ -613,7 +618,6 @@
 
                         </div>
 
-                        <!-- <Divider class="p-0 m-1"></Divider> -->
 
 
 
@@ -624,7 +628,7 @@
 
 
 
-                </div>
+                </div> -->
 
 
 
@@ -680,12 +684,24 @@ const sites = ref()
 import { useDirectoryStore } from '../../store/directorio';
 import { useReportesStore } from '../../store/reportes';
 import { PrimeIcons } from 'primevue/api';
+import { fetchService } from '../../service/utils/fetchService';
+import axios from 'axios';
+
+
 const store = useDirectoryStore()
 const selectedSite = ref(store.currentSite)
 
 
+
+
+
+
+
+
+
+
 const store2 = useReportesStore()
-import axios from 'axios';
+
 
 
 onMounted(() => {
@@ -1375,7 +1391,12 @@ onMounted(async () => {
 
     urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`; 
     file.value = ''
+
+    if (store?.currentSite?.site_id){
+        is_open.value = await fetchService.get(`${URI}/is-open-status/${store.currentSite.site_id}`)
+    }
 })
+
 
 
 
@@ -1415,12 +1436,6 @@ function uploadUsersite_photo(site_photo, id) {
 }
 
 
-
-
-
-
-
-
 watch(() => store.currentSite, (newVal) => {
     store2.setLoading(true, `cargando información de ${newVal.site_name}`);
     store2.setLoading(false);
@@ -1431,6 +1446,32 @@ watch(() => store.currentSite, (newVal) => {
     // Establece un temporizador para cambiar el estado de carga a false después de 1 segundo
     // 1000 milisegundos = 1 segundo
 });
+
+
+
+const is_open = ref(false)
+
+
+
+
+watch(() => store.currentSite, async() => {
+    if (store?.currentSite?.site_id){
+        is_open.value = await fetchService.get(`${URI}/is-open-status/${store.currentSite.site_id}`)
+    }
+})
+
+
+
+
+watch(is_open, async() => {
+
+    if (store?.currentSite?.site_id){
+        await fetchService.put(`${URI}/open-close-site/site/${store?.currentSite?.site_id}/status/${is_open.value}`)
+    }
+})
+
+
+
 
 
 </script>

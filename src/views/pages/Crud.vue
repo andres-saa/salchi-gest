@@ -287,8 +287,7 @@ const processAndSendData = async (data) => {
             address: employer?.Direccion?.toString()?.trim()?.toLowerCase() || 'N/A',
             position: validarCargo(employer.Cargo) || '',
             site_id: sites.find(item => item.site_name?.trim().toLowerCase().includes(employer.Sede.trim().toLowerCase()))?.site_id || 12,
-
-
+            rol_id:PositionDropValue.value.id,
             status: status,
             gender: gender,
 
@@ -646,6 +645,8 @@ const asingDataToSave = () => {
     data.birth_city = cityDropValue.value
     data.boss_id = currentBoss.value.id
     data.position = PositionDropValue.value.title
+    data.rol_id = PositionDropValue.value.id,
+
 
     // data.status = currentUser.status
     data.exit_date = (data.status === "activo") ? null : data.exit_date;
@@ -1518,7 +1519,7 @@ const verIMagen = (dni) => {
                         <template #body="user">
          
                            <h6>
-                            {{ formatoPesosColombianos(user.data.contract_salary) }}
+                            {{ formatoPesosColombianos(user.data.salary) }}
      
                            </h6> 
                         </template>
