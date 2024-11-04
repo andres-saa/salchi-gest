@@ -43,6 +43,14 @@
           <h5 class="field">Medio</h5>
           <Dropdown v-model="selectet_networks" optionValue="id" style="width: 100%; text-transform: uppercase;" :options="networs" optionLabel="name"></Dropdown>
         </div>
+
+
+        <div class="input">
+          <h5 class="field">Restaurante</h5>
+          <Dropdown v-model="selected_resturant" optionValue="id" style="width: 100%; text-transform: uppercase;" :options="restaurants" optionLabel="name"></Dropdown>
+        </div>
+
+
         <!-- Selección de Tipo de Requerimiento -->
         <div class="input">
           <h5 class="field">Categoria</h5>
@@ -143,6 +151,8 @@
     
     const emit = defineEmits(['inFocus', 'reload'])
 
+
+    const selected_resturant = ref({})
  
     const tags = ref([{}])
     const selecte_tag = ref({})
@@ -243,7 +253,8 @@ watch(() => store.visible_add_pqr, (newVal) => {
           site_id: selecteSite.value || null,
           network_id:selectet_networks.value || null,
           order_id:orderId.value  || null,
-          tag_id:selecte_tag.value?.id || 7
+          tag_id:selecte_tag.value?.id || 7,
+          restaurant_id:selected_resturant.value
         },
         user: {
           user_name: userName.value || '',
@@ -274,12 +285,15 @@ watch(() => store.visible_add_pqr, (newVal) => {
       emit('reload')
     };
     
+
+    const restaurants = ref([])
     onMounted(async () => {
     //   update();
       types.value = await fetchService.get(`${URI}/get-all-pqrs-types`);
       sites.value = await fetchService.get(`${URI}/sites`);
       networs.value = await fetchService.get(`${URI}/get-all-networks`)
       tags.value = await fetchService.get(`${URI}/get-all-pqr-tags`);
+      restaurants.value = await fetchService.get(`${URI}/restaurants`);
 
       selectedType.value = 8;
     });

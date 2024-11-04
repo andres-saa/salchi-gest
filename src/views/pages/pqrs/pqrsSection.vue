@@ -213,7 +213,7 @@
 
 
 
-       <column   #body="contract" :header="column.columnName" :style="`min-width:${column.size}`" v-for="column in columview(dataColumns)" :field="column.columnValue" class="my-0 py-0">
+       <column   #body="contract" :header="column.columnName" :style="`min-width:${column.size}`" v-for="column in columview(dataColumns)" :field="column.columnValue" class="my-0 py-2">
 
            <h6  style="min-width: max-content;" v-if="column.columnType=='date'" class="m-0 p-0">
                {{ contract.data[column.columnValue]?.split('-').reverse().join('-') || '---------'  }}
@@ -278,6 +278,17 @@
         
                 
            </div>
+
+
+
+           <div class="p-2" v-if="column.columnValue == 'restaurant'" style="display: flex;gap: .1rem;flex-direction:column;align-items:start;" > 
+            <Tag  style="color: white;;" :style="`background-color:${contract.data.restaurant_color}`">
+               {{ contract.data[column.columnValue]  }}  
+           </Tag>
+        
+           </div>
+
+           
            
        
        </column>
@@ -407,6 +418,14 @@ const dataColumns = ref( [
        columnName:'Id',
        columnValue:'pqr_request_id',
        columnType:'other',
+       size:'1rem',
+       vif:true
+   },
+
+   {
+       columnName:'Restaurante',
+       columnValue:'restaurant',
+       columnType:'restaurant',
        size:'1rem',
        vif:true
    },
