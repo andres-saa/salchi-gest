@@ -58,7 +58,7 @@
         </div>
 
                  <!-- Selección de Sede -->
-                 <div class="input" v-if="(selectedType && selectedType != 8)" >
+                 <div class="input" v-if="(selectedType && selectedType != 8 && selectedType != 11)" >
           <h5 class="field">Por favor clasifica tu inconveniente</h5>
           <Dropdown :options="tags" v-model="selecte_tag"   style="width: 100%;">
   
@@ -85,7 +85,7 @@
   
 
 
-        <div class="input p-3" v-if="(selectedType )" style="background-color: #00f3ff29;">
+        <div class="input p-3" v-if="(selectedType && selectedType !=11)" style="background-color: #00f3ff29;">
           <h5 class="field">Califícanos</h5>
           <Rating v-model="rating" :cancel="false"></Rating>
         </div>
