@@ -49,22 +49,25 @@
         <h4 class="mt-0 py-0"></h4>
     </div>
 
-    <Dialog class="mx-2 " v-model:visible="showPqrGest" modal  :header="`Gestion de la pqr  ID    ${currentPqrGest.pqr_request_id}`" :style="{ width: '50rem',  }">
+    <Dialog class="mx-2 " v-model:visible="showPqrGest" modal  :header="`GESTION DE LA PQR  ID:    ${currentPqrGest.pqr_request_id}`" :style="{ width: '50rem',  }">
     
         <div style="display: flex; flex-direction: column;">
             
 
+            <h6 class="m-0"><b>CONTEXTO</b> </h6>
+
+            <p >{{ currentPqrGest.request_content }}</p>
 
 
 
-
-            <h6 v-if="currentPqrGest.user_name || currentPqrGest.user_phone"><b>Datos del cliente</b> </h6>
+            <h6 class="m-0" v-if="currentPqrGest.user_name || currentPqrGest.user_phone"><b>DATOS DEL CLIENTE</b> </h6>
             <span v-if="currentPqrGest.user_name"><b>Nombre: </b> {{ currentPqrGest.user_name }}</span>
             <span v-if="currentPqrGest.user_phone"><b>Telefono: </b> {{ currentPqrGest.user_phone }}</span>
+            <span v-if="currentPqrGest.user_address"><b>Direccion: </b> {{ currentPqrGest.user_address }}</span>
             <span v-if="currentPqrGest.order_id"><b>Orden: </b> {{ currentPqrGest.order_id }}</span>
             <!-- <span><b>Direccion: {{ currentPqrGest.user_address }} </b></span> -->
 
-            <h6><b>Historial</b> </h6>
+            <h6><b>HISTORIAL</b> </h6>
             <Timeline :value="currentPqrGest.status_history">
                 <template #opposite="data" align="">
             <div style="display: flex;flex-direction: column;">
