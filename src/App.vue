@@ -16,6 +16,7 @@ const orderStore = useOrderStore()
 const sonido1 = new Audio('/sound/pip1.wav')
 const sonido2 = new Audio('/sound/pip2.wav')
 const sonido3 = new Audio('/sound/pip3.wav')
+const sonido_pqr = new Audio('/sound/pqr_audio.mp3')
 const appStore = useAppStore()
 
 
@@ -32,6 +33,7 @@ const toast = useToast()
 
 const intervalId = ref()
 const intervalId2 = ref()
+const intervalId3 = ref()
 const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
 
 
@@ -89,6 +91,21 @@ onMounted( async() => {
 
         fetchTransferRequestsNoLoading();
         }
+    }, 10000);
+
+
+    
+    intervalId3.value = setInterval(async() => {
+
+    const recent_pqr = await orderService.recent_pqr()
+    if (recent_pqr && orderStore.numberPqrId != recent_pqr) {
+        // const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
+        sonido_pqr.play(); // Reproduce el sonido seleccionado al azar
+        orderStore.numberPqrId = recent_pqr; // Actualiza el store
+        toast.add({ severity: 'info', summary: 'Nueva Pqr recibida', detail: 'Una pqr por atender', life: 3000 });
+        
+    fetchTransferRequestsNoLoading();
+    }
     }, 10000);
 
 

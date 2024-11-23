@@ -35,6 +35,36 @@ export const orderService = {
 
 
 
+
+    async recent_pqr() {
+        const store = useReportesStore()
+        
+        try {
+            // store.setLoading(true)
+            const response = await axios.get(`${URI}/recent-pqr/`);
+            if (response.status === 200) {
+                // store.setLoading(false)
+
+                return response.data?.[0]?.id || null;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                // store.setLoading(false)
+
+                return null;
+            }
+
+        } catch (error) {
+            // store.setLoading(false)
+
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+
+    },
+
+
+
+
     async getCancellationCategories() {
         const store = useReportesStore()
         

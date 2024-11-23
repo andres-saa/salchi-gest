@@ -264,9 +264,9 @@
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reportes">
             <template #header>
                 <div class="grid" style="align-items:center">
-                    <div class="col-12 md:col-6 p-3">
+                    <!-- <div class="col-12 md:col-6 p-3">
                         <span class="text-xl" style="width: 100%;"> Ordenes pendientes por alistar</span>
-                    </div>
+                    </div> -->
                     <div class="col-12 md:col-6 p-3">
                         <InputText style="width: 100%;" class="" v-model="filters['global'].value"
                             placeholder="Buscar..." />

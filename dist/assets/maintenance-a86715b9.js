@@ -1,0 +1,1 @@
+import{K as e}from"./index-9a073ae1.js";const n=e("maintance",{persist:{key:"maintance",storage:localStorage,paths:["currentSite"]},state:()=>({currentSite:{}}),getters:{},actions:{setCurrentSite(t){this.currentSite=t}}});export{n as m};

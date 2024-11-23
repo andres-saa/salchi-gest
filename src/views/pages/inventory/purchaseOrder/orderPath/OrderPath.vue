@@ -41,7 +41,7 @@ const navItems = [
         path:'alistar'
     },
     {
-        label:'Authorizar',
+        label:'Autorizar',
         icon:'pi pi-chart-bar',
         path:'autorizar'
     },
@@ -63,11 +63,11 @@ const navItems = [
     },
     
 
-    {
-        label:'Todas las ordenes',
-        icon:'pi pi-chart-bar',
-        path:'purchase-order-reports'
-    },
+    // {
+    //     label:'Todas las ordenes',
+    //     icon:'pi pi-chart-bar',
+    //     path:'purchase-order-reports'
+    // },
 
     {
         label:'stock en planta',

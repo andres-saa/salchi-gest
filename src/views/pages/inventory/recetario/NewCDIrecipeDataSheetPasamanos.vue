@@ -154,9 +154,9 @@
 
             <div class="col-12 p-0 md:p-4">
 
-                <h5 style="" class=" py-3 m-0"> IngredienteAsociado</h5>
+                <h5 style="" class=" py-3 m-0"> Ingrediente asociado</h5>
 
-<Dropdown v-model="newIngredient" placeholder="Ingrediente pasamanos" :options="ingredients" filter optionLabel="ingredient_name"
+<Dropdown v-model="newIngredient" placeholder="Ingrediente pasamanos" :options="ingredients" filter optionLabel="name"
 style="width: 100%;"></Dropdown>
 
 
@@ -184,7 +184,7 @@ style="width: 100%;"></Dropdown>
 
                 <div class="col-12  my-4 px-0" style="display: flex;justify-content: end;">
             <Button v-if="!recipe.recipe_data_sheet.init" size="small" severity="info"
-                @click="createCdiRecipeDataShee" label="Crear Receta"></Button>
+                @click="createCdiRecipeDataShee" label="Crear Pasamanos"></Button>
         </div>
             </div>
 
@@ -879,7 +879,7 @@ const recipe = ref({
 const update = async () => {
     const product_id = 243
     // recipe.value = await fetchService.get(`${URI}/list-recipe-by-product-id/${product_id}`, 'cargando receta')
-    ingredients.value = await fetchService.get(`${URI}/list-ingredients`, 'cargando ingredientes')
+    ingredients.value = await fetchService.get(`${URI}/get-cdi-prices-table`, 'cargando ingredientes')
     unitMeasures.value = await fetchService.get(`${URI}/daily_inventory_unit_measures`,)
 } 
 

@@ -46,7 +46,7 @@ const navItems = [
         color:'green'
     }, 
     {
-        label:'% Comparacion',
+        label:'% Comparación',
         icon:'fa fa-info-circle',
         path:'configuracion/comparation-percents'
     },  

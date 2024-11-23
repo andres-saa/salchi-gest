@@ -89,7 +89,7 @@ const navItems = [
 
 
     {
-        label:'Configuracion',
+        label:'Configuración',
         icon:'fa fa-gear',
         path:'configuracion'
     },  

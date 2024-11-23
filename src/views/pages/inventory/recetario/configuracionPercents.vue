@@ -12,7 +12,7 @@
     <h3 style="margin-top: 6rem;" class="text-center p-0 mx-0">
         <i class=" fa fa-gear"></i>
             <b>
-                Porcentajes de comparacion cdi
+                Porcentajes de comparación cdi
             </b>
     </h3>
 

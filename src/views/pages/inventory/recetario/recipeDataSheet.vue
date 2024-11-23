@@ -139,7 +139,7 @@
 
             <div s class="col-12 md:col-6 py-0 px-0 md:pr-4 shadow-2"
                 style="border-radius: .5rem;background-color: white; display: flex; align-items: center;justify-content: center;">
-                <img style="height:18rem;width: 100%;object-fit:contain;"
+                <img style="width: 100%;aspect-ratio: 1 / 1; object-fit:cover;"
                     :src="`${URI}/read-product-image/600/${route.params.recipe_name}`" alt="">
             </div>
 
@@ -149,7 +149,7 @@
                 <div class="col-12 py-4 md:p-0">
                     <h4>
                         <b>
-                            Informacion Principal
+                            Información Principal
                         </b>
                     </h4>
                 </div>
@@ -201,7 +201,7 @@
                 <template #header>
                     <div class="grid p-3"
                         style="align-items:center;justify-content: space-between; display: flex;gap: 1rem;">
-                        <h4 class="px-2"> <i class="fa fa-carrot"></i> <b>Ingredientes para su preparacion</b></h4>
+                        <h4 class="px-2"> <i class="fa fa-carrot"></i> <b>Ingredientes para su preparación</b></h4>
 
                         <InputText class="" v-model="filters['global'].value" placeholder="Buscar ingrediente ..." />
 
