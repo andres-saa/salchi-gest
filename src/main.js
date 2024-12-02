@@ -124,7 +124,10 @@ const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 
 app.use(router);
-app.use(PrimeVue, { ripple: true });
+app.use(PrimeVue, { ripple: true ,locale: {
+    accept: 'Si',
+    reject: 'No',
+  }, });
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);

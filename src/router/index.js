@@ -306,6 +306,14 @@ const router = createRouter({
           ]
         },
 
+
+        {
+          path: '/franquicias/',
+          name: 'franquicias',
+          component: () => import('@/views/pages/Franquicias/Franquicias.vue'),
+          meta:{permision_id: 4},
+        },
+
         
         {
           path: '/cargos/',

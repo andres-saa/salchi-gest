@@ -111,6 +111,21 @@ async function fetchAndUpdateRoles() {
         },
 
         {
+            label: 'FRANQUICIAS',
+
+            permision_id:get_id([53,54]),
+           
+           
+            items: [
+                {
+                    label: 'Solicitudes', icon: 'fa-database fa-solid', to: '/franquicias',permision_id:53
+
+                },
+                
+
+            ]
+        },
+        {
             label: 'INVENTARIO',
             
             items: [
