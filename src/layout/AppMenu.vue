@@ -328,6 +328,28 @@ async function fetchAndUpdateRoles() {
             ]
         },
 
+
+
+
+        {
+            label: 'ATENCION AL CLIENTE',
+
+            permision_id:get_id([32]),
+            items: [
+               
+             
+                {
+                    label: 'Administrar PQRS ', icon: 'fa-solid fa-folder',to:'/pqrs/pagina_web/1' ,permision_id: 32,
+                    
+
+                },
+
+
+            ]
+        },
+
+
+
         {
             label: 'CALIDAD Y CONTROL',
    

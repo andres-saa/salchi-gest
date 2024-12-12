@@ -53,22 +53,46 @@
     
         <div style="display: flex; flex-direction: column;">
             
+            <h6 class="mx-0 my-0"><b>TIPO</b> </h6>
+            <p  style="display: flex;align-items: center;gap: 1rem;">  {{ currentPqrGest.request_type }}</p>
 
-            <h6 class="m-0"><b>CONTEXTO</b> </h6>
+            <h6 class="mx-0 my-0"><b>CANAL</b> </h6>
+            <p class="m-0 p-0" style="display: flex;align-items: center;gap: 1rem;">  {{ currentPqrGest.channel }}</p>
 
+            <h6 class="mt-3 mb-2"><b>CONTEXTO</b> </h6>
+
+
+            
+            <div style="display: flex;gap: 1rem">
+                <div style="width: 100%;max-width: .4rem;border-radius: 45rem; box-sizing: border-box;" :style="`background-color:${currentPqrGest.channel_color}`"></div>
+                <div style="display: flex;flex-direction: column;">
             <p >{{ currentPqrGest.request_content }}</p>
+            </div>
+            </div>
 
+            <h6 class="mt-3 mb-3" v-if="currentPqrGest.user_name || currentPqrGest.user_phone"><b>DATOS DEL CLIENTE</b> </h6>
 
-
-            <h6 class="m-0" v-if="currentPqrGest.user_name || currentPqrGest.user_phone"><b>DATOS DEL CLIENTE</b> </h6>
-            <span v-if="currentPqrGest.user_name"><b>Nombre: </b> {{ currentPqrGest.user_name }}</span>
-            <span v-if="currentPqrGest.user_phone"><b>Telefono: </b> {{ currentPqrGest.user_phone }}</span>
-            <span v-if="currentPqrGest.user_address"><b>Direccion: </b> {{ currentPqrGest.user_address }}</span>
-            <span v-if="currentPqrGest.order_id"><b>Orden: </b> {{ currentPqrGest.order_id }}</span>
+            <div style="display: flex;gap: 1rem">
+                <div style="width: 100%;max-width: .4rem;border-radius: 45rem; box-sizing: border-box;" :style="`background-color:${currentPqrGest.channel_color}`"></div>
+                <div style="display: flex;flex-direction: column;">
+                <span v-if="currentPqrGest.user_name"><b>Nombre: </b> {{ currentPqrGest.user_name }}</span>
+                <span v-if="currentPqrGest.user_phone"><b>Telefono: </b> {{ currentPqrGest.user_phone }}</span>
+                <span v-if="currentPqrGest.user_address"><b>Direccion: </b> {{ currentPqrGest.user_address }}</span>
+                <span v-if="currentPqrGest.order_id"><b>Orden: </b> {{ currentPqrGest.order_id }}</span>
             <!-- <span><b>Direccion: {{ currentPqrGest.user_address }} </b></span> -->
+            </div>
+            </div>
+           
+          
 
             <h6><b>HISTORIAL</b> </h6>
-            <Timeline :value="currentPqrGest.status_history">
+
+            <div style="display: flex;gap: 1rem">
+                <div style="width: 100%;max-width: .4rem;border-radius: 45rem;  box-sizing: border-box;" :style="`background-color:${currentPqrGest.status_history[0].color}`"></div>
+                <div style="display: flex;flex-direction: column;">
+
+
+                    <Timeline :value="currentPqrGest.status_history">
                 <template #opposite="data" align="">
             <div style="display: flex;flex-direction: column;">
                 <p  style="min-width: max-content; margin: 0;padding: 0;" class="p-text-secondary m-0 p-0">{{data.item.timestamp?.split(' ')[0]}}</p>
@@ -101,6 +125,12 @@
             
         </template>
             </Timeline>
+            </div>
+            </div>
+
+
+
+           
 
 
             <h6><b>Como desea proceder?</b></h6>
@@ -216,26 +246,35 @@
 
 
 
-       <column   #body="contract" :header="column.columnName" :style="`min-width:${column.size}`" v-for="column in columview(dataColumns)" :field="column.columnValue" class="my-0 py-2">
+       <column    #body="contract" :header="column.columnName" :style="`min-width:${column.size}`" v-for="column in dataColumns" :field="column.columnValue" class="my-0 py-2">
 
            <h6  style="min-width: max-content;" v-if="column.columnType=='date'" class="m-0 p-0">
                {{ contract.data[column.columnValue]?.split('-').reverse().join('-') || '---------'  }}
            </h6>
 
 
+
+           <h6  style="min-width: max-content;" v-if="column.columnType=='responsible_name' " class="m-0 p-0">
+            {{ contract.data?.status_history?.[0]?.responsible_name || 'No se ha interactuado'  }} 
+           </h6>
            
 
            <h6 :style="column.columnType == 'max-content'? 'min-width: max-content' : ''" v-if="column.columnType == 'max-content'" class="m-0 p-0">
                {{ contract.data[column.columnValue] || '---------'  }}
            </h6>
 
-           <h6  v-if="column.columnType == 'other'" class="m-0 p-0">
+
+           <h6 style="text-align: justify;min-width: max-content;" v-if="column.columnType == 'order_id'" class="m-0 p-0">
+               {{ contract.data[column.columnValue] || '---------'  }}
+           </h6>
+
+           <h6 style="text-align: justify;" v-if="column.columnType == 'other'" class="m-0 p-0">
                {{ contract.data[column.columnValue] || '---------'  }}
            </h6>
 
 
            <h6  v-if="column.columnType == 'rating'" class="m-0 p-0">
-             <Rating :cancel="false"  v-if="contract.data[column.columnValue] > 0" readonly v-model="contract.data[column.columnValue]"> </Rating>   
+             <Rating :cancel="false"  v-if="contract.data[column.columnValue] > 0" readonly v-model="contract.data[column.columnValue]"/>  <span v-else> ------------</span>
            </h6>
 
            <h6 :style="column.columnType == 'max-content'? 'min-width: max-content' : ''" v-if="column.columnType == 'money'" class="m-0 p-0">
@@ -244,8 +283,8 @@
 
        
 
-           <div class="p-2" v-if="column.columnValue == 'current_status'" style="display: flex;gap: .1rem;flex-direction:column;align-items:start;" > 
-            <Tag  style="color: white;;" :style="`background-color:${contract.data[column.columnValue]?.color}`">
+           <div class="p-2" v-if="column.columnValue == 'current_status'" style="display: flex;gap: .1rem;flex-direction:column;align-items:center;" > 
+            <Tag  style="color: white;text-align: center; " :style="`background-color:${contract.data[column.columnValue]?.color}`">
 
                
                {{ contract.data[column.columnValue]?.status || '---------' }}  
@@ -260,8 +299,8 @@
 
               
 
-           <div class="p-2" v-if="column.columnValue == 'channel'" style="display: flex;gap: .1rem;flex-direction:column;align-items:start;" > 
-            <Tag  style="color: white;;" :style="`background-color:${contract.data.channel_color}`">
+           <div class="p-2" v-if="column.columnValue == 'channel'" style="display: flex;gap: .1rem;flex-direction:column;align-items:center;" > 
+            <Tag  style="color: white;text-align: center;" :style="`background-color:${contract.data.channel_color}`">
 
                
                {{ contract.data[column.columnValue] || '---------' }}  
@@ -272,8 +311,8 @@
 
 
 
-           <div class="p-2" v-if="column.columnValue == 'tag_name'" style="display: flex;gap: .1rem;flex-direction:column;align-items:start;" > 
-            <Tag  style="color: white;;" :style="`background-color:${contract.data.tag_color}`">
+           <div class="p-2" v-if="column.columnValue == 'tag_name'" style="display: flex;gap: .1rem;flex-direction:column;align-items:center;" > 
+            <Tag  style="color: white;text-align: center;" :style="`background-color:${contract.data.tag_color}`">
 
                
                {{ contract.data[column.columnValue]  }}  
@@ -297,10 +336,10 @@
        </column>
 
 
-       <Column class="my-0 py-0 px-0 mx-0" style="" header="Interactuar" >
+       <Column class="my-0 py-0 px-0 mx-0" style="" frozen alignFrozen="right" header="Interactuar" >
           <template #body="data" >
  
-             <div style="display: flex;gap: .5rem;justify-content: center;" class="px-2">
+             <div style="display: flex;gap: .4rem;justify-content: center;" class="px-2">
                   <!-- <Button @click="chargeHistory(data.data)"  severity="info" icon="pi pi-history p-0" class="my-0 p-2"></Button> -->
                   <Button @click="chargePqr(data.data)" label="Gestionar"  severity="help" icon="pi pi-check p-0" class="my-0 py-2"></Button>
                   <!-- <Button @click="chargeRequest(data.data)"  severity="danger" icon="pi pi-times p-0" class="my-1 p-1"></Button> -->
@@ -425,12 +464,13 @@ const dataColumns = ref( [
        vif:true
    },
 
+   
    {
-       columnName:'Restaurante',
-       columnValue:'restaurant',
-       columnType:'restaurant',
-       size:'1rem',
-       vif:true
+       columnName:'Tipo',
+       columnValue:'request_type',
+       columnType:'other',
+        size:'15rem',
+        vif:true
    },
 
 
@@ -442,11 +482,22 @@ const dataColumns = ref( [
        vif:true
    },
 
+   {
+       columnName:'Restaurante',
+       columnValue:'restaurant',
+       columnType:'restaurant',
+       size:'1rem',
+       vif:true
+   },
+
+
+
+
 
    {
        columnName:'Id orden',
        columnValue:'order_id',
-       columnType:'other',
+       columnType:'order_id',
        size:'1rem',
        vif:true
    },
@@ -486,27 +537,20 @@ const dataColumns = ref( [
    },
 
 
-   {
-       columnName:'Tipo',
-       columnValue:'request_type',
-       columnType:'other',
-        size:'15rem',
-        vif:true
-   },
 
    {
        columnName:'Comentarios',
        columnValue:'request_content',
        columnType:'other',
-       size:'20rem',
+       size:'40rem',
        vif:true
    },
    {
        columnName:'Responsable',
        columnValue:'responsible_name',
-       columnType:'other',
+       columnType:'responsible_name',
        size:'20rem',
-       vif:true
+       vif:false
    },
 
    {
@@ -675,9 +719,7 @@ const sendPqrUpdate = async () => {
         status_id: selecte_status_update.value,
         responsible_id: login.rawUserData.id, // Usa el ID del usuario actual
         value: discountedValue || null, // Envía el valor con descuento o el valor total
-        notes: descuento.value && costovalue.value 
-            ? `Se le dio un descuento de ${descuento.value}% en una orden de ${formatToColombianPeso(costovalue.value)}, quedando en un valor de ${formatToColombianPeso(discountedValue)}`
-            : '',
+        notes:notes.value,
         order_id: inputOrder.value || null
     };
     try {

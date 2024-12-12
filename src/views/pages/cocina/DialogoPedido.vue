@@ -445,12 +445,8 @@ import { formatoPesosColombianos } from '@/service/formatoPesos';
 import { onMounted, ref } from 'vue'
 import { useOrderStore } from '@/store/order'
 import { orderService } from '@/service/cocina/orderService';
-import printJS from 'print-js';
 import { fetchService } from '../../../service/utils/fetchService';
 import { URI } from '../../../service/conection';
-import { showProductDialog } from '../../../../papasmonster/src/service/state';
-
-
 
 
 
