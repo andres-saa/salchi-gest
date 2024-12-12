@@ -1,27 +1,24 @@
 <template>
   <div>
-
-
-
-
-  <Dialog v-model:visible="travelDialog" closeOnEscape :closable="true" modal style="width: 30rem;">
+    <Dialog v-model:visible="cancelDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
       <template #header>
-        <h3> <b>TRASLADO DE SEDE</b> </h3>
+        <h3> <b>Cancelar Orden</b> </h3>
       </template>
       <form @submit.prevent="submitCancel" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
   
-        <span for="responsible">SELECCIONE LA SEDE DESTINO</span>
-
-
-        
-        <Dropdown style="width: 100%;" id="responsible" v-model="sede_destino" optionValue="site_id"  :options="sites.filter(s => s.show_on_web)" optionLabel="site_name"
-          placeholder="Seleccione la sede destino"></Dropdown>
+        <span for="responsible">Responsable</span>
+        <Dropdown style="width: 100%;" id="responsible" v-model="cancelData.responsible" :options="responsibles" optionLabel="name"
+          placeholder="Selecciona un responsable"></Dropdown>
   
   
-        
-        <Button @click="traslate_order()" style="width: 100%;border-radius:0.5rem" label="Trasladar" type="submit" class="p-button-danger" />
+        <span for="reason">Razón</span>
+        <Textarea style="resize: none; text-transform: lowercase; width:100%" id="reason" v-model="cancelData.reason" rows="5"
+          placeholder="Escribe la razón de la cancelación"></Textarea>
+  
+        <Button style="width: 100%;border-radius:0.5rem" label="cancelar" type="submit" class="p-button-danger" />
       </form>
   </Dialog>
+
 
 
   <Dialog v-model:visible="cancelDialogVisibleAdmin" closeOnEscape :closable="true" modal style="width: 30rem;">
@@ -79,53 +76,15 @@
     
     <div id="factura" style="width: 100%;">
 
-
-     
+      <!-- {{ store.currentOrder.pe_json }} -->
 
       <Tag style="" class="tag mb-2" severity="success" v-if="store.currentOrder.responsible_id"> <i class="pi pi-whatsapp mr-2"></i>   TRANSFERENCIA APROBADA</Tag> <br> 
       
-      <Tag class="tag mb-2" severity="success" v-if="store.currentOrder.responsible_id">  {{store.currentOrder.name}}</Tag>
+      <Tag class="tag" severity="success" v-if="store.currentOrder.responsible_id">  {{store.currentOrder.name}}</Tag>
 
      
     
-      <div class="" style="width: auto; color: black;">
-
-
-        <p class="text-2xl estado" :class="store.currentOrder.current_status" v-if="store.currentOrder.current_status == 'enviada'" style="text-transform: lowercase;"> 
-    
-    El pedido fue enviado al domicilio del cliente  a las {{ obtenerHoraFormateadaAMPM(store.currentOrder.latest_status_timestamp) }}
-
-</p>
-
-
-<p class="text-2xl estado" :class="store.currentOrder.current_status" v-if="store.currentOrder.current_status == 'cancelada'" style="text-transform: lowercase;"> 
-    
-    El pedido fue cancelado a las {{ obtenerHoraFormateadaAMPM(store.currentOrder.latest_status_timestamp) }}
-    <br><b>responsable</b>: {{ store.currentOrder.responsible }}
-    <br><b>Razon</b>: {{ store.currentOrder.reason }}
-
-</p>
-
-<p class="text-2xl estado" :class="store.currentOrder.current_status" v-if="store.currentOrder.current_status == 'en preparacion'" style="text-transform: lowercase;"> 
-    
-    El pedido esta en preparacion desde las  {{ obtenerHoraFormateadaAMPM(store.currentOrder.latest_status_timestamp) }} y ser'a enviada en breve
-
-</p>
-
-
-<p class="text-2xl estado" :class="store.currentOrder.current_status" v-if="store.currentOrder.current_status == 'generada'" style="text-transform: lowercase;"> 
-    
-    Hemos recibido su pedido a las  {{ obtenerHoraFormateadaAMPM(store.currentOrder.latest_status_timestamp) }}
-    {{ store.currentOrder.authorized? `  y empezaremos a prepararlo en breve, gracias por su espera` : 'y empezaremos a prepararlo Cuando se confirme su Transferencia, Muchas gracias.'}}
-
-</p>
-
-
-<p class="text-2xl estado" :class="store.currentOrder.current_status" v-if="!store.currentOrder.current_status" style="text-transform: lowercase;"> 
-    
-    Este pedido no existe en nuestra base de datos
-
-</p>
+      <div class="" style="width: auto;">
        
           <p class="" id="id" style="font-weight: bold;min-width: 100%; width: max-content; text-align: center; color: black; margin:0rem;"> ID:{{ store.currentOrder.order_id }} </p>
 
@@ -135,9 +94,13 @@
 
 
           
-              <p style="padding: 0;color: black; margin: auto; margin-bottom: 1rem; width: max-content;min-width: max-content; ">
+              <p style="padding: 0;color: black;text-align: center; margin: auto; margin-bottom: 1rem; width: max-content;min-width: max-content;display: flex;justify-content: center; flex-direction: column ">
                 <b>
                   fecha: {{ store.currentOrder.latest_status_timestamp?.split('T')[0] }}
+                </b>
+
+                <b>
+                  Hora: {{ store.currentOrder.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':') }}
 
                 </b>
               </p>
@@ -165,15 +128,19 @@
 
           </div>
 
-          <div  v-for="product in store.currentOrder.products">
+         
+          <div  v-for="product in store.currentOrder.pe_json.listaPedidos">
 
             <div style="display: grid; grid-template-columns: auto auto;">
              
-              <p>
-                {{ product.quantity }}
-                {{ product.name }}
+              <p class="p-0 m-0">
+                {{ product.pedido_cantidad }}
+                {{ product.pedido_nombre_producto }}
+                <br>
               </p>
           
+              
+              
           
             <!-- <div >
               <p style="text-align: end;color: black;">
@@ -183,9 +150,31 @@
             <div >
               <p style="text-align: end;color: black;">
                 <!-- {{ formatoPesosColombianos(product.price) }} -->
-                {{ formatoPesosColombianos(product.total_price) }}
+                {{ formatoPesosColombianos(product.pedido_precio * product.pedido_cantidad) }}
               </p>
             </div>
+
+
+            </div>
+
+            <p v-if="product.lista_productocombo" class="p-0 m-0"><b>COMBO INCLUYE</b></p>
+            <p v-if="product.lista_productocombo" class="p-0 m-0 ml-5" style="" v-for="i in product.lista_productocombo" > -- <b>{{i.pedido_cantidad  }}</b>  {{i.pedido_nombre  }} </p> 
+
+
+            <!-- <p> {{ product.modificadorseleccionList }} </p> -->
+
+
+            <!-- {{ product.modificadorseleccionList.filter(p => p.pedido_productoid == product.pedido_productoid) }} -->
+
+     
+              <div style="display: flex;width: ; justify-content: space-between;" class="p-0 m-0" v-for="i in  product.modificadorseleccionList?.filter(p => p.pedido_productoid == product.pedido_productoid)">
+         
+                <p class="p-0 m-0 ml-5" style="">
+       
+                  -- <b>{{ i.modificadorseleccion_cantidad }}</b> {{ i.modificador_nombre }}
+                </p>
+
+                <p class="p-0 m-0" style="text-align: end;"> {{ formatoPesosColombianos(i.pedido_precio)  }}</p>
 
             </div>
 
@@ -198,7 +187,7 @@
 
 
 
-
+<!-- 
           <div s  v-for="(items, grupo) in store.currentOrder.additional_items" :key="grupo"
             style="position: relative; margin-top: 0.5rem;">
 
@@ -218,15 +207,9 @@
                     {{ aditional.aditional_quantity }}  {{ aditional.aditional_name }}
                   </p>
                 </div>
-<!-- 
+
                 <div >
                   <p style="text-align: end;color: black;">
-                    {{ formatoPesosColombianos(aditional.aditional_price) }}
-                  </p>
-                </div> -->
-                <div >
-                  <p style="text-align: end;color: black;">
-                    <!-- {{ formatoPesosColombianos(product.price) }} -->
                     {{ formatoPesosColombianos(aditional.total_aditional_price) }}
                   </p>
                 </div>
@@ -243,7 +226,7 @@
             </div>
 
           </div>
-
+ -->
 
 
 
@@ -261,7 +244,7 @@
             </div>
             <div class="">
               <p  style="text-align: end;font-weight: bold; color: black;">
-                <b >{{ formatoPesosColombianos(store.currentOrder.total_order_price) }}</b>
+                <b >{{ formatoPesosColombianos(subtotal) }}</b>
               </p>
             </div>
             <div class="">
@@ -281,7 +264,7 @@
             </div>
             <div class="">
 
-              <p style="text-align: end;color: black;font-weight: bold;"><b>{{ formatoPesosColombianos(store.currentOrder.delivery_price + store.currentOrder.total_order_price)
+              <p style="text-align: end;color: black;font-weight: bold;"><b>{{ formatoPesosColombianos(total)
               }}</b></p>
 
             </div>
@@ -395,7 +378,7 @@
 
     <template #footer>
 
-      <!-- <div class="col-12 mb-0 pb-0 px-0 m-0" style="display: flex;justify-content: space-between;gap: 1rem;">
+      <div class="col-12 mb-0 pb-0 px-0 m-0" style="display: flex;justify-content: space-between;gap: 1rem;">
 
         <Button v-if="store.currentOrder.current_status == 'generada'" size="small"
           @click="orderService.prepareOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem;width: 100%;"
@@ -412,18 +395,8 @@
 
           <Button  size="small" style="border-radius: 0.3rem;width: 100%;" @click="cancelDialogVisibleAdmin = true" severity="danger"
           label="CANCELAR "></Button>  
-      </div> -->
-
-
-      <div  class="col-12 px-0" style="display: flex;gap: 1rem;">
-        <Button severity="help" @click="showDeleteDeliveryPrice = true" style="width: 50%;" label="domicilio $0.00">
-
-        </Button>
-        <Button severity="warning" @click="travelDialog = true" style="width: 50%;" icon="pi pi-airplane" label="traslado">
-
-        </Button>
       </div>
-  
+
 
 
     </template>
@@ -442,15 +415,11 @@
 
 <script setup>
 import { formatoPesosColombianos } from '@/service/formatoPesos';
-import { onMounted, ref } from 'vue'
+import { onMounted, ref,computed } from 'vue'
 import { useOrderStore } from '@/store/order'
 import { orderService } from '@/service/cocina/orderService';
 import { fetchService } from '../../../service/utils/fetchService';
 import { URI } from '../../../service/conection';
-
-
-
-
 
 const sede_destino =ref(0)
 const cancelDialogVisibleAdmin = ref(false)
@@ -469,6 +438,37 @@ const obtenerHoraFormateadaAMPM = (fecha) => {
 };
 
       
+const subtotal = computed(() => {
+  return store.currentOrder.pe_json.listaPedidos.reduce((acc, product) => {
+    // Calcula el total del producto base
+    let productTotal = product.pedido_cantidad * product.pedido_precio;
+
+    // Verifica si el producto tiene modificadores
+    if (product.modificadorseleccionList && product.modificadorseleccionList.length > 0) {
+      // Filtra los modificadores asociados a este producto
+      const productModifiers = product.modificadorseleccionList?.filter(
+        mod => mod.pedido_productoid == product.pedido_productoid
+      );
+
+      // Calcula el total de los modificadores
+      const modifiersTotal = productModifiers.reduce((modAcc, modifier) => {
+        return modAcc + modifier.modificadorseleccion_cantidad * modifier.pedido_precio;
+      }, 0);
+
+      // Agrega el total de los modificadores al total del producto
+      productTotal += modifiersTotal;
+    }
+
+    // Agrega el total del producto al acumulador
+    return acc + productTotal;
+  }, 0);
+});
+
+
+const total = computed(() => {
+  return subtotal.value + store.currentOrder.delivery_price;
+});
+
 
 const sendRequest = async() => {
   const data = {
