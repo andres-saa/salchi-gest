@@ -184,7 +184,7 @@
   
             <div style="color: black;">
   
-            <div v-for="modificador in i.listaModificadores" style="display: flex; gap: 1rem;" >
+            <div v-for="modificador in i.listaModificadores" style="display: flex;align-items: center; gap: 1rem;" >
   
   
   
@@ -194,12 +194,12 @@
   
    
    
-                <Checkbox v-if="modificador.modificadorseleccion_precio > 0"  @change="() => handleAdditionChange(modificador, i)"  binary v-model="checkedAdition[modificador.modificadorseleccion_nombre]" class="my-1" :binary="true" 
+                <Checkbox   @change="() => handleAdditionChange(modificador, i)"  binary v-model="checkedAdition[modificador.modificadorseleccion_nombre]" class="my-1" :binary="true" 
                 />
   
   
              
-                <div v-if="modificador.modificadorseleccion_precio > 0" style="display: flex; width: 100%; gap: 1rem; justify-content: space-between;">
+                <div  style="display: flex; width: 100%; gap: 1rem; justify-content: space-between;">
                   <span class="text-sm adicion" style="text-transform: lowercase;">{{ modificador.modificadorseleccion_nombre }}</span>
                 
   
