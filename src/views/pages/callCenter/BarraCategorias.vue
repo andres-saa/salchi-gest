@@ -1,6 +1,6 @@
 <template>
 
-    <div :class="categories.length > 1? 'apear' : 'hide'" style="position: sticky; top: 3rem; z-index: 99; background-color: white;height: max-content; min-height: max-content;" class=" shadow-1 d-flex  lg:justify-content-center align-items-center mb-5 p-0 md:p-0">
+    <div style="position: sticky; top: 3rem; z-index: 99; background-color: var(--primary-color);overflow-x: auto;" class=" nav_bar shadow-3 d-flex  lg:justify-content-start align-items-center mb-5 p-0 md:p-0">
        
        
         <!-- <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; left: -0.5rem;z-index: 99;height: 100%;width: 1.7rem; border-radius: 0;" severity="help"  icon="pi pi-angle-left text-2xl"></Button>
@@ -8,25 +8,43 @@
 
         <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; right: -0.5rem;z-index: 99;height: 100%; width: 1.7rem; border-radius: none;" severity="help"  icon="pi pi-angle-right text-2xl"></Button> -->
 
-        <div class="  d-flex p lg:justify-content-center align-items-center  p-0 md:p-1"
-        style="overflow-x: auto; display:flex;width: 100%; background-color: rgba(255, 255, 255, 0.913)">
+        <div class=" d-flex text-white  align-items-center  p-0 m-0"
+        style="gap: 0;display: flex;">
 
+        <!-- <div v-for="(section,index) in categories" :key="section.id" class="p-0"  style="display: flex; align-items: center;">
+            <Button    size="small" @click="navigateToCategory(section.category_name,section.category_id)" :label="section.category_name "
+                :class="checkSelected(section.category_id) ? 'selected menu-button' : 'menu-button'"
+                class="py-3 px-3 mx-0  text-lg titulo" style=" text-transform: capitalize;width:max-content; color:white; border-radius: 0;outline: none;box-shadow: none;font-weight: bold;">
+               
+            </Button>
+            <span v-if="index < categories.length-1"> <b>| </b></span>
 
-        <Button @click="store.visibles.currentSite = true" severity="help"
-                
-                class="py-2  ml-4 text-lg titulo"  style="font-weight: 400;border-radius: .3rem; text-transform: uppercase;min-width: max-content;">
-                <span class="text-lg" style="min-width: max-content;">Nuevo pedido</span>
-        </Button>
+        </div> -->
         
 
-        <div v-for="section in categories" :key="section.id" class="p-1">
-            
+        
+        <Button @click="store.visibles.currentSite = true" severity="help"
+                
+                class="  mx-4 text-lg titulo"  style="font-weight: 400;min-height: 100%; border-radius: .3rem; text-transform: uppercase;min-width: max-content;">
+                <span class="text-lg" style="min-width: max-content;">Nuevo pedido</span>
+        </Button>
 
-            <Button @click="navigateToCategory(section.category_name,section.category_id)"
-                :class="checkSelected(section.category_id) ? 'selected menu-button' : 'menu-button'"
-                class="p-0 mx-3   text-lg titulo" style="font-weight: 400; text-transform: uppercase;border-radius: 0; min-width: max-content;">
-                <span class="text-lg" style="min-width: max-content;"> {{ section.category_name }}</span>
-            </Button>
+        <div v-for="(section,index) in cart?.menu?.listaCategorias?.filter(c => store.categories.includes(parseInt(c.categoria_id)))
+                    ?.sort((a, b) => store.categories.indexOf(parseInt(a.categoria_id)) - store.categories.indexOf(parseInt(b.categoria_id)))" :key="section.categoria_id" class="p-0"  style="display: flex; align-items: center;">
+
+            <Button    
+                    size="small" 
+                    @click="navigateToCategory(section.categoria_descripcion, section.categoria_id)" 
+                    :label="section.categoria_descripcion"
+                    :class="checkSelected(section.categoria_id) ? 'selected menu-button' : 'menu-button'"
+                    class="py-3 px-3 mx-0 text-lg titulo" 
+                    style="text-transform: capitalize;width:max-content;text-transform: uppercase; color:white; border-radius: 0;outline: none;box-shadow: none;font-weight: bold;">
+                </Button>
+                <span 
+                    v-if="index < cart?.menu?.listaCategorias?.filter(c => store.categories.includes(parseInt(c.categoria_id)))
+                    ?.sort((a, b) => store.categories.indexOf(parseInt(a.categoria_id)) - store.categories.indexOf(parseInt(b.categoria_id))).length - 1">
+                    <b>|</b>
+                </span>
         </div>
     </div>
     </div>
@@ -39,35 +57,36 @@
 
 
 <script setup>
-import { ref, onMounted,watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import router from '@/router/index.js';
 import { useRoute } from 'vue-router';
 import { categoriesService } from './service/restaurant/categoriesService'
+import { usecartStore } from './store/shoping_cart';
+
+const cart = usecartStore()
+
+
 import {useSitesStore} from  './store/site'
 
 const store = useSitesStore()
 
-const categories = ref([{name:'CARGANDO ...'}]);
-
+const categories = ref([]);
 
 const navigateToCategory = (categoryName,category_id) => {
     router.push({ name: 'call-center-vender-menu', params: { menu_name: categoryName, category_id:category_id } });
 };
 
 
-onMounted(async () => {
-    categories.value = await categoriesService.getCategories()});
-
 
 const checkSelected = (section) => {
     const route = useRoute(); // Asegúrate de que tienes acceso a useRoute aquí
-    return route.path.includes(section); // Verifica si el path actual contiene la cadena section
+    return route.params.category_id == section; // Verifica si el path actual contiene la cadena section
 };
 
-watch(() => store.restaurant, async(newval) => {
-    categories.value = await categoriesService.getCategories();
-    router.push('/call-center-vender')
-}, {depth:true})
+
+
+
+
 
 </script>
 
@@ -96,12 +115,14 @@ watch(() => store.restaurant, async(newval) => {
     border: none;
     font-size: 20px;
     outline: none;
+    box-shadow: none;
 
 }
 
 .menu-button:hover {
 
     cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.186);
 
 
 }
@@ -125,10 +146,39 @@ watch(() => store.restaurant, async(newval) => {
     opacity: 0;
 }
 
+
 .selected {
-    box-shadow: 0 0.3rem var(--primary-color);
+    /* box-shadow: 0 0.4rem var(--primary-color) !important;
+     */
+     /* border-bottom: 3px none red !important;  */
+     margin-bottom: 0%;
+     margin-top: 0;
+    
+     padding: 0;
+     background-color: rgba(0, 0, 0, 0.413);
+     /* font-weight: bold; */
+     
+     /* padding-bottom: 3px; */
 
 }
+
+
+
+
+.selected::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      font-weight: bold;
+      height: 0;
+     
+    }
+
+
+
+
 .col-12 {
     width: 100vw;
     /* position: absolute; */
@@ -137,17 +187,12 @@ watch(() => store.restaurant, async(newval) => {
 }
 
 
-
-.apear{
-  transition: .3s all ease;
-  opacity:1;
-
+.navbar {
+  overflow-x: auto; /* Permite desplazamiento horizontal */
+  white-space: nowrap; /* Evita el salto de línea en el texto */
 }
 
-.hide{
-  opacity: 0;
-
-  overflow: hidden;
-
+.navbar-item {
+  min-width: 100px; /* Ajusta el ancho mínimo de los elementos del navbar según sea necesario */
 }
 </style>

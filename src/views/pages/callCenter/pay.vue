@@ -1,8 +1,12 @@
 <template>
-    <div class="col-12  my-4 md:my-8 p-0">
+    <div class="col-12 px-2 my-8  p-0" style="margin-top: 6rem;">
+      
+        <validate></validate>
+      
+        <p class="text-center text-2xl my-8"><b>FINALIZAR COMPRA</b> </p>
         <div class="grid mx-auto " style="max-width:800px;">
 
-<!-- {{ user.user?.name }} -->
+
 
 
             <div class="col-12 md:col-6 p-1 md:px-4" style="display: flex; flex-direction: column; gap:1rem;">
@@ -27,12 +31,13 @@
 
 <div class="flex flex-wrap align-items-center mb-2 gap-2" style="width: 100%;">
     <!-- <label for="username" class="p-sr-only">Username</label> -->
-    <InputMask v-model="user.user.phone_number" style="width: 100%;" prefix="+57" id="basic"  mask="999 999 9999" placeholder="TELEFONO" />
+    <!-- <p>El telefono debe estar disponible en WhatsApp para validar el pedido <img style="width: 1.5rem;" src="/images/WhatsApp.svg.webp" alt=""></p>  -->
+    <InputMask v-model="user.user.phone_number" style="width: 100%;"  id="basic"  mask="999 999 9999" placeholder="TELEFONO" />
 </div>
 
 <div class="flex flex-wrap align-items-center mb-2 gap-2" style="width: 100%;">
     <!-- <label for="username" class="p-sr-only">Username</label> -->
-    <!-- <InputNumber v-model="user.user?.payment_method_option" style="width: 100%;" id="username" placeholder="METODO DE PAGO" invalid /> -->
+    <!-- <InputNumber v-model="user.user.payment_method_option" style="width: 100%;" id="username" placeholder="METODO DE PAGO" invalid /> -->
     <Dropdown v-model="user.user.payment_method_option" style="width: 100%;" id="username" placeholder="METODO DE PAGO" invalid  :options="payment_method_options" optionLabel="name" ></Dropdown>
 </div>
 
@@ -49,6 +54,7 @@
 
         </div>
     </div>
+   
 </template>
 
 
@@ -57,10 +63,11 @@ import { useToast } from 'primevue/usetoast';
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import resumen from './resumen.vue';
 import { usecartStore } from './store/shoping_cart';
-import { formatoPesosColombianos } from './service/formatoPesos';
+// import { formatoPesosColombianos } from '../../service/formatoPesos';
 import { useSitesStore } from './store/site';
 import {useUserStore} from './store/user'
 import { paymentMethodService } from './service/restaurant/paymentMethodService';
+// import validate from './validate.vue';
 const store = usecartStore()
 const siteStore = useSitesStore()
 const use = ref(0)
@@ -71,19 +78,16 @@ const payment_method_options =  ref([])
 onMounted( async()=> {
     payment_method_options.value = await paymentMethodService.getPaymentMethods()
 
-    if (user.user?.payment_method_option?.id != 7)
+    if (user.user.payment_method_option?.id != 7)
         siteStore.setNeighborhoodPrice()
     else {
         siteStore.setNeighborhoodPriceCero()
 
     }
-
-
-
 })
 
 
-watch(() => user.user?.payment_method_option, (new_val) => {
+watch(() => user.user.payment_method_option, (new_val) => {
 
     if(new_val.id == 7){
         siteStore.current_delivery = siteStore.location.neigborhood.delivery_price

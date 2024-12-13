@@ -30,7 +30,20 @@ export const useSitesStore = defineStore('call-center-site', {
             current_delivery:0,
             webSocket: null,
             status:'closed',
-            restaurant:1
+            restaurant:1,
+            categories:[
+                10, //COMBOS 2 PERSONAS
+                26, //COMBOS PERSONALES
+                // 25, //COMBOS 2X1 BURGER + PAPAS
+                8, //SALCHIPAPAS 2 PERSONAS
+                9, //SALCHIPAPAS PERSONALES
+                13, //PRODUCTO NUEVO
+                27, //POLLO
+               11,   //SHOWW
+                4, //BEBIDAS
+                5, //CERVEZAS
+                // 14,//ADICIONES SALCHIPAPAS
+            ]
 
 
         }

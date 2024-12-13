@@ -380,12 +380,12 @@
 
       <div class="col-12 mb-0 pb-0 px-0 m-0" style="display: flex;justify-content: space-between;gap: 1rem;">
 
-        <Button v-if="store.currentOrder.current_status == 'generada'" size="small"
+        <!-- <Button v-if="store.currentOrder.current_status == 'generada'" size="small"
           @click="orderService.prepareOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem;width: 100%;"
           severity="success" label="Preparar"></Button>
 
   
-
+ -->
 
         <Button v-if="store.currentOrder.current_status == 'en preparacion'" size="small"
           @click="orderService.sendOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem;width: 100%;"
@@ -394,7 +394,12 @@
           label="imprimir"></Button>
 
           <Button  size="small" style="border-radius: 0.3rem;width: 100%;" @click="cancelDialogVisibleAdmin = true" severity="danger"
-          label="CANCELAR "></Button>  
+          label="CANCELAR "></Button> 
+
+
+          <Button severity="warning" @click="travelDialog = true" style="width: 100%;background-color: black;border: none;" icon="pi pi-airplane" label="traslado">
+
+        </Button>
       </div>
 
 
@@ -410,6 +415,25 @@
   </Dialog>
 
   </div>
+
+  <Dialog v-model:visible="travelDialog" closeOnEscape :closable="true" modal style="width: 30rem;">
+      <template #header>
+        <h3> <b>TRASLADO DE SEDE</b> </h3>
+      </template>
+      <form @submit.prevent="submitCancel" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
+  
+        <span for="responsible">SELECCIONE LA SEDE DESTINO</span>
+
+
+        
+        <Dropdown style="width: 100%;" id="responsible" v-model="sede_destino" optionValue="site_id"  :options="sites.filter(s => s.show_on_web)" optionLabel="site_name"
+          placeholder="Seleccione la sede destino"></Dropdown>
+  
+  
+        
+        <Button @click="traslate_order()" style="width: 100%;border-radius:0.5rem" label="Trasladar" type="submit" class="p-button-danger" />
+      </form>
+  </Dialog>
 
 </template>
 
@@ -436,6 +460,10 @@ const obtenerHoraFormateadaAMPM = (fecha) => {
 
   return `${horaFormateada}:${minutosFormateados} ${ampm}`;
 };
+
+
+
+
 
       
 const subtotal = computed(() => {
