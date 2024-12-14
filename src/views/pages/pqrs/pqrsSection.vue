@@ -205,17 +205,28 @@
 
 
 
-    <nav class="nav_bar shadow-2 p-0 my-0 mx-2" style="position: sticky;top: 3rem;max-width: 900px;border-radius:10rem; background-color: white;z-index: 99;">
+    <nav class="nav_bar shadow-2 p-0 my-0 mx-2" style="position: sticky;overflow-x: auto; top: 3rem;max-width: min-content;border-radius:.5rem; background-color: white;z-index: 99;">
         <ul class="nav_bar--buttons p-0 m-1" style="">
        
-                <li v-for="button in nav_buttons" key="" class="" style="display: flex;align-items: center  ;" >
+                <li :class="button.id == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" v-for="button in nav_buttons" key="" class="" style="display: flex;align-items: center  ;" >
                   
                     
-                   <Tag :style="`background-color:${button.color}`"  style="height: 1.3rem;aspect-ratio: 1 / 1;border-radius: 50%;"></Tag> <Button  @click="() => active_button_nav = button" class="nav_bar--buttons-button p-2" :class="button.id == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" :label="button.name"></Button>
+                   <Tag :style="`background-color:${button.color}`"  style="height: 1.3rem;aspect-ratio: 1 / 1;border-radius: 50%;"></Tag> <Button  @click="() => active_button_nav = button" class="nav_bar--buttons-button p-2"  :label="button.name"></Button>
  
                 </li>
+
+                <li>
+
+                    <Dropdown :options="avanzadas" optionLabel="name" style="font-weight: bold;" placeholder="Avanzado"></Dropdown>
+                </li>
         </ul>
+
+
     </nav>
+
+
+
+
 
     <DataTable :paginator="true" :rows="15" style="width: 100%;;"
        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -393,6 +404,16 @@ const nav_buttons = ref( [
 
 ]
 )
+
+
+const avanzadas = [
+    {
+        name:'Resumen de Pqr'
+    },
+    {
+        name:'Resumen de Pqr'
+    }
+]
 
 const columview = (colums) => {
  
