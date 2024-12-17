@@ -11,7 +11,8 @@ export const loginStore = defineStore('user', {
                 key: 'user', // La clave bajo la cual se almacenará tu estado en el storage
                 storage: localStorage,
                 paths:[
-                    'userData'
+                    'userData',
+                    'currentSection_pqr'
                     ]
 
         
@@ -21,7 +22,11 @@ export const loginStore = defineStore('user', {
 
         return {
             userData:{},
-            NoAuthorized:false
+            NoAuthorized:false,
+            currentSection_pqr:{
+                name:'Basico',
+                x:0
+            },
             
         }
     },
