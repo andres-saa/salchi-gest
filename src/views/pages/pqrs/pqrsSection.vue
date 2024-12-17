@@ -205,7 +205,7 @@
 
 
 
-    <nav class="nav_bar shadow-2 p-0 my-0 mx-2" style="position: sticky;top: 3rem;max-width: 900px;border-radius:10rem; background-color: white;z-index: 99;">
+    <nav class="nav_bar shadow-2 p-0 my-0 mx-2" style="position: sticky;top: 3rem;max-width: 900px;border-radius:0.5rem; background-color: white;z-index: 99;">
         <ul class="nav_bar--buttons p-0 m-1" style="">
        
                 <li v-for="button in nav_buttons" key="" class="" style="display: flex;align-items: center  ;" >
@@ -217,7 +217,24 @@
         </ul>
     </nav>
 
-    <DataTable :paginator="true" :rows="15" style="width: 100%;;"
+    <div class="px-2    my-3" style="display: flex;width: 100%;align-items: center; justify-content: end;gap: 1rem;">
+
+        <h6 class="m-0"> <b>MODOS</b>  </h6>
+        <Dropdown style="width: 20rem;" optionLabel="name" placeholder="Avanzado" v-model="currentSection" :options="options"></Dropdown>
+        <Button @click="store.visible_add_pqr = true" label="Nueva PQR" severity="help"></Button>
+
+    </div>
+ 
+
+
+    <div class="scroll-container" style="">
+
+
+        <div  style="display: flex; max-width: 1200px;overflow: hidden;">
+
+          
+            
+        <DataTable :style="`transform:translateX(${ currentSection.x}%);transition: .5s all ease;`"  :paginator="true" :rows="15" style="width: 100%;"
        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes"
        :rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto"
@@ -231,7 +248,7 @@
                 <InputText class="" v-model="filters['global'].value"
                 placeholder="Buscar Solicitud..." />
 
-                <Button @click="store.visible_add_pqr = true" label="Nueva PQR" severity="help"></Button>
+             
                </div>
              
 
@@ -349,8 +366,136 @@
          </Column>
 
 
+         
+         
 
        </DataTable>
+
+       <div :style="`transform:translateX(${ currentSection.x}%);transition: .5s all ease;`" style="min-width: 100%; margin: auto;">
+
+
+
+        <div style="max-width: 1010px;" class="m-auto">
+            <h4 class="m-0 px-3">
+            <b>
+                REPORTE POR ESTADO
+            </b>
+            </h4>
+              
+        <DataTable    :rows="15" style=" max-width: 1010px;"
+
+        scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto"
+       :value="report" tableStyle="min-width: 50rem;" :filters="filters">
+       <template #header>
+ 
+
+
+       </template>
+
+
+
+
+
+
+
+       <Column v-for="column  in report_keys" class="p-0 " style="max-width: min-content;text-transform: uppercase;" :header="column" >
+            <template #body="data">
+                <div>
+                    <h6 class="m-0 py-1 px-3" v-if="data.data.sede == 'total'" style="display: flex;background-color:  var(--blue-100); justify-content: center;">
+                        <b>
+                            {{ data.data[column] }}
+                        </b>
+                    </h6>
+
+                    <h6 v-else class="m-0 py-1 px-2" style="display: flex; justify-content: center;">
+
+                    {{ data.data[column] }}
+                    </h6>
+                </div>
+            </template>
+
+         </Column>
+
+
+
+
+
+       </DataTable>
+
+        </div>
+   
+
+
+
+
+
+
+        
+        <div style="max-width: 1010px;" class="mx-auto my-3">
+            <h4 class="m-0 px-3">
+            <b>
+                REPORTE POR TIPOS
+            </b>
+            </h4>
+              
+        <DataTable    :rows="15" style=" max-width: 1010px;"
+
+        scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto"
+       :value="report_type" tableStyle="min-width: 50rem;" :filters="filters">
+       <template #header>
+ 
+
+
+       </template>
+
+
+
+
+
+
+
+       <Column v-for="column  in report_keys_type" class="p-0 " style="max-width: min-content;text-transform: uppercase;" :header="column" >
+            <template #body="data">
+                <div>
+                    <h6 class="m-0 py-1 px-3" v-if="data.data.sede == 'TOTAL'" style="display: flex;background-color:  var(--blue-100); justify-content: center;">
+                        <b>
+                            {{ data.data[column] }}
+                        </b>
+                    </h6>
+
+                    <h6 v-else class="m-0 py-1 px-2" style="display: flex; justify-content: center;">
+
+                    {{ data.data[column] }}
+                    </h6>
+                </div>
+            </template>
+
+         </Column>
+
+
+
+
+
+       </DataTable>
+
+        </div>
+
+       <div>
+
+
+        
+       </div>
+
+        </div>
+
+        </div>
+
+    </div>
+
+ 
+
+
+    
 
 
        <pqrUser @reload="update()"></pqrUser>
@@ -381,6 +526,36 @@ import { useReportesStore } from '@/store/reportes';
 
 
 const notes = ref('')
+
+
+const report = ref([])
+const report_keys = ref([]) 
+
+
+
+const report_type = ref([])
+const report_keys_type = ref([]) 
+
+const options = [
+    {
+        name:'Basico',
+        x:0
+    },
+    {
+        name:'Reporte Por Estado',
+        x:-100
+    },
+    {
+        name:'Reporte sEDES',
+        x:-200
+    }
+    
+]
+
+const currentSection = ref(
+    options[0]
+    
+)
 
 
 const inputOrder = ref()
@@ -645,6 +820,11 @@ const visibles = ref({});
 const editing = ref(false);
 const visibleAnswers = ref({});
 
+
+watch(active_button_nav, () => {
+    currentSection.value = options[0]
+})
+
 const costo = ref(false)
 const costovalue = ref()
 const order = ref(false)
@@ -688,7 +868,17 @@ const deletePqrs = async (id) => {
 
 onMounted(async () => {
     update();
-});
+
+    const reports = await fetchService.get(`${URI}/get-pqrs-by-date-range/2024-11-01/2024-12-10`)
+    const reports_types = await fetchService.get(`${URI}/get-pqrs-by-date-range-types/2024-11-01/2024-12-10`)
+
+    report.value = reports
+    report_keys.value =  Object.keys(reports[0]);
+
+    report_type.value = reports_types
+    report_keys_type.value =  Object.keys(reports_types[0]);
+}
+);
 
 
 watch(selecte_status_update, () => {
@@ -796,6 +986,10 @@ const createNewPqrs = async () => {
         opacity: 1;
     }
 }
+.h{
+    transform: translateX(100%);
+}
+
 
 @keyframes an_show_actions_2 {
     100% {
