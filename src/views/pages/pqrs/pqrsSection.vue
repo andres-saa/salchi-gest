@@ -268,7 +268,7 @@
                     <li v-for="button in nav_buttons" key="" class="" style="display: flex;align-items: center  ;" >
                      
                        
-                       <Tag :style="`background-color:${button.color}`"  style="height: 1.3rem;aspect-ratio: 1 / 1;border-radius: 50%;"></Tag> <Button  @click="() => active_button_nav = button" class="nav_bar--buttons-button p-2" :class="button.id == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" :label="button.name"></Button>
+                       <Tag :style="`background-color:${button.color}`"  style="height: 1.3rem;aspect-ratio: 1 / 1;border-radius: 50%;"></Tag> <Button  @click="() => {active_button_nav = button;login.currentSection_pqr = options[0] }" class="nav_bar--buttons-button p-2" :class="button.id == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" :label="button.name"></Button>
      
                     </li>
             </ul>
@@ -713,7 +713,25 @@
     import { useReportesStore } from '@/store/reportes';
         const store = useReportesStore()
     
+        
+        const options = [
+        {
+            name:'Basico',
+            x:0
+        },
+        {
+            name:'Reporte Por Estado',
+            x:-100
+        },
+        {
+            name:'Reporte sEDES',
+            x:-200
+        }
+       
+    ]
     
+    
+
 
 
     function formatearFechaLocal(fechaInput) {
@@ -781,24 +799,6 @@
     
     const report_type = ref([])
     const report_keys_type = ref([])
-    
-    
-    const options = [
-        {
-            name:'Basico',
-            x:0
-        },
-        {
-            name:'Reporte Por Estado',
-            x:-100
-        },
-        {
-            name:'Reporte sEDES',
-            x:-200
-        }
-       
-    ]
-    
     
 
     
@@ -1132,7 +1132,7 @@
     
     
     watch(active_button_nav, () => {
-        login.currentSection_pqr.value = options[0]
+        login.currentSection_pqr = options[0]
     })
     
     
