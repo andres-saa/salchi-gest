@@ -885,8 +885,8 @@
     import { useReportesStore } from '@/store/reportes';
         const store = useReportesStore()
     
-        
 
+    
     
 
 
@@ -1311,9 +1311,9 @@
     
     
     
-    watch(active_button_nav, () => {
-        login.currentSection_pqr = options[0]
-    })
+    // watch(active_button_nav, () => {
+    //     login.currentSection_pqr = options[0]
+    // })
     
     
     const costo = ref(false)
