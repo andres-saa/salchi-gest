@@ -885,7 +885,10 @@
     import { useReportesStore } from '@/store/reportes';
         const store = useReportesStore()
     
+        
+
     
+
 
         const data_graphics = ref([])
 
@@ -1309,7 +1312,7 @@
     
     
     watch(active_button_nav, () => {
-        login.currentSection_pqr.value = options[0]
+        login.currentSection_pqr = options[0]
     })
     
     
