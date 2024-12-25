@@ -179,32 +179,31 @@ const categories = ref([
 
   
 const getProducts = async (category_name) => {
+    if (true) {
+        try {
+            let response = await fetch(`${URI}/get-product-integration/6149/3`);
 
+            if (!response.ok) {
+                store.setLoading(false, 'cargando productos');
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-      if(true){
-  
-         
-          try {
-            
-          let response = await fetch(`${URI}/get-product-integration/6149/3`);
+            let data = await response.json();
 
-          if (!response.ok) {
-              store.setLoading(false, 'cargando productos')
-  
-              throw new Error(`HTTP error! status: ${response.status}`);
-  
-          }
+            // Procesamos los productos y los organizamos por precio usando cartStore.getProductPrice
+            const sortedProducts = data.data.data.sort((a, b) => {
+                return cartStore.getProductPrice(a) - cartStore.getProductPrice(b);
+            });
 
-  
-          let data = await response.json();
-          cartStore.menu = data.data;
-      } catch (error) {
+            // Asignamos los productos organizados al menú
+            cartStore.menu.data = sortedProducts;
 
-  
-          console.error('Error fetching data: ', error);
-      }
-      }
-  }
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+        }
+    }
+};
+
 
 
   

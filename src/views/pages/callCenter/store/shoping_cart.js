@@ -24,7 +24,7 @@ export const usecartStore = defineStore('cart-call-center', {
         sending_order:false,
         was_reserva:false,
         menu:{
-            "data": {
+          
                 "tipo": "1",
                 "data": [
                     {
@@ -45,7 +45,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "62",
                                 "producto_presentacion": "",
-                                "producto_precio": "22000.00",
+                                "producto_precio": "23500.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/618ddc6c-6716-4ee4-98a8-e8b4a6955006.jpg",
                                 "producto_codigo": "",
@@ -158,7 +158,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "98",
-                        "productogeneral_precio": "45000.00",
+                        "productogeneral_precio": "49900.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "28",
@@ -1572,7 +1572,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "29",
                                 "producto_presentacion": "",
-                                "producto_precio": "40500.00",
+                                "producto_precio": "41900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/d7b48589-46f4-4e88-a2eb-24fe98c307dc.png",
                                 "producto_codigo": "",
@@ -1885,7 +1885,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "43",
                                 "producto_presentacion": "",
-                                "producto_precio": "28500.00",
+                                "producto_precio": "29500.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/61841d74-062e-4a6f-a781-f5ea353d51e4.png",
                                 "producto_codigo": "",
@@ -3308,7 +3308,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "155",
-                        "productogeneral_precio": "46000.00",
+                        "productogeneral_precio": "47200.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "29",
@@ -3455,7 +3455,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "100",
-                        "productogeneral_precio": "30500.00",
+                        "productogeneral_precio": "31400.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "43",
@@ -4004,7 +4004,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "157",
-                        "productogeneral_precio": "55000.00",
+                        "productogeneral_precio": "56400.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "13",
@@ -4151,7 +4151,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "101",
-                        "productogeneral_precio": "36500.00",
+                        "productogeneral_precio": "36900.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "13",
@@ -4245,7 +4245,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "158",
-                        "productogeneral_precio": "63000.00",
+                        "productogeneral_precio": "63900.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "13",
@@ -4392,7 +4392,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "94",
-                        "productogeneral_precio": "57900.00",
+                        "productogeneral_precio": "59200.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "13",
@@ -4539,7 +4539,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "55",
-                        "productogeneral_precio": "71000.00",
+                        "productogeneral_precio": "71900.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "37",
@@ -5494,7 +5494,7 @@ export const usecartStore = defineStore('cart-call-center', {
                         "productogeneral_estado": "Activo",
                         "notas": [],
                         "producto_id": "93",
-                        "productogeneral_precio": "57900.00",
+                        "productogeneral_precio": "59200.00",
                         "lista_productobase": [
                             {
                                 "producto_id": "13",
@@ -5644,7 +5644,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "226",
                                 "producto_presentacion": "",
-                                "producto_precio": "125900.00",
+                                "producto_precio": "127900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/105ee3af-7689-4588-95d6-f4419368e9ed.png",
                                 "producto_codigo": "",
@@ -5913,7 +5913,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "31",
                                 "producto_presentacion": "",
-                                "producto_precio": "50900.00",
+                                "producto_precio": "52500.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/d6d266cf-09c2-49b0-a6b1-b70579f28691.png",
                                 "producto_codigo": "",
@@ -6226,7 +6226,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "45",
                                 "producto_presentacion": "",
-                                "producto_precio": "35500.00",
+                                "producto_precio": "35900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/a2ebc6f7-f02d-49ed-a305-c76335b4adb2.png",
                                 "producto_codigo": "",
@@ -6539,7 +6539,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "143",
                                 "producto_presentacion": "DETODITO",
-                                "producto_precio": "35900.00",
+                                "producto_precio": "37900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/57190689-99ac-4aa3-b76c-aeda5085cefa.png",
                                 "producto_codigo": "",
@@ -7054,7 +7054,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "36",
                                 "producto_presentacion": "",
-                                "producto_precio": "59900.00",
+                                "producto_precio": "60900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/ad39edaf-7a6d-47ce-85a0-ca53a397ae7c.png",
                                 "producto_codigo": "",
@@ -7680,7 +7680,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "37",
                                 "producto_presentacion": "",
-                                "producto_precio": "68900.00",
+                                "producto_precio": "69900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/7aa802dc-158d-4c97-817a-b46f9a3b490a.png",
                                 "producto_codigo": "",
@@ -8306,7 +8306,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "38",
                                 "producto_presentacion": "",
-                                "producto_precio": "67000.00",
+                                "producto_precio": "68500.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/8849b81a-5db2-440c-9351-3d343407bb9e.png",
                                 "producto_codigo": "",
@@ -8619,7 +8619,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "32",
                                 "producto_presentacion": "",
-                                "producto_precio": "39500.00",
+                                "producto_precio": "40900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/d925099e-4209-43de-b96b-94b31d6ade6d.png",
                                 "producto_codigo": "",
@@ -8932,7 +8932,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "48",
                                 "producto_presentacion": "",
-                                "producto_precio": "27500.00",
+                                "producto_precio": "28500.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/d3faff50-3713-4414-a0d7-8b3d7bd716f8.png",
                                 "producto_codigo": "",
@@ -9245,7 +9245,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "39",
                                 "producto_presentacion": "",
-                                "producto_precio": "53900.00",
+                                "producto_precio": "55300.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/53faa098-0902-4486-bf27-fa4c56d07cac.png",
                                 "producto_codigo": "",
@@ -10452,7 +10452,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "33",
                                 "producto_presentacion": "",
-                                "producto_precio": "53900.00",
+                                "producto_precio": "55300.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/cbf69f36-6420-4cbf-a83f-60fd63d9e9ce.jpg",
                                 "producto_codigo": "",
@@ -11167,7 +11167,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "141",
                                 "producto_presentacion": "PAPAS BACON",
-                                "producto_precio": "19900.00",
+                                "producto_precio": "20900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/507d9b7d-be99-490d-8870-e71c79e3fac8.png",
                                 "producto_codigo": "",
@@ -12065,7 +12065,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "142",
                                 "producto_presentacion": "",
-                                "producto_precio": "99900.00",
+                                "producto_precio": "101900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/eb9739cb-097f-4514-8e26-32d46457413a.png",
                                 "producto_codigo": "",
@@ -12256,7 +12256,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "34",
                                 "producto_presentacion": "",
-                                "producto_precio": "46500.00",
+                                "producto_precio": "47900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/1d3266ba-571e-4217-a165-6f6e219e1f72.png",
                                 "producto_codigo": "",
@@ -12916,7 +12916,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "40",
                                 "producto_presentacion": "",
-                                "producto_precio": "51500.00",
+                                "producto_precio": "53500.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/f2b690c6-fc70-4a19-962b-57871c286ec9.png",
                                 "producto_codigo": "",
@@ -13229,7 +13229,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "52",
                                 "producto_presentacion": "",
-                                "producto_precio": "35500.00",
+                                "producto_precio": "35900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/46d19ade-a524-45cf-9599-79c5b1ae4d26.png",
                                 "producto_codigo": "",
@@ -13687,7 +13687,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "41",
                                 "producto_presentacion": "",
-                                "producto_precio": "48900.00",
+                                "producto_precio": "49900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/9a02fec0-22ac-4e30-a824-3f694989dbb8.png",
                                 "producto_codigo": "",
@@ -13974,7 +13974,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "53",
                                 "producto_presentacion": "",
-                                "producto_precio": "34500.00",
+                                "producto_precio": "34900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/7696cef4-830d-4438-be8a-76ab336fccea.png",
                                 "producto_codigo": "",
@@ -14261,7 +14261,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "42",
                                 "producto_presentacion": "",
-                                "producto_precio": "125900.00",
+                                "producto_precio": "127900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/7c39dc25-cb1a-461b-b95a-c9e2295888a2.png",
                                 "producto_codigo": "",
@@ -14707,7 +14707,7 @@ export const usecartStore = defineStore('cart-call-center', {
                             {
                                 "producto_id": "61",
                                 "producto_presentacion": "",
-                                "producto_precio": "25900.00",
+                                "producto_precio": "26900.00",
                                 "producto_delivery": "1",
                                 "producto_urlimagen": "salchimonsterrestaurantpe/productos/7c544662-6f95-4556-9334-671457450dbb.jpg",
                                 "producto_codigo": "",
@@ -14821,6 +14821,15 @@ export const usecartStore = defineStore('cart-call-center', {
                         "categoria_delivery": "1"
                     },
                     {
+                        "categoria_id": "28",
+                        "local_id": "3",
+                        "categoria_descripcion": "DOMIICLIOS",
+                        "categoria_estado": "1",
+                        "categoria_padreid": "0",
+                        "categoria_color": "#e74c3c",
+                        "categoria_delivery": "1"
+                    },
+                    {
                         "categoria_id": "18",
                         "local_id": "3",
                         "categoria_descripcion": "HAMBURGUESAS",
@@ -14906,7 +14915,7 @@ export const usecartStore = defineStore('cart-call-center', {
             },
             "mensajes": [],
             "tipo": 1
-        },
+      
            
     }),
    

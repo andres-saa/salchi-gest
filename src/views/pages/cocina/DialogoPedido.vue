@@ -387,11 +387,14 @@
   
  -->
 
-        <Button v-if="store.currentOrder.current_status == 'en preparacion'" size="small"
-          @click="orderService.sendOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem;width: 100%;"
-          severity="success" label="enviar"></Button>
-        <Button size="small" style="border-radius: 0.3rem;width: 100%;" @click="IMPRIMIR" severity="warning"
-          label="imprimir"></Button>
+
+
+ <Button severity="help" @click="showDeleteDeliveryPrice = true" style="width: 100%;" label="domi $0.00">
+
+</Button>
+
+        
+       
 
           <Button  size="small" style="border-radius: 0.3rem;width: 100%;" @click="cancelDialogVisibleAdmin = true" severity="danger"
           label="CANCELAR "></Button> 
