@@ -1,7 +1,8 @@
 <template>
 
 
-  <Dialog v-model:visible="showChangeDialog" :modal="true" class="p-3" style="background-color: var(--primary-color);max-width: 20rem;max-height: 30rem;border-radius: 1rem;" >
+  <Dialog v-model:visible="showChangeDialog" :modal="true" class="p-3" style="background-color:white;width: max-content
+  ; max-width: 20rem;max-height: 30rem;border-radius: 1rem;" >
     <template #header>
         
           <h6>Elige una alternativa para  {{productBaseToChange.producto_descripcion}}</h6>
@@ -14,12 +15,21 @@
         <p><strong>{{ option.producto_descripcion }}</strong> </p>
         <!-- <p>{{ formatoPesosColombianos(option.producto_precio) }}</p> -->
       </div>
+  
+  
+  
+    <Button @click="showChangeDialog = false;" severity="danger" icon="pi pi-times"
+        style=" width: 2.5rem;height: 2.5rem; border: none; position: absolute; right: -1rem; top: -1rem; border-radius: 50%; display: flex; align-items: center;justify-content: center; z-index: 99;">
+      </Button>
     </div>
+  
+  
+  
   </Dialog>
   
   
-    <Dialog :close="reset()" v-model:visible="store.visibles.currentProduct" :style="{ width: '500px', }"
-      header="Seleccion de sede" :modal="true" class="p-fluid pt-8 m-3"
+    <Dialog :close="reset()" :closable="false" v-model:visible="store.visibles.currentProduct" :style="{ width: '500px', }"
+    :modal="true" class="p-fluid pt-8 m-3"
       style="justify-content: center; background-color: white;position: relative ; border-radius: 1rem;padding-top: 2rem;">
   
   
@@ -184,7 +194,7 @@
   
             <div style="color: black;">
   
-            <div v-for="modificador in i.listaModificadores" style="display: flex;align-items: center; gap: 1rem;" >
+            <div v-for="modificador in i.listaModificadores" style="display: flex; gap: 1rem;align-items: center;" >
   
   
   
@@ -321,6 +331,7 @@
   import { ref, computed } from 'vue';
   import { PrimeIcons } from 'primevue/api';
   // import { changeProduct } from '@/service/productServices';
+  import { currentCambios, currentToppings, currentAcompanantes, checkedAcomp, sumarAdiciones, showSiteDialog, setShowDialog, showProductDialog, productDialog, checkedSalsas, checkedAdiciones, currentSalsas, currentAditions } from './service/state';
   import { carro_para_la_barra_de_abajo } from '@/service/cart';
   // import { useRouter } from 'vue-router';
   import { adiciones } from '@/service/menu/adiciones/adiciones.js'
@@ -452,7 +463,27 @@
   
   }
   
+  
+  watch(() => store.visibles.currentProduct, (newval) => {
+  
+  
+    if (newval) {
+      selectedAdditions.value = {}
+      checkedAdition.value = {}
+      return
+    }
+  
+    const new_route = `/${route.params.menu_name}/${route.params.category_id}`
+  
 
+  
+  
+  
+  
+  
+  
+  
+  })
   
   const seeLeftHand = ref(false)
   
@@ -479,6 +510,7 @@
         price: item.modificadorseleccion_precio,
         group: group.modificador_nombre,
         group_id:group.modificador_id,
+        multiple:group.modificador_esmultiple,
         parent_id: store.currentProduct.producto_id || store.currentProduct.lista_presentacion[0].producto_id
       }
   
@@ -648,9 +680,97 @@
   }
   
   
-
-
-
+  
+  
+  const getSalsas = async () => {
+    if (!productDialog.value.grupo_salsa_id) {
+      salsas.value = []
+      return
+    }
+    try {
+      let response = await fetch(`${URI}/grupo-salsas/${productDialog.value.grupo_salsa_id}/salsas`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let data = await response.json();
+      salsas.value = data;
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  }
+  
+  const getCambios = async () => {
+    if (!productDialog.value.grupo_cambio_id) {
+      cambios.value = []
+      return
+    }
+    try {
+      let response = await fetch(`${URI}/grupo-cambios/${productDialog.value.grupo_cambio_id}/cambios`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let data = await response.json();
+      cambios.value = data;
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  }
+  
+  
+  
+  const getToppings = async () => {
+    if (!productDialog.value.grupo_topping_id) {
+      toppings.value = []
+      return
+    }
+    try {
+      let response = await fetch(`${URI}/grupo-toppings/${productDialog.value.grupo_topping_id}/toppings`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let data = await response.json();
+      toppings.value = data;
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  }
+  
+  
+  const getAcompanantes = async () => {
+    if (!productDialog.value.grupo_acompanante_id) {
+      toppings.value = []
+      return
+    }
+    try {
+      let response = await fetch(`${URI}/grupo-acompanantes/${productDialog.value.grupo_acompanante_id}/acompanantes`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let data = await response.json();
+      acompanantes.value = data;
+      // alert(response)
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  }
+  
+  
+  const getAdiciones = async () => {
+    if (!productDialog.value.grupo_adicional_id) {
+      adicionales.value = []
+      return
+    }
+    try {
+      let response = await fetch(`${URI}/grupo-adicionales/${productDialog.value.grupo_adicional_id}/adicionales`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let data = await response.json();
+      adicionales.value = data;
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  }
   
   
   
@@ -659,6 +779,16 @@
   
   
   
+  
+  onMounted(() => {
+    setTimeout(() => {
+      if (route.params.product_id) {
+        // alert(route.params.product_id);
+        store.currentProduct = store.menu.data.find(p => p.productogeneral_id == route.params.product_id);
+        store.visibles.currentProduct = true;
+      }
+    }, 1000); // Espera 1 segundo (1000 ms)
+  });
   
   
   
@@ -675,8 +805,18 @@
   
   onMounted(() => {
   
-
-
+    getToppings()
+    getSalsas()
+    getCambios()
+    getAdiciones()
+    getAcompanantes()
+    const cartData = JSON.parse(localStorage.getItem('cart'));
+  
+    // Check if 'cart' exists in localStorage and has 'products' attribute
+    const productsLength = cartData && cartData.products ? cartData.products.length : 0;
+  
+    // Create a ref with the calculated quantity
+    quantity.value = productsLength;
   
   
   
@@ -751,7 +891,32 @@
   })
   const possibleNeigborhoods = ref()
   
-
+  const vueMenu = ref(false)
+  
+  const addcar = (product) => {
+  
+    const estado = localStorage.getItem('estado')
+    if (estado && estado == 'cerrado') {
+      verCerrado.value = true
+      return
+    }
+  
+    showProductDialog.value = !showProductDialog.value
+  
+    const product_new = { ...product }
+  
+    product_new.price = product_new.price
+    product_new.salsas = currentSalsas.value
+    product_new.adiciones = currentAditions.value
+    product_new.toppings = currentToppings.value
+    product_new.cambios = currentCambios.value
+    product_new.acompanantes = currentAcompanantes.value
+  
+    useCart.add(product_new)
+    toast.add({ severity: 'success', summary: 'Agregado al carrito', detail: productDialog.value.name, life: 3000 });
+  }
+  
+  
   const currenCity = ref({})
   
   const changePossiblesNeigborhoods = () => {
@@ -768,17 +933,169 @@
   }
   watch(currenCity, () => { changePossiblesNeigborhoods() })
   
-
-
- 
+  watch(showProductDialog, (newval, oldval) => {
+  
+    currentAcompanantes.value = []
+    currentToppings.value = []
+    currentAditions.value = []
+    currentSalsas.value = []
+    currentCambios.value = []
+  
+    cambios.value = []
+    salsas.value = []
+    // acompanantes.value = []
+    toppings.value = []
+    adicionales.value = []
+    acompanantes.value = []
+  
+    getToppings()
+    getSalsas()
+    getCambios()
+    getAdiciones()
+    getAcompanantes()
+  
+  
+  })
+  const setNeigborhood = () => {
+    localStorage.setItem('currentNeigborhood', JSON.stringify({
+      currenCity: currenCity.value.name,
+      currenNeigborhood: currenNeigborhood.value.neigborhood,
+      currenSite: currenNeigborhood.value.site.name,
+      currenSiteId: currenNeigborhood.value.site.site_id,
+    }))
+    // //console.log(localStorage.getItem('currentNeigborhood'))
+    localStorage.setItem('currenSiteWsp', currenNeigborhood.value.site.wsp)
+  
+    setShowDialog()
+    location.reload()
+  
+  
+  
+  
+  }
+  
+  const wsp = ref(localStorage.getItem('currenSiteWsp'))
+  
+  const searchCountry = (event) => {
+    setTimeout(() => {
+      if (!event.query.trim().length) {
+        autoFilteredValue.value = [...autoValue.value];
+      } else {
+        autoFilteredValue.value = autoValue.value.filter((country) => {
+          return country.name.toLowerCase().startsWith(event.query.toLowerCase());
+        });
+      }
+    }, 250);
+  };
   
   //console.log(router.currentRoute)
+  
+  const topbarMenuClasses = computed(() => {
+    return {
+      'layout-topbar-menu-mobile-active': topbarMenuActive.value
+    };
+  });
   
   const topbarMenuActive = ref(false);
   
   
   
- 
+  
+  
+  const cargarAdiciones = (item, gratis = 0) => {
+  
+  
+    // Asegúrate de que checkedAdiciones y currentAditions estén definidos en el ámbito adecuado
+  
+    const negativePriceCount = currentAcompanantes.value.filter((el) => el.price <= 0).length;
+  
+  
+  
+    if (checkedAdiciones.value[item.name]) {
+  
+      if (negativePriceCount >= gratis && item.price == 0) {
+        checkedAdiciones.value[item.name] = false
+        //console.log('ya')
+  
+        toast.add({ severity: 'error', summary: 'Recuerda', detail: `solo puede elegir ${gratis} acompanantes gratis`, life: 3000 });
+  
+        // Si ya hay dos o más objetos con price < 0, no hacer nada y retornar
+        return;
+  
+      }
+      // Si el checkbox está marcado, agregar el elemento a la lista
+      if (item.adicional_id) {
+        currentAditions.value.push(item);
+      } else if (item.cambio_id) {
+        currentCambios.value.push(item);
+      } else if (item.topping_id) {
+        currentToppings.value.push(item);
+      } else if (item.acompanante_id) {
+        //console.log('here')
+        currentAcompanantes.value.push(item);
+        //console.log(item)
+        //console.log(currentAcompanantes)
+      }
+  
+      // //console.log(item.acompanante_id)
+  
+  
+    } else if (item.adicional_id) {
+      // Si el checkbox está desmarcado, quitar el elemento de la lista
+      const index = currentAditions.value.findIndex((el) => el.name === item.name);
+      if (index !== -1) {
+        currentAditions.value.splice(index, 1);
+      }
+    } else if (item.cambio_id) {
+      // Si el checkbox está desmarcado, quitar el elemento de la lista
+      const index = currentCambios.value.findIndex((el) => el.name === item.name);
+      if (index !== -1) {
+        currentCambios.value.splice(index, 1);
+      }
+    } else if (item.topping_id) {
+      // Si el checkbox está desmarcado, quitar el elemento de la lista
+      const index = currentToppings.value.findIndex((el) => el.name === item.name);
+      if (index !== -1) {
+        currentToppings.value.splice(index, 1);
+      }
+    } else if (item.acompanante_id) {
+      // Si el checkbox está desmarcado, quitar el elemento de la lista
+      const index = currentAcompanantes.value.findIndex((el) => el.name === item.name);
+      if (index !== -1) {
+        currentAcompanantes.value.splice(index, 1);
+      }
+    }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    //console.log(currentAditions.value)
+  };
+  
+  function sumarPrecios(arrayDeObjetos) {
+    // Verificar si el array está vacío
+    if (arrayDeObjetos.length === 0) {
+      return 0;
+    }
+  
+    // Utilizar reduce para sumar los valores de .price
+    const suma = arrayDeObjetos.reduce((acumulador, objeto) => {
+      // Asegurarse de que .price sea un número antes de sumarlo
+      const precio = parseFloat(objeto.price);
+      // Sumar al acumulador solo si se obtuvo un número válido desde .price
+      return isNaN(precio) ? acumulador : acumulador + precio;
+    }, 0);
+  
+    return suma;
+  }
   // const cargarAcomp = (item) => {
   //   //console.log('hola');
   

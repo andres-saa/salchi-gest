@@ -14919,18 +14919,18 @@ export const usecartStore = defineStore('cart-call-center', {
            
     }),
    
-        getters: {
-            totalItems: (state) => {
-                return state.cart.products.reduce((total, product) => total + product.quantity, 0);
-            },
-            totalAdditions: (state) => {
-                return state.cart.additions.reduce((total, addition) => total + (addition.price  * addition.quantity), 0);
-            },
-            isProductInCart: (state) => (productId) => {
-                return state.cart.products.some(product => product.product.productogeneral_id === productId);
-            }
+    getters: {
+        totalItems: (state) => {
+            return state.cart.products.reduce((total, product) => total + product.quantity, 0);
         },
-   
+        totalAdditions: (state) => {
+            return state.cart.additions.reduce((total, addition) => total + (addition.price  * addition.quantity), 0);
+        },
+        isProductInCart: (state) => (productId) => {
+            return state.cart.products.some(product => product.product.productogeneral_id === productId);
+        }
+    },
+
     actions: {
 
         incrementAdditionQuantity(additionId) {
@@ -14966,52 +14966,53 @@ export const usecartStore = defineStore('cart-call-center', {
         },
         getProductId(product) {
             if (product.producto_id) {
-              return product.producto_id;
+            return product.producto_id;
             } else if (
-              product.lista_presentacion &&
-              product.lista_presentacion.length > 0 &&
-              product.lista_presentacion[0].producto_id
+            product.lista_presentacion &&
+            product.lista_presentacion.length > 0 &&
+            product.lista_presentacion[0].producto_id
             ) {
-              return product.lista_presentacion[0].producto_id;
+            return product.lista_presentacion[0].producto_id;
             } else {
-              console.error('No valid product ID found for product:', product);
-              return null; // Or throw an error if appropriate
+            console.error('No valid product ID found for product:', product);
+            return null; // Or throw an error if appropriate
             }
-          },
-          addProductToCart(product, quantity = 1, additionalItems = []) {
+        },
+        
+        addProductToCart(product, quantity = 1, additionalItems = []) {
             const productId = this.getProductId(product);
-          
+        
             if (!productId) {
-              console.error('Cannot add product to cart: Invalid product ID');
-              return;
+            console.error('Cannot add product to cart: Invalid product ID');
+            return;
             }
-          
+        
             const cartProduct = this.cart.products.find(
-              (p) => this.getProductId(p.product) === productId
+            (p) => this.getProductId(p.product) === productId
             );
-          
+        
             const price = this.getProductPrice(product);
-          
+        
             if (cartProduct) {
-              cartProduct.quantity += quantity;
-              cartProduct.total_cost += price * quantity;
+            cartProduct.quantity += quantity;
+            cartProduct.total_cost += price * quantity;
             } else {
-              const productWithId = { ...product, producto_id: productId };
+            const productWithId = { ...product, producto_id: productId };
                 console.log(productWithId)
-              this.cart.products.push({
+            this.cart.products.push({
                 product: productWithId,
                 quantity,
                 additionalItems: this.groupAdditionalItems(additionalItems),
                 total_cost: this.calculateProductTotal(
-                  productWithId,
-                  quantity,
-                  additionalItems
+                productWithId,
+                quantity,
+                additionalItems
                 ),
-              });
+            });
             }
             this.calculateCartTotal();
-          },
-          
+        },
+        
 
         removeProductFromCart(productId) {
             this.cart.products = this.cart.products.filter(product => product.product.productogeneral_id !== productId);
@@ -15022,36 +15023,36 @@ export const usecartStore = defineStore('cart-call-center', {
             const generalPrice = product.productogeneral_precio;
             const presentationPrice = product.lista_presentacion?.[0]?.producto_precio;
             return generalPrice !== undefined ? generalPrice : presentationPrice || 0;
-          },
+        },
 
         addAdditionalItem(productId, additionalItem) {
             const product = this.cart.products.find(
-              (product) => product.product.productogeneral_id === productId
+            (product) => product.product.productogeneral_id === productId
             );
             if (product) {
-              product.additionalItems.push(additionalItem);
-              const price = this.getProductPrice(additionalItem);
-              product.total_cost += price * additionalItem.quantity;
-              this.calculateCartTotal();
+            product.additionalItems.push(additionalItem);
+            const price = this.getProductPrice(additionalItem);
+            product.total_cost += price * additionalItem.quantity;
+            this.calculateCartTotal();
             }
-          },
-          removeAdditionalItem(productId, additionalItemId) {
+        },
+        removeAdditionalItem(productId, additionalItemId) {
             const product = this.cart.products.find(
-              (product) => product.product.productogeneral_id === productId
+            (product) => product.product.productogeneral_id === productId
             );
             if (product) {
-              const itemIndex = product.additionalItems.findIndex(
+            const itemIndex = product.additionalItems.findIndex(
                 (item) => item.productogeneral_id === additionalItemId
-              );
-              if (itemIndex > -1) {
+            );
+            if (itemIndex > -1) {
                 const removedItem = product.additionalItems[itemIndex];
                 const price = this.getProductPrice(removedItem);
                 product.total_cost -= price * removedItem.quantity;
                 product.additionalItems.splice(itemIndex, 1);
                 this.calculateCartTotal();
-              }
             }
-          },
+            }
+        },
         groupAdditionalItems(additionalItems) {
             return additionalItems.reduce((acc, item) => {
                 (acc[item.type] = acc[item.type] || []).push(item);
@@ -15061,11 +15062,11 @@ export const usecartStore = defineStore('cart-call-center', {
         calculateProductTotal(product, quantity, additionalItems) {
             const basePrice = this.getProductPrice(product) * quantity;
             const additionalPrice = additionalItems.reduce(
-              (sum, item) => sum + this.getProductPrice(item) * item.quantity,
-              0
+            (sum, item) => sum + this.getProductPrice(item) * item.quantity,
+            0
             );
             return basePrice + additionalPrice;
-          },
+        },
         removeProductInstance(productId) {
             const cartProduct = this.cart.products.find(p => p.product.productogeneral_id === productId);
         

@@ -129,15 +129,7 @@ const open = (product) => {
     store.setCurrentProduct(product);
     store.setVisible('currentProduct', true);
 
-    if (route.path != '/') {
-        const category_name = route.params.menu_name;
-        const category_id = route.params.category_id;
 
-        // Sanitizar el nombre del producto
-        const sanitizedProductName = encodeURIComponent(product.productogeneral_descripcion);
-
-       
-    }
 };
 
 

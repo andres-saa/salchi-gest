@@ -121,13 +121,13 @@
 
 
 
-            <router-link to="/call-center-vender/cart" v-if="route.path.includes('cart')">
+            <router-link to="/call-center-vender" v-if="route.path.includes('cart')">
                 <Button outlined icon="pi pi-shopping-cart" label="Seguir comprando" class="mt-4" severity="danger"
                     style="outline: none;width: 100%;font-weight: bold; background-color: rgba(0, 0, 0, 0);"></Button>
 
             </router-link>
 
-            <router-link to="/cart" v-else-if="route.path != '/reservas'">
+            <router-link to="/call-center-vender/cart" v-else-if="route.path != '/reservas'">
                 <Button outlined icon="pi pi-arrow-left" label="Volver al carrito" class="mt-4" severity="danger"
                     style="outline: none;width: 100%;font-weight: bold; background-color: rgba(0, 0, 0, 0);"></Button>
 
