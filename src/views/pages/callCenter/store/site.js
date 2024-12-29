@@ -33,6 +33,7 @@ export const useSitesStore = defineStore('call-center-site', {
             restaurant:1,
             categories:[
                 10, //COMBOS 2 PERSONAS
+                22, //COMBOS 2 PERSONAS
                 26, //COMBOS PERSONALES
                 // 25, //COMBOS 2X1 BURGER + PAPAS
                 8, //SALCHIPAPAS 2 PERSONAS
