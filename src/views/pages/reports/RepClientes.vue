@@ -410,8 +410,8 @@ const countries = ref()
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { salesReport, formatToColombianPeso } from "../../service/valoresReactivosCompartidos";
-import { URI } from "../../service/conection";
+import { salesReport, formatToColombianPeso } from "@/service/valoresReactivosCompartidos";
+import { URI } from "@/service/conection";
 import {useReportesStore} from '@/store/reportes.js'
 const store = useReportesStore()
 

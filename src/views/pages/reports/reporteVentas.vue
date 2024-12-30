@@ -63,17 +63,6 @@
 
         <div class="contenedor mt-5" style="position: sticky;top: 3rem;z-index: 99;">
 
-
-
-
-
-
-
-
-
-
-
-
             <div class="col-12 px-0 py-0 my-0 p-0 m-auto" style="overflow-x:auto; background-color: #fafafa;">
                 <div class="px-0 mx-0"
                     style="width: max-content; background-color:#fafafa; display:  flex;align-items: center; color: ; justify-content: start;gap: 2rem;min-width: max-content;">
@@ -95,18 +84,6 @@
                             </Button>
                         </RouterLink>
                     </div>
-                    <!-- <div class="p-0" style="display: flex;align-items: center;background-color: rgba(245, 222, 179, 0); ">
-    
-          <Button size="medium"   class="text-md px-0 py-0 mx-0 text-l btn-ocultar" text @click="store.toogleVisibleNotifications" :severity="store.visibleNotifications? 'danger': 'success'"  rounded style="font-weight: bold; ">
-            <span>
-               <span >{{ store.visibleNotifications? 'Ocultar notificaciones': 'Mostrar notificaciones' }} </span> <i  :class="PrimeIcons.ANGLE_DOUBLE_RIGHT"></i>
-            </span>
-        
-        </Button>  
-
-        
-   </div>
-        -->
 
 
                 </div>
@@ -118,6 +95,65 @@
 
 
 
+        <p class="text-xl px-0 mx-0 my-3 pb-0" style="font-weight: bold;">
+            INDICADORES GENERALES</p>
+
+
+
+        <div class="grid col-12 p-0 m-0">
+
+            <div class="col-12 lg:col-6 md:px-3 px-0 lg:pl-0 ">
+                <div class="card mb-0 m-0 card-indicator">
+                    <div class="flex justify-content-between mb-3">
+                        <div>
+                            <span class="block text-500 font-medium mb-3">Venta bruta</span>
+                            <div class="text-900 font-medium text-xl">
+                                {{ formatToColombianPeso(store.salesReport?.total_sales?.total_sales) || '$0' }}</div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                            style="width: 2.5rem; height: 2.5rem">
+                            <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; align-items: center;">
+                        <span class="text-500">Total de ordenes</span>
+
+
+                        <RouterLink to="/reporte-ventas/ordenes">
+                            <Button outlined class="p-2 font-medium ml-3  "
+                                :style="store.order_status == 'enviada' ? 'color:var(--blue-500);background-color:var(--blue-100)' : 'color:rgba(255, 99, 132, 1);background-color:var(--pink-100)'"
+                                style="border: none ;"> ordenes</Button>
+
+                        </RouterLink> <span class=" font-medium ml-3"
+                            :style="store.order_status == 'enviada' ? 'color:var(--blue-500)' : 'color:rgba(255, 99, 132, 1)'">{{
+                                store.salesReport?.total_sales?.total_orders || 0 }} </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-12 lg:col-6 md:px-3 px-0 lg:pr-0 " style="height: ;">
+                <div class="card mb-0 card-indicator" style="height: 100%;">
+                    <div class="flex justify-content-between mb-3">
+                        <div>
+                            <span class="block text-500 font-medium mb-3">Ticket promedio</span>
+                            <div class="text-900 font-medium text-xl">
+                                {{ formatToColombianPeso(store.salesReport?.total_sales?.average_ticket) || '$0' }}
+                            </div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
+                            style="width: 2.5rem; height: 2.5rem">
+                            <i class="pi pi-map-marker text-orange-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <!-- <span class="text-green-500 font-medium">%52+ </span> -->
+                    <span class="text-500">Valor de la venta promedio</span>
+                </div>
+            </div>
+
+       
+        </div>
 
 
 
@@ -311,10 +347,10 @@ import { onMounted, reactive, ref, watch, onUnmounted } from 'vue';
 // import ProductService from '@/service/ProductService';
 import { useLayout } from '@/layout/composables/layout';
 import { useRoute } from 'vue-router';
-import { URI } from '../../service/conection';
-import { salesReport } from '../../service/valoresReactivosCompartidos'
-import { formatToColombianPeso } from '../../service/valoresReactivosCompartidos';
-import Loading from '../../components/Loading.vue';
+import { URI } from '@/service/conection';
+import { salesReport } from '@/service/valoresReactivosCompartidos'
+import { formatToColombianPeso } from '@/service/valoresReactivosCompartidos';
+import Loading from '@/components/Loading.vue';
 import { PrimeIcons } from 'primevue/api';
 import { useReportesStore } from '@/store/reportes.js'
 import RepValorVentas from './RepValorVentas.vue';
@@ -878,6 +914,11 @@ function saveState() {
 .fade-leave-active {
     transition: all ease .3s;
 
+}
+
+.card-indicator{
+    box-shadow: 0 .5rem 1rem #00000030;
+    border: 1px solid #4b55635d;
 }
 
 

@@ -517,39 +517,39 @@ const router = createRouter({
         {
           path: '/reporte-ventas/',
           name: 'reporte-ventas',
-          component: () => import('@/views/pages/reporteVentas.vue'),
+          component: () => import('@/views/pages/reports/reporteVentas.vue'),
           meta:{permision_id: 3},
           children: [
             {
               path: '/reporte-ventas/valor-ventas',
               name: 'reporte-ventas-valor-ventas',
-              component: () => import('@/views/pages/RepValorVentas.vue'),
+              component: () => import('@/views/pages/reports/RepValorVentas.vue'),
             },
             {
               path: '/reporte-ventas/no-ordenes',
               name: 'reporte-ventas-no-ordenes',
-              component: () => import('@/views/pages/RepNoOrdenes.vue'),
+              component: () => import('@/views/pages/reports/RepNoOrdenes.vue'),
             },
             {
               path: '/reporte-ventas/ticket',
               name: 'reporte-ventas-ticket',
-              component: () => import('@/views/pages/RepTicket.vue'),
+              component: () => import('@/views/pages/reports/RepTicket.vue'),
             }
             ,
             {
               path: '/reporte-ventas/clientes',
               name: 'reporte-ventas-clientes',
-              component: () => import('@/views/pages/RepClientes.vue'),
+              component: () => import('@/views/pages/reports/RepClientes.vue'),
             },
             {
               path: '/reporte-ventas/ordenes',
               name: 'reporte-ventas-ordenes',
-              component: () => import('@/views/pages/ordenes.vue'),
+              component: () => import('@/views/pages/reports/ordenes.vue'),
             },
             {
               path: '/reporte-ventas/order-sumary',
               name: 'reporte-ventas-order-sumary',
-              component: () => import('@/views/pages/orderSumary.vue'),
+              component: () => import('@/views/pages/reports/orderSumary.vue'),
             }
 
           ]

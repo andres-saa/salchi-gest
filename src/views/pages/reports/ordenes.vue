@@ -194,12 +194,12 @@
 
 <script setup>
 import {useReportesStore} from '@/store/reportes.js'
-import { formatToColombianPeso, salesReport } from '../../service/valoresReactivosCompartidos';
+import { formatToColombianPeso, salesReport } from '@/service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
 import {onBeforeMount} from 'vue'
 import { FilterMatchMode } from 'primevue/api';
 import {ref} from 'vue'
-import OrderDialog from '../../components/orderDialog.vue';
+import OrderDialog from '@/components/orderDialog.vue';
 import * as XLSX from 'xlsx';
 
 const filters = ref(null);

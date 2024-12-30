@@ -93,8 +93,8 @@ import { onMounted, reactive, ref, watch } from 'vue';
 // import ProductService from '@/service/ProductService';
 import { useLayout } from '@/layout/composables/layout';
 import { useRoute } from 'vue-router';
-import { URI } from '../../service/conection';
-import {salesReport} from '../../service/valoresReactivosCompartidos'
+import { URI } from '@/service/conection';
+import {salesReport} from '@/service/valoresReactivosCompartidos'
 import {useReportesStore} from '@/store/reportes.js'
 
 const store = useReportesStore()

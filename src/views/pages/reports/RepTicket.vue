@@ -1,89 +1,27 @@
 <template>
-    <div class="p-0 m-0">
+    <div class="grid">
 
-        <div class="grid col-12 p-0 m-0">
+        <div class="grid col-12 ">
+         
 
-            <div class=" grid" style="">
-                <div class="col-12 lg:col-6 pr-3 lg:pl-0 ">
-                    <div class="card mb-0">
-                        <div class="flex justify-content-between mb-3">
-                            <div>
-                                <span class="block text-500 font-medium mb-3">Venta bruta</span>
-                                <div class="text-900 font-medium text-xl">
-                                    {{ formatToColombianPeso(store.salesReport?.total_sales?.total_sales) || '$0' }}
-                                </div>
-                            </div>
-                            <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
-                                style="width: 2.5rem; height: 2.5rem">
-                                <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; align-items: center;">
-                            <span class="text-500">Total de ordenes</span>
-
-
-                            <RouterLink to="/reporte-ventas/ordenes">
-                                <Button outlined class="p-2 font-medium ml-3  "
-                                    :style="store.order_status == 'enviada' ? 'color:var(--blue-500);background-color:var(--blue-100)' : 'color:rgba(255, 99, 132, 1);background-color:var(--pink-100)'"
-                                    style="border: none ;"> ordenes</Button>
-
-                            </RouterLink> <span class=" font-medium ml-3"
-                                :style="store.order_status == 'enviada' ? 'color:var(--blue-500)' : 'color:rgba(255, 99, 132, 1)'">{{
-                                    store.salesReport?.total_sales?.total_orders || 0 }} </span>
-                        </div>
-
-                    </div>
-                </div>
-
-            
-                <div class="col-12 lg:col-6 pl-3 lg:pr-0" style="height: ;">
-                    <div class="card mb-0" style="height: 100%;">
-                        <div class="flex justify-content-between mb-3">
-                            <div>
-                                <span class="block text-500 font-medium mb-3">Ticket promedio</span>
-                                <div class="text-900 font-medium text-xl">
-                                    {{ formatToColombianPeso(store.salesReport?.total_sales?.average_ticket) || '$0' }}
-                                </div>
-                            </div>
-                            <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
-                                style="width: 2.5rem; height: 2.5rem">
-                                <i class="pi pi-map-marker text-orange-500 text-xl"></i>
-                            </div>
-                        </div>
-                        <!-- <span class="text-green-500 font-medium">%52+ </span> -->
-                        <span class="text-500">Valor de la venta promedio</span>
-                    </div>
-                </div>
-
-                <div class="col-12 px-3 lg:px-3  m-auto card  p-3  " style="">
-
-                    <h5 style="background-color: ;">Historico de ordenes <span
-                            :style="store.order_status == 'enviada' ? 'color:var(--blue-500)' : 'color:rgba(255, 99, 132, 1)'">{{
-                            store.order_status }}s</span> </h5>
+            <div class="col-12 ">
+                <div class="card">
+                    <h5 style="background-color: ;"   >Historico de cantidad de ordenes <span :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.order_status }}s</span>  </h5>
                     <!-- <Chart type="bar" :data="lineData" :options="lineOptions" /> -->
-
-                    <Button class="p-0" text @click="visible_graph = true" size="small" style="border: none;"
-                        :style="store.order_status == 'enviada' ? 'color:var(--blue-500)' : 'color:rgba(255, 99, 132, 1)'"><i
-                            class="text-4xl" style="transform: rotate(45deg);;"
-                            :class="PrimeIcons.ARROW_A"></i></Button>
-
-                            
-                    <Chart type="line" :data="store.ventasCharData" :options="chartOptions" />
-
-
-
-
+                    <div class="card" >
+                        <Button class="p-0" text @click="visible_graph = true" size="small" style="border: none;" :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'"><i class="text-4xl" style="transform: rotate(45deg);;" :class="PrimeIcons.ARROW_A"></i></Button>
+                        <Chart type="line" :data="store.ordersCharData" :options="chartOptions" class="h-30rem" />
+                    </div>
                 </div>
+
 
             </div>
-
         </div>
 
 
-        <Dialog v-model:visible="visible_graph" modal header="Periodo" :style="{ width: '90vw' }">
-            <!-- <RepValorVentas></RepValorVentas> -->
-            <Chart type="line" :data="store.ventasCharData" :options="chartOptions" />
+        <Dialog v-model:visible="visible_graph" modal header="Periodo" :style="{ width: '90vw',height:'max-content' }">
+<!-- <RepValorVentas></RepValorVentas> -->     
+                        <Chart type="line" :data="store.ordersCharData" :options="chartOptions" style="height: 60vh;" />
 
         </Dialog>
 
@@ -295,9 +233,9 @@ const countries = ref()
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { salesReport, formatToColombianPeso } from "../../service/valoresReactivosCompartidos";
-import { URI } from "../../service/conection";
-import { useReportesStore } from '@/store/reportes.js'
+import { salesReport, formatToColombianPeso } from "@/service/valoresReactivosCompartidos";
+import { URI } from "@/service/conection";
+import {useReportesStore} from '@/store/reportes.js'
 import { PrimeIcons } from "primevue/api";
 const store = useReportesStore()
 const visible_graph = ref(false)
@@ -393,7 +331,7 @@ const setChartOptions = () => {
                 },
                 grid: {
                     color: surfaceBorder,
-                    display: false
+                    display:false
                 }
             },
             y: {
@@ -402,7 +340,7 @@ const setChartOptions = () => {
                 },
                 grid: {
                     color: surfaceBorder,
-
+                    
                 }
             }
         }
