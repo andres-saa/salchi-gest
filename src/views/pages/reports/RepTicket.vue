@@ -1,354 +1,85 @@
 <template>
-    <div class="grid">
-
-        <div class="grid col-12 ">
-         
-
-            <div class="col-12 ">
-                <div class="card">
-                    <h5 style="background-color: ;"   >Historico de cantidad de ordenes <span :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'">{{ store.order_status }}s</span>  </h5>
-                    <!-- <Chart type="bar" :data="lineData" :options="lineOptions" /> -->
-                    <div class="card" >
-                        <Button class="p-0" text @click="visible_graph = true" size="small" style="border: none;" :style="store.order_status == 'enviada'? 'color:var(--blue-500)': 'color:rgba(255, 99, 132, 1)'"><i class="text-4xl" style="transform: rotate(45deg);;" :class="PrimeIcons.ARROW_A"></i></Button>
-                        <Chart type="line" :data="store.ordersCharData" :options="chartOptions" class="h-30rem" />
-                    </div>
-                </div>
+    <div class="p-3" style="min-width: 100%;  margin: auto;">
 
 
-            </div>
+        <div style="display: flex;gap: 1rem; align-items: center;" class="my-4">
+            <h6 class="m-0"><b>Tipo de grafica</b> </h6>
+
+            <Dropdown v-model="type_graph" :options="tipos_graficas" optionLabel="name"></Dropdown>
         </div>
 
 
-        <Dialog v-model:visible="visible_graph" modal header="Periodo" :style="{ width: '90vw',height:'max-content' }">
-<!-- <RepValorVentas></RepValorVentas> -->     
-                        <Chart type="line" :data="store.ordersCharData" :options="chartOptions" style="height: 60vh;" />
+        <Chart :type="type_graph.value" :data="data_graphics" class="h-[10rem] p-2 h-50"
+            style="width: 100%; box-shadow: 0 0 10px rgba(0, 0, 0, .2);border-radius: .5rem;" />
 
-        </Dialog>
+        <div>
+
+
+
+            <!-- {{ store }} -->
+
+        </div>
+
 
     </div>
+
+
 </template>
 
-<!-- 
-<script setup>
-
-
-
-
-
-
-
-
-
-
-
-
-import { onMounted, reactive, ref, watch } from 'vue';
-// import ProductService from '@/service/ProductService';
-import { useLayout } from '@/layout/composables/layout';
-import { useRoute } from 'vue-router';
-
-const { isDarkTheme } = useLayout();
-
-
-const ruta = useRoute()
-
-
-
-
-
-
-
-const products = ref(null);
-const lineData = reactive({
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            backgroundColor: '#2f4860',
-            borderColor: '#2f4860',
-            tension: 0.4
-        },
-        {
-            label: 'Second Dataset',
-            data: [28, 48, 40, 19, 86, 27, 90],
-            fill: false,
-            backgroundColor: '#00bb7e',
-            borderColor: '#00bb7e',
-            tension: 0.4
-        }
-    ]
-});
-const items = ref([
-    { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-    { label: 'Remove', icon: 'pi pi-fw pi-minus' }
-]);
-const lineOptions = ref(null);
-// const productService = new ProductService();
-
-// onMounted(() => {
-//     productService.getProductsSmall().then((data) => (products.value = data));
-// });
-
-const formatCurrency = (value) => {
-    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-};
-const applyLightTheme = () => {
-    lineOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#495057'
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: '#495057'
-                },
-                grid: {
-                    color: '#ebedef'
-                }
-            },
-            y: {
-                ticks: {
-                    color: '#495057'
-                },
-                grid: {
-                    color: '#ebedef'
-                }
-            }
-        }
-    };
-};
-
-const applyDarkTheme = () => {
-    lineOptions.value = {
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#ebedef'
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: '#ebedef'
-                },
-                grid: {
-                    color: 'rgba(160, 167, 181, .3)'
-                }
-            },
-            y: {
-                ticks: {
-                    color: '#ebedef'
-                },
-                grid: {
-                    color: 'rgba(160, 167, 181, .3)'
-                }
-            }
-        }
-    };
-};
-
-watch(
-    isDarkTheme,
-    (val) => {
-        if (val) {
-            applyDarkTheme();
-        } else {
-            applyLightTheme();
-        }
-    },
-    { immediate: true }
-);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const date = ref(false)
-const startDate = ref(new Date()) // Fecha de inicio del período
-const endDate = ref(new Date())   // Fecha de finalización del período
-
-// Formatear el período de fechas
-const formattedPeriod = ref(`${startDate.value} - ${endDate.value}`)
-
-function formatDate(date) {
-    if (!date) {
-        return 'periodo'
-    }
-    const mes = date.getMonth() + 1; // Extraer el mes (agregar 1 porque los meses comienzan desde 0)
-    const dia = date.getDate(); // Extraer el día
-    const año = date.getFullYear(); // Extraer el año
-
-    // Formatear la fecha con ceros a la izquierda si es necesario
-    const fechaFormateada = `${mes.toString().padStart(2, '0')}/${dia.toString().padStart(2, '0')}/${año.toString().slice(-2)}`;
-
-    return fechaFormateada;
-}
-
-
-const selectedCountry = ref({})
-
-const countries = ref()
-
-
-</script> -->
-
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { salesReport, formatToColombianPeso } from "@/service/valoresReactivosCompartidos";
-import { URI } from "@/service/conection";
-import {useReportesStore} from '@/store/reportes.js'
-import { PrimeIcons } from "primevue/api";
+import { onMounted, ref, watch } from "vue"
+import { URI } from "../../../service/conection"
+import { fetchService } from "../../../service/utils/fetchService"
+import { useReportesStore } from '@/store/reportes.js'
+
+
 const store = useReportesStore()
-const visible_graph = ref(false)
-onMounted(() => {
-    // store.fetchDilyReport()
-    chartOptions.value = setChartOptions();
-});
-
-
-const chartData = ref();
-const chartOptions = ref();
+const type_graph = ref({
+    name: 'Barras',
+    value: 'bar'
+})
 
 
 
+const data_graphics = ref([])
 
 
-const fetchSalesReport = async () => {
-    //   const formattedStartDate = formatDate(startDate.value);
-    //   const formattedEndDate = formatDate(endDate.value);
-    //   const siteIds = selectedSites.value.map(site => site.site_id).join(',');
-
-    // Construir la URL con parámetros de consulta
-    const queryParams = new URLSearchParams({
-        site_ids: '7',
-        status: 'enviada',
-        start_date: '2024-01-01',
-        end_date: '2024-02-08'
-    });
-
-    const url = `${URI}/daily_sales?${queryParams.toString()}`;
-
-    try {
-        const response = await fetch(url, {
-            method: 'GET', // Método GET especificado aquí
-            headers: {
-                'Content-Type': 'application/json',
-                // Agrega aquí otros encabezados si son necesarios
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        // salesReport.value = data
-        return (data)
+watch(() => store.dateRange , async() => {
+    const site_ids = store.selectedSites.map(s => s.site_id)
+    data_graphics.value = await fetchService.post(`${URI}/get_daily_average_ticket_report/`, {
+        start_date:store.dateRange.startDate,
+        end_date:store.dateRange.endDate,
+        sites: site_ids
+         })
+}, {deep:true})
 
 
-        // Maneja la respuesta
-        console.log(data);
-    } catch (error) {
-        console.error('Fetch error:', error);
+
+
+const tipos_graficas = [
+
+    {
+        name: 'Lineas',
+        value: 'line'
+    },
+    {
+        name: 'Barras',
+        value: 'bar'
     }
-};
+]
 
+onMounted(async () => {
 
+    const site_ids = store.selectedSites.map(s => s.site_id)
 
-// fetchSalesReport()
+    data_graphics.value = await fetchService.post(`${URI}/get_daily_average_ticket_report/`, {
+        start_date:store.dateRange.startDate,
+        end_date:store.dateRange.endDate,
+        sites: site_ids
+         })
 
-
-
-// onMounted(() => {
-//     store.fetchSalesReport()    
-
-// })
-
-
-
-
-
-
-const setChartOptions = () => {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-    return {
-        maintainAspectRatio: true,
-        aspectRatio: 3,
-        plugins: {
-            legend: {
-                labels: {
-                    color: textColor
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder,
-                    display:false
-                }
-            },
-            y: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder,
-                    
-                }
-            }
-        }
-    };
-}
-
-
-
+})
 
 
 </script>

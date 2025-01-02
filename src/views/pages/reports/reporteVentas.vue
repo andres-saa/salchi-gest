@@ -1,7 +1,7 @@
 <template>
 
 
-    <div class="col-12 px-3 md:px-4 mx-auto" style="position: relative; max-width: 1366px; margin-top: 6rem;">
+    <div class="col-12 px-0 md:px-4 mx-auto" style="position: relative; max-width: 1366px; margin-top: 6rem;">
 
 
         <div class="  grid " style=" background-color:rgba(250, 250, 250, 0);">
@@ -44,16 +44,6 @@
 
 
         </div>
-
-
-
-
-
-
-
-
-
-
 
 
         <p class="text-3xl px-0 mx-0 my-6 pb-0" style="font-weight: bold;"> <i class="fa-solid fa-chart-simple"></i>
@@ -506,7 +496,7 @@ const selectedRangeName = ref('');
 function setDateRange(days) {
     const today = new Date();
     const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setDate(tomorrow.getDate());
 
     const pastDate = new Date(today);
     pastDate.setDate(today.getDate() - days);
@@ -917,8 +907,8 @@ function saveState() {
 }
 
 .card-indicator{
-    box-shadow: 0 .5rem 1rem #00000030;
-    border: 1px solid #4b55635d;
+    box-shadow: 0 .5rem .5rem #00000020;
+    /* border: 1px solid #4b55635d;  */
 }
 
 

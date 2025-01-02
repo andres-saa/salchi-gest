@@ -1,5 +1,5 @@
 <template>
-    <div class="p-3" style="min-width: 100%; max-height: 80vh;overflow: auto; margin: auto;">
+    <div class="p-3" style="min-width: 100%;  margin: auto;">
 
 
         <div style="display: flex;gap: 1rem; align-items: center;" class="my-4">
@@ -16,7 +16,7 @@
 
 
 
-
+            <!-- {{ store }} -->
 
         </div>
 
@@ -28,10 +28,13 @@
 
 
 <script setup>
-import { onMounted, ref } from "vue"
+import { onMounted, ref, watch } from "vue"
 import { URI } from "../../../service/conection"
 import { fetchService } from "../../../service/utils/fetchService"
+import { useReportesStore } from '@/store/reportes.js'
 
+
+const store = useReportesStore()
 const type_graph = ref({
     name: 'Barras',
     value: 'bar'
@@ -40,6 +43,18 @@ const type_graph = ref({
 
 
 const data_graphics = ref([])
+
+
+watch(() => store.dateRange , async() => {
+    const site_ids = store.selectedSites.map(s => s.site_id)
+    data_graphics.value = await fetchService.post(`${URI}/get_daily_sales_report/`, {
+        start_date:store.dateRange.startDate,
+        end_date:store.dateRange.endDate,
+        sites: site_ids
+         })
+}, {deep:true})
+
+
 
 
 const tipos_graficas = [
@@ -55,7 +70,14 @@ const tipos_graficas = [
 ]
 
 onMounted(async () => {
-    data_graphics.value = await fetchService.post(`${URI}/get_daily_sales_report/2024-09-01/2024-12-30`, { ids: [1, 2, 3, 4, 5, 6, 7] })
+
+    const site_ids = store.selectedSites.map(s => s.site_id)
+
+    data_graphics.value = await fetchService.post(`${URI}/get_daily_sales_report/`, {
+        start_date:store.dateRange.startDate,
+        end_date:store.dateRange.endDate,
+        sites: site_ids
+         })
 
 })
 
