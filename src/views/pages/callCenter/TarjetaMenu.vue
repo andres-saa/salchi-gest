@@ -19,8 +19,6 @@
                     alt="">
    
 
-            <!-- {{ props.product }} -->
-
         </div>
 
         <div class="texto" style="">

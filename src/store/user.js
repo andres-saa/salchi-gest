@@ -12,7 +12,8 @@ export const loginStore = defineStore('user', {
                 storage: localStorage,
                 paths:[
                     'userData',
-                    'currentSection_pqr'
+                    'currentSection_pqr',
+                    'currentSection_users'
                     ]
 
         
@@ -27,6 +28,12 @@ export const loginStore = defineStore('user', {
                 name:'Basico',
                 x:0
             },
+            currentSection_users:{
+                name:'Basico',
+                x:0
+            },
+            
+            
             
         }
     },

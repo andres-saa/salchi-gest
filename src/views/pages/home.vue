@@ -82,10 +82,28 @@ Accesos Directos ->
 
 
 
+ 
+
+
+   <router-link v-if="store.rawUserData.id == 1132"  class="col-6  p-0 md:col-3 xl:col-3 px-0 item p-3"  to="/customers" style="transition: all ease .3s;">
+                <Button class="p-1" style="background-color: transparent;border: none;  ">
+                    <img class="m-0 px-2 py-2" src="/images/logo.png"
+                        style="width: 100%;aspect-ratio: 16/9; object-fit: contain  ;" alt="">
+                </Button>
+                
+                <p class="texto-apps text-sm md:text-l my-0 my-1 text-center"
+                    style="text-align: center; z-index: 99; color: white;">  <strong> {{ customers.name }} ( * Solo tu )</strong> 
+
+                
+                </p>
+    </router-link>
+
 
 
     <div class=" col-6  p-0 md:col-3 xl:col-3 px-0 item p-3" v-for="menu in menus"
         style="display: flex; transition: .2s all ease; flex-direction: column; justify-content: center; align-items: center;">
+
+        
         <div class="p-0   " outlined style="border: none;">
 
             <a class="" v-if="menu.a" :href="menu.to">
@@ -95,7 +113,9 @@ Accesos Directos ->
                 </Button>
             </a>
 
-            <router-link v-else :to="menu.to">
+      
+
+            <router-link v-else :to="menu.to ">
                 <Button class="p-1" style="background-color: transparent;border: none;">
                     <img class="m-0 px-2 py-2" :src="menu.imagen"
                         style="width: 100%;aspect-ratio: 16/9; object-fit: cover;" alt="">
@@ -168,6 +188,7 @@ const current_post = ref(1) ;
 const positionX = ref(0);
 
 
+const es_bryan = ref(false)
 
 const moveRight = () => {
   // Incrementamos la posición en 100px hacia la derecha
@@ -247,12 +268,26 @@ const items = ref([
 ]);
 
 
+
+const customers = ref(    
+    {
+        name: 'Base Usuarios',
+        to: '/customers',
+        imagen: "/images/icons/certify.png",
+        secret:true
+    },
+)
+
 const menus = [
+
+
     {
         name: 'Certificado laboral',
         to: '/certificado-laboral',
         imagen: "/images/icons/certify.png"
     },
+
+
 
     {
         name: 'Capacitaciones',

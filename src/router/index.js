@@ -115,6 +115,13 @@ const router = createRouter({
         
         },
 
+    
+          {
+            path: '/customers',
+            name: 'customers',
+            component: () => import('@/views/pages/customers/customer.vue'),
+          },
+        
 
         {
           path: '/hiring-hr/',
