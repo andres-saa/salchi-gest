@@ -871,8 +871,11 @@ import axios from 'axios';
     return null;
   }
 
+  // Filtrar PQRs para excluir las de clasificación "Cortesías"
+  const filteredPqrs = pqrsUser.value.filter(pqr => pqr.tag_name && pqr.tag_name !== "CORTESÍAS");
+
   // Agrupar las PQRs por sede
-  const groupedBySede = pqrsUser.value.reduce((acc, pqr) => {
+  const groupedBySede = filteredPqrs.reduce((acc, pqr) => {
     const sede = pqr.site_name || "Sin Sede"; // Asegúrate de que 'site_name' sea el campo correcto
     if (!acc[sede]) {
       acc[sede] = [];
@@ -887,7 +890,7 @@ import axios from 'axios';
     title: `Reporte de PQRs - Sede: ${sede}`,
     column_widths: {
       "ID": 15,
-      "Tipo": 30,
+      "Clasificacion": 30,
       "Descripción": 60,
       "Fecha": 15,
       "Hora": 10,
@@ -896,33 +899,40 @@ import axios from 'axios';
       "Responsable": 50             // Nueva columna
       // Agrega más columnas según tus necesidades
     },
-    data: groupedBySede[sede].map(pqr => {
-      // Verificar que el timestamp exista y tenga el formato esperado
-      let fecha = "--------";
-      let hora = "--------";
-      if (pqr.current_status?.timestamp) {
-        const parts = pqr.current_status.timestamp.split(' ');
-        if (parts.length >= 3) {
-          fecha = parts.slice(0, 1)[0]; // "26-12-2024"
-          hora = `${parts.slice(1, 3).join(' ')}`; // "04:58 pm"
-        } else {
-          // Manejo de formatos inesperados
-          fecha = pqr.current_status.timestamp;
+    data: groupedBySede[sede]
+      .sort((a, b) => {
+        // Manejo seguro para evitar problemas con valores nulos
+        const tagA = a.tag_name || "";
+        const tagB = b.tag_name || "";
+        return tagA.localeCompare(tagB);
+      })
+      .map(pqr => {
+        // Verificar que el timestamp exista y tenga el formato esperado
+        let fecha = "--------";
+        let hora = "--------";
+        if (pqr.current_status?.timestamp) {
+          const parts = pqr.current_status.timestamp.split(' ');
+          if (parts.length >= 3) {
+            fecha = parts.slice(0, 1)[0]; // "26-12-2024"
+            hora = `${parts.slice(1, 3).join(' ')}`; // "04:58 pm"
+          } else {
+            // Manejo de formatos inesperados
+            fecha = pqr.current_status.timestamp;
+          }
         }
-      }
 
-      return {
-        "ID": pqr.pqr_request_id,
-        "Tipo": pqr.request_type,
-        "Descripción": pqr.request_content,
-        "Fecha": fecha,
-        "Hora": hora,
-        "Estado": pqr.current_status?.status || "N/A",
-        "Observación del estado": pqr.current_status?.notes || "--------",        // Nuevo campo
-        "Responsable": pqr.current_status?.responsible_name?.toUpperCase() || "--------"        // Nuevo campo
-        // Agrega más campos según tus necesidades
-      };
-    }),
+        return {
+          "ID": pqr.pqr_request_id,
+          "Clasificacion": pqr.tag_name || "Sin Clasificación", // Valor por defecto
+          "Descripción": pqr.request_content,
+          "Fecha": fecha,
+          "Hora": hora,
+          "Estado": pqr.current_status?.status || "N/A",
+          "Observación del estado": pqr.current_status?.notes || "--------",        // Nuevo campo
+          "Responsable": pqr.current_status?.responsible_name?.toUpperCase() || "--------"        // Nuevo campo
+          // Agrega más campos según tus necesidades
+        };
+      }),
   }));
 
   return { hojas };
