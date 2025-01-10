@@ -315,6 +315,15 @@
             </div>
                      
             <Button @click="store.visible_add_pqr = true" icon="pi pi-plus" label="Nueva PQR" severity="help"></Button>
+            <div style="text-align: right; margin: 1rem;">
+    <Button 
+      @click="downloadPQRExcel" 
+      label="Descargar PQRs como Excel" 
+      icon="pi pi-file-excel" 
+      severity="success" 
+      class="p-button-sm"
+    />
+  </div>
 
                 
         </div>
@@ -847,14 +856,106 @@
     import { loginStore } from '../../../store/user';
     import { da, ta } from 'date-fns/locale';
     import { formatToColombianPeso } from '../../../service/valoresReactivosCompartidos';
-    
+    import { saveAs } from 'file-saver';
+import axios from 'axios';
     
     import { PathService } from '@/service/pathService';
     import pqrUser from './pqrUser.vue';
     
 
 
+    const prepareExcelData = () => {
+  // Verificar que pqrsUser tenga datos
+  if (!pqrsUser.value || pqrsUser.value.length === 0) {
+    alert("No hay PQRs disponibles para descargar.");
+    return null;
+  }
 
+  // Agrupar las PQRs por sede
+  const groupedBySede = pqrsUser.value.reduce((acc, pqr) => {
+    const sede = pqr.site_name || "Sin Sede"; // Asegúrate de que 'site_name' sea el campo correcto
+    if (!acc[sede]) {
+      acc[sede] = [];
+    }
+    acc[sede].push(pqr);
+    return acc;
+  }, {});
+
+  // Crear una hoja por cada sede
+  const hojas = Object.keys(groupedBySede).map(sede => ({
+    hoja: sede,
+    title: `Reporte de PQRs - Sede: ${sede}`,
+    column_widths: {
+      "ID": 15,
+      "Tipo": 30,
+      "Descripción": 60,
+      "Fecha": 15,
+      "Hora": 10,
+      "Estado": 45,
+      "Observación del estado": 50,   // Nueva columna
+      "Responsable": 50             // Nueva columna
+      // Agrega más columnas según tus necesidades
+    },
+    data: groupedBySede[sede].map(pqr => {
+      // Verificar que el timestamp exista y tenga el formato esperado
+      let fecha = "--------";
+      let hora = "--------";
+      if (pqr.current_status?.timestamp) {
+        const parts = pqr.current_status.timestamp.split(' ');
+        if (parts.length >= 3) {
+          fecha = parts.slice(0, 1)[0]; // "26-12-2024"
+          hora = `${parts.slice(1, 3).join(' ')}`; // "04:58 pm"
+        } else {
+          // Manejo de formatos inesperados
+          fecha = pqr.current_status.timestamp;
+        }
+      }
+
+      return {
+        "ID": pqr.pqr_request_id,
+        "Tipo": pqr.request_type,
+        "Descripción": pqr.request_content,
+        "Fecha": fecha,
+        "Hora": hora,
+        "Estado": pqr.current_status?.status || "N/A",
+        "Observación del estado": pqr.current_status?.notes || "--------",        // Nuevo campo
+        "Responsable": pqr.current_status?.responsible_name?.toUpperCase() || "--------"        // Nuevo campo
+        // Agrega más campos según tus necesidades
+      };
+    }),
+  }));
+
+  return { hojas };
+};
+
+
+
+
+
+// Función para descargar las PQRs como Excel
+const downloadPQRExcel = async () => {
+  try {
+    const payload = prepareExcelData();
+
+    if (!payload) return; // Salir si no hay datos para descargar
+
+    // Realizar la solicitud POST a la API
+    const response = await axios.post('https://excel-creator.salchimonster.com/crear-excel', payload, {
+      responseType: 'blob', // Importante para manejar archivos binarios
+    });
+
+    // Crear un blob a partir de la respuesta
+    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Utilizar file-saver para descargar el archivo
+    saveAs(blob, 'Reporte_PQRs.xlsx');
+  } catch (error) {
+    console.error('Error al descargar el Excel:', error);
+    alert("Ocurrió un error al intentar descargar el archivo Excel.");
+    // Opcional: Mostrar una notificación al usuario usando tu sistema de notificaciones
+  }
+};
+    
 
     const tipos_graficas = [
 
@@ -1599,7 +1700,7 @@
     display: flex;
     justify-content: center;
     border-radius: 0 0 1rem  1rem;
-    overflow: hidden;
+    overflow: auto;
     
     
     }
