@@ -863,7 +863,6 @@ import axios from 'axios';
     import pqrUser from './pqrUser.vue';
     
 
-
     const prepareExcelData = () => {
   // Verificar que pqrsUser tenga datos
   if (!pqrsUser.value || pqrsUser.value.length === 0) {
@@ -871,8 +870,28 @@ import axios from 'axios';
     return null;
   }
 
-  // Filtrar PQRs para excluir las de clasificación "Cortesías"
-  const filteredPqrs = pqrsUser.value.filter(pqr => pqr.tag_name && pqr.tag_name !== "CORTESÍAS");
+  // Convertir startDate y endDate a objetos Date
+  const start = new Date(startDate.value);
+  const end = new Date(endDate.value);
+  // Ajustar la hora del endDate para incluir todo el día
+  end.setHours(23, 59, 59, 999);
+
+  // Filtrar PQRs dentro del rango de fechas
+  const filteredByDatePqrs = pqrsUser.value.filter(pqr => {
+    if (!pqr.current_status?.timestamp) return false;
+    const pqrDateParts = pqr.current_status.timestamp.split(' ')[0].split('-');
+    // Asumiendo formato 'dd-mm-yyyy'
+    const pqrDate = new Date(`${pqrDateParts[2]}-${pqrDateParts[1]}-${pqrDateParts[0]}`);
+    return pqrDate >= start && pqrDate <= end;
+  });
+
+  if (filteredByDatePqrs.length === 0) {
+    alert("No hay PQRs en el rango de fechas seleccionado.");
+    return null;
+  }
+
+  // Filtrar PQRs para excluir las de clasificación "CORTESÍAS"
+  const filteredPqrs = filteredByDatePqrs.filter(pqr => pqr.tag_name && pqr.tag_name !== "CORTESÍAS");
 
   // Agrupar las PQRs por sede
   const groupedBySede = filteredPqrs.reduce((acc, pqr) => {
@@ -937,6 +956,7 @@ import axios from 'axios';
 
   return { hojas };
 };
+
 
 
 
