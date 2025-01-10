@@ -256,14 +256,14 @@
     
 
 
-<div style="min-width: 1200px;">
+<div style="">
 
 
     
     
     
     
-        <nav class="nav_bar shadow-2 p-0 my-0 mx-3" style="position: sticky;top: 3rem;max-width: 1200px; background-color: white;z-index: 99;">
+        <nav class="nav_bar shadow-2 p-0 my-0 mx-3" style="position: sticky;top: 3rem;max-width: 96vw;left: 0; background-color: white;z-index: 99;">
             <ul class="nav_bar--buttons p-0 m-1" style="">
            
                     <li v-for="button in nav_buttons" key="" class="" style="display: flex;align-items: center  ;" >
@@ -276,10 +276,10 @@
         </nav>
 
 
-       <div style="display: flex; justify-content: center;width: 100%;max-width: 1200px; align-items: end;gap: 1rem;" class="mt-0 px-1">
+       <div style="display: flex; justify-content: center;flex-direction: column; width: 100%;max-width: 96vw; align-items: center;gap: 1rem;" class="mt-0 px-1">
 
 
-        <div class="my-0 px-0"  :style="login.currentSection_pqr.x !=0? 'opacity:1' :'opacity:0'" style="display: flex;transition: all ease .5s; align-items: end; gap: 1rem">
+        <div class="my-0 px-0" v-if="login.currentSection_pqr.x !=0"  :style="login.currentSection_pqr.x !=0? 'opacity:1' :'opacity:0'" style="display: flex;transition: all ease .5s; align-items: end; gap: 1rem">
          
          <h6> <b> Desde</b> </h6>
          <Calendar style="max-width:7.5rem;" :disabled="login.currentSection_pqr.x == 0" v-model="temp_start_date"     dateFormat="dd-mm-yy" 
@@ -294,7 +294,7 @@
 
         <template v-if="login.currentSection_pqr.x == -200">
             <h6><b>Sedes</b> </h6>
-                <MultiSelect style="max-width: 17rem;min-width:  15rem;" :options="sites.filter(s => s.show_on_web)"  optionLabel="site_name" v-model="selected_sites"  placeholder="SEDES" />
+                <MultiSelect style="max-width: 17rem;min-width:  15rem;" :options="sites.filter(s => s.show_on_web || s.site_id == 17 || s.site_id == 18)"  optionLabel="site_name" v-model="selected_sites"  placeholder="SEDES" />
 
 
 
@@ -303,6 +303,8 @@
      
      
      <Button style="min-width: max-content;" :disabled="login.currentSection_pqr.x == 0" @click="obtain_pqr_report(temp_start_date,temp_end_data)" severity="help" label="Buscar" icon="pi pi-search"></Button>
+
+
         </div>
 
 
@@ -336,7 +338,7 @@
                 
             
     
-        <div class="px-0    mt-2" style="display: flex;width: 100%;align-items: center; justify-content:end;gap: 1rem; max-width: 1200px;">
+        <div class="px-0    mt-2" style="display: flex;width: 100%;align-items: center; justify-content:end;gap: 1rem; max-width: 96vw;">
     
     
  
@@ -348,20 +350,20 @@
     
     
     
-        <div class="scroll-container" style="">
+        <div class="scroll-container" style="margin: 0 auto;">
     
     
     
     
-            <div  style="display: flex; max-width: 1200px;overflow: hidden;align-items: start   ;">
+            <div  style="display: flex; max-width: 96vw;overflow: hidden;align-items: start   ;margin:0 auto;">
     
     
              
                
-            <DataTable :style="`transform:translateX(${ login.currentSection_pqr.x}%);transition: .5s all ease;`"  :paginator="true" :rows="15" style="width: 100%;"
+            <DataTable :style="`transform:translateX(${ login.currentSection_pqr.x}%);transition: .5s all ease;`"  :paginator="true" :rows="15" style="width: 100%"
            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes"
-           :rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto p-2"
+           :rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines  stripedRows class="col-12  p-2"
            :value="pqrsUser.filter(p =>  p.current_status?.status == active_button_nav?.name )" tableStyle="min-width: 50rem;" :filters="filters">
            <template #header>
                <div class="grid p-3" style="align-items:center;justify-content: space-between; display: flex;gap: 1rem;">
@@ -541,7 +543,7 @@
            </DataTable>
     
     
-           <div :style="`transform:translateX(${ login.currentSection_pqr.x}%);transition: .5s all ease;`" style="min-width: 100%; max-height: 80vh;overflow: auto; margin: auto;">
+           <div :style="`transform:translateX(${ login.currentSection_pqr.x}%);transition: .5s all ease;`" style="min-width: 100%;overflow: auto; margin:0 auto;height: min-content;">
     
     
     
@@ -549,7 +551,7 @@
 
            
     
-            <div style="max-width: 1010px;" class="m-auto my-6">
+            <div style="max-width: 1366px;" class="m-auto my-6">
 
 
          
@@ -562,10 +564,10 @@
                 </b> 
                 </h4>
                  
-            <DataTable    :rows="15" style=" max-width: 1200px; box-shadow: 0 0 1rem #00000030;border-radius: .5rem;"
+            <DataTable    :rows="15" style=" max-width: 96vw; box-shadow: 0 0 1rem #00000030;border-radius: .5rem;"
     
     
-            scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto my-4"
+            scrollable showGridlines  stripedRows class="col-12 m-auto my-4"
            :value="report" tableStyle="min-width: 50rem;" :filters="filters">
            <template #header>
      
@@ -626,17 +628,17 @@
     
 
 
-            <div style="max-width: 1010px;" class="mx-auto my-6">
+            <div style="max-width: 1366px;" class="mx-auto my-6">
                 <h4 class="m-0 px-0">
                 <b>
                     REPORTE POR RESPONSABLES  {{ formatearFechaLocal(startDate).split('-').reverse().join('-')}} <i class="pi pi-arrow-right"</i> {{ formatearFechaLocal(endDate   ).split('-').reverse().join('-')}} 
                 </b>
                 </h4>
                  
-            <DataTable    :rows="15" style=" max-width: 1200px; box-shadow: 0 0 1rem #00000030;border-radius: .5rem;"
+            <DataTable    :rows="15" style=" max-width: 96vw; box-shadow: 0 0 1rem #00000030;border-radius: .5rem;"
     
     
-            scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto my-4"
+            scrollable showGridlines  stripedRows class="col-12 m-auto my-4"
            :value="report_responsible   " tableStyle="min-width: 50rem;" :filters="filters">
            <template #header>
      
@@ -707,17 +709,17 @@
 
 
            
-            <div style="max-width: 1010px;" class="mx-auto my-3">
+            <div style="max-width: 1366px;" class="mx-auto my-3">
                 <h4 class="m-0 px-0">
                 <b>
                     REPORTE POR TIPOS  {{ formatearFechaLocal(startDate).split('-').reverse().join('-')}} <i class="pi pi-arrow-right"</i> {{ formatearFechaLocal(endDate   ).split('-').reverse().join('-')}} 
                 </b>
                 </h4>
                  
-            <DataTable    :rows="15" style=" max-width: 1200px; box-shadow: 0 0 1rem #00000030;border-radius: .2rem;background-color: white;"
+            <DataTable    :rows="15" style=" max-width: 96vw; box-shadow: 0 0 1rem #00000030;border-radius: .2rem;background-color: white;"
     
     
-            scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto my-4"
+            scrollable showGridlines  stripedRows class="col-12 m-auto my-4"
            :value="report_type" tableStyle="min-width: 50rem;" :filters="filters">
            <template #header>
      
@@ -789,22 +791,19 @@
     
     
             </div>
-    
-    
 
 
+             <div class="p-3" :style="`transform:translateX(${ login.currentSection_pqr.x}%);transition: .5s all ease;`" style="min-width: 100%;overflow: auto;height: min-content;  margin:0 auto;">
 
-             <div class="p-3" :style="`transform:translateX(${ login.currentSection_pqr.x}%);transition: .5s all ease;`" style="min-width: 100%; max-height: 80vh;overflow: auto; margin: auto;">
 
-
-                <div style="display: flex;gap: 1rem; align-items: center;" class="my-4">
+                <div style="display: flex;width: 100%;margin:0 auto; max-width: 1200px; gap: 1rem; align-items: center;" class="my-4">
                     <h6 class="m-0"><b>Tipo de grafica</b> </h6>
 
                 <Dropdown v-model="type_graph" :options="tipos_graficas" optionLabel="name"></Dropdown>
                 </div>
          
 
-                <Chart :type="type_graph.value" :data="data_graphics"  class="h-[10rem] p-2 h-50" style="width: 100%; box-shadow: 0 0 10px rgba(0, 0, 0, .2);border-radius: .5rem;" />
+                <Chart :type="type_graph.value" :data="data_graphics"  class="h-[10rem] p-2 h-50" style="width: 100%;margin:0 auto; max-width: 1200px; box-shadow: 0 0 10px rgba(0, 0, 0, .2);border-radius: .5rem;" />
                 
        
            <div>

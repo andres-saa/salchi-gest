@@ -41,7 +41,7 @@
 
         <div class="input">
           <h5 class="field">Medio</h5>
-          <Dropdown v-model="selectet_networks" optionValue="id" style="width: 100%; text-transform: uppercase;" :options="networs" optionLabel="name"></Dropdown>
+          <Dropdown v-model="selectet_networks" optionValue="id" style="width: 100%; text-transform: uppercase;" :options="networs.filter(n => ![4,5].includes(n.id))" optionLabel="name"></Dropdown>
         </div>
 
 
@@ -85,15 +85,15 @@
   
 
 
-        <div class="input p-3" v-if="(selectedType && selectedType !=11)" style="background-color: #00f3ff29;">
+        <!-- <div class="input p-3" v-if="(selectedType && selectedType !=11)" style="background-color: #00f3ff29;">
           <h5 class="field">Califícanos</h5>
           <Rating v-model="rating" :cancel="false"></Rating>
-        </div>
+        </div> -->
   
         <!-- Selección de Sede -->
         <div class="input" v-if="(selectedType)">
           <h5 class="field">Sede</h5>
-          <Dropdown :options="sites.filter(s => s.show_on_web)" v-model="selecteSite" optionValue="site_id" optionLabel="site_name" style="width: 100%;"></Dropdown>
+          <Dropdown :options="sites.filter(s => s.show_on_web || s.site_id == 17 || s.site_id == 18)" v-model="selecteSite" optionValue="site_id" optionLabel="site_name" style="width: 100%;"></Dropdown>
         </div>
   
         <!-- ID de la Orden -->
@@ -249,7 +249,7 @@ watch(() => store.visible_add_pqr, (newVal) => {
           reques_type_id: selectedType.value,
           content: comments.value || 'Sin comentarios',
           channel_id: 2, // Ajustar según el canal,
-          rating: rating.value,
+          rating: 0,
           site_id: selecteSite.value || null,
           network_id:selectet_networks.value || null,
           order_id:orderId.value  || null,
