@@ -870,19 +870,28 @@ import axios from 'axios';
     return null;
   }
 
-  // Convertir startDate y endDate a objetos Date
-  const start = new Date(startDate.value);
-  const end = new Date(endDate.value);
-  // Ajustar la hora del endDate para incluir todo el día
-  end.setHours(23, 59, 59, 999);
+  // Función para formatear la fecha a 'yyyy-mm-dd'
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Mes en base 0
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
-  // Filtrar PQRs dentro del rango de fechas
+  // Formatear las fechas seleccionadas
+  const startDateFormatted = formatDate(temp_start_date.value);
+  const endDateFormatted = formatDate(temp_end_data.value);
+
+  // Filtrar PQRs dentro del rango de fechas inclusivo
   const filteredByDatePqrs = pqrsUser.value.filter(pqr => {
     if (!pqr.current_status?.timestamp) return false;
-    const pqrDateParts = pqr.current_status.timestamp.split(' ')[0].split('-');
-    // Asumiendo formato 'dd-mm-yyyy'
-    const pqrDate = new Date(`${pqrDateParts[2]}-${pqrDateParts[1]}-${pqrDateParts[0]}`);
-    return pqrDate >= start && pqrDate <= end;
+
+    // Extraer la fecha de 'dd-mm-yyyy' a 'yyyy-mm-dd'
+    const [day, month, year] = pqr.current_status.timestamp.split(' ')[0].split('-');
+    const pqrDateFormatted = `${year}-${month}-${day}`;
+
+    return pqrDateFormatted >= startDateFormatted && pqrDateFormatted <= endDateFormatted;
   });
 
   if (filteredByDatePqrs.length === 0) {
@@ -891,7 +900,7 @@ import axios from 'axios';
   }
 
   // Filtrar PQRs para excluir las de clasificación "CORTESÍAS"
-  const filteredPqrs = filteredByDatePqrs.filter(pqr => pqr.tag_name && pqr.tag_name !== "CORTESÍAS");
+  const filteredPqrs = filteredByDatePqrs.filter(pqr => pqr.tag_name && pqr.tag_name.toUpperCase() !== "CORTESÍAS");
 
   // Agrupar las PQRs por sede
   const groupedBySede = filteredPqrs.reduce((acc, pqr) => {
@@ -926,14 +935,14 @@ import axios from 'axios';
         return tagA.localeCompare(tagB);
       })
       .map(pqr => {
-        // Verificar que el timestamp exista y tenga el formato esperado
+        // Extraer fecha y hora
         let fecha = "--------";
         let hora = "--------";
         if (pqr.current_status?.timestamp) {
           const parts = pqr.current_status.timestamp.split(' ');
-          if (parts.length >= 3) {
-            fecha = parts.slice(0, 1)[0]; // "26-12-2024"
-            hora = `${parts.slice(1, 3).join(' ')}`; // "04:58 pm"
+          if (parts.length >= 2) {
+            fecha = parts[0]; // "dd-mm-yyyy"
+            hora = parts.slice(1).join(' '); // Resto de la cadena (hora)
           } else {
             // Manejo de formatos inesperados
             fecha = pqr.current_status.timestamp;
@@ -956,6 +965,7 @@ import axios from 'axios';
 
   return { hojas };
 };
+
 
 
 
