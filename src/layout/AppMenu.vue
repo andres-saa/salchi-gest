@@ -299,11 +299,7 @@ async function fetchAndUpdateRoles() {
 
                 },
              
-                {
-                    label: 'Administrar PQRS ', icon: 'fa-solid fa-folder',to:'/pqrs/pagina_web/1' ,permision_id: 32,
-                    
-
-                },
+     
                 {
                     label: 'Requisicion de personal', icon: 'fa-solid fa-folder' ,permision_id: 32,
                     items:
@@ -339,7 +335,7 @@ async function fetchAndUpdateRoles() {
                
              
                 {
-                    label: 'Administrar PQRS ', icon: 'fa-solid fa-folder',to:'/pqrs/pagina_web/1' ,permision_id: 32,
+                    label: 'Administrar PQRS ', icon: 'fa-solid fa-folder',to:'/pqrs/pagina_web/1' ,permision_id: 55,
                     
 
                 },

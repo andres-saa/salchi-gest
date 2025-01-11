@@ -295,9 +295,6 @@
         <template v-if="login.currentSection_pqr.x == -200">
             <h6><b>Sedes</b> </h6>
                 <MultiSelect style="max-width: 17rem;min-width:  15rem;" :options="sites.filter(s => s.show_on_web || s.site_id == 17 || s.site_id == 18)"  optionLabel="site_name" v-model="selected_sites"  placeholder="SEDES" />
-
-
-
         </template>
         
      
