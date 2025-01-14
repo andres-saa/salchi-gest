@@ -67,12 +67,14 @@ const router = createRouter({
           path: '/cachier-money/',
           name: 'cachier-money',
           component: () => import('@/views/pages/cachierMoney/cachierMoney.vue'),
+          meta:{permission: 433},
           children:[
 
             {
               path: '/cachier-money/reportes',
               name: 'cachier-money-reportes',
               component: () => import('@/views/pages/cachierMoney/Reportes.vue'),
+              meta:{permision: 433},
             },
             {
               path: '/cachier-money/registros',
@@ -1290,10 +1292,9 @@ router.beforeEach(async (to, from, next) => {
     if (isRoleAuthorized || !to.matched.some(record => record.meta?.permission)) {
       next(); // Rol permitido o la ruta no requiere permisos específicos
     } else {
-      store.NoAuthorized = true
-   
-      // toast.add({ severity: 'error', summary: 'Algo salio mal', detail: 'No tienes permiso para entrar ahi', life: 3000 });
-      next(from); // Continuar a la ruta aunque no tenga el permiso específico
+      // Mostrar alerta y cancelar navegación
+      alert('No tienes permiso para entrar aquí');
+      next(false); // Cancela la navegación
     }
   } catch (error) {
     console.error("Error al decodificar el token:", error);

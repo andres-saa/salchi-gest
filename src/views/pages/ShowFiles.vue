@@ -572,19 +572,19 @@ const deleteFileType = async (typeId) => {
 
 
                 <div class="col-12 p-0" style="display: flex; justify-content: end;">
-                    <div class="mt-4 col-12 md:col-6 xl:col-4 p-0"
+                    <div class="mt-4 col-12 md:col-6 xl:col-4 p-0 px-3"
                         style="display: flex;max-width: 35rem; justify-content: end; gap: 1rem;">
 
                         <Button size="small "
                             style="width: 100%;font-weight: bold;display: flex;align-items: center;justify-content: center; "
-                            rounded class=" p-button-info  py-2" @click="open2()">
+                             class=" p-button-help  py-2" @click="open2()">
                             <i class="fa-solid fa-plus mr-2 text-2xl "></i>
                             <i class="fa-solid fa-file mr-2  text-2xl "></i>
 
                         </Button>
                         <Button size="small " ico
                             style="width:100%;font-weight: bold;display: flex;align-items: center; justify-content: center; "
-                            rounded class=" p-button-warning  py-2" @click="openNewSiteDialog">
+                             class=" p-button-help  py-2" @click="openNewSiteDialog">
                             <i class="fa-solid fa-plus mr-2 text-2xl "></i>
                             <i class="fa-solid fa-house mr-2 text-2xl "></i>
 
@@ -592,7 +592,7 @@ const deleteFileType = async (typeId) => {
 
                         <Button size="small "
                             style="width: 100%;font-weight: bold;display: flex;align-items: center;justify-content: center; "
-                            rounded class=" p-button-success  py-2" @click="displayAddTypeDialog = true">
+                             class=" p-button-help  py-2" @click="displayAddTypeDialog = true">
                             <i class="fa-solid fa-plus mr-2 text-2xl "></i>
                             <i class="fa-solid fa-font"></i>
 
@@ -640,7 +640,7 @@ const deleteFileType = async (typeId) => {
                     <template #body="user">
                         <span class="p-column-title">Category</span>
                         <p style="min-width: max-content;">
-                            {{ user.data.document_name }}
+                         {{ currentSite.site_name }}   {{ user.data.document_type }}
 
                         </p>
                     </template>
