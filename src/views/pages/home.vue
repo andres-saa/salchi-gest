@@ -85,14 +85,14 @@ Accesos Directos ->
  
 
 
-   <router-link v-if="store.rawUserData.id == 1132"  class="col-6  p-0 md:col-3 xl:col-3 px-0 item p-3"  to="/customers" style="transition: all ease .3s;">
+   <router-link v-if=" [1132, 1259, 1082].includes(store.rawUserData.id)"  class="col-6  p-0 md:col-3 xl:col-3 px-0 item p-3"  to="/customers" style="transition: all ease .3s;">
                 <Button class="p-1" style="background-color: transparent;border: none;  ">
                     <img class="m-0 px-2 py-2" src="/images/logo.png"
                         style="width: 100%;aspect-ratio: 16/9; object-fit: contain  ;" alt="">
                 </Button>
                 
                 <p class="texto-apps text-sm md:text-l my-0 my-1 text-center"
-                    style="text-align: center; z-index: 99; color: white;">  <strong> {{ customers.name }} ( * Solo tu )</strong> 
+                    style="text-align: center; z-index: 99; color: white;">  <strong> {{ customers.name }} ( * auth )</strong> 
 
                 
                 </p>

@@ -158,13 +158,13 @@
 import { useReportesStore } from '@/store/reportes.js'
 import { formatToColombianPeso, salesReport } from '@/service/valoresReactivosCompartidos';
 import { PrimeIcons } from 'primevue/api';
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, onMounted, watch } from 'vue'
 import { FilterMatchMode } from 'primevue/api';
 import { ref } from 'vue'
 import OrderDialog from '@/components/orderDialog.vue';
 import * as XLSX from 'xlsx';
 import { formatoPesosColombianos } from '@/service/formatoPesos';
-
+import { URI } from '../../../service/conection';
 const filters = ref(null);
 
 function convertirFechaUTCaColombia(fechaUTC) {
@@ -189,7 +189,62 @@ function convertirFechaUTCaColombia(fechaUTC) {
     return formateador.format(fecha);
 }
 
+
 const store = useReportesStore()
+
+
+const  fetchSumaryReport = async () => {
+    store.setLoading(true, 'cargando reporte')
+
+    const formattedStartDate = store.formatDate(store.dateRange.startDate)
+    const formattedEndDate = store.formatDate(store.dateRange.endDate)
+    const siteIds = store.selectedSites.map(site => site.site_id).join(',');
+
+  // Construir la URL con parámetros de consulta
+  const queryParams = new URLSearchParams({
+      site_ids: siteIds,
+      start_date: formattedStartDate,
+      end_date: formattedEndDate
+  });
+
+  const url = `${URI}/sales_report_sumary?${queryParams.toString()}`;
+
+  try {
+      const response = await fetch(url, {
+          method: 'GET', // Método GET especificado aquí
+          headers: {
+              'Content-Type': 'application/json',
+              // Agrega aquí otros encabezados si son necesarios
+          }
+      });
+
+      if (!response.ok) {
+        store.setLoading(false, 'cargando reporte')
+
+          throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // salesReport.value = data
+
+      store.sumaryData = data
+      store.setLoading(false, 'cargando reporte')
+
+
+  } catch (error) {
+      console.error('Fetch error:', error);
+      store.setLoading(false, 'cargando reporte')
+  }
+}
+
+
+onMounted(async () => {
+ 
+    await fetchSumaryReport(); 
+
+    // 5. Actualizar el rango "anterior"
+  
+});
 
 onBeforeMount(() => {
     initFilters();
@@ -203,6 +258,12 @@ const initFilters = () => {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     };
 };
+
+
+watch(() => store.dateRange, async() => {
+    // alert('hola')
+   await  fetchSumaryReport()
+},{deep:true})
 
 
 const getSeverity = (state) => {

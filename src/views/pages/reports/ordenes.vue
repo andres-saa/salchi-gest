@@ -1,336 +1,114 @@
 <template>
+  <div style="display: flex; justify-content: center; align-items: center; min-height: 50vh;">
+    <Button
+      style="width: 20rem; height: 5rem; font-size: 1.5rem;"
+      size="small"
+      class="p-4 mx-4"
+      severity="help"
+      @click="exportCSV"
+      label="Descargar reporte"
+      icon="pi pi-download text-5xl"
+    >
+    </Button>
 
+    <img
+      src="/images/excel.png"
+      style="position: fixed; z-index: -1; opacity: .2; width: 100vw; height: 40vh;filter: blur(3px); object-fit: cover;"
+      alt=""
+    />
 
-
-<div>
-    <Button size="small" class="py-2"  severity="help" @click="exportCSV" label=" Descargar reporte" icon="pi pi-download"> </Button>
-
-    <div class="flex flex-wrap align-items-center justify-content-between gap-2 my-5 pl-0 ml-0">
-                    <span class="text-l p-0  text-900 font-bold">Ordenes {{ store.order_status }}s entre {{store.dateRange?.startDate  }} y {{store.dateRange?.endDate }} </span>
-                    <div class="flex p-0  flex-column md:flex-row md:justify-content-between md:align-items-center" style="background-color: ;">
-                           
-                            <span class="block mt-2 md:mt-0 py-0">
-                                <!-- <i class="pi pi-search pr-3" /> -->
-                                <InputText class="p-2"  v-model="filters['global'].value" placeholder="Buscar..." />
-                            </span>
-                        </div>
-                </div>
-
-
-
-        <DataTable paginator  :value="store.salesReport.total_sales.orders_info" tableStyle="min-width: 50rem"
-                
-        
-        :rows="10" :filters="filters"
-                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                  :rowsPerPageOptions="[5, 10, 25,100]"
-                    stripedRows=""
-                  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} ordenes"
-                  responsiveLayout="scroll" scrollable >
-
-                  
-            <template>
-                
-            </template>
-            <Column field="order_id" header="Id" class="py-0" headerStyle="width:12rem;min-width:6rem">
-            
-                <template #body="slotProps">
-                 <p style="min-width: max-content;">
-                    {{slotProps.data.order_id}}
-                 </p>   
-                </template>
-            </Column>
-            <Column field="total_price" header="Monto" class="py-0" headerStyle="min-width:max-content; width:5rem">
-                <template #body="slotProps">
-             
-                    {{ formatToColombianPeso(slotProps.data.total_order_price)  }}
-                </template>
-            </Column>
-
-
-                
-      
-
-            <Column field="site_name" header="Sede" class="py-0" headerStyle="min-width:max-content; width:6rem">
-                <template #body="slotProps">
-                   
-                    {{ formatToColombianPeso(slotProps.data.site_name)  }}
-                </template>
-            </Column>
-
-
-        
-            <Column field="status.timestamp" class="px-1 py-0" header="Fecha" headerStyle="width:50rem; min-width:10rem ">
-                <template #body="slotProps">
-           
-                    {{ slotProps.data.latest_status_timestamp?.split('T')[0]}} 
-                    {{ slotProps.data.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':')}}
-                </template>
-            </Column>
-
-            <Column field="status.timestamp" class="px-1 py-0" header="Hora" headerStyle="width:50rem; min-width:max-content ">
-                <template #body="slotProps">
-           
-                    <!-- {{ slotProps.data.latest_status_timestamp?.split('T')[0]}}  -->
-                    {{ slotProps.data.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':')}}
-                </template>
-            </Column>
-
-            
-            <Column field="status.timestamp" class="px-1 py-0" header="Domicilio" headerStyle="width:6rem; min-width:max-content">
-                <template #body="slotProps">
-           
-                    ${{ slotProps.data.delivery_price}} 
-                   
-                </template>
-            </Column>
-
-
-            <Column field="status.timestamp" class="px-1 py-0" header="Metodo de pago" headerStyle="width:10rem; min-width:12rem">
-                <template #body="slotProps">
-           
-                    ${{ slotProps.data.payment_method}} 
-                   
-                </template>
-            </Column>
-
-            <Column field="status.timestamp" class="px-1 py-0" header="Nombre del usuario" headerStyle="width:12rem; min-width:13rem ">
-                <template #body="slotProps">
-           
-                    {{ slotProps.data.user_name .slice(0,40)}} 
-                   
-                </template>
-            </Column>
-
-
-            <Column field="status.timestamp" class="px-1 py-0" header="Telefono del usuario" headerStyle="width:12rem; min-width:11rem ">
-                <template #body="slotProps">
-           
-                    {{ slotProps.data.user_phone}} 
-                   
-                </template>
-            </Column>
-
-
-            <Column field="status.timestamp" class="px-1 py-0" header="Direccion del usuario" headerStyle="width:12rem; min-width:30rem ">
-                <template #body="slotProps">
-           
-                    {{ slotProps.data.user_address}} 
-                   
-                </template>
-            </Column>
-
-                 
-
-            <Column class="px-1 py-0" v-if="store.order_status == 'cancelada'" headerStyle="width:20rem; min-width:8rem; " field="status.reazon" header="Responsable">
-                <template #body="slotProps">
-                
-                   <span class="motivo">{{ slotProps.data?.responsible?.toLowerCase()}}.</span> 
-                </template>
-            </Column>
-
-
-
-            <Column class="px-1 py-0" v-if="store.order_status == 'cancelada'" headerStyle="width:30rem;min-width:40rem; " field="status.reazon" header="Motivo">
-                <template #body="slotProps">
-                
-                   <span class="motivo">{{ slotProps.data.reason?.toLowerCase()}}.</span> 
-                </template>
-            </Column>
-
-
-  
-
-            
-
-         
-            <Column header="Status" class="px-1 py-0"> 
-                <template #body="slotProps">
-                    <Tag :value="slotProps.data.current_status" :severity="getSeverity(slotProps.data?.current_status)" />
-                </template>
-            </Column>
-            
-
-        
-            <Column class="px-1 py-0" header="" frozen alignFrozen="right" headerStyle="width:0.5rem; max-width:0.5rem ">
-                <template #body="slotProps">
-                    <Button style="width: min-content;" @click="store.setVisibleOrder(true,slotProps.data)" text severity="help" icon="pi pi-eye" ></Button>
-                </template>
-            </Column>
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-        </DataTable>
-
-
-        <!-- <iframe src="https://agent.lety.ai/es/chatbot/embed/3939e556-be3d-4c2a-81f3-d3743b0e4c07" width="100%" height="600" frameborder="0" allow='microphone' ></iframe>
- -->
-
-
-        
-
-    <OrderDialog>
-
-    </OrderDialog>
-
-
-
-    </div>
-
+    <OrderDialog />
+  </div>
 </template>
 
-
 <script setup>
-import {useReportesStore} from '@/store/reportes.js'
-import { formatToColombianPeso, salesReport } from '@/service/valoresReactivosCompartidos';
-import { PrimeIcons } from 'primevue/api';
-import {onBeforeMount} from 'vue'
-import { FilterMatchMode } from 'primevue/api';
-import {ref} from 'vue'
-import OrderDialog from '@/components/orderDialog.vue';
-import * as XLSX from 'xlsx';
+import { ref } from 'vue'
+import { useReportesStore } from '@/store/reportes.js'
+import OrderDialog from '@/components/orderDialog.vue'
+import { URI } from '../../../service/conection'
 
-const filters = ref(null);
-
-
-
-
+// Store global
 const store = useReportesStore()
-onBeforeMount(() => {
-    initFilters();
-    // getSites()
-});
 
-
-
-const initFilters = () => {
-    filters.value = {
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
-    };
-};
-
-
-const getSeverity = (state) => {
-    switch (state) {
-        case 'enviada':
-            return 'success';
-
-        // case 'LOWSTOCK':
-        //     return 'warning';
-
-        case 'cancelada':
-            return 'danger';
-
-        default:
-            return null;
-    }
-};
-
-
-const obtenerDatosFiltrados = async () => {
-    
-
-    let Orders1 = [...store.salesReport.total_sales.orders_info];
-
-    store.order_status = store.order_status == 'enviada' ? 'cancelada' : 'enviada';
-    // Esperamos a que se complete la operación asincrónica
-    await store.fetchSalesReport();
-
-    // Ahora podemos trabajar con los datos actualizados
-    Orders1 = Orders1.concat([...store.salesReport.total_sales.orders_info]);
-    // store.order_status = store.order_status == 'enviada' ? 'cancelada' : 'enviada';
-
-    if (!filters?.value?.global.value) {
-        return Orders1
+/**
+ * Realiza la consulta GET al endpoint de reporte de ventas,
+ * luego realiza POST a la API de create-excel y finalmente
+ * descarga el archivo Excel.
+ */
+ const exportCSV = async () => {
+  try {
+    if (store.selectedSites.length < 1) {
+      await store.getSites()
     }
 
-    const filtroGlobal = filters.value.global.value.trim().toLowerCase();
+    const formattedStartDate = store.formatDate(store.dateRange.startDate)
+    const formattedEndDate = store.formatDate(store.dateRange.endDate)
 
+    if (formattedStartDate > formattedEndDate) {
+      alert('La fecha de inicio debe ser anterior o igual a la fecha final.')
+      return
+    }
 
-    // store.fetchSalesReport()
+    const siteIds = store.selectedSites.map(site => site.site_id).join(',')
 
-    return Orders1.filter(order => {
-        // Asumiendo que `order` es un objeto y comprobamos cada propiedad
-        return Object.values(order).some(value =>
-            value && value.toString().trim().toLowerCase().includes(filtroGlobal)
-        );
-    });
-}; 
+    const queryParams = new URLSearchParams({
+      site_ids: siteIds,
+      status: store.order_status,
+      start_date: formattedStartDate,
+      end_date: formattedEndDate
+    })
 
+    const url = `${URI}/sales_report?${queryParams.toString()}`
+    store.setLoading(true, 'cargando reporte')
 
+    // 1) Primer fetch: obtener la data (ya con la forma { "hojas": [...] })
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
 
-const exportCSV = async() => {
-    const datosFiltrados = await obtenerDatosFiltrados();
-    const data = datosFiltrados.map(order => ({
-        "Orden No": order.order_id,
-        "Monto": order.total_order_price,
-        "Sede": order.site_name,
-        "Fecha": order.latest_status_timestamp?.split('T')[0],
-        "Hora": order.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':'),
-        "Estado": order.current_status,
-        "Responsable": order.responsible ? `cancelada por ${order.responsible}` : 'no aplica',
-        "razon de la cancelacion": order.reason || 'no aplica',
-        "Domicilio": order.delivery_price,
-        "Metodo de pago": order.payment_method,
-        "Nombre del usuario": order.user_name,
-        "telefono del usuario": order.user_phone,
-        "direccion del usuario": order.user_address
-    }));
+    const data = await response.json() 
+    // data = {
+    //   hojas: [
+    //     { hoja: 'BRETAÑA', title: ..., column_widths: {...}, data: [...] },
+    //     ...
+    //   ]
+    // }
 
-    const worksheet = XLSX.utils.json_to_sheet(data);
+    // 2) Segundo fetch: mandar tal cual a create-excel
+    // OJO: notar que AQUI enviamos data completo, SIN envolverlo de nuevo
+    const excelResponse = await fetch('https://excel-creator.salchimonster.com/crear-excel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data.total_sales) // aquí va 'data'
+    })
+    if (!excelResponse.ok) {
+      throw new Error(`HTTP error! status: ${excelResponse.status}`)
+    }
 
-    // Calcular el ancho máximo de cada columna
-    const colWidths = data.reduce((widths, row) => {
-        Object.keys(row).forEach((key, i) => {
-            const contentLength = row[key]?.toString().length || 0;
-            widths[i] = Math.max(widths[i] || 10, contentLength);
-        });
-        return widths;
-    }, []);
+    // 3) Descargar el archivo Excel
+    const blob = await excelResponse.blob()
+    const downloadUrl = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = downloadUrl
+    link.setAttribute('download', 'reporte_de_ventas.xlsx')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  } catch (error) {
+    console.error('Fetch error:', error)
+  } finally {
+    store.setLoading(false, 'cargando reporte')
+  }
+}
 
-    worksheet["!cols"] = colWidths.map(maxWidth => ({
-        wch: maxWidth
-    }));
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "ventas");
-    XLSX.writeFile(workbook, "reporte de ventas salchimonster.xlsx");
-};
-
-
-
-
-
-// exportCSV()
 </script>
 
 <style scoped>
-
-
-
-
-*{
-    transition: all ease .3s;
+* {
+  transition: all ease 0.3s;
 }
-
-.motivo{
-    text-transform: capitalize;
-}
-
-
 </style>
-
-
-

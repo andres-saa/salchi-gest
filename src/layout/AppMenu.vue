@@ -66,7 +66,7 @@ async function fetchAndUpdateRoles() {
                         { label: 'Control', icon: ' fa-solid fa-burger', to: '/cancellation-requests/revisar/'  },
                         { label: 'Horario sedes ', icon: 'fa-solid fa-folder', to: '/directorio',permision_id: 31},
                     ],
-                    permision_id: get_id([1,2,3,4,5,6,7]),
+                    permision_id: get_id([1,2,3,4,5,6,7,31]),
                 },
                 {
                     label: 'Cajeros', icon: 'fa-solid fa-cart-shopping',

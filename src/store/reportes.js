@@ -16,10 +16,14 @@ export const useReportesStore = defineStore('reportes', {
                     // 'salesReport',
                     'selectedSites',
                     'order_status',
-                    // 'sumaryData',
+                    'sumaryData',
                      // Estado por defecto si no hay nada en localStorage
                     // 'ventasCharData',
                     // 'visibleNotifications',
+                    // 'NoOrdersDataGraphics',
+                    // 'OrderDataGraphics',
+                    // 'TicketDataGraphics',
+                    // 'dateReports',
                     'sites']
 
         
@@ -48,6 +52,25 @@ export const useReportesStore = defineStore('reportes', {
                     
                 }
             },
+            dateReports:{
+                resumen:{
+                    start:'',
+                    end:''
+                },
+                valorVentas:{
+                    start:'',
+                    end:''
+                },
+                NoOrdenes:{
+                    start:'',
+                    end:''
+                },
+                Ticket:{
+                    start:'',
+                    end:''
+                },
+
+            },
             selectedSites: [],
             order_status: 'enviada', // Estado por defecto si no hay nada en localStorage
             ventasCharData:{},
@@ -68,7 +91,10 @@ export const useReportesStore = defineStore('reportes', {
                 progress:0
             },
             sitesStatus:[],
-            visible_add_pqr:false
+            visible_add_pqr:false,
+            NoOrdersDataGraphics:{},
+            OrderDataGraphics:{},
+            TicketDataGraphics:{}
             
 
 
@@ -195,38 +221,40 @@ export const useReportesStore = defineStore('reportes', {
 
             const url = `${URI}/sales_report?${queryParams.toString()}`;
 
-            try {
-                this.setLoading(true, 'cargando reporte')
-                const response = await fetch(url, {
-                    method: 'GET', // Método GET especificado aquí
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // Agrega aquí otros encabezados si son necesarios
-                    }
-                });
+            // try {
+            //     this.setLoading(true, 'cargando reporte')
+            //     const response = await fetch(url, {
+            //         method: 'GET', // Método GET especificado aquí
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             // Agrega aquí otros encabezados si son necesarios
+            //         }
+            //     });
 
-                if (!response.ok) {
-                    // this.setLoading(false, 'cargando reporte')
-                    throw new Error(`HTTP error! status: ${response.status}`);
+            //     if (!response.ok) {
+            //         // this.setLoading(false, 'cargando reporte')
+            //         throw new Error(`HTTP error! status: ${response.status}`);
                     
-                }
+            //     }
 
-                const data = await response.json();
-                this.salesReport = data
+            //     const data = await response.json();
+            //     this.salesReport = data
               
-                // this.fetchDilyReport()
-                // this.fetchDilyOrdersReport()
-                // this.fetchTicketsReport()
-                this.fetchSumaryReport()
-                this.setLoading(false, 'cargando reporte')
+            //     // this.fetchDilyReport()
+            //     // this.fetchDilyOrdersReport()
+            //     // this.fetchTicketsReport()
+              
+            //     this.setLoading(false, 'cargando reporte')
 
 
 
                
-            } catch (error) {
-                console.error('Fetch error:', error);
-                this.setLoading(false, 'cargando reporte')
-            }
+            // } catch (error) {
+            //     console.error('Fetch error:', error);
+            //     this.setLoading(false, 'cargando reporte')
+            // }
+
+            // this.fetchSumaryReport()
         },
 
 
@@ -410,44 +438,6 @@ export const useReportesStore = defineStore('reportes', {
 
 
   
-  async fetchSumaryReport() {
-    const formattedStartDate = this.formatDate(this.dateRange.startDate)
-    const formattedEndDate = this.formatDate(this.dateRange.endDate)
-    const siteIds = this.selectedSites.map(site => site.site_id).join(',');
-
-  // Construir la URL con parámetros de consulta
-  const queryParams = new URLSearchParams({
-      site_ids: siteIds,
-      start_date: formattedStartDate,
-      end_date: formattedEndDate
-  });
-
-  const url = `${URI}/sales_report_sumary?${queryParams.toString()}`;
-
-  try {
-      const response = await fetch(url, {
-          method: 'GET', // Método GET especificado aquí
-          headers: {
-              'Content-Type': 'application/json',
-              // Agrega aquí otros encabezados si son necesarios
-          }
-      });
-
-      if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-          this.setLoading(false, 'cargando reporte')
-      }
-
-      const data = await response.json();
-      // salesReport.value = data
-
-      this.sumaryData = data
-
-  } catch (error) {
-      console.error('Fetch error:', error);
-      this.setLoading(false, 'cargando reporte')
-  }
-},
 
 
 
