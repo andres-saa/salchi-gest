@@ -1,7 +1,12 @@
 <template>
     <div class="container p-3">
       <div class="buttons">
-        <!-- Iterar sobre cada menú principal -->
+
+        <div style="border: 2px solid red;border-radius: 1rem;position: relative; overflow: hidden;"> 
+            <Sonando style="position: absolute;top: /3rem;"></Sonando>
+
+        </div>
+      
         <div
           class="p-3"
           v-for="menu in model"
@@ -365,7 +370,7 @@ const model = [
 ];
 
 import { loginStore } from '../../store/user';
-
+import Sonando from './Sonando.vue';
 
 
 // Función recursiva para verificar permisos
@@ -411,7 +416,7 @@ const permisions = loginStore()
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    max-width: 1600px;
+    max-width: 1920px;
     align-items: stretch; /* Estirar elementos para llenar el espacio */
 
 }
@@ -425,7 +430,7 @@ const permisions = loginStore()
 }
 
 
-@media (width<860px) {
+@media (width<1200px) {
  .buttons{
     grid-template-columns: repeat(2,1fr);
 
@@ -433,7 +438,7 @@ const permisions = loginStore()
 }
 
 
-@media (width<570px) {
+@media (width<800px) {
  .buttons{
     grid-template-columns: repeat(1,1fr);
 

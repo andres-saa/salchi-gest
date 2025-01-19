@@ -118,6 +118,12 @@ const router = createRouter({
             name: 'customers',
             component: () => import('@/views/pages/customers/customer.vue'),
           },
+
+          {
+            path: '/sonando',
+            name: 'sonando',
+            component: () => import('@/views/pages/Sonando.vue'),
+          },
         
 
         {
@@ -211,7 +217,7 @@ const router = createRouter({
           
           children: [
             {
-              path: '/call-center-vender/:menu_name/:category_id',
+              path: '/call-center-vender/:category_id',
               name: 'call-center-vender-menu',
               component: () => import('@/views/pages/callCenter/sesion.vue'),
               meta: { title:'callCenter' },

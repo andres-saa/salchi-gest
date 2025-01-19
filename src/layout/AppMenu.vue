@@ -87,6 +87,16 @@ async function fetchAndUpdateRoles() {
     },
 
     {
+        label: 'MONSTER LIVE',
+        icon: 'fa-solid fa-sync',
+        'icon-color': 'yellow', // Verde lima
+        permision_id: get_id([50]),
+        items: [
+            { label: 'Sonando', icon: 'fa-solid fa-music', to: '/sonando', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
+        ]
+    },
+
+    {
         label: 'CONCURSOS',
         icon: 'fa-solid fa-trophy',
         'icon-color': '#FFD700', // Oro

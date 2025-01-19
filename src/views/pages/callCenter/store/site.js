@@ -77,7 +77,7 @@ export const useSitesStore = defineStore('call-center-site', {
                 this.webSocket.close// Make sure to close any existing connections
             }
 
-            this.webSocket = new WebSocket(`wss://${URI_SOCKET}/ws/${siteId}`);
+            // this.webSocket = new WebSocket(`wss://${URI_SOCKET}/ws/${siteId}`);
             this.webSocket.onopen = () =>
                 this.webSocket.onmessage = (message) => {
                     console.log('new mesagge')

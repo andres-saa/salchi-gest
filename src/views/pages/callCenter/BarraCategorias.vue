@@ -1,198 +1,219 @@
 <template>
-
-    <div style="position: sticky; top: 3rem; z-index: 99; background-color: var(--primary-color);overflow-x: auto;" class=" nav_bar shadow-3 d-flex  lg:justify-content-start align-items-center mb-5 p-0 md:p-0">
-       
-       
-        <!-- <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; left: -0.5rem;z-index: 99;height: 100%;width: 1.7rem; border-radius: 0;" severity="help"  icon="pi pi-angle-left text-2xl"></Button>
-
-
-        <Button class="px-0" style="position: absolute;border: none;background-color: white;color: black; right: -0.5rem;z-index: 99;height: 100%; width: 1.7rem; border-radius: none;" severity="help"  icon="pi pi-angle-right text-2xl"></Button> -->
-
-        <div class=" d-flex text-white  align-items-center  p-0 m-0"
-        style="gap: 0;display: flex;">
-
-        <!-- <div v-for="(section,index) in categories" :key="section.id" class="p-0"  style="display: flex; align-items: center;">
-            <Button    size="small" @click="navigateToCategory(section.category_name,section.category_id)" :label="section.category_name "
-                :class="checkSelected(section.category_id) ? 'selected menu-button' : 'menu-button'"
-                class="py-3 px-3 mx-0  text-lg titulo" style=" text-transform: capitalize;width:max-content; color:white; border-radius: 0;outline: none;box-shadow: none;font-weight: bold;">
-               
-            </Button>
-            <span v-if="index < categories.length-1"> <b>| </b></span>
-
-        </div> -->
-        
-
-        
-        <Button @click="store.visibles.currentSite = true" severity="help"
+    <div ref="categoryBar"
+      style="position: sticky;  box-shadow: 0 1rem .5rem #00000020;
+   top: 3rem;padding: .2rem; z-index: 99    ;display: flex;align-items: center; background-color: var(--primary-color); overflow-x: auto;">
+           
+           <Button @click="siteStore.visibles.currentSite = true" severity="help"
                 
                 class="  mx-4 text-lg titulo"  style="font-weight: 400;min-height: 100%; border-radius: .3rem; text-transform: uppercase;min-width: max-content;">
                 <span class="text-lg" style="min-width: max-content;">Nuevo pedido</span>
         </Button>
-
-        <div v-for="(section,index) in cart?.menu?.listaCategorias?.filter(c => store.categories.includes(parseInt(c.categoria_id)))
-                    ?.sort((a, b) => store.categories.indexOf(parseInt(a.categoria_id)) - store.categories.indexOf(parseInt(b.categoria_id)))" :key="section.categoria_id" class="p-0"  style="display: flex; align-items: center;">
-
-            <Button    
-                    size="small" 
-                    @click="navigateToCategory(section.categoria_descripcion, section.categoria_id)" 
-                    :label="section.categoria_descripcion"
-                    :class="checkSelected(section.categoria_id) ? 'selected menu-button' : 'menu-button'"
-                    class="py-3 px-3 mx-0 text-lg titulo" 
-                    style="text-transform: capitalize;width:max-content;text-transform: uppercase; color:white; border-radius: 0;outline: none;box-shadow: none;font-weight: bold;">
-                </Button>
-                <span 
-                    v-if="index < cart?.menu?.listaCategorias?.filter(c => store.categories.includes(parseInt(c.categoria_id)))
-                    ?.sort((a, b) => store.categories.indexOf(parseInt(a.categoria_id)) - store.categories.indexOf(parseInt(b.categoria_id))).length - 1">
-                    <b>|</b>
-                </span>
+      <div class="container" style="justify-content: start; align-items: center;">
+        <div v-for="(section, index) in filteredAndSortedCategories" :key="section.categoria_id"
+          :id="'categoryButton-' + section.categoria_id" class="container-button">
+          <a @click.prevent="smoothScrollTo(section.categoria_id)">
+            <Button class="bar-button" :class="{ selected: cart.currentSection === section.categoria_id }"
+              :label="section.categoria_descripcion">
+              <img
+                :src="`https://img.restpe.com/${cart?.menu?.data.find(p => p.categoria_id == section.categoria_id)?.productogeneral_urlimagen}`"
+                alt="" />
+              <span><b>{{ section.categoria_descripcion }}</b></span>
+            </Button>
+          </a>
         </div>
+      </div>
     </div>
-    </div>
+  </template>
+  
+  <script setup>
+  import { onMounted, onBeforeUnmount, computed, watch } from 'vue';
+  import { usecartStore } from './store/shoping_cart';
+  import router from '../../../router';
+  import { useSitesStore } from './store/site';
+
+  const siteStore = useSitesStore()
+//   import { Button } from 'primevue';
+  
+  // Store
+  const cart = usecartStore();
+  
+  // Orden personalizado de las categorías (IDs)
+  const codigos = [10, 26, 8, 9, 13, 27, 11, 4, 5];
+  
+  // Filtra y ordena las categorías con base en 'codigos'
+  const filteredAndSortedCategories = computed(() => {
+    return cart?.menu?.listaCategorias
+      ?.filter(c => siteStore.categories.includes(parseInt(c.categoria_id)))
+      ?.sort((a, b) => {
+        return codigos.indexOf(parseInt(a.categoria_id)) - codigos.indexOf(parseInt(b.categoria_id));
+      });
+  });
+  
+  /**
+   * Desplaza suavemente el contenido principal hasta la sección
+   * y actualiza cart.currentSection para que se marque como activa
+   */
+  const smoothScrollTo = (categoryId) => {
     
-
-</template>
-
-
-
-
-
-<script setup>
-import { ref, onMounted } from 'vue';
-import router from '@/router/index.js';
-import { useRoute } from 'vue-router';
-import { categoriesService } from './service/restaurant/categoriesService'
-import { usecartStore } from './store/shoping_cart';
-
-const cart = usecartStore()
-
-
-import {useSitesStore} from  './store/site'
-
-const store = useSitesStore()
-
-const categories = ref([]);
-
-const navigateToCategory = (categoryName,category_id) => {
-    router.push({ name: 'call-center-vender-menu', params: { menu_name: categoryName, category_id:category_id } });
-};
-
-
-
-const checkSelected = (section) => {
-    const route = useRoute(); // Asegúrate de que tienes acceso a useRoute aquí
-    return route.params.category_id == section; // Verifica si el path actual contiene la cadena section
-};
-
-
-
-
-
-
-</script>
-
-
-<style scoped>
-.boton-menu {
-    margin: 0;
-    border: none;
-    background-color: transparent;
-    font-size: 20px;
-    padding: 0 20px;
-}
-
-* {
-    text-transform: lowercase;
-}
-
-*::first-letter {
-    text-transform: uppercase;
-}
-
-.menu-button {
-    background-color: transparent;
-    padding: 1rem;
-    margin: 0 1rem;
-    border: none;
-    font-size: 20px;
-    outline: none;
-    box-shadow: none;
-
-}
-
-.menu-button:hover {
-
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.186);
-
-
-}
-
-*:focus {
-    outline: none;
-}
-
-
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.5s;
-}
-
-.titulo {
-    text-transform: lowercase;
-}
-
-.fade-enter,
-.fade-leave-to {
-    opacity: 0;
-}
-
-
-.selected {
-    /* box-shadow: 0 0.4rem var(--primary-color) !important;
-     */
-     /* border-bottom: 3px none red !important;  */
-     margin-bottom: 0%;
-     margin-top: 0;
-    
-     padding: 0;
-     background-color: rgba(0, 0, 0, 0.413);
-     /* font-weight: bold; */
-     
-     /* padding-bottom: 3px; */
-
-}
-
-
-
-
-.selected::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      font-weight: bold;
-      height: 0;
-     
+    router.push(`/call-center-vender/${categoryId}`)
+    // ----- SCROLL VERTICAL (al contenido) -----
+    const element = document.getElementById(categoryId);
+    if (element) {
+      const offset = 10 * 16;
+      const elementY = element.getBoundingClientRect().top + window.pageYOffset;
+      const targetPosition = elementY - offset;
+  
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
     }
-
-
-
-
-.col-12 {
-    width: 100vw;
-    /* position: absolute; */
-    left: 0;
-    padding: 1.5rem;
-}
-
-
-.navbar {
-  overflow-x: auto; /* Permite desplazamiento horizontal */
-  white-space: nowrap; /* Evita el salto de línea en el texto */
-}
-
-.navbar-item {
-  min-width: 100px; /* Ajusta el ancho mínimo de los elementos del navbar según sea necesario */
-}
-</style>
+  
+    // ----- MARCAR SECCIÓN ACTUAL -----
+    cart.currentSection = categoryId;
+  
+    // ----- SCROLL HORIZONTAL (a la barra de categorías) -----
+    setTimeout(() => {
+      const buttonElement = document.getElementById(`categoryButton-${categoryId}`);
+      if (buttonElement) {
+        buttonElement.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center',   // Centra horizontalmente
+          block: 'nearest'       // No desplaza verticalmente innecesariamente
+        });
+      }
+    }, 1000);
+  };
+  
+  // IntersectionObserver para marcar la sección activa al hacer scroll
+  // let observer = null;
+  // onMounted(() => {
+  //   observer = new IntersectionObserver(
+  //     entries => {
+  //       entries.forEach(entry => {
+  //         if (entry.isIntersecting) {
+  //           cart.currentSection = entry.target.id;
+  //         }
+  //       });
+  //     },
+  //     {
+  //       root: null,
+  //       // Ajustar según la altura de tu barra sticky
+  //       rootMargin: '-50px 0px -60% 0px',
+  //       threshold: 0
+  //     }
+  //   );
+  
+  //   // Se observa cada contenedor de categoría (en tu DOM deben existir elementos con id = section.categoria_id)
+  //   filteredAndSortedCategories.value.forEach(section => {
+  //     const target = document.getElementById(section.categoria_id);
+  //     if (target) {
+  //       observer.observe(target);
+  //     }
+  //   });
+  
+  
+  
+  
+  
+  
+  // });
+  
+  // Al desmontar, limpiamos el observer
+  onBeforeUnmount(() => {
+    // if (observer) observer.disconnect();
+  });
+  
+  
+  // watch(() => cart.currentSection, (f) => {
+  //   setTimeout(() => {
+  //     const buttonElement = document.getElementById(`categoryButton-${f}`);
+  //     if (buttonElement) {
+  //       buttonElement.scrollIntoView({
+  //         behavior: 'smooth',
+  //         inline: 'center',   // Centra horizontalmente
+  //         block: 'nearest'       // No desplaza verticalmente innecesariamente
+  //       });
+  //     }
+  //   }, 1000);
+  // })
+  
+  /**
+   * Watch que, cada vez que cambie la sección activa,
+   * busca el botón correspondiente y hace scroll para centrarlo.
+   */
+  
+  </script>
+  
+  <style scoped>
+  .container {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 0.5rem;
+    animation: ;
+  
+  }
+  
+  .bar-button {
+    border-radius: 10rem;
+    background-color: #fff;
+    color: #000;
+    padding: .2rem 1rem .4rem .4rem;
+    white-space: nowrap;
+    box-shadow: 0 0 .5rem #00000050;
+    /* para evitar quiebres de línea */
+  }
+  
+  
+  .bar-button:hover {
+  
+    background-color: #000000;
+    color: #fff;
+  
+    /* para evitar quiebres de línea */
+  }
+  
+  
+  .container-button {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    height: 3rem;
+  }
+  
+  .selected {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  
+  @keyframes scrollHint {
+    0% {
+      transform: translateX(0) rotate(45deg);
+      opacity: 0;
+    }
+  
+    30% {
+      opacity: 1;
+    }
+  
+    70% {
+      transform: translateX(20px) rotate(45deg);
+      opacity: 1;
+    }
+  
+    100% {
+      transform: translateX(40px) rotate(45deg);
+      opacity: 0;
+    }
+  }
+  
+  img {
+    height: 2rem;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  </style>
+  

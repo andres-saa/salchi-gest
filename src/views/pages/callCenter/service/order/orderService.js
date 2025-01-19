@@ -14,7 +14,12 @@ const cart = usecartStore();
 const site = useSitesStore();
 const user = useUserStore();
 
+
+
+
 const preparar_orden = () => {
+
+  const login = loginStore()
   user.user.was_reserva = false;
   cart.sending_order = true;
   const order_products = cart.cart.products.map((p) => {
@@ -114,6 +119,7 @@ const preparar_orden = () => {
     order_aditionals: order_aditionals,
     pe_json: order_products,
     total: cart.cart.total_cost,
+    inserted_by:login.rawUserData.id
   };
 
   return order;

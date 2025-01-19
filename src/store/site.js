@@ -20,6 +20,10 @@ export const useSitesStore = defineStore('site', {
             site:{
 
             },
+            visibles: {
+                currentSite: false,
+                sonandoCurrentSite:false
+            },
             restaurant:1
         }
     },
