@@ -61,8 +61,6 @@ const router = createRouter({
         
         },
 
-
-        
         {
           path: '/cachier-money/',
           name: 'cachier-money',
@@ -74,7 +72,7 @@ const router = createRouter({
               path: '/cachier-money/reportes',
               name: 'cachier-money-reportes',
               component: () => import('@/views/pages/cachierMoney/Reportes.vue'),
-              meta:{permision: 433},
+              meta:{permission: 433},
             },
             {
               path: '/cachier-money/registros',
@@ -87,11 +85,8 @@ const router = createRouter({
               component: () => import('@/views/pages/cachierMoney/Salidas.vue'),
             }
 
-
-            
           ]
           
-        
         },
         {
           path: '/hiring-authorize',
@@ -212,7 +207,7 @@ const router = createRouter({
           path: '/call-center-vender',
           name: 'call-center-vender',
           component: () => import('@/views/pages/callCenter/MenuView.vue'),
-          matched:{permision_id: 6},
+          matched:{permission_id: 6},
           
           children: [
             {
@@ -248,7 +243,7 @@ const router = createRouter({
           path: '/pqrs',
           name: 'pqrs',
           component: () => import('@/views/pages/pqrs/pqrs.vue'),
-          meta:{permision_id: 32},
+          meta:{permission_id: 32},
           children:[
             {
               path: '/pqrs/:section/:section_id',
@@ -264,7 +259,7 @@ const router = createRouter({
           path: '/pqrs-user',
           name: 'pqrs-user',
           component: () => import('@/views/pages/pqrs/pqrUser.vue'),
-          meta:{permision_id: 43}
+          meta:{permission_id: 43}
           
         },
 
@@ -272,13 +267,13 @@ const router = createRouter({
           path: '/informacion-empresarial',
           name: 'informacion-empresarial',
           component: () => import('@/views/pages/infoSalchi.vue'),
-          meta:{permision_id: 43}
+          meta:{permission_id: 43}
         },
 
         {
           path: '/tienda-menu',
           name: 'menuTienda',
-          meta:{permision_id: 2},
+          meta:{permission_id: 2},
           component: () => import('@/views/pages/tienda/MenuTienda.vue'),
           children:[
               {
@@ -305,7 +300,7 @@ const router = createRouter({
           path: '/domicilios/',
           name: 'domicilios',
           component: () => import('@/views/pages/domicilios.vue'),
-          meta:{permision_id: 4},
+          meta:{permission_id: 4},
           children: [
             {
               path: '/domicilios/:site_id',
@@ -320,7 +315,7 @@ const router = createRouter({
           path: '/franquicias/',
           name: 'franquicias',
           component: () => import('@/views/pages/Franquicias/Franquicias.vue'),
-          meta:{permision_id: 4},
+          meta:{permission_id: 4},
         },
 
         
@@ -527,7 +522,7 @@ const router = createRouter({
           path: '/reporte-ventas/',
           name: 'reporte-ventas',
           component: () => import('@/views/pages/reports/reporteVentas.vue'),
-          meta:{permision_id: 3},
+          meta:{permission_id: 3},
           children: [
             {
               path: '/reporte-ventas/valor-ventas',
@@ -538,6 +533,11 @@ const router = createRouter({
               path: '/reporte-ventas/no-ordenes',
               name: 'reporte-ventas-no-ordenes',
               component: () => import('@/views/pages/reports/RepNoOrdenes.vue'),
+            },
+            {
+              path: '/reporte-ventas/modificar-ordenes',
+              name: 'reporte-ventas-no-ordenes-modificar',
+              component: () => import('@/views/pages/reports/modificar_ordenes.vue'),
             },
             {
               path: '/reporte-ventas/ticket',
@@ -568,7 +568,7 @@ const router = createRouter({
           path: '/cocina',
           name: 'cocina',
           component: () => import('@/views/pages/cocina/pedidos.vue'),
-          meta:{permision_id: 1}
+          meta:{permission_id: 1}
           
         },
        
@@ -644,11 +644,6 @@ const router = createRouter({
             
             },
               
-            
-              
-
-
-
             {
               path: '/purchase-order/recorrido/purchase-order-view/:purchase_order_id',
               name: 'purchase-order-view-3/',

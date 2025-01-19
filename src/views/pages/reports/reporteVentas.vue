@@ -85,11 +85,6 @@
 
 
 
-        <!-- <p class="text-xl px-0 mx-0 my-3 pb-0" style="font-weight: bold;">
-            INDICADORES GENERALES</p>
- -->
-
-
         <div class="grid col-12 p-0 m-0">
 
      
@@ -265,8 +260,6 @@
     </div>
 
  
-
-
 </template>
 
 
@@ -624,6 +617,11 @@ const menus = ref([
         name: 'Ordenes',
         to: '/reporte-ventas/ordenes',
         icon: 'fa-solid fa-table'
+    },
+    {
+        name: 'Modificar ordenes',
+        to: '/reporte-ventas/modificar-ordenes',
+        icon: 'fa-solid fa-sync'
     }
 
 ])

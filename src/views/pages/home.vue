@@ -1,550 +1,442 @@
 <template>
-
-
-
-    <div>
-
-
-        <div class="aux-back"
-            style="background-color: white;  object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
-        </div>
-
-
-
-        <div class="aux-back"
-            style="background-color: rgb(0, 1, 22);opacity:0.9 ;background-size: cover;height: 100vh;  width: 100vw; object-fit: contain;display: flex; position: fixed;top: 0;bottom: 0;left: 0;">
-        </div>
-
-
-        <div style="height: calc(100vh - 3rem); display: flex;margin-top:2rem; align-items: center;">
-
-
-
-
-
-            <div class="ipad-container col-12   "
-                style="max-width: 800px;border-radius:0.5rem;position: relative;display: flex; ">
-
-
-
-                <div style="z-index: 99; width: min-content; display: flex;justify-content: start; gap: 1rem; align-items: center;"
-                    class=" knobi my-3">
-
-                    <div
-                        style="position: relative;width: min-content; height: min-content; display: flex;align-items: center; justify-content: center;">
-                        <!-- <Knob v-model="valor" valueTemplate=""></Knob> -->
-                        <img class="p-1"
-                            style="height:3.5rem; position: relative; border-radius: 50%;width: 3.5rem;outline: .2rem solid var(--primary-color); object-fit: cover;"
-                            :src="`${URI}/read-product-image/96/employer-${store.rawUserData?.dni}`" alt="">
-
-                    </div>
-
-
-                    <div style="display: flex; flex-direction: column;gap:0.5rem ;   ">
-                        <h6 class="text-xl m-0 md:text-3xl" style=" min-width: max-content;color:white;text-transform:capitalize;  text-shadow: 
-">
-
-
-                            {{ store.rawUserData?.name.split(' ').slice(0, 3).join(' ').toLowerCase() }}</h6>
-
-                        <h6 class="m-0" style=" color:white;text-transform:capitalize; min-width:max-content;
-"> {{ store.rawUserData?.rol.toLowerCase() }}</h6>
-                    </div>
-
-
-                </div>
-
-
-                <div class="ipad-screen p-3" style=" ">
-
-
-                    <h4 class="m-0 col-12" style="color: #fff;">
-
-Accesos Directos ->
-
-
-                    </h4>
-
-
-
-
-                    <div style="overflow: hidden;display: flex;align-items: center;">
-
-
-
-
-<div style="display: flex; transition: .7s all ease;" ref="slider" :class="move ? 'move' : '.'">
-
-
-<div v-for="i in [1,2,3]" class="grid col-12   m-0"
-    style="z-index: 99;overflow: hidden;width: 100%; align-items: start"
-   >
-
-
-
- 
-
-
-   <router-link v-if=" [1132, 1259, 1082].includes(store.rawUserData.id)"  class="col-6  p-0 md:col-3 xl:col-3 px-0 item p-3"  to="/customers" style="transition: all ease .3s;">
-                <Button class="p-1" style="background-color: transparent;border: none;  ">
-                    <img class="m-0 px-2 py-2" src="/images/logo.png"
-                        style="width: 100%;aspect-ratio: 16/9; object-fit: contain  ;" alt="">
-                </Button>
-                
-                <p class="texto-apps text-sm md:text-l my-0 my-1 text-center"
-                    style="text-align: center; z-index: 99; color: white;">  <strong> {{ customers.name }} ( * auth )</strong> 
-
-                
-                </p>
-    </router-link>
-
-
-
-    <div class=" col-6  p-0 md:col-3 xl:col-3 px-0 item p-3" v-for="menu in menus"
-        style="display: flex; transition: .2s all ease; flex-direction: column; justify-content: center; align-items: center;">
-
-        
-        <div class="p-0   " outlined style="border: none;">
-
-            <a class="" v-if="menu.a" :href="menu.to">
-                <Button class="p-1 " style="background-color: transparent;border: none;">
-                    <img class="m-0 px-2 py-2 " :src="menu.imagen"
-                        style="width: 100%;aspect-ratio: 16/9; object-fit: cover;" alt="">
-                </Button>
-            </a>
-
-      
-
-            <router-link v-else :to="menu.to ">
-                <Button class="p-1" style="background-color: transparent;border: none;">
-                    <img class="m-0 px-2 py-2" :src="menu.imagen"
-                        style="width: 100%;aspect-ratio: 16/9; object-fit: cover;" alt="">
-                </Button>
-            </router-link>
-
-
-
-        </div>
-
-        <span class="texto-apps text-sm md:text-l my-0 my-1"
-            style="text-align: center; z-index: 99; color: white;">{{ menu.name }}</span>
-
-
-    </div>
-
-</div>
-
-
-
-</div>
-
-
-                    </div>
-                   
-
-
-                    
-                    <div class="buttons" style="height: min-content;">
-
-                    <Button v-if="current_post > 1" class="button" rounded icon="pi pi-angle-left text-2xl text-white"
-                        style="position: absolute;background-color: var(--primary-color); left: -1.5rem;z-index: 999;"
-                        @click="moveLeft"></Button>
-
-                    <Button v-if="current_post < 3" class="button" rounded icon="pi pi-angle-right text-2xl text-white"
-                        @click="moveRight"
-                        style="position: absolute; background-color: var(--primary-color);right: -1.5rem;z-index: 9999;"></Button>
-
-                    </div>
-
-                </div>
-
+    <div class="container p-3">
+      <div class="buttons">
+        <!-- Iterar sobre cada menú principal -->
+        <div
+          class="p-3"
+          v-for="menu in model"
+          :key="menu.label"
+          v-show="tienePermiso(menu)"
+          style="display: flex; border-radius: 3rem 1rem 1rem 1rem; flex-direction: column; background-color: #ffffff15; gap: 1rem;"
+        >
+          <!-- Encabezado del menú principal -->
+          <div
+            :style="`background-color:${menu.color}`"
+            style="display: flex; padding: 1rem 1rem; align-items: center; gap: 1rem; background-color: #ffffff30; border-radius: 10rem 2rem 2rem 10rem;"
+          >
+            <div
+              :style="`background-color:${menu.color}`"
+              style="width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center;"
+            >
+              <i class="text-white text-2xl" :class="menu.icon"></i>
             </div>
+            <span class="text-white">{{ menu.label }}</span>
+          </div>
+  
+          <!-- Iterar sobre los submenús -->
+          <div
+            v-for="m in menu.items"
+            :key="m.label"
+            v-show="tienePermiso(m)"
+            :style="m.items ? `border:1px solid ${m.color}; padding:1rem` : ''"
+            style="border-radius: 1rem; display: flex; flex-direction: column; gap: 1rem;"
+          >
+            <!-- Encabezado del submenú si tiene sub-items -->
+            <div
+              v-if="m.items"
+              :style="`background-color: ${m.color}`"
+              class="p-3"
+              style="display: flex; align-items: center; padding: 0.3rem; gap: 1rem; border-radius: 0.5rem;"
+            >
+              <b><span class="text-white">{{ m.label }}</span></b>
+            </div>
+  
+            <!-- Item del submenú si no tiene sub-items -->
+            <div
+              v-else
+      
+              class="px-3"
+              style="display: flex; align-items: center; padding: 0.3rem; gap: 1rem; border-radius: 10rem 0 0 10rem;"
+            >
+              <div
+                :style="`background-color:${m.color}`"
+                style="width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center;"
+              >
+                <i class="text-white text-2xl" :class="m.icon"></i>
+              </div>
+              <span class="text-white">{{ m.label }}</span>
+            </div>
+  
+            <!-- Iterar sobre los sub-items del submenú -->
+            <div v-for="m2 in m.items?.slice(0, 5)" :key="m2.label">
+              <div
+                style="display: flex; align-items: center; gap: 1rem;"
+              >
+                <div
+                  :style="`background-color:${m2.color}`"
+                  style="width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center;"
+                >
+                  <i class="text-white text-2xl" :class="m2.icon"></i>
+                </div>
+                <span class="text-white">{{ m2.label }}</span>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-
-
-
-
-</template>
-
-
-
-
-
-
+  </template>
+  
 
 <script setup>
-import { ref } from 'vue';
-import { URI } from '@/service/conection'
-import { loginStore } from '@/store/user.js'
-const store = loginStore()
-const valor = ref(90)
-const move = ref(false)
+const model = [
+    {
+        label: 'INVENTARIO',
+        icon: 'fa-solid fa-boxes-stacked',
+        color: '#FFD93D', // Amarillo
+        items: [
+            {
+                label: 'Recetario',
+                icon: 'fa-solid fa-book',
+                color: '#6BCB77', // Verde
+                items: [
+                    { label: 'Ingredientes', icon: 'fa-solid fa-carrot', to: '/recetario/prices-cdi-table/', permision_id: 8, color: '#00C9A7' }, // Turquesa
+                    { label: 'recetas', icon: 'fa-solid fa-utensils', to: '/recetario/recetas/', permision_id: 8, color: '#00C9A7' },
+                    { label: 'Configuracion', icon: 'fa-solid fa-gears', to: '/recetario/configuracion/', permision_id: 13, color: '#00C9A7' },
+                    { label: 'Resumen Beneficio', icon: 'fa-solid fa-chart-pie', to: '/recetario/recipe-sumary-benefit/', permision_id: 14, color: '#00C9A7' },
+                ]
+            },
+            {
+                label: 'Reportes de inventario diario',
+                icon: 'fa-solid fa-calendar-day',
+                color: '#4D96FF', // Azul
+                items: [
+                    { label: 'Reportar inventario diario', icon: 'fa-solid fa-edit', to: '/daily-inventory/report-inventory', permision_id: 11, color: '#FFA502' }, // Naranja
+                    { label: 'Revisar reportes', icon: 'fa-solid fa-eye', to: '/daily-inventory/daily-inventory-reports', permision_id: 10, color: '#FFA502' },
+                ]
+            },
+            {
+                label: 'Reportes de inventario Mensual',
+                icon: 'fa-solid fa-calendar-days',
+                color: '#4D96FF', // Azul
+                items: [
+                    { label: 'Reportar inventario mensual', icon: 'fa-solid fa-file-circle-plus', to: '/monthly-inventory/report-monthly-inventory', permision_id: 17, color: '#FFA502' }, // Naranja
+                    { label: 'Revisar reportes', icon: 'fa-solid fa-eye', to: '/monthly-inventory/monthly-inventory-reports', permision_id: 18, color: '#FFA502' },
+                ]
+            },
+            {
+                label: 'Ordenes de compra',
+                icon: 'fa-solid fa-shopping-cart',
+                color: '#FF6B6B', // Rojo
+                items: [
+                    { label: 'Nueva', icon: 'fa-solid fa-file-circle-plus', to: '/purchase-order/generate-purchase-order', permision_id: 21, color: '#D65DB1' }, // Rosa
+                    { label: 'Generadas por mi', icon: 'fa-solid fa-folder-open', to: '/purchase-order/purchase-order-my-orders/', permision_id: 21, color: '#D65DB1' },
+                    { label: 'Alistar', icon: 'fa-solid fa-clipboard-check', to: '/purchase-order/recorrido/alistar/', permision_id: 22, color: '#D65DB1' },
+                    { label: 'Autorizar', icon: 'fa-solid fa-check-double', to: '/purchase-order/recorrido/autorizar', permision_id: 23, color: '#D65DB1' },
+                    { label: 'Transportar', icon: 'fa-solid fa-truck', to: '/purchase-order/recorrido/transport/', permision_id: 24, color: '#D65DB1' },
+                    { label: 'Recibir en la sede', icon: 'fa-solid fa-building-circle-check', to: '/purchase-order/recorrido/recibida-en-sede/', permision_id: 25, color: '#D65DB1' },
+                    { label: 'Completada', icon: 'fa-solid fa-circle-check', to: '/purchase-order/recorrido/completed/', permision_id: 25, color: '#D65DB1' },
+                    { label: 'Todas las ordenes', icon: 'fa-solid fa-list-ol', to: '/purchase-order/recorrido/purchase-order-reports/', permision_id: 26, color: '#D65DB1' },
+                    { label: 'Stock', icon: 'fa-solid fa-boxes-packing', to: '/purchase-order/recorrido/purchase-order-settings/', permision_id: 27, color: '#D65DB1' },
+                ]
+            },
+        ]
+    },
+    {
+        label: 'VENTAS',
+        icon: 'fa-solid fa-cash-register',
+        color: '#FFA502', // Naranja
+        items: [
+            {
+                label: 'Tienda',
+                icon: 'fa-solid fa-store',
+                color: '#845EC2', // Púrpura
+                items: [
+                    { label: 'Cocina', icon: 'fa-solid fa-utensils', to: '/cocina/', permision_id: 1, color: '#FFD93D' }, // Amarillo
+                    { label: 'Menu', icon: 'fa-solid fa-book-open', to: '/tienda-menu/productos/SALCHIPAPAS/3', permision_id: 2, color: '#FFD93D' },
+                    { label: 'Reportes de ventas', icon: 'fa-solid fa-chart-line', to: '/reporte-ventas/order-sumary', permision_id: 3, color: '#FFD93D' },
+                    { label: 'Domicilios', icon: 'fa-solid fa-truck-fast', to: '/domicilios/1', permision_id: 4, color: '#FFD93D' },
+                    { label: 'Transferencias', icon: 'fa-solid fa-right-left', to: '/transfer/', permision_id: 5, color: '#FFD93D' },
+                    { label: 'Ingresar pedido', icon: 'fa-solid fa-cart-plus', to: '/call-center-vender', permision_id: 6, color: '#FFD93D' },
+                    { label: 'Solicitudes de cancelacion', icon: 'fa-solid fa-ban', to: '/cancellation-requests/revisar/', permision_id: 7, color: '#FFD93D' },
+                    { label: 'Control', icon: 'fa-solid fa-sliders', to: '/cancellation-requests/revisar/', color: '#FFD93D' }, // Sin permision_id
+                    { label: 'Info sedes ', icon: 'fa-solid fa-building', to: '/directorio', permision_id: 31, color: '#FFD93D' },
+                ],
+            },
+            {
+                label: 'Cajeros',
+                icon: 'fa-solid fa-cash-register',
+                color: '#845EC2', // Púrpura
+                items: [
+                    { label: 'Reportes', icon: 'fa-solid fa-file-invoice-dollar', to: '/cachier-money/reportes/', permision_id: 1, color: '#FFD93D' },
+                    { label: 'Registros', icon: 'fa-solid fa-book', to: '/cachier-money/registros/', permision_id: 1, color: '#FFD93D' },
+                    { label: 'Salidas', icon: 'fa-solid fa-money-bill-trend-up', to: '/cachier-money/salidas/', permision_id: 1, color: '#FFD93D' },
+                ],
+            }
+        ]
+    },
+    {
+        label: 'INFORMACIÓN ADICIONAL',
+        icon: 'fa-solid fa-hand-holding-heart',
+        color: '#00C9A7', // Turquesa
+        items: [
+            { label: 'Planeacíon Estrategica ', icon: 'fa-solid fa-lightbulb', to: '/mas-cerca-de-ti', permision_id: 43, color: '#FFD93D' },
+            { label: 'Un verdadero Monstruo', icon: 'fa-solid fa-ghost', to: '/informacion-empresarial', permision_id: 43, color: '#FFD93D' },
+            { label: 'Mis Turnos ', icon: 'fa-solid fa-business-time', to: '/turnos-trabajo-empleados', permision_id: 43, color: '#FFD93D' },
+            { label: 'Evaluación clima organizacional ', icon: 'fa-solid fa-cloud-sun', to: '/clima', permision_id: 43, color: '#FFD93D' },
+            { label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-line', to: '/desempeno', permision_id: 43, color: '#FFD93D' },
+            { label: 'Encuesta de retiro ', icon: 'fa-solid fa-door-open', to: '/retiro', permision_id: 43, color: '#FFD93D' },
+            { label: 'PQRS ', icon: 'fa-solid fa-question', to: '/pqrs-user', permision_id: 43, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'CAPACITACIONES',
+        icon: 'fa-solid fa-chalkboard-user',
+        color: '#4D96FF', // Azul
+        items: [
+            { label: 'Agendar', icon: 'fa-solid fa-calendar-plus', to: '/capacitaciones', permision_id: 44, color: '#FFD93D' },
+            { label: 'Mi formacion', icon: 'fa-solid fa-chalkboard-user', to: '/video-training-sequences/', permision_id: 45, color: '#FFD93D' },
+            { label: 'Administrar Escuelas', icon: 'fa-solid fa-school', to: '/video-training-video-sesion', permision_id: 46, color: '#FFD93D' },
+            {
+                label: 'Principal',
+                icon: 'fa-solid fa-house',
+                color: '#845EC2', // Púrpura
+                items: [
+                    { label: 'Recetario cucharas', icon: 'fa-solid fa-utensil-spoon', to: '/cucharas', permision_id: 48, color: '#FF6B6B' }, // Rojo
+                    { label: 'Organizacion', icon: 'fa-solid fa-sitemap', to: '/samovar', permision_id: 49, color: '#FF6B6B' },
+                ]
+            },
+        ]
+    },
+    {
+        label: 'RECURSOS HUMANOS',
+        icon: 'fa-solid fa-user-group',
+        color: '#6BCB77', // Verde
+        items: [
+            { label: 'Base de datos del personal', icon: 'fa-solid fa-database', to: '/pages/crud', permision_id: 28, color: '#FFA502' }, // Naranja
+            { label: 'Contratos', icon: 'fa-solid fa-file-contract', to: '/contracts/contracts-to-finish', permision_id: 29, color: '#FFA502' },
+            { label: 'Gestion de cargos', icon: 'fa-solid fa-user-gear', to: '/cargos', permision_id: 30, color: '#FFA502' },
+            {
+                label: 'Requisicion de personal',
+                icon: 'fa-solid fa-user-plus',
+                permision_id: 32,
+                color: '#845EC2', // Púrpura
+                items: [
+                    { label: 'Solicitudes', icon: 'fa-solid fa-file-circle-plus', to: '/hiring/request-people/', permision_id: 32, color: '#FFD93D' },
+                    { label: 'Aprobacion de solicitudes', icon: 'fa-solid fa-thumbs-up', to: '/hiring-authorize/requests', permision_id: 32, color: '#FFD93D' },
+                    { label: 'Seleccion y contratacion', icon: 'fa-solid fa-user-check', to: '/hiring-hr/selection', permision_id: 32, color: '#FFD93D' },
+                ]
+            },
+        ]
+    },
+    {
+        label: 'SOLICITAR PERMISOS',
+        icon: 'fa-solid fa-calendar-check',
+        color: '#845EC2', // Púrpura
+        items: [
+            { label: 'Vacaciones', icon: 'fa-solid fa-umbrella-beach', to: '/permiso-vacaciones', permision_id: 42, color: '#FFD93D' },
+            { label: 'Licencia', icon: 'fa-solid fa-id-card', to: '/permiso-Licencia', permision_id: 42, color: '#FFD93D' },
+            { label: 'Permiso general', icon: 'fa-solid fa-calendar-check', to: '/permiso', permision_id: 42, color: '#FFD93D' },
+            { label: 'Permisos solicitados', icon: 'fa-solid fa-list', to: '/mis-permisos', permision_id: 42, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'CONCURSOS',
+        icon: 'fa-solid fa-trophy',
+        color: '#FF6B6B', // Rojo
+        items: [
+            { label: 'Vigentes', icon: 'fa-solid fa-play', to: '/concursos', permision_id: 53, color: '#FFD93D' },
+            { label: 'Proximos', icon: 'fa-solid fa-forward', to: '/future-concursos', permision_id: 53, color: '#FFD93D' },
+            { label: 'Finalizados ', icon: 'fa-solid fa-flag-checkered', to: '/completed-concursos', permision_id: 53, color: '#FFD93D' },
+            { label: 'Administrar ', icon: 'fa-solid fa-gear', to: '/manage-concursos', permision_id: 54, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'MAS CERCA DE TI',
+        icon: 'fa-solid fa-hand-holding-heart',
+        color: '#00C9A7', // Turquesa
+        items: [
+            { label: 'Planeacíon Estrategica ', icon: 'fa-solid fa-lightbulb', to: '/mas-cerca-de-ti', permision_id: 43, color: '#FFD93D' },
+            { label: 'Un verdadero Monstruo', icon: 'fa-solid fa-ghost', to: '/informacion-empresarial', permision_id: 43, color: '#FFD93D' },
+            { label: 'Mis Turnos ', icon: 'fa-solid fa-business-time', to: '/turnos-trabajo-empleados', permision_id: 43, color: '#FFD93D' },
+            { label: 'Evaluación clima organizacional ', icon: 'fa-solid fa-cloud-sun', to: '/clima', permision_id: 43, color: '#FFD93D' },
+            { label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-line', to: '/desempeno', permision_id: 43, color: '#FFD93D' },
+            { label: 'Encuesta de retiro ', icon: 'fa-solid fa-door-open', to: '/retiro', permision_id: 43, color: '#FFD93D' },
+            { label: 'PQRS ', icon: 'fa-solid fa-question', to: '/pqrs-user', permision_id: 43, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'CAPACITACIONES',
+        icon: 'fa-solid fa-chalkboard-user',
+        color: '#4D96FF', // Azul
+        items: [
+            { label: 'Agendar', icon: 'fa-solid fa-calendar-plus', to: '/capacitaciones', permision_id: 44, color: '#FFD93D' },
+            { label: 'Mi formacion', icon: 'fa-solid fa-chalkboard-user', to: '/video-training-sequences/', permision_id: 45, color: '#FFD93D' },
+            { label: 'Administrar Escuelas', icon: 'fa-solid fa-school', to: '/video-training-video-sesion', permision_id: 46, color: '#FFD93D' },
+            {
+                label: 'Principal',
+                icon: 'fa-solid fa-house',
+                color: '#845EC2', // Púrpura
+                items: [
+                    { label: 'Recetario cucharas', icon: 'fa-solid fa-utensil-spoon', to: '/cucharas', permision_id: 48, color: '#FF6B6B' }, // Rojo
+                    { label: 'Organizacion', icon: 'fa-solid fa-sitemap', to: '/samovar', permision_id: 49, color: '#FF6B6B' },
+                ]
+            },
+        ]
+    },
 
-const slider = ref(null)
+    {
+        label: 'ATENCION AL CLIENTE',
+        icon: 'fa-solid fa-headset',
+        color: '#4D96FF', // Azul
+        items: [
+            { label: 'Administrar PQRS ', icon: 'fa-solid fa-folder-tree', to: '/pqrs/pagina_web/1', permision_id: 55, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'CALIDAD Y CONTROL',
+        icon: 'fa-solid fa-clipboard-check',
+        color: '#6BCB77', // Verde
+        items: [
+            { label: 'Auditorias ', icon: 'fa-solid fa-list-check', to: '/auditorias/lista', permision_id: 33, color: '#FFA502' },
+            { label: 'Configurar turnos ', icon: 'fa-solid fa-clock', to: '/turnos-trabajo', permision_id: 35, color: '#FFA502' },
+        ]
+    },
 
-const current_post = ref(1) ;
-
-const positionX = ref(0);
 
 
-const es_bryan = ref(false)
+    {
+        label: 'FRANQUICIAS',
+        icon: 'fa-solid fa-handshake',
+        color: '#845EC2', // Púrpura
+        items: [
+            { label: 'Solicitudes', icon: 'fa-solid fa-clipboard-list', to: '/franquicias', permision_id: 53, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'ENTREGAS',
+        icon: 'fa-solid fa-truck-moving',
+        color: '#FFA502', // Naranja
+        items: [
+            { label: 'Dotacion', icon: 'fa-solid fa-shirt', to: '/dotacion', permision_id: 37, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'CELEBRACIONES',
+        icon: 'fa-solid fa-cake-candles',
+        color: '#D65DB1', // Rosa
+        to: '/cumples',
+        items: [
+            { label: 'Cumpleanos', icon: 'fa-solid fa-cake-candles', to: '/cumples', permision_id: 38, color: '#FFD93D' }
+        ]
+    },
+    {
+        label: 'GUIAS',
+        icon: 'fa-solid fa-book-open',
+        color: '#845EC2', // Púrpura
+        items: [
+            { label: 'Gestion de guias', icon: 'fa-solid fa-book', to: '/guias', permision_id: 40, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'CERTIFICADOS',
+        icon: 'fa-solid fa-award',
+        color: '#FF6B6B', // Rojo
+        items: [
+            { label: 'Generar certificado laboral', icon: 'fa-solid fa-certificate', to: '/certificado-laboral', permision_id: 41, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'Revisar',
+        icon: 'fa-solid fa-check-double',
+        color: '#D65DB1', // Rosa
+        items: [
+            { label: 'Permisos', icon: 'fa-solid fa-file-invoice', to: '/permisos', permision_id: 50, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'Datos',
+        icon: 'fa-solid fa-database',
+        color: '#6BCB77', // Verde
+        items: [
+            { label: 'Actualizar mis datos', icon: 'fa-solid fa-user-pen', to: '/actualizar-datos', permision_id: 50, color: '#FFD93D' },
+        ]
+    },
+    {
+        label: 'Extras',
+        icon: 'fa-solid fa-ellipsis',
+        color: '#845EC2', // Púrpura
+        to: '/mis-permisos',
+        items: [
+            { label: 'Mi carnet digital', icon: 'fa-solid fa-id-badge', to: '/mi-carnet', permision_id: 52, color: '#FFD93D' },
+            { label: 'Organigrama empresarial', icon: 'fa-solid fa-diagram-project', to: '/organigrama', permision_id: 52, color: '#FFD93D' },
+        ]
+    },
+];
 
-const moveRight = () => {
-  // Incrementamos la posición en 100px hacia la derecha
+import { loginStore } from '../../store/user';
 
-  if (current_post.value <3){
-  positionX.value -= 100;
 
-  // Aplicamos el nuevo valor de transform a través del estilo
-  slider.value.style.transform = `translateX(${positionX.value}%)`;
-  current_post.value += 1 
+
+// Función recursiva para verificar permisos
+function tienePermiso(item) {
+  // Si el elemento tiene un permision_id, verifica si el usuario lo tiene
+  const permisoValido = item.permision_id
+    ? permisions.rawUserData.permissions.includes(item.permision_id)
+    : false;
+
+  // Si el permiso es válido, retorna true
+  if (permisoValido) return true;
+
+  // Si el elemento tiene sub-items, verifica recursivamente
+  if (item.items && item.items.length > 0) {
+    return item.items.some(subItem => tienePermiso(subItem));
   }
-};
 
+  // Si no tiene permiso y no tiene sub-items, retorna false
+  return false;
+}
 
-const moveLeft = () => {
-  
-    if (current_post.value > 1){
-        positionX.value += 100;
-
-        current_post.value -= 1 
-        slider.value.style.transform = `translateX(${positionX.value}%)`;
-    } else{
-        slider.value.animation
-    }
-
-};
-
-
-
-const items = ref([
-    {
-        label: 'Finder',
-        icon: "https://primefaces.org/cdn/primevue//images/dock/finder.svg",
-        command: () => {
-            displayFinder.value = true;
-        }
-    },
-    {
-        label: 'Terminal',
-        icon: "https://primefaces.org/cdn/primevue//images/dock/terminal.svg",
-        command: () => {
-            displayTerminal.value = true;
-        }
-    },
-    {
-        label: 'App Store',
-        icon: "https://primefaces.org/cdn/primevue//images/dock/appstore.svg",
-        command: () => {
-            toast.add({ severity: 'error', summary: 'An unexpected error occurred while signing in.', detail: 'UNTRUSTED_CERT_TITLE', group: 'tc', life: 3000 });
-        }
-    },
-    {
-        label: 'Safari',
-        icon: "https://primefaces.org/cdn/primevue//images/dock/safari.svg",
-        command: () => {
-            toast.add({ severity: 'warn', summary: 'Safari has stopped working', group: 'tc', life: 3000 });
-        }
-    },
-    {
-        label: 'Photos',
-        icon: "https://primefaces.org/cdn/primevue//images/dock/photos.svg",
-        command: () => {
-            displayPhotos.value = true;
-        }
-    },
-    {
-        label: 'GitHub',
-        icon: "https://primefaces.org/cdn/primevue//images/dock/github.svg",
-    },
-    {
-        label: 'Trash',
-        icon: "https://primefaces.org/cdn/primevue//images/dock/trash.png",
-        command: () => {
-            toast.add({ severity: 'info', summary: 'Empty Trash', life: 3000 });
-        }
-    }
-]);
-
-
-
-const customers = ref(    
-    {
-        name: 'Base Usuarios',
-        to: '/customers',
-        imagen: "/images/icons/certify.png",
-        secret:true
-    },
-)
-
-const menus = [
-
-
-    {
-        name: 'Certificado laboral',
-        to: '/certificado-laboral',
-        imagen: "/images/icons/certify.png"
-    },
-
-
-
-    {
-        name: 'Capacitaciones',
-        to: 'capacitaciones-invitaciones',
-        imagen: "/images/icons/capacitation.png"
-    },
-
-
-    {
-        name: 'Actualizar mis datos',
-        to: '/actualizar-datos',
-        imagen: "/images/icons/data.png"
-    },
-    {
-        name: 'Solicitar permiso general',
-        to: '/permiso',
-        imagen: "/images/icons/general.png"
-    },
-    {
-        name: 'Solicitar permiso por licencia',
-        to: '/permiso-licencia',
-        imagen: "/images/icons/licencia.png"
-    },
-    {
-        name: 'Solicitar vacaciones',
-        to: '/permiso-vacaciones',
-        imagen: "/images/icons/vacaciones.png"
-    },
-    {
-        name: 'Mi carne digital',
-        to: '/mi-carnet',
-        imagen: "/images/icons/carnet.png"
-    },
-
-    {
-        name: 'Un verdadero Monstruo',
-        to: '/informacion-empresarial',
-        imagen: "/images/icons/monster.png"
-    },
-
-    {
-        name: 'Mis turnos',
-        to: '/turnos-trabajo-empleados',
-        imagen: "/images/icons/turno.png"
-    },
-    {
-        name: 'Facebook Salchimonster',
-        to: 'https://www.facebook.com/salchimonsterr',
-        imagen: "/images/icons/facebook.webp",
-        a: true
-    },
-    {
-        name: 'Instagram Salchimonster',
-        to: 'https://www.instagram.com/salchimonsterr/',
-        imagen: "/images/icons/insta.webp",
-        a: true
-    },
-
-    {
-        name: 'Youtube salchimonster',
-        to: 'https://www.youtube.com/@Salchimonster/videos',
-        imagen: "/images/icons/youtube.png",
-        a: true
-    },
-
-
-
-]
+const permisions = loginStore()
 
 </script>
-
-
-
 <style scoped>
-.imagen::before {
 
-    content: '';
-    background-color: rgba(0, 0, 0, 0.5);
-    width: 100%;
-    height: 100%;
-    z-index: 99;
-    position: absolute;
-    top: 0;
-    left: 0;
-    backdrop-filter: blur(2px);
-    object-fit: cover;
-
-
-}
-
-.knobi {
-    margin: 0 0rem;
-}
-
-.bg {
-    background-image: url('/images/bg-ipad.jpg');
-    background-size: cover;
-    width: 100%;
-    object-fit: cover;
-    height: 100%;
-    z-index: 0;
-    top: 0;
-    left: 0;
-    opacity: 1;
-    background-size: cover;
-}
-
-
-Button img {
-    transition: all .3s ease;
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.208); */
-    width: 100%;
+.container{
+    background-color: rgb(0, 1, 22);
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+    align-items: center;
+    /* padding: 30rem; */
+
 
 }
 
-Button img:hover {
-    /* transform: scale(1.03); */
+.buttons{
 
-}
-
-.ipad-container {
-    /* aspect-ratio: 4/5; */
-    /* border-radius: 1rem; */
-    /* max-width: 1080px; */
-    height: max-content;
-    /* max-height: 1920px; */
-    /* background-color: rgb(255, 255, 255); */
-    display: flex;
+     padding-top: 3rem;
+     margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
     flex-direction: column;
     gap: 1rem;
-    align-items: start;
-    justify-content: center;
-
-    margin: auto;
-
-}
-
-
-
-@keyframes move {
-    0% {
-        opacity: 1;
-        /* width:100% */
-        transform: translateX(0100%); 
-
-
-    }
-
-    100% {
-        transform: translateX(-100%); 
-    }
-
-
-}
-
-
-@keyframes alter-move {
-    0% {
-        opacity: 1;
-
-    }
-
-    100% {
-        transform: translateX(  100%);
-
-    }
-
-
-}
-
-
-
-
-.ipad-screen {
-    border-radius: 0.5rem;
-    /* box-shadow: 0 0 10px var(--primary-color) ; border-radius: 0.5rem; */
-    outline: 2px solid var(--primary-color);
-
-
-}
-
-.barra {
-    display: flex;
-}
-
-.ipad-screen {
     width: 100%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    justify-content: center;
-    /* justify-content: space-between; */
-    background-color: transparent;
-    height: 100%;
-    /* overflow: hidden; */
-    /* box-shadow: 0 0 20px var(--primary-color) ; border-radius: 0.5rem;
-     overflow: hidden; */
-}
-
-@media (max-width: 600px) {
-    .texto-apps {
-        font-size: 0.8rem;
-        /* Tamaño de letra reducido para pantallas pequeñas */
-    }
-
-    .ipad-container {
-        border: none;
-        box-shadow: none;
-
-
-        margin-top: 2rem;
-
-
-    }
-
-    .knobi {
-        margin: 1rem;
-    }
-
-    .dock {
-        display: none;
-    }
-
-    .ipad-screen {}
-
-    .bg {
-        position: fixed;
-        /* display: none; */
-        bottom: 0;
-        height: 100%;
-    }
-
-    .barra {
-        /* display: none; */
-    }
-
-    .aux-back {
-        display: inline;
-    }
-
-
+    max-width: 1600px;
+    align-items: stretch; /* Estirar elementos para llenar el espacio */
 
 }
 
-.item {
-    filter: brightness(.9);
+
+@media (width<1400px) {
+ .buttons{
+    grid-template-columns: repeat(3,1fr);
+
+ }   
 }
 
-.item:hover {
-    /* transform: scale(1.1); */
-    filter: brightness(1.4);
-    transform: translateY(-1rem)
+
+@media (width<860px) {
+ .buttons{
+    grid-template-columns: repeat(2,1fr);
+
+ }   
+}
+
+
+@media (width<570px) {
+ .buttons{
+    grid-template-columns: repeat(1,1fr);
+
+ }   
 }
 </style>

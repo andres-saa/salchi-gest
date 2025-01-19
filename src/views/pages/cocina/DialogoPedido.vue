@@ -1,4 +1,42 @@
 <template>
+
+
+<!-- Nuevo Diálogo para Cambiar Método de Pago -->
+<Dialog v-model:visible="changePaymentDialog" closeOnEscape :closable="true" modal style="width: 30rem;">
+  <template #header>
+    <h3><b>Cambiar Método de Pago</b></h3>
+  </template>
+  <form @submit.prevent="submitChangePayment" style="display: flex; gap: 1rem; flex-direction: column; align-items: start">
+    <span for="paymentMethod">Método de Pago actual</span>
+
+    <Tag class="px-4" severity="warning">
+      <span for="paymentMethod"> <b>{{ store.currentOrder.payment_method }}</b></span>
+
+    </Tag>
+
+    <span for="paymentMethod">Nuevo método de Pago</span>
+    <Dropdown
+      style="width: 100%;"
+      id="paymentMethod"
+      v-model="newPaymentMethod"
+      :options="paymentMethods"
+      optionLabel="name"
+      optionValue="id"
+      placeholder="Selecciona un método de pago"
+      required
+    ></Dropdown>
+    <Button
+      style="width: 100%; border-radius: 0.5rem"
+      label="Cambiar"
+      type="submit"
+      class="p-button-help"
+    />
+  </form>
+</Dialog>
+
+
+
+
   <div>
     <Dialog v-model:visible="cancelDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
       <template #header>
@@ -364,14 +402,7 @@
 
     <template #footer>
 
-      <div class="col-12 mb-0 pb-0 px-0 m-0" style="display: flex;justify-content: space-between;gap: 1rem;">
-
-        <!-- <Button v-if="store.currentOrder.current_status == 'generada'" size="small"
-          @click="orderService.prepareOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem;width: 100%;"
-          severity="success" label="Preparar"></Button>
-
-  
- -->
+      <div class="col-12 mb-0 pb-0 px-0 m-0" style="display: flex; justify-content: space-between;gap: 1rem;">
 
 
 
@@ -389,8 +420,17 @@
           <Button severity="warning" @click="travelDialog = true" style="width: 100%;background-color: black;border: none;" icon="pi pi-airplane" label="traslado">
 
         </Button>
+
+
+
+     
       </div>
 
+      <div class="mt-3">
+        <Button       @click="changePaymentDialog = true"
+        label="Cambiar metodo de pago" severity="success"></Button>
+      </div>
+  
 
 
     </template>
@@ -433,6 +473,80 @@ import { useOrderStore } from '@/store/order'
 import { orderService } from '@/service/cocina/orderService';
 import { fetchService } from '../../../service/utils/fetchService';
 import { URI } from '../../../service/conection';
+
+
+
+
+
+
+
+
+// Nueva variable reactiva para el diálogo de cambio de método de pago
+const changePaymentDialog = ref(false)
+
+// Variable para almacenar el nuevo método de pago seleccionado
+const newPaymentMethod = ref(null)
+
+// Variable para almacenar los métodos de pago obtenidos del backend
+const paymentMethods = ref([])
+
+// Obtener los métodos de pago al montar el componente
+onMounted(async () => {
+  try {
+    const response = await fetchService.get(`${URI}/payment_methods`)
+    paymentMethods.value = response // Asegúrate de ajustar según la estructura de la respuesta
+  } catch (error) {
+    console.error('Error al obtener métodos de pago:', error)
+    // Opcional: Manejar errores, mostrar notificaciones, etc.
+  }
+
+  // ... Código existente para obtener sitios ...
+  store.currentOrder.value = store.currentOrder
+  sites.value = await fetchService.get(`${URI}/sites`)
+})
+
+// Método para enviar el cambio de método de pago
+const submitChangePayment = async () => {
+  if (newPaymentMethod.value) {
+    try {
+      await fetchService.put(
+        `${URI}/change-method/${store.currentOrder.order_id}/${newPaymentMethod.value}`,
+        
+        `Cambiando método de pago para la orden ${store.currentOrder.order_id}`
+      )
+
+      // Opcional: Actualizar los datos de la orden si es necesario
+      // await store.fetchCurrentOrder()
+
+      // Cerrar el diálogo
+      changePaymentDialog.value = false
+      store.visibles.currentOrder= false
+
+      // Opcional: Mostrar una notificación de éxito
+      console.log('Método de pago cambiado exitosamente')
+    } catch (error) {
+      console.error('Error al cambiar el método de pago:', error)
+      // Opcional: Mostrar una notificación de error
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const sede_destino =ref(0)
 const cancelDialogVisibleAdmin = ref(false)

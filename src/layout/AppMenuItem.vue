@@ -103,8 +103,16 @@ const checkActiveRoute = (item) => {
 
 <template>
     <li  :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
-        <div  @click="visibleMenus = !visibleMenus"  style="cursor: pointer; border-radius: .3rem; display: flex;background-color: #ffffff15;min-width: max-content; justify-content: space-between;align-items: center;" v-if="root && item.visible !== false" class="layout-menuitem-root-text p-2 border-radius-1">{{ item.label }} 
+        
+        <div  @click="visibleMenus = !visibleMenus"  style="cursor: pointer; border-radius: .3rem; display: flex;background-color: #ffffff15;min-width: max-content; justify-content: space-between;align-items: center;" v-if="root && item.visible !== false" class="layout-menuitem-root-text p-2 border-radius-1"> 
             
+            <div>
+                <i :style="`color:${item['icon-color']}`" :class="item.icon" class="layout-menuitem-icon text-xl mr-3" style="min-width: 1.5rem;"></i>
+            {{ item.label }} 
+            
+
+            </div>
+         
             <i   :class="!visibleMenus?  'pi pi-angle-down t-up ' :  'pi pi-angle-down t-down' " v-if="item.items"></i>
         
             <!-- {{ visibleMenus }} -->
@@ -185,6 +193,10 @@ const checkActiveRoute = (item) => {
     max-height: 30rem;
     opacity: 1;
     height: auto;
+}
+
+span{
+    font-weight: 400;
 }
 
 

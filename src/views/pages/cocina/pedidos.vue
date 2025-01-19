@@ -30,7 +30,7 @@
 
     <DialogoPedido>
 
-  </DialogoPedido>
+    </DialogoPedido>
 
   
     <div :vif="store.TodayOrders.filter(orden => orden.current_status == 'generada').length>0? 'apear' : 'hide'" class="md:px-2 xl:pt-5 p-0 col-12 xl:col-4 top">

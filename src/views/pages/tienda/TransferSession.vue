@@ -36,90 +36,115 @@
             </form>
         </Dialog>
 
-        <DataTable   :paginator="true" :rows="15" :filters="filters"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Transferencias"
-          :rowsPerPageOptions="[5, 10, 25, 100]"
-          scrollable
-          scrollHeight="65vh"
-        stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
-        :value="TransferRequests" tableStyle="min-width: 50rem;">
-        <template #header>
-            <div class="grid" style="align-items:center;justify-content: space-between;">
-                <div class="col-12 md:col-6 p-3"> 
-                    <span  class="text-xl" style="width: 100%;"> Transferencias pendientes <span style="text-transform: capitalize;"></span> </span>
-                </div>
 
-                <span class="md:mt-0 p-input-icon-right m-3">
-                                <i class="pi pi-search" />
-                                <InputText class="" v-model="filters['global'].value"
-                                    placeholder="Buscar Solicitud..." />
-                            </span>
+
+
+
+        <div style="max-width: 1280px;" class="mx-auto">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <h3 style="width: min-content; padding: 0;"> <b>Modos</b> </h3>  <Dropdown v-model="selectedMode" :options="modes" optionLabel="name"></Dropdown>
+
             </div>
-        </template>
 
 
-        <Column style="" class="py-1 pl-0" field="order_id" header="ID orden" frozen />
-        <!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
-        <Column style="" class="py-1 pl-0" field="total_order_price" header="Monto de la orden"  >
-            <template #body="data">
-                {{formatToColombianPeso(data.data.total_order_price)   }}
-            </template>
-        </Column>
+        <div class="slider mx-auto" style="display: flex;overflow: hidden">
 
 
-        <Column style="" class="py-1 pl-0" field="total_order_price" header="Hora"  >
-            <template #body="data">
-                {{ extraerHora(data.data.latest_status_timestamp ) }}
-            </template>
-        </Column>
+<div :style="`transform:translateX(${selectedMode.slide}%)`" class="slider-item">       
+    <DataTable   :paginator="true" :rows="15" :filters="filters"
+paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Transferencias"
+:rowsPerPageOptions="[5, 10, 25, 100]"
+scrollable
+scrollHeight="65vh"
+stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
+:value="TransferRequests" tableStyle="min-width: 50rem;">
+<template #header>
+<div class="grid" style="align-items:center;justify-content: space-between;">
+    <div class="col-12 md:col-6 p-3"> 
+        <span  class="text-xl" style="width: 100%;"> Transferencias pendientes <span style="text-transform: capitalize;"></span> </span>
+    </div>
 
-        <Column style="" class="py-1 pl-0" field="delivery_price" header="Domicilio"  >
-            <template #body="data">
-                {{formatToColombianPeso(data.data.delivery_price)   }}
-            </template>
-        </Column>
+    <span class="md:mt-0 p-input-icon-right m-3">
+                    <i class="pi pi-search" />
+                    <InputText class="" v-model="filters['global'].value"
+                        placeholder="Buscar Solicitud..." />
+                </span>
+</div>
+</template>
+
+
+<Column style="" class="py-1 pl-0" field="order_id" header="ID orden" frozen />
+<!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
+<Column style="" class="py-1 pl-0" field="total_order_price" header="Monto de la orden"  >
+<template #body="data">
+    {{formatToColombianPeso(data.data.total_order_price)   }}
+</template>
+</Column>
+
+
+<Column style="" class="py-1 pl-0" field="total_order_price" header="Hora"  >
+<template #body="data">
+    {{ extraerHora(data.data.latest_status_timestamp ) }}
+</template>
+</Column>
+
+<Column style="" class="py-1 pl-0" field="delivery_price" header="Domicilio"  >
+<template #body="data">
+    {{formatToColombianPeso(data.data.delivery_price)   }}
+</template>
+</Column>
 
 
 
-        <Column style="" class="py-1 pl-0" field="Total" header="Total"  >
-            <template #body="data">
-                {{formatToColombianPeso(data.data.delivery_price + data.data.total_order_price)   }}
-            </template>
-        </Column>
-        <!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
+<Column style="" class="py-1 pl-0" field="Total" header="Total"  >
+<template #body="data">
+    {{formatToColombianPeso(data.data.delivery_price + data.data.total_order_price)   }}
+</template>
+</Column>
+<!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
 
 
+
+
+<Column style="" class="py-1 pl-0" field="user_name" header="Cliente"  />
+
+<Column style="" class="py-1 pl-0" field="user_phone" header="Telefono cliente"  />
+<!-- <Column style="" class="py-1 pl-0" field="user_phone" header="ID orden" frozen /> -->
+
+
+
+
+<Column style="" class="py-1 px-0" field="date" header="Action" frozen alignFrozen="right">
+<template #body="data">
+
+    <div style="display: flex;gap:0.5rem;">
+        
+            <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="open(data.data)" style="height: 1.8rem;width: 2rem;" severity="info" class="p-1" icon="pi pi-eye" />
+
+            <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="show(data.data.order_id)" style="height: 1.8rem;width: 2rem;" severity="success" class="p-1" icon="pi pi-check" />
+            <!-- <Button v-if="route.params.request_status != 'rechazadas'" @click="show(false,data.data.id)" style="height: 1.8rem;width: 2rem;background:var(--primary-color);border:none"  severity="danger" class="p-1"
+            icon="pi pi-times" /> -->
 
         
-        <Column style="" class="py-1 pl-0" field="user_name" header="Cliente"  />
-
-        <Column style="" class="py-1 pl-0" field="user_phone" header="Telefono cliente"  />
-        <!-- <Column style="" class="py-1 pl-0" field="user_phone" header="ID orden" frozen /> -->
-        
-
+    </div>
+    
+</template>
+</Column>
 
 
-        <Column style="" class="py-1 px-0" field="date" header="Action" frozen alignFrozen="right">
-            <template #body="data">
-
-                <div style="display: flex;gap:0.5rem;">
-                    
-                        <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="open(data.data)" style="height: 1.8rem;width: 2rem;" severity="info" class="p-1" icon="pi pi-eye" />
-
-                        <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="show(data.data.order_id)" style="height: 1.8rem;width: 2rem;" severity="success" class="p-1" icon="pi pi-check" />
-                        <!-- <Button v-if="route.params.request_status != 'rechazadas'" @click="show(false,data.data.id)" style="height: 1.8rem;width: 2rem;background:var(--primary-color);border:none"  severity="danger" class="p-1"
-                        icon="pi pi-times" /> -->
-
-                    
-                </div>
-                
-            </template>
-        </Column>
+</DataTable>
+</div>
+<div :style="`transform:translateX(${selectedMode.slide}%)`" class="slider-item">1</div>
 
 
-    </DataTable>
+</div>
 
+        </div>
+
+
+
+ 
 
 
     <DialogoPedido>
@@ -147,6 +172,7 @@ import {loginStore} from '@/store/user.js'
 import { useOrderStore } from '../../../store/order';
 import { months } from 'moment-timezone';
 import {formatDateTime, extraerHora} from '@/service/formating/formatDate.js'
+// import { transform } from 'html2canvas/dist/types/css/property-descriptors/transform';
 
 
 
@@ -181,7 +207,27 @@ const cancelData = ref({
 
 })
 
+const modes = ref([
 
+{
+    index:1,
+    slide:0,
+    name:'Basico'
+},
+{
+    index:2,
+    slide:-100,
+    name:'reportes'
+}
+
+])
+
+
+const selectedMode = ref({
+    index:1,
+    slide:0,
+    name:'Basico'
+})
 
 const sonido1 = new Audio('/sound/pip1.wav')
 const sonido2 = new Audio('/sound/pip2.wav')
@@ -439,6 +485,15 @@ li{
     position: relative;
 
 }
+
+
+
+.slider-item{
+    width: 100%;
+    min-width: 100%;
+    transition: all ease .5s;
+}
+
 
 
 .nav-var--item-button{

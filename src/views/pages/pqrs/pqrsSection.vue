@@ -1312,21 +1312,6 @@ const downloadPQRExcel = async () => {
        },
     
     
-    
-    
-       {
-           columnName:'Calificacion',
-           columnValue:'rating',
-           columnType:'rating',
-            size:'10rem',
-            vif:true
-       },
-    
-    
-    
-    
-    
-    
        {
            columnName:'Comentarios',
            columnValue:'request_content',
@@ -1734,7 +1719,7 @@ const downloadPQRExcel = async () => {
     
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     border-radius: 0 0 1rem  1rem;
     overflow: auto;
     

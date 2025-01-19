@@ -12,7 +12,18 @@
         </nav>
 
 
-        <router-view/>
+        <div class="container">
+            <div>
+1
+            </div>
+            <div>
+                2
+            </div>
+            <!-- <router-view/> -->
+        </div>
+       
+
+
 
 
 

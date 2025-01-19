@@ -7,13 +7,17 @@
 
 
 
+<img class="img-profile-add p-0"
+                    style="width: 100%;filter: blur(10px);background-color: black;opacity: .5; position: fixed;z-index: -1;height: 120%; border-radius: 0.5rem;  object-fit: cover; border-radius: 0.5rem; aspect-ratio: 4 / 2;background-color: #84e4ff;"
+                    :src="urlsite_photo ? urlsite_photo : `${URI}/read-product-image/96/site-${store.currentSite.site_id}`"
+                    alt="">
 
 
 
 
 
 
-    <div class="col-12 mx-auto md:shadow-3 py-6 md:p-3 p-0 px-2 mb-8 my-8" style="max-width: 700px;margin-top: 3rem; background-color: white; border-radius: 0.5rem;">
+    <div class="col-12 mx-auto md:shadow-3 md:p-4 p-0 px-2 mb-8 mt-6" style="max-width: 900px;margin-top: 3rem; background-color: white;">
 
             <!-- Botón para abrir el diálogo de actualización -->
 
@@ -364,7 +368,6 @@
 
 
 
-<!-- 
                 <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: #d0f5be;position: relative;border-radius: 0.5rem;">
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
@@ -427,10 +430,9 @@
                     </div>
 
 
-                </div> -->
+                </div>
 
 
-<!-- 
                 <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: #e7ceff; position: relative;border-radius: 0.5rem;">
                     <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
@@ -482,9 +484,9 @@
 
 
                     </div>
-                </div> -->
+                </div>
 
-<!-- 
+
                 <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: rgb(237 120 85 / 43%);border-radius: 0.5rem;position: relative">
 
@@ -553,13 +555,13 @@
 
                     </div>
 
-                </div> -->
+                </div> 
 
 
 
 
 
-                <!-- <div class="col-12  mt-4 mb-1 col-12"
+               <div class="col-12  mt-4 mb-1 col-12"
                     style="background-color: #ddedea;border-radius: 0.5rem;position: relative">
 
 
@@ -628,8 +630,7 @@
 
 
 
-                </div> -->
-
+                </div> 
 
 
 
