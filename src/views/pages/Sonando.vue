@@ -6,9 +6,13 @@
     <div class="main-container">
 
         <div class="salchimonster-container" style="overflow: hidden;">
-            <h2 style="margin:0 2rem 0 1rem;">
-                <i class="fa-solid fa-play" style="margin-right: 1rem;"></i> SONANDO EN <span
+            <h2 class="text-xl" style="margin:0 2rem 0 1rem;">
+                <b>
+                    <i class="fa-solid fa-play" style="margin-right: 1rem;"></i> SONANDO EN <span
                     style="min-width: max-content;max-width: max-content;">SM {{ siteStore?.sonando?.site_name }}</span>
+
+                </b>
+            
             </h2>
 
             <div style="display: flex;gap: 1rem;justify-content: center;">
@@ -28,7 +32,7 @@
 
             <!-- Información de la Canción Actual -->
             <div v-if="currentPlayback?.currentSong" class="current-song-info">
-                <h2>{{ currentPlayback.currentSong.title }}</h2>
+                <h2 class="text-xl">{{ currentPlayback.currentSong.title }}</h2>
                 <p><strong>Solicitada por:</strong> {{ currentPlayback.currentSong.requestedBy }}</p>
             </div>
 
