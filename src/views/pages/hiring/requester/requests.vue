@@ -124,4 +124,13 @@ onMounted( async() =>{
 })
 
 
+
+
+
+const create_requisition = async() => {
+
+
+    await fe
+}
+
 </script>

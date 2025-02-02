@@ -230,7 +230,7 @@ const searchOrder_id = async(id) => {
   if (order?.order_id){
     store.setVisible('currentOrder',true)
     store.setOrder(order)
-    site_cocina.site = sites.value.filter(site => site.site_id == order.site_id)[0]
+    // site_cocina.site = sites.value.filter(site => site.site_id == order.site_id)[0]
     store.currentSearchingOrder = order
 
     

@@ -47,6 +47,11 @@ const cancellationRequests = ref([])
         icon:'pi pi-times',
         path:'rechazadas'
     },
+    {
+        label:'Reportes',
+        icon:'pi pi-book',
+        path:'reports'
+    },
 
 
 ]

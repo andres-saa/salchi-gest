@@ -1,74 +1,87 @@
 <template>
-    <div class="p-1 my-0 md:my-0">
+    <div class="p-1 my-5 md:my-0 col-12">
         <!-- Contenedor principal “Resumen” -->
         <div class="sticky-summary col-12 p-3 m-0">
             <h5><b>Resumen</b></h5>
             <h5><b>productos</b></h5>
 
             <!-- Lista de productos -->
-            <div class="mb-0 pb-0 product-line" v-for="product in store.cart.products"
-                :key="product.product.productogeneral_id">
-                <div class="col-6 p-0 py-2 mb-0 m-0">
+            <div  v-for="product in store.cart"
+                :key="product.productogeneral_id">
+
+                <div class="mb-0 pb-0 product-line">
+                    <div class="col-6 py-2 mb-0 m-0">
                     <h6 class="m-0">
-                        <span class="span-minwidth"><b>{{ product.quantity }} </b></span>
-                        {{ product.product.productogeneral_descripcion }}
+                        <span class="span-minwidth">( {{ product.pedido_cantidad }} ) </span>
+                       <span style="font-weight: 400;"> {{ product.pedido_nombre_producto }}</span>
                     </h6>
 
-                    <h6 class="m-0 " v-for="i in product.product.lista_productobase" :key="i.producto_id">
-                        -- <b>{{ parseInt(i.productocombo_cantidad * product.quantity) }}</b>
-                        <span class="font-weight-400">{{ i.producto_descripcion }}</span>
+                    <h6 class="m-0 ml-3 " style="margin-left: 1rem;" v-for="i in product.lista_productocombo" :key="i.producto_id">
+                        ( {{  product.pedido_cantidad }} ) <b style="margin-right: .5rem;">{{ parseInt(i.pedido_cantidad ) }}</b> 
+                        <span class="font-weight-400">{{ i.pedido_nombre   }}</span>
                     </h6>
+
+                    
+
+
+
+                 
                 </div>
 
-                <div class="col-6 my-0 p-0 text-right py-2">
-                    <h6 class="text-end">
-                        {{ formatoPesosColombianos(product.total_cost) }}
+                
+                
+
+                <div class="col-6 my-0 text-right py-2">
+                    <h6 v-if="product.modificadorseleccionList.length < 1" class="text-end">
+                        {{ formatoPesosColombianos(product.pedido_precio * product.pedido_cantidad) }}
+                    </h6>
+
+                    <h6 v-else class="text-end">
+                        {{ formatoPesosColombianos(product.pedido_base_price * product.pedido_cantidad) }}
                     </h6>
                 </div>
+                
+                
+                </div>
+                <div class="addition-item" v-for="item in product.modificadorseleccionList" :key="item">
+                            <div class="addition-item-inner">
+                                <span class="text adicion"><span><b>- ( {{ product.pedido_cantidad }} ) {{ item.modificadorseleccion_cantidad / product.pedido_cantidad }}</b></span> {{ item.modificador_nombre
+                                    }}</span>
+
+                                <span    v-if="item.pedido_precio > 0" class="pl-2 text-sm">
+                                    <b>{{ formatoPesosColombianos(item.pedido_precio * item.modificadorseleccion_cantidad) }}</b>
+                                </span>
+                            </div>
+                    </div>
+               
             </div>
 
             <!-- Adicionales agrupados -->
             <div class="col-12 p-0 mt-1">
-                <div class="p-0 mb-2 addition-group" v-for="(items, grupo) in agrupados" :key="grupo">
-                    <div class="mb-0">
-                        <span class="mb-1 text-center">
-                            <b>{{ grupo }}</b>
-                        </span>
-
-                        <div class="addition-item" v-for="item in items" :key="item.aditional_item_instance_id">
-                            <div class="addition-item-inner">
-                                <span class="text adicion"><span><b>{{ item.quantity }}</b></span> {{ item.name
-                                    }}</span>
-
-                                <span v-if="item.price > 0" class="pl-2 text-sm">
-                                    <b>{{ formatoPesosColombianos(item.price * item.quantity) }}</b>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+           
+                  
             </div>
 
             <hr class="p-0 mt-2" />
 
             <!-- Subtotales y totales -->
-            <div class=" summary-grid">
-                <div class="col-6 my-0 py-0 p-0">
+            <div class="grid summary-grid">
+                <div class="col-6 my-0 py-0">
                     <span><b>Subtotal</b></span>
                 </div>
-                <div class="col-6 p-0 my-0 text-right py-0 " style="text-align: end;width: 100%;">
-                    <span style="">
-                        <b>{{ formatoPesosColombianos(store.cart.total_cost) }}</b>
+                <div class="col-6 my-0 text-right py-0 text-end">
+                    <span>
+                        <b>{{ formatoPesosColombianos(store.cartTotal) }}</b>
                     </span>
                 </div>
 
-                <div class="col-6 my-0 py-0 p-0">
+                <div class="col-6 my-0 py-0">
                     <span :style="siteStore.location.neigborhood.delivery_price == 0
                         ? 'text-decoration: line-through;'
                         : ''
                         "><b>Domicilio</b></span>
                 </div>
-                <div class="col-6 my-0 text-right py-0 text-end p-0"style="text-align: end;width: 100%;" >
+                <div class="col-6 my-0 text-right py-0 text-end">
                     <!-- {{ siteStore.location }} -->
                     <span v-if="siteStore.location.neigborhood.delivery_price == 0" class="primary-color">
                         <b>
@@ -79,21 +92,32 @@
                             }}
                         </b>
                     </span>
-                    <span v-else>
+                    <span v-else-if="siteStore.location.neigborhood.delivery_price">
                         <b>{{ formatoPesosColombianos(siteStore.location.neigborhood.delivery_price) }}</b>
                     </span>
                 </div>
-                <div class="col-6 my-0 py-0 p-0">
+                <div class="col-6 my-0 py-0">
                     <span><b>Total</b></span>
                 </div>
-                <div class="col-6 my-0 text-right py-0 text-end p-0" style="text-align: end;width: 100%;">
+                <div class="col-6 my-0 text-right py-0 text-end" v-if="siteStore.location.neigborhood.delivery_price">
                     <!-- {{ siteStore.location }} -->
                     <span><b>{{ formatoPesosColombianos(
-                        store.cart.total_cost +
+                        store.cartTotal +
                         siteStore.location.neigborhood.delivery_price
                             ) }}</b></span>
                 </div>
+
+                <Button @click="siteStore.visibles.currentSite = true" v-else label="Calcular mi domicilio"
+                    style="min-width: max-content;"></Button>
             </div>
+
+            <!-- Botones de navegación y acciones -->
+         
+
+            <div>
+
+            </div>
+
 
 
         </div>

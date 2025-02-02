@@ -752,6 +752,11 @@ const router = createRouter({
               name: 'cancellation-requests-sesion',
               component: () => import('@/views/pages/tienda/cancellationOrderRequestSesion.vue'),
             },
+            {
+              path: '/cancellation-requests/reports',
+              name: 'cancellation-requests-reports',
+              component: () => import('@/views/pages/tienda/CancellationReports.vue'),
+            },
 
           ]
         },

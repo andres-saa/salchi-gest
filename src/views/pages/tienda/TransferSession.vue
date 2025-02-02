@@ -135,7 +135,46 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 
 </DataTable>
 </div>
-<div :style="`transform:translateX(${selectedMode.slide}%)`" class="slider-item">1</div>
+<div :style="`transform:translateX(${selectedMode.slide}%)`" class="slider-item">
+
+    <DataTable   :paginator="true" :rows="15" style="width: 100%"
+           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Transferencias"
+           :rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines  stripedRows class="col-12  p-2"
+           :value="transfers" tableStyle="min-width: 50rem;" :filters="filters">
+           <template #header>
+               <div class="grid p-3 mt-4" style="align-items:center;justify-content: start; display: flex;gap: 1rem;">
+                   <h4 class="px-2 m-0"> <i class="fa-regular fa-bars-progress"></i>  <b style="text-transform: uppercase;">Transferencias <b>{{ route.params.section }}</b> </b> </h4>
+                   
+
+                   <Calendar v-model="date_range.start_date"></Calendar>
+                   <calendar v-model="date_range.end_date"></calendar>
+
+                   <MultiSelect style="max-width: 30rem;" v-model="date_range.sites" optionLabel="site_name" :options="sites.filter(s => s.show_on_web)"></MultiSelect>
+
+                <Button severity="help" @click="update" label="Buscar" icon="pi pi-search"></Button>
+    
+               </div>
+    
+    
+    
+           </template>
+    
+    
+           
+           <Column class="py-1" style="text-transform: uppercase;" v-for="c in columnsd" :header="c">
+        
+            <template #body="data">
+                    <h6 class="m-0">{{ data.data[c] }}</h6>
+            </template>
+        
+
+            </Column>
+    
+           </DataTable>
+    
+    
+</div>
 
 
 </div>
@@ -172,15 +211,59 @@ import {loginStore} from '@/store/user.js'
 import { useOrderStore } from '../../../store/order';
 import { months } from 'moment-timezone';
 import {formatDateTime, extraerHora} from '@/service/formating/formatDate.js'
+import { fetchService } from '../../../service/utils/fetchService';
+import { URI } from '../../../service/conection';
 // import { transform } from 'html2canvas/dist/types/css/property-descriptors/transform';
 
 
 
+const sites = ref([])
+
+const dataColumns = ref( [
+    
+    
+    
+    
+    
+    {
+        columnName:'SEDE',
+        columnValue:'sede',
+        columnType:'other',
+        size:'1rem',
+        vif:true
+    },
+
+
+
+    {
+        columnName:'ASESOR',
+        columnValue:'current_status',
+        columnType:'status',
+        size:'15rem',
+        vif:true
+    },
+ 
+ 
+ 
+ 
+   
+ ])
+
+
+ const date_range = ref( {
+    start_date : new Date(),
+    end_date: new Date(),
+    sites:[]
+ })
+
+
+const columnsd = ref([])
 
 
 
 
 const store = useOrderStore()
+
 
 
 
@@ -197,6 +280,39 @@ const authoize = async( order_id) => {
     fetchTransferRequests();
 
 }
+
+
+const update = async() => {
+const transfersd = await fetchService.post(`${URI}/transaction_report/`,
+    {
+        "start_date": date_range.value.start_date,
+        "end_date": date_range.value.end_date,
+        "sites": 
+            date_range.value.sites.map(s => s.site_id)
+        
+    }
+
+
+    )
+
+    transfers.value = transfersd
+
+    if (transfersd?.[0]){
+        columnsd.value = Object.keys(transfersd[0]) 
+    }
+
+
+}
+const transfers = ref([])
+
+onMounted  (async() => {
+
+
+  
+    sites.value = await fetchService.get(`${URI}/sites/`)
+    await update()
+
+})
 
 
 const cancelDialogVisible = ref(false)
@@ -337,27 +453,6 @@ onMounted(() => {
     // Ejecutar inicialmente al montar el componente
     fetchTransferRequests();
 
-    // Configurar el intervalo para actualizar los datos cada 10 segundos
-    // intervalId.value = setInterval(() => {
-    //     fetchTransferRequestsNoLoading();
-    // }, 10000);
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -382,25 +477,7 @@ onMounted(async() => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Función para cargar las solicitudes de cancelación
+// Función para cargar las Transferencias de cancelación
 const fetchTransferRequests = async () => {
     TransferRequests.value = await orderService.getOrdersTransfer();
 
@@ -413,18 +490,6 @@ const fetchTransferRequestsNoLoading = async () => {
 
 const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
 
-// const fetchTransferRequestsNoLoading = async () => {
-//     TransferRequests.value = await requestMethodsNoLoading['revisar']();
-//     const currentNumberCansellationRequests = orderStore.numberTransferRequests;
-//     const newCansellationResquestNumber = TransferRequests.value.length;
-
-//     if (currentNumberCansellationRequests < newCansellationResquestNumber) {
-//         const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
-//         sounds[randomSoundIndex].play(); // Reproduce el sonido seleccionado al azar
-
-//         orderStore.numberTransferRequests = newCansellationResquestNumber; // Actualiza el store
-//     }
-// };
 
 
 const isActive = PathService.isActiveRoute

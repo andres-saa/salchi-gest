@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu?.listaCategorias?.filter(c => sitestore.categories.includes(parseInt(c.categoria_id)))
+      <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu?.listaCategorias?.filter(c => codigos.includes(parseInt(c.categoria_id)))
           ?.sort((a, b) => codigos.indexOf(parseInt(a.categoria_id)) - codigos.indexOf(parseInt(b.categoria_id)))"
           :key="section.categoria_id">
 
@@ -13,7 +13,7 @@
               <img @click="open(image.producto)" v-for="(image, index) in cart?.menu?.data
                   .filter(p => p.categoria_id === section.categoria_id)
                   .map(p => { return { imagen: p.productogeneral_urlimagen, producto: p } })
-                  .slice(0, 4)" :key="index" class="category-img" :src="`https://img.restpe.com/${image.imagen}`"
+                  .slice(0, 4)" :key="index" class="category-img" :src="`${URI}/get-image?image_url=${image.imagen}`"
                   alt="Imagen de categoría">
 
           </div>
@@ -22,7 +22,7 @@
 
           <div class="section">
 
-              <div v-for="(product, index) in cart?.menu?.data?.filter(d => d.categoria_id == section.categoria_id)"
+              <div v-for="(product, index) in cart?.menu?.data?.filter(d => d.categoria_id == section.categoria_id && d.productogeneral_estado == 'Activo')"
                   :key="product.id" class="" style="width: 100%;">
 
                   <div class="card-container">
@@ -42,12 +42,13 @@
 
 
 
+
 <script setup>
 import { usecartStore } from './store/shoping_cart';
 import MenuCard from './cards/MenuCard.vue';
 import { useReportesStore } from './store/ventas';
 import { useSitesStore } from './store/site';
-
+import { URI } from './service/conection';
 const sitestore = useSitesStore()
 import { onMounted } from 'vue';
 const store = useReportesStore()
@@ -135,7 +136,7 @@ onMounted(() => {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: auto;
   /* margin-top: 3rem; */
 }
@@ -176,7 +177,7 @@ onMounted(() => {
 
 .section {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   width: 100%;
 }
 

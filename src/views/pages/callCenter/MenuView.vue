@@ -87,6 +87,7 @@ const hola = ref( localStorage.getItem('currentNeigborhood') )
 const siteStore = useSitesStore()
 import { URI } from './service/conection';
 import {usecartStore} from './store/shoping_cart'
+import { fetchService } from '../../../service/utils/fetchService';
 
 
 const cartStore = usecartStore()
@@ -101,7 +102,10 @@ const updateScreenWidth = () => {
 onMounted(async() => {
   window.addEventListener('resize', updateScreenWidth);
   comprobar_sede()
-  await getProducts()
+  // await getProducts()
+
+  const cart = await fetchService.get(`https://backend.salchimonster.com/get-product-integration/6149/11`)
+  cartStore.menu = cart
 
 
 });
@@ -133,7 +137,7 @@ const categories = ref([
   {
     name:'S',
     id:1,
-    imagen:'https://www.salchimonster.com/images/logo.png',
+    imagen:'/images/logo.png',
     codigos:[
                 10, //COMBOS 2 PERSONAS
                 26, //COMBOS PERSONALES
@@ -178,31 +182,31 @@ const categories = ref([
 
 
   
-const getProducts = async (category_name) => {
-    if (true) {
-        try {
-            let response = await fetch(`${URI}/get-product-integration/6149/3`);
+// const getProducts = async (category_name) => {
+//     if (true) {
+//         try {
+//             let response = await fetch(`${URI}/get-product-integration/6149/3`);
 
-            if (!response.ok) {
-                store.setLoading(false, 'cargando productos');
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+//             if (!response.ok) {
+//                 store.setLoading(false, 'cargando productos');
+//                 throw new Error(`HTTP error! status: ${response.status}`);
+//             }
 
-            let data = await response.json();
+//             let data = await response.json();
 
-            // Procesamos los productos y los organizamos por precio usando cartStore.getProductPrice
-            const sortedProducts = data.data.data.sort((a, b) => {
-                return cartStore.getProductPrice(a) - cartStore.getProductPrice(b);
-            });
+//             // Procesamos los productos y los organizamos por precio usando cartStore.getProductPrice
+//             const sortedProducts = data.data.data.sort((a, b) => {
+//                 return cartStore.getProductPrice(a) - cartStore.getProductPrice(b);
+//             });
 
-            // Asignamos los productos organizados al menú
-            cartStore.menu.data = sortedProducts;
+//             // Asignamos los productos organizados al menú
+//             cartStore.menu.data = sortedProducts;
 
-        } catch (error) {
-            console.error('Error fetching data: ', error);
-        }
-    }
-};
+//         } catch (error) {
+//             console.error('Error fetching data: ', error);
+//         }
+//     }
+// };
 
 
 

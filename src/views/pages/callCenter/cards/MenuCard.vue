@@ -3,8 +3,8 @@
         <div class="imagen">
             <!-- Imagen con lazy loading personalizado -->
             <img ref="productImage" class="imagen-producto lazy"
-                :data-src="`https://img.restpe.com/${props.product.productogeneral_urlimagen}`"
-                src="https://www.salchimonster.com/images/characters/line/1.png" alt="Descripción del producto" />
+                :data-src="`${URI}/get-image?image_url=${props.product.productogeneral_urlimagen}`"
+                src="https://media.tenor.com/IfbOs_yh89AAAAAM/loading-buffering.gif" alt="Descripción del producto" />
         </div>
 
         <div class="texto">
@@ -26,10 +26,10 @@
 
                 <!-- Fila de acciones (corazón y precio) -->
                 <div class="flex-row-center-space-between">
-                    <Button icon="pi pi-heart text-xl p-0 m-0" text rounded class="heart-button" />
+                    <!-- <Button icon="pi pi-heart text-xl p-0 m-0" text rounded class="heart-button" /> -->
 
                     <div class="flex-center-gap">
-                        <h5 class="text-xl p-0 m-0 precio">
+                        <h2 class="text-xl p-0 m-0 precio">
                             <b>
                                 {{
                                     formatoPesosColombianos(
@@ -38,15 +38,15 @@
                                     )
                                 }}
                             </b>
-                        </h5>
+                        </h2>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Botón flotante para añadir al carrito -->
-        <Button class="add-to-cart-button" @click.stop="addToCart(props.product)" severity="danger" rounded
-            icon="pi pi-plus text-xl fw-100" />
+        <Button class="add-to-cart-button" @click.stop="addToCart(props.product)" severity="danger" rounded> <i
+                class="pi pi-plus text-xl fw-100" style="font-weight: bold;"></i> </Button>
     </div>
 </template>
 
@@ -54,7 +54,9 @@
 import { formatoPesosColombianos } from '../service/utils/formatoPesos';
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import { usecartStore } from '../store/shoping_cart';
+import { URI } from '../service/conection';
 // import { Button } from 'primevue';
+// const route = useRoute()
 
 // Acceso al store del carrito
 const store = usecartStore();
@@ -69,6 +71,7 @@ const addToCart = (productToAdd) => {
 
 // Función para abrir la vista del producto
 const open = (product) => {
+
     store.setCurrentProduct(product);
     store.setVisible('currentProduct', true);
 };
@@ -140,6 +143,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
+
 <style scoped>
 /* --- Clases nuevas para los estilos que antes estaban en línea --- */
 
@@ -163,7 +167,7 @@ onBeforeUnmount(() => {
     width: 100%;
     aspect-ratio: 1 / 1;
     background-color: #fff;
-    object-fit: contain;
+    object-fit: cover;
 
     /* o 'contain' según tu preferencia */
     border-radius: 0.5rem;
@@ -196,7 +200,7 @@ onBeforeUnmount(() => {
 /* Fila con “display: flex; justify-content: space-between; align-items: center;” */
 .flex-row-center-space-between {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     align-items: center;
 }
 
@@ -220,6 +224,7 @@ onBeforeUnmount(() => {
 /* Botón flotante (absolute) para añadir al carrito */
 .add-to-cart-button {
     position: absolute;
+    aspect-ratio: 1 / 1;
     right: -1rem;
     top: -1rem;
 }
@@ -256,11 +261,11 @@ onBeforeUnmount(() => {
 @media (max-width: 900px) {
 
     span,
-    h5 {
+    h3 {
         font-size: 12.5px;
     }
 
-    h5 {
+    h2 {
         font-size: 20px;
     }
 }

@@ -13,7 +13,7 @@
                 convertirFechaUTCaColombia(store.formatDate(store.dateRange.endDate)) }} </p>
 
 
-        <DataTable :loading="store.loading.visible" stripedRows showGridLines :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
+        <DataTable style="box-shadow: 0 0 1rem #00000030  ;border-radius: .5rem; overflow: hidden;" :loading="store.loading.visible" stripedRows showGridLines :value="store.sumaryData.total_sales" tableStyle="min-width: 100%  max-width:500px"
             :rows="11" :filters="filters" responsiveLayout="scroll" scrollable>
 
 
@@ -148,6 +148,40 @@
 
 
 
+        <p class="text-xl px-0 mx-0 my-6 pb-0" style="font-weight: bold;">
+            REPORTE CALLCENTER</p>
+
+
+        <DataTable  style="box-shadow: 0 0 1rem #00000030  ;border-radius: .5rem; overflow: hidden;" :loading="store.loading.visible" stripedRows showGridLines :value="store.sumaryData.callcenter_report" tableStyle="min-width: 100%  max-width:500px"
+            :rows="11" :filters="filters" responsiveLayout="scroll" scrollable>
+
+
+            <template>
+
+            </template>
+            <Column :style="`background-color:${call_colors[column?.split(' ').slice(0,1)]}`"  v-for="column in columnsd" style="text-transform: uppercase;" :header="column?.split(' ').slice(0,1).join(' ') + ' ' +  column?.split(' ')?.reverse()[0]" field="order_id" header="SEDE   " class="py-0 px-0" headerStyle="width:12rem;min-width:3rem">
+
+                <template #body="slotProps">
+                    <p v-if="!column?.includes('Dinero')" class="text" :class="slotProps.data['SEDE '] == 'TOTAL' ? 'bold' : ''"
+                        style="min-width: max-content;">
+                        {{ slotProps.data[column]  }}
+                    </p>
+
+                    <p class="text" v-else :class="slotProps.data['SEDE '] == 'TOTAL' ? 'bold' : ''"
+                        style="min-width: max-content;">
+                        {{ formatoPesosColombianos(slotProps.data[column] ) }}
+                    </p>    
+
+                </template>
+            </Column>
+
+
+
+
+        </DataTable>
+
+
+
     </div>
 
 
@@ -167,6 +201,15 @@ import { formatoPesosColombianos } from '@/service/formatoPesos';
 import { URI } from '../../../service/conection';
 const filters = ref(null);
 
+
+
+
+const call_colors = {
+    LILIAN:'var(--red-100)',
+    ALEXANDRA:'var(--yellow-100)'
+}
+
+const columnsd = ref()
 function convertirFechaUTCaColombia(fechaUTC) {
     // Crear un objeto de fecha con la fecha UTC
     const fecha = new Date(fechaUTC);
@@ -228,6 +271,13 @@ const  fetchSumaryReport = async () => {
       // salesReport.value = data
 
       store.sumaryData = data
+
+
+      if (data) {
+        const columns = Object.keys(data.callcenter_report[0])
+        // columnsd.value = columns
+        columns? columnsd.value = columns  : columnsd.value = []   }
+
       store.setLoading(false, 'cargando reporte')
 
 

@@ -2,22 +2,21 @@
   <!-- Dialog para cambiar un producto base -->
   <Dialog v-model:visible="showChangeDialog" :closable="false" :modal="true" class="p-3 change-dialog">
     <template #header>
-      <h5>Elige una alternativa para {{ productBaseToChange.producto_descripcion }}</h5>
+      <h3>Elige una alternativa para {{ productBaseToChange.producto_descripcion }}</h3>
     </template>
 
     <div v-if="productBaseToChange" class="change-dialog-content">
       <div class="change-option shadow-4 p-2" v-for="option in productBaseToChange.lista_productoCambio"
         :key="option.producto_cambio_id" @click="selectAlternative(option)">
-        <img class="change-option-img" :src="`https://img.restpe.com/${option.producto_urlimagen}`" alt="" />
+        <img class="change-option-img" :src="`${URI}/get-image?image_url=${option.producto_urlimagen}`" alt="" />
         <p><strong>{{ option.producto_descripcion }}</strong></p>
       </div>
-
       <Button @click="showChangeDialog = false;" severity="danger" icon="pi pi-times" class="close-change-dialog-btn" />
     </div>
   </Dialog>
 
   <!-- Dialog principal para mostrar un producto -->
-  <Dialog :closable="false" :close="reset()" v-model:visible="store.visibles.currentProduct" :style="{ width: '40rem' }"
+  <Dialog :closable="false" v-model:visible="store.visibles.currentProduct" style="max-width: 1200px;" :style="dialogStyle"
     :header="`${store.currentProduct.productogeneral_descripcion}`" :modal="true" class="container product-dialog">
     <!-- Botón para cerrar el diálogo principal -->
     <Button class="add-cart-button" @click="store.setVisible('currentProduct', false)" severity="danger"
@@ -25,17 +24,17 @@
 
     <template #header>
       <div class="header-container">
-        <h5 class="m-0">
+        <h3>
           {{ store.currentProduct.productogeneral_descripcion }}
-        </h5>
-        <h5 class="m-0">
+        </h3>
+        <h3>
           {{
             formatoPesosColombianos(
               store.currentProduct.productogeneral_precio ||
               store.currentProduct.lista_presentacion[0].producto_precio
             )
           }}
-        </h5>
+        </h3>
       </div>
     </template>
 
@@ -48,23 +47,27 @@
 
     <!-- Contenido del diálogo principal -->
     <div class="dialog-main-content">
-      <img class="product-image" :src="`https://img.restpe.com/${store.currentProduct.productogeneral_urlimagen}`"
-        alt="" />
 
       <div>
-        <h5 class="text description">DESCRIPCION</h5>
-        <p>
+        <img style="position: sticky;top: 0;" class="product-image"
+          :src="`${URI}/get-image?image_url=${store.currentProduct.productogeneral_urlimagen}`" alt="" />
+      </div>
+
+
+      <div class="details" style="">
+        <h3 class="text description">DESCRIPCION</h3>
+        <p class=" " style="margin: 1rem 0;">
           {{ store.currentProduct.productogeneral_descripcionweb?.toLowerCase() }}
         </p>
 
         <!-- Agrupadores de modificadores -->
         <div v-for="i in store.currentProduct.lista_agrupadores" :key="i.modificador_id">
-          <h5><strong>{{ i.modificador_nombre }}</strong></h5>
+          <h3 style="margin: 1rem 0;"><strong>{{ i.modificador_nombre }}</strong></h3>
 
           <div>
             <div class="modificador-row" v-for="modificador in i.listaModificadores"
               :key="modificador.modificadorseleccion_id">
-              <Checkbox class="my-0 modificador-checkbox" @change="() => handleAdditionChange(modificador, i)" binary
+              <Checkbox class="my-1 modificador-checkbox" @change="() => handleAdditionChange(modificador, i)" binary
                 v-model="checkedAdition[modificador.modificadorseleccion_nombre]" />
 
               <div class="modificador-row-content">
@@ -74,7 +77,8 @@
 
                 <div class="modificador-price-quantity">
                   <span v-if="modificador.modificadorseleccion_precio > 0" class="pl-2 py-1 text-sm modificador-price">
-                    <b v-if="selectedAdditions[modificador.modificadorseleccion_id]?.quantity > 0">
+                    <b style="margin-right: .5rem;"
+                      v-if="selectedAdditions[modificador.modificadorseleccion_id]?.quantity > 0">
                       {{
                         formatoPesosColombianos(
                           modificador.modificadorseleccion_precio *
@@ -95,12 +99,12 @@
                       modificador.modificadorseleccion_precio > 0 &&
                       i.modificador_esmultiple > 0
                     " @click="decrement(modificador)" class="quantity-btn" severity="danger" icon="pi pi-minus" />
-                    <InputText v-if="
+                    <span v-if="
                       checkedAdition[modificador.modificadorseleccion_nombre] &&
                       modificador.modificadorseleccion_precio > 0 &&
                       i.modificador_esmultiple > 0
-                    " :modelValue="selectedAdditions[modificador.modificadorseleccion_id]?.quantity || 1" readonly
-                      class="quantity-input p-0 text-center" />
+                    " readonly class="quantity-input p-0 text-center"> {{
+                      selectedAdditions[modificador.modificadorseleccion_id]?.quantity || 1 }}</span>
                     <Button v-if="
                       checkedAdition[modificador.modificadorseleccion_nombre] &&
                       modificador.modificadorseleccion_precio > 0 &&
@@ -114,21 +118,22 @@
         </div>
 
         <!-- Productos base (INCLUYE) -->
-        <h5 v-if="store.currentProduct?.lista_productobase?.length > 0" class="includes-title">
+        <h3 v-if="store.currentProduct?.lista_productobase?.length > 0" class="includes-title">
           <strong>INCLUYE</strong>
-        </h5>
+        </h3>
 
         <div class="product-base-grid">
           <div class="product-base-item" v-for="product_base in store.currentProduct.lista_productobase"
             :key="product_base.producto_id">
             <div class="product-base-item-header">
-              <h5 class="m-0 p-0 text-2xl product-base-qty">
+              <h3 class="m-0 p-0 text-2xl product-base-qty">
                 {{ Math.round(product_base.productocombo_cantidad) }} x
-              </h5>
-              <img class="product-base-img" :src="`https://img.restpe.com/${product_base.producto_urlimagen}`" alt="" />
-              <h5 class="m-0 p-0 product-base-desc">
+              </h3>
+              <img class="product-base-img" :src="`${URI}/get-image?image_url=${product_base.producto_urlimagen}`"
+                alt="" />
+              <h3 class="m-0 p-0 product-base-desc">
                 {{ product_base.producto_descripcion }}
-              </h5>
+              </h3>
             </div>
 
             <div class="product-base-change-btn-wrapper">
@@ -153,6 +158,7 @@ import { onMounted, onBeforeUnmount, watch } from 'vue';
 // import Checkbox from 'primevue/checkbox';
 // import { InputText } from 'primevue';
 import { ref, computed } from 'vue';
+import { URI } from './service/conection';
 import { useToast } from 'primevue/usetoast';
 import { formatoPesosColombianos } from './service/utils/formatoPesos';
 import router from '@/router/index.js';
@@ -166,6 +172,9 @@ const route = useRoute();
 
 const productBaseToChange = ref(null);
 const showChangeDialog = ref(false);
+
+
+
 
 /**
  * Lógica para cambiar un producto base por otro alternativo.
@@ -277,7 +286,7 @@ const addToCart = (product) => {
   // alert('hola');
   const additionsArray = Object.values(selectedAdditions.value);
 
-  store.addProductToCart(product);
+  store.addProductToCart(product,1,additionsArray);
 
   additionsArray.forEach((adition) => {
     store.addAdditionToCart(adition);
@@ -293,60 +302,45 @@ const addToCart = (product) => {
 const see = ref(false);
 const seeLeftHand = ref(false);
 const seeRightHand = ref(false);
-const reset = () => {
-  see.value = seeLeftHand.value = seeRightHand.value = false;
-};
 
-// watch(
-//   () => store.visibles.currentProduct,
-//   (newval) => {
-//     if (newval) {
-//       return;
-//     }
-//     const new_route = `/${route.params.menu_name}/${route.params.category_id}`;
-//     if (route.path != '/') {
-//       router.push(new_route);
-//     }
-//   }
-// );
+
 
 /**
  * Control de adiciones v2 (?)
  */
 const adicionales = ref([]);
 
-watch(
-  () => store.visibles.addAdditionToCart,
-  async (new_val) => {
-    if (!new_val) {
-      selectedAdditions.value = {};
-      adicionales.value = [];
-    } else {
-      // Lógica cuando se abre el panel de adiciones, si la hay
-    }
-  },
-  { deep: true }
-);
+
 
 /**
  * Detección de tamaño de pantalla
  */
+
+/**
+ * onMounted inicial
+ */
+
 const screenWidth = ref(window.innerWidth);
 
 const updateScreenWidth = () => {
   screenWidth.value = window.innerWidth;
 };
+
 window.addEventListener('resize', updateScreenWidth);
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateScreenWidth);
 });
 
-const isSmallScreen = computed(() => screenWidth.value < 768);
+const dialogStyle = computed(() => {
+  return isBelow1200.value
+    ? { width: '90%', 'max-width': '40rem' }
+    : { width: '90%', 'max-width': '1200px' };
+});
 
-/**
- * onMounted inicial
- */
+// Computed para determinar si la pantalla es menor a 1200px
+const isBelow1200 = computed(() => screenWidth.value < 1200);
+
 onMounted(() => {
   setTimeout(() => {
     if (route.params.product_id) {
@@ -414,7 +408,7 @@ const toast = useToast();
 
 /* Diálogo principal (producto) */
 .product-dialog {
-  max-width: 91vw;
+  max-width: 91vw !important;
 }
 
 /* Botón flotante para cerrar el diálogo principal */
@@ -466,6 +460,33 @@ const toast = useToast();
   border-radius: 1rem;
   padding: 0;
   padding-bottom: 0;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.details {
+  box-shadow: 0rem 1rem 3rem 1rem #00000010;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+@media (width<1200px) {
+
+  .dialog-main-content {
+    grid-template-columns: repeat(1, 1fr);
+
+  }
+
+  .product-dialog {
+    max-width: 20rem !important;
+  }
+
+  .details {
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
 }
 
 /* Imagen del producto */
@@ -482,6 +503,7 @@ const toast = useToast();
   font-weight: bold;
   color: black;
   padding: 0.2rem 0;
+  /* background-color: red; */
 }
 
 /* Fila de modificador (checkbox + label + precio + botones) */
@@ -494,8 +516,8 @@ const toast = useToast();
 
 /* Checkbox de modificador */
 .modificador-checkbox {
-  /* outline: 2px solid var(--primary-color); */
-  /* border-radius: 0.2rem; */
+  /* outline: 2px solid var(--p-primary-color); */
+  border-radius: 0.2rem;
 }
 
 /* Contenido de la fila (nombre y precio/cantidad a la derecha) */
@@ -533,6 +555,7 @@ const toast = useToast();
 
 /* Botón genérico de + / - */
 .quantity-btn {
+  /* margin-left: .5rem; */
   width: 2rem;
   height: 1.5rem;
   border: none;
@@ -541,6 +564,9 @@ const toast = useToast();
 /* Input de cantidad */
 .quantity-input {
   width: 2rem;
+  text-align: center;
+  font-weight: bold;
+  padding: 0;
   border: none;
   height: 1.5rem;
 }
@@ -561,7 +587,7 @@ const toast = useToast();
 
 /* Cada ítem de producto base */
 .product-base-item {
-  border: 2px solid var(--primary-color);
+  border: 2px solid var(--p-primary-color);
   display: flex;
   border-radius: 0.5rem;
   background-color: #fff;
@@ -591,7 +617,7 @@ const toast = useToast();
 .product-base-img {
   width: 4rem;
   aspect-ratio: 1 / 1;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 0.5rem;
 }
 
