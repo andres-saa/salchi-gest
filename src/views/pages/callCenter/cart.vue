@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="cart-has-products" v-if="store.cart.length > 0">
+        <div class="cart-has-products pb-8" v-if="store.cart.length > 0">
             <h1 class="cart-title text-center text-2xl rtg8">
                 <b>CARRITO DE COMPRAS</b>
             </h1>

@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { URI } from '../service/conection'
 
-export const usecartStore = defineStore('salchimonster-cart-n3', {
+export const usecartStore = defineStore('salchimonster-cart-new-4555', {
   persist: {
-    key: 'salchimonster-cart-n3',
+    key: 'salchimonster-cart-new-4555',
     storage: localStorage,
     paths: ['cart', 'last_order', 'menu'],
   },
