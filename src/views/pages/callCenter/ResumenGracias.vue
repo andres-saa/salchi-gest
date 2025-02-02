@@ -31,15 +31,17 @@
                 
                 
 
+               
                 <div class="pe6 pe0 text-right py-2">
                     <h6 v-if="product.modificadorseleccionList.length < 1" class="text-end">
-                        {{ formatoPesosColombianos(product.pedido_precio * product.pedido_cantidad) }}
+                        {{ formatoPesosColombianos(product.pedido_precio ) }}
                     </h6>
 
                     <h6 v-else class="text-end">
                         {{ formatoPesosColombianos(product.pedido_base_price * product.pedido_cantidad) }}
                     </h6>
                 </div>
+                
                 
                 
                 </div>

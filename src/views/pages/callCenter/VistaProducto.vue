@@ -241,6 +241,14 @@ const changeProduct = (product_base) => {
 const selectedAdditions = ref({});
 const checkedAdition = ref({});
 
+
+watch(() => store.visibles.currentProduct, (newVal) => {
+
+  selectedAdditions.value = {}
+  checkedAdition.value = {}
+},{deep:true})
+
+
 const handleAdditionChange = (item, group) => {
   if (checkedAdition.value?.[item?.modificadorseleccion_nombre]) {
     const new_item = {
