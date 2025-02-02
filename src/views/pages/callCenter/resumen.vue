@@ -107,27 +107,23 @@
                             ) }}</b></span>
                 </div>
 
-                <Button @click="siteStore.visibles.currentSite = true" v-else label="Calcular mi domicilio"
-                    style="min-width: max-content;"></Button>
             </div>
 
             <!-- Botones de navegación y acciones -->
-            <router-link to="/" v-if="route.path.includes('cart')">
+            <router-link to="/call-center-vender/" v-if="route.path.includes('cart')">
                 <Button outlined icon="pi pi-shopping-cart" label="Volver al menu'"
                     class="mt-4 button-common button-transparent button-fullwidth button-bold" severity="danger">
                 </Button>
             </router-link>
 
-            <router-link to="/cart" v-else-if="route.path != '/reservas'">
-                <Button outlined icon="pi pi-arrow-left" label="Volver al carrito"
-                    class="mt-4 button-common button-transparent button-fullwidth button-bold"
-                    severity="danger"></Button>
+
+            <router-link to="/call-center-vender/cart/" v-if="route.path.includes('pay')">
+                <Button outlined icon="pi pi-shopping-cart" label="Volver al carrito'"
+                    class="mt-4 button-common button-transparent button-fullwidth button-bold" severity="danger">
+                </Button>
             </router-link>
 
-            <Tag v-if="siteStore.status?.status == 'closed' && route.path != '/reservas'" class="mt-2 tag-fullheight"
-                severity="danger">
-                Cerrado, abre a las {{ siteStore.status.next_opening_time }}
-            </Tag>
+      
 
 
             <div>
@@ -135,8 +131,8 @@
             </div>
 
 
-            <router-link to="/pay"
-                v-if="route.path.includes('cart') && (siteStore.status?.status !== 'closed' && route.path == '/reservas')">
+            <router-link to="/call-center-vender/pay"
+                v-if="route.path.includes('cart')">
                 <Button iconPos="right" icon="pi pi-arrow-right" label="Pedir"
                     class="mt-2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
                     severity="help"></Button>
@@ -161,8 +157,10 @@
             </router-link>
 
 
+
+
             <Button
-                v-else-if="siteStore.status?.status !== 'closed' && siteStore.status?.status && route.path == '/pay'"
+                v-else-if=" route.path == '/call-center-vender/pay'"
                 @click="() => {
                     orderService.sendOrder()
                     sending = true

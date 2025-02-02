@@ -142,7 +142,7 @@
           </div>
 
          
-          <div  v-for="product in store.currentOrder.pe_json.listaPedidos">
+          <div  v-for="product in store?.currentOrder?.pe_json?.listaPedidos">
 
             <div style="display: grid; grid-template-columns: auto auto;">
              
@@ -161,16 +161,21 @@
               </p>
             </div> -->
             <div >
-              <p style="text-align: end;color: black;">
+              <p v-if="product.pedido_base_price" style="text-align: end;color: black;">
                 <!-- {{ formatoPesosColombianos(product.price) }} -->
                 {{ formatoPesosColombianos(product.pedido_base_price * product.pedido_cantidad) }}
+              </p>
+
+              <p v-else style="text-align: end;color: black;">
+                <!-- {{ formatoPesosColombianos(product.price) }} -->
+                {{ formatoPesosColombianos(product.pedido_precio) }}
               </p>
             </div>
 
 
             </div>
 
-            <p v-if="product.lista_productocombo.length > 0" class="p-0 m-0"><b>COMBO INCLUYE</b></p>
+            <p v-if="product.lista_productocombo?.length > 0" class="p-0 m-0"><b>COMBO INCLUYE</b></p>
             <p v-if="product.lista_productocombo" class="p-0 m-0 ml-5" style="" v-for="i in product.lista_productocombo" > -- <b>{{i.pedido_cantidad  }}</b>  {{i.pedido_nombre  }} </p> 
 
 
