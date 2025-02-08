@@ -78,7 +78,7 @@
 
                                                     <span  :modelValue="item.quantity" readonly
                                                         class="cart-addition-quantity-label rtg0 text-center">{{
-                                                            item.modificadorseleccion_cantidad / product.pedido_cantidad }}</span>
+                                                            item.modificadorseleccion_cantidad }}</span>
 
                                                     <Button  @click="store.incrementAdditional(product.signature, item)"
                                                         severity="danger" class="cart-addition-quantity-btn-plus"

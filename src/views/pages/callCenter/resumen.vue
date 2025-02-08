@@ -45,7 +45,7 @@
                 </div>
                 <div class="addition-item" v-for="item in product.modificadorseleccionList" :key="item">
                             <div class="addition-item-inner">
-                                <span class="text adicion"><span><b>- ( {{ product.pedido_cantidad }} ) {{ item.modificadorseleccion_cantidad / product.pedido_cantidad }}</b></span> {{ item.modificador_nombre
+                                <span class="text adicion"><span><b>- ( {{ product.pedido_cantidad }} ) {{ item.modificadorseleccion_cantidad  }}</b></span> {{ item.modificador_nombre
                                     }}</span>
 
                                 <span    v-if="item.pedido_precio > 0" class="pl-2 text-sm">

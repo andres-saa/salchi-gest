@@ -227,6 +227,9 @@ onBeforeUnmount(() => {
     aspect-ratio: 1 / 1;
     right: -1rem;
     top: -1rem;
+    width: 3rem;
+    display: flex;
+    justify-content: center;
 }
 
 /* --- Estilos existentes y/o adicionales --- */

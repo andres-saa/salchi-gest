@@ -28,7 +28,7 @@ export const useSitesStore = defineStore('call-center-site', {
                 currentSite: false
             },
             current_delivery:0,
-            webSocket: null,
+     
             status:'closed',
             restaurant:1,
             categories:[
@@ -65,42 +65,12 @@ export const useSitesStore = defineStore('call-center-site', {
         },
 
         setLocation(location){
-            this.connectWebSocket(location.site.site_id)
             this.location = location
         },
         setVisible(item,status){
             this.visibles[item]=status
         },
-        async connectWebSocket(siteId) {
-
-            if (this.webSocket !== null) {
-                this.webSocket.close// Make sure to close any existing connections
-            }
-
-            // this.webSocket = new WebSocket(`wss://${URI_SOCKET}/ws/${siteId}`);
-            this.webSocket.onopen = () =>
-                this.webSocket.onmessage = (message) => {
-                    console.log('new mesagge')
-                    
-
-
-                };
-            this.webSocket.onclose = async () => {
-                console.log("WebSocket disconnected");
-
-
-                const site_id = this.location.site.site_id
-
-                if (site_id) {
-                    this.connectWebSocket(site_id);
-                } else {
-                    // router.push('/login')
-                }
-                this.webSocket = null;
-                // location.reload() // Clean up the reference to the WebSocket
-            };
-            this.webSocket.onerror = (error) => console.error("WebSocket error:", error);
-        },
+   
         async setNeighborhoodPrice(){
        
                 try {

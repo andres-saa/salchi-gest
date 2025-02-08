@@ -78,6 +78,7 @@ const route = useRoute()
 
 
 
+
 import {ref} from 'vue'
 import { comprobar_sede } from './service/state';
 import router from '@/router/index.js'
@@ -90,6 +91,9 @@ import {usecartStore} from './store/shoping_cart'
 import { fetchService } from '../../../service/utils/fetchService';
 
 
+
+
+
 const cartStore = usecartStore()
 const screenWidth = ref(window.innerWidth);
 
@@ -99,13 +103,26 @@ const updateScreenWidth = () => {
   screenWidth.value = window.innerWidth;
 };
 
+
+
+onMounted(async () => {
+  const site_id = siteStore.location.site?.site_id
+  const pe_id = siteStore.location.site?.pe_site_id
+
+  const data = await fetchService.get(`${URI}/get-product-integration/6149/${pe_id || 1}`)
+  cartStore.menu = data
+
+})
+
+
+
 onMounted(async() => {
   window.addEventListener('resize', updateScreenWidth);
   comprobar_sede()
   // await getProducts()
 
-  const cart = await fetchService.get(`https://backend.salchimonster.com/get-product-integration/6149/11`)
-  cartStore.menu = cart
+  // const cart = await fetchService.get(`https://backend.salchimonster.com/get-product-integration/6149/11`)
+  // cartStore.menu = cart
 
 
 });

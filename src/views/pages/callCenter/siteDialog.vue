@@ -143,7 +143,7 @@ import { URI } from './service/conection'
 import {sitesService } from './service/site/sitesService'
 import {useSitesStore} from './store/site'
 import { usecartStore } from './store/shoping_cart';
-
+import { fetchService } from '../../../service/utils/fetchService';
 const store = useSitesStore()
 const cart = usecartStore()
 
@@ -200,9 +200,17 @@ const setNeigborhood = async() => {
         city:currenCity.value
     }
     
+
+
+    const pe_id = store.location.site?.pe_site_id
+
+    const data = await fetchService.get(`${URI}/get-product-integration/6149/${pe_id || 1}`)
+    cart.menu = data
+
     store.setLocation(newLocation)
     store.setVisible('currentSite',false)
     showSiteDialog.value = false
+
 
 }
 

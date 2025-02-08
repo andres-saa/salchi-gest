@@ -2,7 +2,7 @@
   <!-- Dialog para cambiar un producto base -->
   <Dialog v-model:visible="showChangeDialog" :closable="false" :modal="true" class="p-3 change-dialog">
     <template #header>
-      <h3>Elige una alternativa para {{ productBaseToChange.producto_descripcion }}</h3>
+      <h5>Elige una alternativa para {{ productBaseToChange.producto_descripcion }}</h5>
     </template>
 
     <div v-if="productBaseToChange" class="change-dialog-content">
@@ -24,17 +24,17 @@
 
     <template #header>
       <div class="header-container">
-        <h3>
+        <h5>
           {{ store.currentProduct.productogeneral_descripcion }}
-        </h3>
-        <h3>
+        </h5>
+        <h5>
           {{
             formatoPesosColombianos(
               store.currentProduct.productogeneral_precio ||
               store.currentProduct.lista_presentacion[0].producto_precio
             )
           }}
-        </h3>
+        </h5>
       </div>
     </template>
 
@@ -55,14 +55,14 @@
 
 
       <div class="details" style="">
-        <h3 class="text description">DESCRIPCION</h3>
+        <h5 class="text description">DESCRIPCION</h5>
         <p class=" " style="margin: 1rem 0;">
           {{ store.currentProduct.productogeneral_descripcionweb?.toLowerCase() }}
         </p>
 
         <!-- Agrupadores de modificadores -->
         <div v-for="i in store.currentProduct.lista_agrupadores" :key="i.modificador_id">
-          <h3 style="margin: 1rem 0;"><strong>{{ i.modificador_nombre }}</strong></h3>
+          <h6 style="margin: 1rem 0; padding: 0;"><strong>{{ i.modificador_nombre }}</strong></h6>
 
           <div>
             <div class="modificador-row" v-for="modificador in i.listaModificadores"
@@ -71,13 +71,13 @@
                 v-model="checkedAdition[modificador.modificadorseleccion_nombre]" />
 
               <div class="modificador-row-content">
-                <span class="text-sm adicion modificador-nombre">
+                <h5 class="text adicion modificador-nombre p-0 m-0">
                   {{ modificador.modificadorseleccion_nombre }}
-                </span>
+                </h5>
 
                 <div class="modificador-price-quantity">
-                  <span v-if="modificador.modificadorseleccion_precio > 0" class="pl-2 py-1 text-sm modificador-price">
-                    <b style="margin-right: .5rem;"
+                  <span v-if="modificador.modificadorseleccion_precio > 0" class="pl-2 py-1          modificador-price">
+                    <b style=""
                       v-if="selectedAdditions[modificador.modificadorseleccion_id]?.quantity > 0">
                       {{
                         formatoPesosColombianos(
@@ -118,22 +118,22 @@
         </div>
 
         <!-- Productos base (INCLUYE) -->
-        <h3 v-if="store.currentProduct?.lista_productobase?.length > 0" class="includes-title">
+        <h5 v-if="store.currentProduct?.lista_productobase?.length > 0" class="includes-title">
           <strong>INCLUYE</strong>
-        </h3>
+        </h5>
 
         <div class="product-base-grid">
           <div class="product-base-item" v-for="product_base in store.currentProduct.lista_productobase"
             :key="product_base.producto_id">
             <div class="product-base-item-header">
-              <h3 class="m-0 p-0 text-2xl product-base-qty">
+              <h5 class="m-0 p-0 text-2xl product-base-qty">
                 {{ Math.round(product_base.productocombo_cantidad) }} x
-              </h3>
+              </h5>
               <img class="product-base-img" :src="`${URI}/get-image?image_url=${product_base.producto_urlimagen}`"
                 alt="" />
-              <h3 class="m-0 p-0 product-base-desc">
+              <h5 class="m-0 p-0 product-base-desc">
                 {{ product_base.producto_descripcion }}
-              </h3>
+              </h5>
             </div>
 
             <div class="product-base-change-btn-wrapper">
@@ -165,10 +165,15 @@ import router from '@/router/index.js';
 import { useRoute } from 'vue-router';
 import { usecartStore } from './store/shoping_cart';
 // import { Dialog } from 'primevue';
-// import { Button } from 'primevue';
-
 const store = usecartStore();
 const route = useRoute();
+
+watch(() => store.visibles.currentProduct, (newVal) => {
+
+
+  selectedAdditions.value = {}
+  checkedAdition.value = {}
+},{deep:true})
 
 const productBaseToChange = ref(null);
 const showChangeDialog = ref(false);
@@ -176,9 +181,6 @@ const showChangeDialog = ref(false);
 
 
 
-/**
- * Lógica para cambiar un producto base por otro alternativo.
- */
 const selectAlternative = (option) => {
   const currentProduct = {
     producto_cambio_id: productBaseToChange.value.producto_id,
@@ -241,14 +243,6 @@ const changeProduct = (product_base) => {
 const selectedAdditions = ref({});
 const checkedAdition = ref({});
 
-
-watch(() => store.visibles.currentProduct, (newVal) => {
-
-  selectedAdditions.value = {}
-  checkedAdition.value = {}
-},{deep:true})
-
-
 const handleAdditionChange = (item, group) => {
   if (checkedAdition.value?.[item?.modificadorseleccion_nombre]) {
     const new_item = {
@@ -296,9 +290,9 @@ const addToCart = (product) => {
 
   store.addProductToCart(product,1,additionsArray);
 
-  additionsArray.forEach((adition) => {
-    store.addAdditionToCart(adition);
-  });
+  // additionsArray.forEach((adition) => {
+  //   store.addAdditionToCart(adition);
+  // });
 
   selectedAdditions.value = {}; // Reseteamos las adiciones
   store.setVisible('currentProduct', false);
@@ -313,12 +307,24 @@ const seeRightHand = ref(false);
 
 
 
+
 /**
  * Control de adiciones v2 (?)
  */
 const adicionales = ref([]);
 
-
+watch(
+  () => store.visibles.addAdditionToCart,
+  async (new_val) => {
+    if (!new_val) {
+      selectedAdditions.value = {};
+      adicionales.value = [];
+    } else {
+      // Lógica cuando se abre el panel de adiciones, si la hay
+    }
+  },
+  { deep: true }
+);
 
 /**
  * Detección de tamaño de pantalla
@@ -518,7 +524,7 @@ const toast = useToast();
 .modificador-row {
   display: flex;
   gap: 1rem;
-  padding: 0.3rem;
+  /* padding: 0.3rem; */
   align-items: center;
 }
 
@@ -559,6 +565,7 @@ const toast = useToast();
   min-width: max-content;
   display: flex;
   /* margin-left: 1rem; */
+  align-items: center;
 }
 
 /* Botón genérico de + / - */

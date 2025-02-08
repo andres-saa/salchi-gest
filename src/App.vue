@@ -39,6 +39,7 @@ const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
 
 
 
+
 const updateApp = async() => {
 
 
