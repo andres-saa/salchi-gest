@@ -1,1 +1,0 @@
-import o from"./pedidos-d5a66558.js";import{o as r,x as t}from"./index-25141ed2.js";import"./OrderItem.vue_vue_type_style_index_0_scoped_bbba8067_lang-6aac4597.js";import"./formatoPesos-8aa989a0.js";import"./siteService-9f9c23bb.js";import"./ventas-60329630.js";const d={__name:"modificar_ordenes",setup(e){return(p,m)=>(r(),t(o))}};export{d as default};
