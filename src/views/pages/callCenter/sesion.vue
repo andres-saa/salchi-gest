@@ -1,20 +1,22 @@
 <template>
   <div class="container">
-      <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu?.listaCategorias?.filter(c => codigos.includes(parseInt(c.categoria_id)))
+      <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu?.listaCategorias
           ?.sort((a, b) => codigos.indexOf(parseInt(a.categoria_id)) - codigos.indexOf(parseInt(b.categoria_id)))"
           :key="section.categoria_id">
 
 
 
           <div class="category-header">
-              <span class="category-name">
+              <span class="category-name py-2 px-5"  style="border-radius: 10rem;" :class="cart.currentSection  == section.categoria_id ? 'selected' : 3">
                   <b>{{ section.categoria_descripcion }}</b>
+
+                  <!-- {{ cart.currentSection }} -->
               </span>
-              <img @click="open(image.producto)" v-for="(image, index) in cart?.menu?.data
+              <!-- <img @click="open(image.producto)" v-for="(image, index) in cart?.menu?.data
                   .filter(p => p.categoria_id === section.categoria_id)
                   .map(p => { return { imagen: p.productogeneral_urlimagen, producto: p } })
                   .slice(0, 4)" :key="index" class="category-img" :src="`${URI}/get-image?image_url=${image.imagen}`"
-                  alt="Imagen de categoría">
+                  alt="Imagen de categoría"> -->
 
           </div>
 
@@ -93,7 +95,8 @@ const smoothScrollTo = (categoryId) => {
   }
 
   // ----- MARCAR SECCIÓN ACTUAL -----
-  store.currentSection = categoryId;
+  cart.currentSection = categoryId;
+
 
   // ----- SCROLL HORIZONTAL (a la barra de categorías) -----
   setTimeout(() => {
@@ -151,6 +154,22 @@ onMounted(() => {
   margin: 2rem auto;
   justify-content: center;
   /* width: max-content; */
+}
+
+.selected{
+  background-color: rgb(255, 255, 255);
+  animation:colorizes 1s infinite linear ;
+}
+
+@keyframes colorizes {
+
+  0%{
+    background-color: yellow;
+  }
+  50%{
+    background-color: greenyellow;
+  }
+  
 }
 
 

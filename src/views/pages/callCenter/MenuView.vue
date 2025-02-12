@@ -26,11 +26,11 @@
   
   <VistaProducto></VistaProducto>
 
-  <div style="position: fixed;overflow: hidden;background-color: white; border-radius: 0 1rem 1rem 0; left: 0;top:12rem;display: flex;flex-direction: column; ">
+  <div style="position: fixed;overflow: hidden;background-color: white;border-radius: 10rem;background-color: black; top:12rem;display: flex;flex-direction: column;left:1rem;padding: .5rem;gap: 1rem; ">
 
-<div v-for="(i, index) in categories" style="display: flex;align-items: center;width: 2rem; flex-direction: column;">
-    <Button size="small" text :label="i.name" class="text-white" @click="siteStore.categories = i.codigos">
-        <img style="width: 2rem;" :src="i.imagen" alt="">
+<div v-for="(i, index) in categories" style="display: flex;align-items: center; flex-direction: column;">
+    <Button :style="siteStore.categories == i.codigos? 'background-color:yellow' : 'background-color:white'" style="padding: .5rem; border-radius: 50%;aspect-ratio: 1 / 1;" size="small" text :label="i.name" class="text-white button" @click="siteStore.categories = i.codigos">
+        <img style="width: 2rem; height: 2rem;" :src="i.imagen" alt="">
     </Button>
     <span   v-if="index != 2" style="border-top: .1rem solid white;"></span>
 </div>
@@ -173,9 +173,8 @@ const categories = ref([
 
   {
     name:'B',
-    id:2,imagen:'https://burgermonsterr.com/images/LOGO.png',
+    id:2,imagen:'https://backend.salchimonster.com/read-photo-product/mm9Ohnu7',
     codigos:[
-
     5,
     22,
     18,
@@ -187,7 +186,7 @@ const categories = ref([
   {
     name:'P',
     id:4,
-    imagen:'https://papasmonster.com/images/LOGO.png',
+    imagen:'https://backend.salchimonster.com/read-photo-product/a1roeK3y',
     codigos:[
     19,
 24,
@@ -235,3 +234,18 @@ onMounted(async () => {
 
 
 </script>
+
+<style scoped>
+
+
+*{
+  transition: all ease .5s;
+}
+
+
+.button:hover{
+
+  transform: scale(1.2);
+  
+}
+</style>

@@ -1,4 +1,20 @@
 <template>
+
+<div
+    class=""
+    v-if="reportes.loading.visible"
+    style="width: 100vw;transition: all ease .3s;backdrop-filter: blur(5px);  flex-direction: column;pointer-events:auto; background-color: #00000020; height: 100vh;position: fixed;display: flex;align-items: center;justify-content: center; left: 0;right: 0;z-index: 99999999;"
+  >
+  <div class="luz" style="aspect-ratio: 1  / 1;display: flex;justify-content: center;align-items: center;">
+
+    <div class="girar" style="width: 150px;z-index: -1; height: 150px;padding: 3rem; background-color: var(primary-color); position: absolute;"></div>
+    <div class="imagen" style="display: flex;padding: 1rem;border-radius: .3rem; background-color: white;  gap: 1rem; flex-direction: column; align-items:center;">
+      <img src="https://backend.salchimonster.com/read-photo-product/xai0dVnL" style="width:20vw ;max-width: 100px;" alt="">
+      <h5 style="color: black;">Cargando...</h5>
+    </div>
+  </div>
+
+  </div>
     <div class="col-12 px-2 my-8  p-0" style="margin-top: 6rem;">
       
         <validate></validate>
@@ -67,7 +83,11 @@ import { usecartStore } from './store/shoping_cart';
 import { useSitesStore } from './store/site';
 import {useUserStore} from './store/user'
 import { paymentMethodService } from './service/restaurant/paymentMethodService';
+import { useReportesStore } from './store/ventas';
 // import validate from './validate.vue';
+
+const reportes = useReportesStore()
+
 const store = usecartStore()
 const siteStore = useSitesStore()
 const use = ref(0)
@@ -127,6 +147,15 @@ img {
 
 .descripcion::first-letter {
     text-transform: uppercase;
+}
+
+
+@keyframes girar {
+
+100%{
+  transform: rotate(360deg);
+}
+
 }
 
 @keyframes cambiaColor {

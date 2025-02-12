@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { URI } from '../service/conection'
-
-export const usecartStore = defineStore('salchi_super_cart_web_salchiget_3', {
+import { menu } from './menu.js';
+export const usecartStore = defineStore('salchi_super_cart_web4432', {
   persist: {
-    key: 'salchi_super_cart_web_salchiget_3',
+    key: 'salchi_super_cart_web4432',
     storage: sessionStorage,
     paths: ['cart', 'last_order', 'menu'],
   },
@@ -16,6 +16,7 @@ export const usecartStore = defineStore('salchi_super_cart_web_salchiget_3', {
     visibles: {
       currentProduct: false,
       addAdditionToCart: false,
+      loading:true,
       last_order: '',
     },
 
@@ -23,13 +24,23 @@ export const usecartStore = defineStore('salchi_super_cart_web_salchiget_3', {
     last_order: '',
     sending_order: false,
     was_reserva: false,
-    menu:{}
+    menu:menu
   }),
 
   getters: {
-    cartTotal(state) {
-      return state.cart.reduce((acc, item) => acc + item.pedido_precio, 0)
-    },
+    // cartTotal(state) {
+    //   return state.cart.reduce((acc, item) => acc + item.pedido_precio, 0)
+    // },
+
+    cartTotal(state){
+      if (!Array.isArray(state.cart) || state.cart.length === 0) return 0;
+
+      return state.cart.reduce((total, product) => total + this.calculateTotalProduct(product), 0);
+  },
+
+
+
+
     // Getter para verificar si existe un producto por ID en el carrito
     isProductInCart: (state) => (productId) => {
       return state.cart.some((item) => {
@@ -45,27 +56,21 @@ export const usecartStore = defineStore('salchi_super_cart_web_salchiget_3', {
     },
 
     // Ejemplo de getter para calcular el total de un producto fuera de las actions
-    getProductTotal: () => (product, additionalItems = [], quantity = 1) => {
+    getProductTotal: () => (product) => {
       // Si el combo ya tiene su precio final, NO sumamos sus "sub-productos"
       // sino que solo usamos el precio general y los adicionales.
-
-
-      let total = 0
-      const productBasePrice = parseInt(product.productogeneral_precio) || 0
-      total += productBasePrice * quantity
+      const productBasePrice = this.getProductPrice(product)
+      let total = productBasePrice
 
       // Adicionales (si aplica)
-      if (additionalItems && additionalItems.length > 0) {
-        additionalItems.forEach(ad => {
-          const adPrice    = parseInt(ad.price) || 0
-          const adQuantity = parseInt(ad.quantity) || 1
+      if (product.modificadorseleccionList && product.modificadorseleccionList.length > 0) {
+        product.modificadorseleccionList.forEach(ad => {
+          const adPrice    = parseInt(ad.pedido_precio) || 0
+          const adQuantity = parseInt(ad.modificadorseleccion_cantidad) || 1
           total += adPrice * adQuantity
         })
       }
-
-
-
-      return total
+      return total * product.pedido_cantidad
     },
   },
 
@@ -76,6 +81,32 @@ export const usecartStore = defineStore('salchi_super_cart_web_salchiget_3', {
     setCurrentVideoTime(time) {
       this.currentVideoTime = time
     },
+    calculateTotalProduct (product){
+      if (!product || typeof product !== "object") return 0;
+
+      // Destructuración con valores por defecto
+      const {
+          pedido_base_price = 0,
+          pedido_cantidad = 1,
+          modificadorseleccionList = []
+      } = product;
+
+      // Convertir a números para evitar errores con strings numéricos
+      const basePrice = Number(pedido_base_price) || 0;
+      const cantidad = Number(pedido_cantidad) || 1;
+
+      // Validar y calcular modificadores
+      const adiciones = Array.isArray(modificadorseleccionList)
+          ? modificadorseleccionList.reduce(
+              (total, { pedido_precio = 0, modificadorseleccion_cantidad = 1 }) =>
+                  total + (Number(pedido_precio) || 0) * (Number(modificadorseleccion_cantidad) || 1),
+              0
+          )
+          : 0;
+
+      return (basePrice + adiciones) * cantidad;
+  },
+
 
     setCurrentProduct(product) {
       this.currentProduct = product
@@ -86,261 +117,150 @@ export const usecartStore = defineStore('salchi_super_cart_web_salchiget_3', {
 
 
     getProductId(product) {
-      if (product.producto_id) {
-        return product.producto_id
-      } else if (
-        product.lista_presentacion &&
-        product.lista_presentacion.length > 0 &&
-        product.lista_presentacion[0].producto_id
-      ) {
-        return product.lista_presentacion[0].producto_id
-      } else {
-        console.error('No valid product ID found for product:', product)
-        return null
+      if  (product.lista_presentacion && product.lista_presentacion.length > 0 ){
+          return product.lista_presentacion[0].producto_id
+      }else if (product.productogeneral_id){
+          return product.productogeneral_id
       }
-    },
+  },
 
-    getProductPrice(product) {
-      // Si el combo ya está en productogeneral_precio, lo usamos directamente
-      const generalPrice      = parseInt(product.productogeneral_precio)
-      const presentationPrice = parseInt(product.lista_presentacion?.[0]?.producto_precio)
-      return generalPrice || presentationPrice || 0
-    },
+   getProductPrice(product) {
+
+    if (product.productogeneral_precio){
+        return product.productogeneral_precio
+    }else if (product.lista_presentacion && product.lista_presentacion.length > 0 ){
+        return product.lista_presentacion[0].producto_precio
+    } else return 0
+
+  },
+
+   buildSignature(product_id,modificadores=[]) {
+
+    const aditions = modificadores.map(p => {
+        return {
+            "id" : p.modificadorseleccion_id,
+            "quantity" : p.modificadorseleccion_cantidad
+        }
+    })
+    return `${product_id}-${JSON.stringify(aditions) }`
+},
 
 
     calculateTotalPrice(product, quantity, modificadores = []) {
-      // 1. Precio base del producto (combo o no combo)
-      const basePrice = this.getProductPrice(product)
-      let total = basePrice
 
-      // 2. Sumamos solamente modificadores (adicionales)
-      modificadores.forEach((mod) => {
-        const modPrice    = parseInt(mod.pedido_precio) || 0
-        const modQuantity = parseInt(mod.modificadorseleccion_cantidad) || 0
-        total += modPrice * modQuantity
-      })
-
-      return total * quantity
     },
 
 
-    addProductToCart(product, quantity = 1, additionalItems = []) {
-      const signatureObject = {
-        productId: this.getProductId(product),
-        additions: additionalItems.map(ad => ({
-          group_id: ad.group_id,
-          id: ad.id,
-          quantity: ad.quantity
-        }))
+     addProductToCart(product, quantity = 1, additionalItems = []) {
+
+      const newProduct = {
+          "pedido_precio": this.getProductPrice(product),
+          "pedido_escombo":product.productogeneral_escombo,
+          "pedido_cantidad": quantity,
+          "pedido_base_price": this.getProductPrice(product),
+          "pedido_productoid": this.getProductId(product),
+          "lista_productocombo": product.lista_productobase?  product.lista_productobase.map( product => {
+              return {
+                      "pedido_productoid": product.producto_id,
+                      "pedido_cantidad": product.productocombo_cantidad,
+                      "pedido_precio": product.productocombo_precio,
+                      "pedido_nombre": product.producto_descripcion,
+                    }
+          }) : [],
+          "pedido_nombre_producto": product.productogeneral_descripcion,
+          "modificadorseleccionList": additionalItems.map( add => {
+              return {
+
+                  "modificador_id":add.modificador_id ,
+                  "modificadorseleccion_id": add.modificadorseleccion_id,
+                  "pedido_precio": add.modificadorseleccion_precio,
+                  "modificadorseleccion_cantidad": add.modificadorseleccion_cantidad || 1,
+                  "modificadorseleccion_nombre":add.modificadorseleccion_nombre
+
+              }
+          }
+
+          ),
+          "productogeneral_urlimagen":product.productogeneral_urlimagen
       }
-      const signatureString = JSON.stringify(signatureObject)
 
-      // Buscar si ya existe en el carrito
-      const existingProductIndex = this.cart.findIndex(
-        (item) => item.signature === signatureString
-      )
+      const signature = this.buildSignature(newProduct.pedido_productoid,newProduct.modificadorseleccionList)
+      newProduct.signature = signature
 
-      if (existingProductIndex !== -1) {
-        // Ya existe: actualizar
-        const existingItem = this.cart[existingProductIndex]
-        existingItem.pedido_cantidad += quantity
+      console.log(newProduct)
 
+      const existIndex = this.cart.findIndex(p => p.signature == signature)
 
-        const recalculatedPrice = this.calculateTotalPrice(
-          product,
-          existingItem.pedido_cantidad,
-          existingItem.modificadorseleccionList
-        )
-        existingItem.pedido_precio = recalculatedPrice
-
-
-        this.cart[existingProductIndex] = existingItem
-        console.log('Producto actualizado en el carrito:', existingItem)
-
-      } else {
-        // Nuevo producto
-        const lista_productocombo = product.lista_productobase
-          ? product.lista_productobase.map((comboItem) => ({
-              pedido_productoid: parseInt(comboItem.producto_id),
-              pedido_cantidad: parseInt(comboItem.productocombo_cantidad) || 1,
-              pedido_precio: parseInt(comboItem.productocombo_precio) || 0,
-              pedido_nombre: comboItem.producto_descripcion
-            }))
-          : []
-
-        const modificadorseleccionList = additionalItems.map((ad) => ({
-          modificadorseleccion_cantidad: parseInt(ad.quantity) || 1,
-          pedido_precio: parseInt(ad.price) || 0,
-          modificador_id: ad.group_id,
-          modificadorseleccion_id: ad.id,
-          modificador_nombre: ad.name,
-          pedido_productoid: ad.parent_id,
-        }))
-
-        const pedidoCantidad = parseInt(quantity) || 1
-
-        // Calculamos precio total (SIN sumar combo items manualmente)
-        const totalPrice = this.calculateTotalPrice(
-          product,
-          pedidoCantidad,
-          modificadorseleccionList
-        )
-
-        const pedido = {
-          signature: signatureString,
-          pedido_productoid: this.getProductId(product),
-          pedido_cantidad: pedidoCantidad,
-          pedido_precio: totalPrice,
-          pedido_base_price: this.getProductPrice(product),
-          pedido_escombo: product.productogeneral_escombo,
-          productogeneral_urlimagen: product.productogeneral_urlimagen,
-          pedido_nombre_producto: product.productogeneral_descripcion,
-          lista_productocombo,
-          modificadorseleccionList
-        }
-
-        this.cart.push(pedido)
-        console.log('Producto agregado al carrito:', pedido)
+      if (existIndex != -1){
+        const existingProduct = this.cart[existIndex]
+        existingProduct.pedido_cantidad += quantity
+        console.log(this.cart[existIndex])
       }
-    },
+      else {
+        this.cart.push(newProduct)
+      }
+
+  },
+
 
     removeProductFromCart(signature) {
-      const index = this.cart.findIndex(item => item.signature === signature)
-      if (index !== -1) {
-        this.cart.splice(index, 1)
-        console.log(`Producto con signature ${signature} eliminado del carrito.`)
-      } else {
-        console.warn(`Producto con signature ${signature} no encontrado en el carrito.`)
-      }
+      const existIndex = this.cart.findIndex(p => p.signature === signature)
+      this.cart.splice(existIndex, 1)
     },
 
     // Decrementar la cantidad de un producto
     decrementProduct(signature) {
-      const itemIndex = this.cart.findIndex((item) => item.signature === signature)
-      if (itemIndex === -1) return
+      const existIndex = this.cart.findIndex(p => p.signature === signature)
+      if (existIndex !== -1) {
+        const existingProduct = this.cart[existIndex]
+        existingProduct.pedido_cantidad -= 1
 
-      const currentItem = this.cart[itemIndex]
-      if (currentItem.pedido_cantidad <= 1) {
-        // Si bajamos a 0, lo sacamos del carrito
-        this.cart.splice(itemIndex, 1)
-        return
+        // Si la cantidad es 0 o menor, eliminar el producto del arreglo
+        if (existingProduct.pedido_cantidad <= 0) {
+          this.cart.splice(existIndex, 1)
+        }
       }
-
-      const oldQuantity = currentItem.pedido_cantidad
-      currentItem.pedido_cantidad -= 1
-      const parsedSignature = JSON.parse(currentItem.signature)
-      let productToUse = this.currentProduct
-      if (this.getProductId(productToUse) !== parsedSignature.productId) {
-        console.warn('No coincide la ID del combo en currentProduct, precio podría no recalcularse bien.')
-      }
-
-      currentItem.pedido_precio = this.calculateTotalPrice(
-        productToUse,
-        currentItem.pedido_cantidad,
-        currentItem.modificadorseleccionList
-      )
-
-      this.cart[itemIndex] = currentItem
     },
 
     incrementProduct(signature) {
-      const itemIndex = this.cart.findIndex((item) => item.signature === signature)
-      if (itemIndex === -1) return
-
-      const currentItem = this.cart[itemIndex]
-      const oldQuantity = currentItem.pedido_cantidad
-
-      currentItem.pedido_cantidad += 1
-
-
-      const parsedSignature = JSON.parse(currentItem.signature)
-      let productToUse = this.currentProduct
-      if (this.getProductId(productToUse) !== parsedSignature.productId) {
-        console.warn('No coincide la ID en currentProduct, precio podría no recalcularse bien.')
+      const existIndex = this.cart.findIndex(p => p.signature == signature)
+      if (existIndex != -1){
+        const existingProduct = this.cart[existIndex]
+        existingProduct.pedido_cantidad += 1
+        console.log(this.cart[existIndex])
       }
-
-      currentItem.pedido_precio = this.calculateTotalPrice(
-        productToUse,
-        currentItem.pedido_cantidad,
-        currentItem.modificadorseleccionList
-      )
-
-      this.cart[itemIndex] = currentItem
     },
+
 
     // Incrementar la cantidad de un adicional específico
     incrementAdditional(signature, additionalItem) {
-      const itemIndex = this.cart.findIndex((item) => item.signature === signature)
-      if (itemIndex === -1) return
-
-      const currentItem = this.cart[itemIndex]
-
-      // 1. Buscar el modificador
-      const modIndex = currentItem.modificadorseleccionList.findIndex((mod) => mod === additionalItem)
-
-      // 2. Ajustar la cantidad
-      if (modIndex !== -1) {
-        // Sumar 1
-        currentItem.modificadorseleccionList[modIndex].modificadorseleccion_cantidad += 1
-      } else {
-        // Si no existe, lo creamos con 1
-        currentItem.modificadorseleccionList.push({
-          modificadorseleccion_cantidad: 1,
-          pedido_precio: parseInt(additionalItem.price) || 0,
-          modificador_id: additionalItem.group_id,
-          modificadorseleccion_id: additionalItem.id,
-          modificador_nombre: additionalItem.name,
-          pedido_productoid: additionalItem.parent_id,
-        })
+      const existIndex = this.cart.findIndex(p => p.signature == signature)
+      if (existIndex != -1){
+        const existingProduct = this.cart[existIndex]
+        const aditional = existingProduct.modificadorseleccionList.find(a => a === additionalItem)
+        aditional.modificadorseleccion_cantidad++
       }
-
-      // 3. Recalcular
-      const parsedSignature = JSON.parse(currentItem.signature)
-      let productToUse = this.currentProduct
-      if (this.getProductId(productToUse) !== parsedSignature.productId) {
-        console.warn('No coincide la ID en currentProduct, precio podría no recalcularse bien.')
-      }
-
-      currentItem.pedido_precio = this.calculateTotalPrice(
-        productToUse,
-        currentItem.pedido_cantidad,
-        currentItem.modificadorseleccionList
-      )
-
-      this.cart[itemIndex] = currentItem
     },
 
     // Decrementar la cantidad de un adicional específico
     decrementAdditional(signature, additionalItem) {
-      const itemIndex = this.cart.findIndex((item) => item.signature === signature)
-      if (itemIndex === -1) return
+      const existIndex = this.cart.findIndex(p => p.signature === signature)
+      if (existIndex !== -1) {
+        const existingProduct = this.cart[existIndex]
 
-      const currentItem = this.cart[itemIndex]
+        // Encontramos el índice del adicional en 'modificadorseleccionList'
+        const aditionalIndex = existingProduct.modificadorseleccionList.findIndex(a => a === additionalItem)
 
-      const modIndex = currentItem.modificadorseleccionList.findIndex((mod) => mod === additionalItem)
-      if (modIndex !== -1) {
-        currentItem.modificadorseleccionList[modIndex].modificadorseleccion_cantidad -= 1
+        if (aditionalIndex !== -1) {
+          // Decrementar la cantidad
+          existingProduct.modificadorseleccionList[aditionalIndex].modificadorseleccion_cantidad--
 
-        if (currentItem.modificadorseleccionList[modIndex].modificadorseleccion_cantidad <= 0) {
-          currentItem.modificadorseleccionList.splice(modIndex, 1)
+          // Si después de la resta queda 0 o menos, eliminarlo del arreglo
+          if (existingProduct.modificadorseleccionList[aditionalIndex].modificadorseleccion_cantidad < 1) {
+            existingProduct.modificadorseleccionList.splice(aditionalIndex, 1)
+          }
         }
       }
-
-      const parsedSignature = JSON.parse(currentItem.signature)
-      let productToUse = this.currentProduct
-      if (this.getProductId(productToUse) !== parsedSignature.productId) {
-        console.warn('No coincide la ID en currentProduct, precio podría no recalcularse bien.')
-      }
-
-      currentItem.pedido_precio = this.calculateTotalPrice(
-        productToUse,
-        currentItem.pedido_cantidad,
-        currentItem.modificadorseleccionList
-      )
-
-      this.cart[itemIndex] = currentItem
-    },
-
-
+    }
   },
 })

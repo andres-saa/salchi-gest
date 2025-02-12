@@ -30,7 +30,9 @@ export const useReportesStore = defineStore('reportes-ventas', {
             loading:{
                 visible:false,
                 tittle:'Cargando'
-            }
+            },
+
+            currentSesion:1
 
         }
     },

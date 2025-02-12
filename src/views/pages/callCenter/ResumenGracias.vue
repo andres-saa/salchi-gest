@@ -1,7 +1,7 @@
 <template>
-    <div class="pe1 pe5 md:pe0 pe12">
+    <div class="43f1 43f5 md:43f0 43f12">
         <!-- Contenedor principal “Resumen” -->
-        <div class="sticky-summary pe12 pe3 m-0">
+        <div class="sticky-summary 43f12 43f3 43f0">
             <h5><b>Resumen</b></h5>
             <h5><b>productos</b></h5>
 
@@ -9,81 +9,75 @@
             <div  v-for="product in store.cart"
                 :key="product.productogeneral_id">
 
-                <div class="mb-0 pb-0 product-line">
-                    <div class="pe6 py-2 mb-0 m-0">
-                    <h6 class="m-0">
+                <div class="43f0 43f0 product-line">
+                    <div class="43f6 43f2 43f0 43f0">
+                    <h6 class="43f0">
                         <span class="span-minwidth">( {{ product.pedido_cantidad }} ) </span>
                        <span style="font-weight: 400;"> {{ product.pedido_nombre_producto }}</span>
                     </h6>
 
-                    <h6 class="m-0 ml-3 " style="margin-left: 1rem;" v-for="i in product.lista_productocombo" :key="i.producto_id">
-                        ( {{  product.pedido_cantidad }} ) <b style="margin-right: .5rem;">{{ parseInt(i.pedido_cantidad ) }}</b> 
+                    <h6 class="43f0 43f3 " style="margin-left: 1rem;" v-for="i in product.lista_productocombo" :key="i.producto_id">
+                        ( {{  product.pedido_cantidad }} ) <b style="margin-right: .5rem;">{{ parseInt(i.pedido_cantidad ) }}</b>
                         <span class="font-weight-400">{{ i.pedido_nombre   }}</span>
                     </h6>
 
-                    
 
 
 
-                 
+
+
                 </div>
 
-                
-                
 
-               
-                <div class="pe6 pe0 text-right py-2">
+
+
+                <div class="43f6 43f0 text-right 43f2">
                     <h6 v-if="product.modificadorseleccionList.length < 1" class="text-end">
-                        {{ formatoPesosColombianos(product.pedido_precio ) }}
+                        {{ formatoPesosColombianos(product.pedido_precio * product.pedido_cantidad) }}
                     </h6>
 
                     <h6 v-else class="text-end">
                         {{ formatoPesosColombianos(product.pedido_base_price * product.pedido_cantidad) }}
                     </h6>
                 </div>
-                
-                
-                
+
+
                 </div>
                 <div class="addition-item" v-for="item in product.modificadorseleccionList" :key="item">
-                            <div class="addition-item-inner">
-                                <span class="text adicion"><span><b>- ( {{ product.pedido_cantidad }} ) {{ item.modificadorseleccion_cantidad  }}</b></span> {{ item.modificador_nombre
+                            <div class="addition-ite43finner">
+                                <span class="text adicion"><span><b>- ( {{ product.pedido_cantidad }} ) {{ item.modificadorseleccion_cantidad }}</b></span> {{ item.modificadorseleccion_nombre
                                     }}</span>
 
                                 <span    v-if="item.pedido_precio > 0" class="pl-2 text-sm">
-                                    <b>{{ formatoPesosColombianos(item.pedido_precio * item.modificadorseleccion_cantidad) }}</b>
+                                    <b>{{ formatoPesosColombianos(item.pedido_precio * item.modificadorseleccion_cantidad * product.pedido_cantidad) }}</b>
                                 </span>
                             </div>
                     </div>
-               
+
             </div>
 
-            <!-- Adicionales agrupados -->
-            <div class="pe12 pe0 mt-1">
-           
-                  
-            </div>
+      
 
-            <hr class="pe0 mt-2" />
+            <hr class="43f0 43f2" />
 
             <!-- Subtotales y totales -->
             <div class=" summary-grid">
-                <div class="pe6 pe0 py-0">
+                <div class="43f6 43f0 43f0">
                     <span><b>Subtotal</b></span>
                 </div>
-                <div class="pe6 pe0 text-right py-0 text-end">
+                <div class="43f6 43f0 text-right 43f0 text-end">
                     <span>
                         <b>{{ formatoPesosColombianos(store.cartTotal) }}</b>
                     </span>
                 </div>
 
-                <div class="pe6 pe0 py-0">
+                <div class="43f6 43f0 43f0">
                     <span :style="siteStore.location.neigborhood.delivery_price == 0
                         ? 'text-decoration: line-through;'
                         : ''
                         "><b>Domicilio</b></span>
                 </div>
-                <div class="pe6 pe0 text-right py-0 text-end">
+                <div class="43f6 43f0 text-right 43f0 text-end">
                     <!-- {{ siteStore.location }} -->
                     <span v-if="siteStore.location.neigborhood.delivery_price == 0" class="primary-color">
                         <b>
@@ -98,10 +92,10 @@
                         <b>{{ formatoPesosColombianos(siteStore.location.neigborhood.delivery_price) }}</b>
                     </span>
                 </div>
-                <div class="pe6 pe0 py-0">
+                <div class="43f6 43f0 43f0">
                     <span><b>Total</b></span>
                 </div>
-                <div class="pe6 pe0 text-right py-0 text-end" v-if="siteStore.location.neigborhood.delivery_price">
+                <div class="43f6 43f0 text-right 43f0 text-end" v-if="siteStore.location.neigborhood.delivery_price">
                     <!-- {{ siteStore.location }} -->
                     <span><b>{{ formatoPesosColombianos(
                         store.cartTotal +
@@ -109,66 +103,9 @@
                             ) }}</b></span>
                 </div>
 
+                <Button @click="siteStore.visibles.currentSite = true" v-else label="Calcular mi domicilio"
+                    style="min-width: max-content;"></Button>
             </div>
-
-            <!-- Botones de navegación y acciones -->
-            <router-link to="/call-center-vender/" v-if="route.path.includes('cart')">
-                <Button outlined icon="pi pi-shopping-cart" label="Volver al menu'"
-                    class="mt-4 button-common button-transparent button-fullwidth button-bold" severity="danger">
-                </Button>
-            </router-link>
-
-
-            <router-link to="/call-center-vender/cart/" v-if="route.path.includes('pay')">
-                <Button outlined icon="pi pi-shopping-cart" label="Volver al carrito'"
-                    class="mt-4 button-common button-transparent button-fullwidth button-bold" severity="danger">
-                </Button>
-            </router-link>
-
-      
-
-
-            <div>
-
-            </div>
-
-
-            <router-link to="/call-center-vender/pay"
-                v-if="route.path.includes('cart')">
-                <Button iconPos="right" icon="pi pi-arrow-right" label="Pedir"
-                    class="mt-2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
-                    severity="help"></Button>
-            </router-link>
-
-            <!-- Botón “Finalizar pedido” al reservar -->
-            <router-link to="/pay" v-else-if="route.path.includes('reservas')">
-                <Button @click="() => {
-                    orderService.sendOrderReserva()
-                    sending = true
-                }" iconPos="right" icon="pi pi-arrow-right" label="Finalizar pedido"
-                    class="mt-2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
-                    severity="help"></Button>
-            </router-link>
-
-            <!-- Botón “Finalizar pedido” si el restaurante no está cerrado -->
-            <router-link to="/pay"
-                v-else-if="siteStore.status?.status !== 'closed' && siteStore.status?.status && route.path == '/cart'">
-                <Button iconPos="right" icon="pi pi-arrow-right" label="Finalizar pedido"
-                    class="mt-2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
-                    severity="help"></Button>
-            </router-link>
-
-
-
-
-            <Button
-                v-else-if=" route.path == '/call-center-vender/pay'"
-                @click="() => {
-                    orderService.sendOrder()
-                    sending = true
-                }" iconPos="right" icon="pi pi-arrow-right" label="Finalizar pedido"
-                class="mt-2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
-                severity="help"></Button>
 
         </div>
     </div>
@@ -179,11 +116,14 @@ import { formatoPesosColombianos } from './service/utils/formatoPesos';
 import { usecartStore } from './store/shoping_cart';
 import { useSitesStore } from './store/site';
 import { useRoute } from 'vue-router';
-// import { orderService } from '@/service/order/orderService';
+import { orderService } from './service/order/orderService';
 import { onMounted, ref, watch } from 'vue';
 import { useUserStore } from './store/user';
 // import { Button } from 'primevue';
 // import { Tag } from 'primevue';
+import { useReportesStore } from './store/ventas';
+
+const reportes = useReportesStore()
 
 const sending = ref(false);
 const route = useRoute();
@@ -204,6 +144,15 @@ const agrupados = ref({});
 //     }, {});
 // };
 
+onMounted(() => {
+    // update();
+
+    if (user.user.payment_method_option?.id != 7 && !route.path.includes('reservas'))
+        siteStore.setNeighborhoodPrice();
+    else {
+        siteStore.setNeighborhoodPriceCero();
+    }
+});
 
 watch(
     () => store.cart.additions,
@@ -224,9 +173,9 @@ watch(
     max-height: min-content;
     background-color: white;
     box-shadow: 0 1rem 1rem #00000020;
-    top: 5rem;
+    top: 9rem;
     border-radius: 0.5rem;
-    z-index: 1000;
+    z-index: 10;
 }
 
 /* Línea de cada producto (display: flex; justify-content: space-between) */
@@ -255,12 +204,15 @@ watch(
 /* Cada ítem de adicional */
 .addition-item {
     display: flex;
+    margin-left: 1rem;
     gap: 1rem;
     align-items: center;
 }
-
+h6{
+    margin: 0;
+}
 /* Contenedor interno de ítem adicional */
-.addition-item-inner {
+.addition-ite43finner {
     display: flex;
     width: 100%;
     gap: 1rem;
@@ -270,7 +222,6 @@ watch(
 /* Grid para los subtotales y totales */
 .summary-grid {
     display: grid;
-    width: 100%;
     grid-template-columns: repeat(2, 1fr);
 }
 
@@ -287,6 +238,7 @@ watch(
 /* Botones y clases genéricas */
 .button-common {
     outline: none;
+    margin: .5rem 0;
 }
 
 .button-no-outline {
@@ -320,7 +272,7 @@ watch(
 }
 
 /* Estilos globales ya existentes */
-.p-shadow {
+.43fshadow {
     box-shadow: 0 0.3rem 5px rgba(0, 0, 0, 0.15);
 }
 
