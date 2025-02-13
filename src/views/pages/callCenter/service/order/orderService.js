@@ -6,6 +6,7 @@ import { useReportesStore } from "../../store/ventas";
 // import pixel from "../../router/pixel";
 import router from "@/router/index.js";
 import { useUserStore } from "../../store/user";
+import {loginStore} from "../../../../../store/user"
 
 // import { Value } from "sass";
 const report = useReportesStore();
@@ -21,7 +22,7 @@ const preparar_orden = () => {
   // console.log(order_products);
 
 
-
+  const login = loginStore()
   const site_id = site.location.site.site_id;
   const pe_site_id = site.location.site.pe_site_id;
   const payment_method_id = user.user.payment_method_option?.id;
@@ -49,7 +50,8 @@ const preparar_orden = () => {
     user_data: user_data,
     order_aditionals: [],
     pe_json: order_products,
-    total: 0
+    total: 0,
+    inserted_by:login.rawUserData.id
   };
   console.log(order)
 
