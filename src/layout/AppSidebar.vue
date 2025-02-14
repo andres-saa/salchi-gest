@@ -3,7 +3,11 @@ import AppMenu from './AppMenu.vue';
 </script>
 
 <template>
+      <h6 class="text-xl pb-3" style="color: red;">
+        Algunos apartados no estan disponibles por el momento, se esta trabajando en reestablecer todo, gracias de antemano por su paciencia.
+    </h6>
     <app-menu></app-menu>
+  
 </template>
 
 <style lang="scss" scoped>

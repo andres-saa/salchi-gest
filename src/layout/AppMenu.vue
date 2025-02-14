@@ -72,17 +72,17 @@ async function fetchAndUpdateRoles() {
                 ],
                 permision_id: get_id([1,2,3,4,5,6,7,31]),
             },
-            {
-                label: 'Cajeros',
-                icon: 'fa-solid fa-cash-register',
-                'icon-color': '#FF69B4', // Rosa vibrante
-                items: [
-                    { label: 'Reportes', icon: 'fa-solid fa-file-invoice-dollar', to: '/cachier-money/reportes/', permision_id: 1, 'icon-color': '#FF1493' }, // Rosa oscuro
-                    { label: 'Registros', icon: 'fa-solid fa-book', to: '/cachier-money/registros/', permision_id: 1, 'icon-color': '#ADFF2F' }, // Verde amarillento
-                    { label: 'Salidas', icon: 'fa-solid fa-money-bill-trend-up', to: '/cachier-money/salidas/', permision_id: 1, 'icon-color': '#00CED1' }, // Turquesa
-                ],
-                permision_id: get_id([1,2,3,4,5,6,7]),
-            }
+            // {
+            //     label: 'Cajeros',
+            //     icon: 'fa-solid fa-cash-register',
+            //     'icon-color': '#FF69B4', // Rosa vibrante
+            //     items: [
+            //         { label: 'Reportes', icon: 'fa-solid fa-file-invoice-dollar', to: '/cachier-money/reportes/', permision_id: 1, 'icon-color': '#FF1493' }, // Rosa oscuro
+            //         { label: 'Registros', icon: 'fa-solid fa-book', to: '/cachier-money/registros/', permision_id: 1, 'icon-color': '#ADFF2F' }, // Verde amarillento
+            //         { label: 'Salidas', icon: 'fa-solid fa-money-bill-trend-up', to: '/cachier-money/salidas/', permision_id: 1, 'icon-color': '#00CED1' }, // Turquesa
+            //     ],
+            //     permision_id: get_id([1,2,3,4,5,6,7]),
+            // }
         ]
     },
 
@@ -96,18 +96,18 @@ async function fetchAndUpdateRoles() {
         ]
     },
 
-    {
-        label: 'CONCURSOS',
-        icon: 'fa-solid fa-trophy',
-        'icon-color': '#FFD700', // Oro
-        permision_id: get_id([53,54]),
-        items: [
-            { label: 'Vigentes', icon: 'fa-solid fa-play', to: '/concursos', permision_id: 53, 'icon-color': '#32CD32' }, // Verde lima
-            { label: 'Proximos', icon: 'fa-solid fa-forward', to: '/future-concursos', permision_id: 53, 'icon-color': '#FF8C00' }, // Naranja oscuro
-            { label: 'Finalizados ', icon: 'fa-solid fa-flag-checkered', to: '/completed-concursos', permision_id: 53, 'icon-color': '#8A2BE2' }, // Azul violeta
-            { label: 'Administrar ', icon: 'fa-solid fa-gear', to: '/manage-concursos', permision_id: 54, 'icon-color': '#DC143C' }, // Carmesí
-        ]
-    },
+    // {
+    //     label: 'CONCURSOS',
+    //     icon: 'fa-solid fa-trophy',
+    //     'icon-color': '#FFD700', // Oro
+    //     permision_id: get_id([53,54]),
+    //     items: [
+    //         { label: 'Vigentes', icon: 'fa-solid fa-play', to: '/concursos', permision_id: 53, 'icon-color': '#32CD32' }, // Verde lima
+    //         { label: 'Proximos', icon: 'fa-solid fa-forward', to: '/future-concursos', permision_id: 53, 'icon-color': '#FF8C00' }, // Naranja oscuro
+    //         { label: 'Finalizados ', icon: 'fa-solid fa-flag-checkered', to: '/completed-concursos', permision_id: 53, 'icon-color': '#8A2BE2' }, // Azul violeta
+    //         { label: 'Administrar ', icon: 'fa-solid fa-gear', to: '/manage-concursos', permision_id: 54, 'icon-color': '#DC143C' }, // Carmesí
+    //     ]
+    // },
 
     {
         label: 'FRANQUICIAS',
@@ -119,76 +119,76 @@ async function fetchAndUpdateRoles() {
         ]
     },
 
-    {
-        label: 'INVENTARIO',
-        icon: 'fa-solid fa-boxes-stacked',
-        'icon-color': '#4682B4', // Azul acero
-        items: [
-            {
-                label: 'Recetario',
-                icon: 'fa-solid fa-book',
-                'icon-color': '#6A5ACD', // Azul pizarra medio
-                permision_id: get_id([8,13,14]),
-                items: [
-                    { label: 'Ingredientes', icon: 'fa-solid fa-carrot', to: '/recetario/prices-cdi-table/', permision_id: 8, 'icon-color': '#FFA500' }, // Naranja
-                    { label: 'recetas', icon: 'fa-solid fa-utensils', to: '/recetario/recetas/', permision_id: 8, 'icon-color': '#FF69B4' }, // Rosa vibrante
-                    { label: 'Configuracion', icon: 'fa-solid fa-gears', to: '/recetario/configuracion/', permision_id: 13, 'icon-color': '#4B0082' }, // Índigo
-                    { label: 'Resumen Beneficio', icon: 'fa-solid fa-chart-pie', to: '/recetario/recipe-sumary-benefit/', permision_id: 14, 'icon-color': '#00FF7F' }, // Verde primavera
-                ]
-            },
-            {
-                label: 'Reportes de inventario diario',
-                icon: 'fa-solid fa-calendar-day',
-                'icon-color': '#FF4500', // Naranja rojizo
-                permision_id: get_id([10,11]),
-                items: [
-                    { label: 'Reportar inventario diario', icon: 'fa-solid fa-edit', to: '/daily-inventory/report-inventory', permision_id: 11, 'icon-color': '#1E90FF' }, // Azul dodger
-                    { label: 'Revisar reportes', icon: 'fa-solid fa-eye', to: '/daily-inventory/daily-inventory-reports', permision_id: 10, 'icon-color': '#32CD32' }, // Verde lima
-                ]
-            },
-            {
-                label: 'Reportes de inventario Mensual',
-                icon: 'fa-solid fa-calendar-days',
-                'icon-color': '#FF69B4', // Rosa vibrante
-                permision_id: get_id([17,18]),
-                items: [
-                    { label: 'Reportar inventario mensual', icon: 'fa-solid fa-file-circle-plus', to: '/monthly-inventory/report-monthly-inventory', permision_id: 17, 'icon-color': '#FFD700' }, // Oro
-                    { label: 'Revisar reportes', icon: 'fa-solid fa-eye', to: '/monthly-inventory/monthly-inventory-reports', permision_id: 18, 'icon-color': '#7FFF00' }, // Verde chartreuse
-                ]
-            },
-            // {
-            //     label: 'Reportes de inventario Cdi', icon: 'fa-solid fa-calendar',
-            //     permision_id:get_id([19,20]),
-            //     items: [
-            //         {
-            //             label: 'Reportar inventario ', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/report-inventory/',permision_id:20,
-            //             'icon-color': '#FF1493' // Rosa oscuro
-            //         },
-            //         {
-            //             label: 'Revisar reportes', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/cdi-inventory-reports/',permision_id:19,
-            //             'icon-color': '#00FA9A' // Verde menta
-            //         },
-            //     ]
-            // },
-            {
-                label: 'Ordenes de compra',
-                icon: 'fa-solid fa-shopping-cart',
-                'icon-color': '#FF6347', // Tomate
-                permision_id: get_id([21,22,23,24,25,26,27]),
-                items: [
-                    { label: 'Nueva', icon: 'fa-solid fa-file-circle-plus', to: '/purchase-order/generate-purchase-order', permision_id: 21, 'icon-color': '#FF4500' }, // Naranja rojizo
-                    { label: 'Generadas por mi', icon: 'fa-solid fa-folder-open', to: '/purchase-order/purchase-order-my-orders/', permision_id: 21, 'icon-color': '#1E90FF' }, // Azul dodger
-                    { label: 'Alistar', icon: 'fa-solid fa-clipboard-check', to: '/purchase-order/recorrido/alistar/', permision_id: 22, 'icon-color': '#32CD32' }, // Verde lima
-                    { label: 'Autorizar', icon: 'fa-solid fa-check-double', to: '/purchase-order/recorrido/autorizar', permision_id: 23, 'icon-color': '#DA70D6' }, // Orquídea
-                    { label: 'Transportar', icon: 'fa-solid fa-truck', to: '/purchase-order/recorrido/transport/', permision_id: 24, 'icon-color': '#FF8C00' }, // Naranja oscuro
-                    { label: 'Recibir en la sede', icon: 'fa-solid fa-building-circle-check', to: '/purchase-order/recorrido/recibida-en-sede/', permision_id: 25, 'icon-color': '#00CED1' }, // Turquesa oscuro
-                    { label: 'Completada', icon: 'fa-solid fa-circle-check', to: '/purchase-order/recorrido/completed/', permision_id: 25, 'icon-color': '#32CD32' }, // Verde lima
-                    { label: 'Todas las ordenes', icon: 'fa-solid fa-list-ol', to: '/purchase-order/recorrido/purchase-order-reports/', permision_id: 26, 'icon-color': '#8A2BE2' }, // Azul violeta
-                    { label: 'Stock', icon: 'fa-solid fa-boxes-packing', to: '/purchase-order/recorrido/purchase-order-settings/', permision_id: 27, 'icon-color': '#FF1493' }, // Rosa oscuro
-                ]
-            },
-        ]
-    },
+    // {
+    //     label: 'INVENTARIO',
+    //     icon: 'fa-solid fa-boxes-stacked',
+    //     'icon-color': '#4682B4', // Azul acero
+    //     items: [
+    //         {
+    //             label: 'Recetario',
+    //             icon: 'fa-solid fa-book',
+    //             'icon-color': '#6A5ACD', // Azul pizarra medio
+    //             permision_id: get_id([8,13,14]),
+    //             items: [
+    //                 { label: 'Ingredientes', icon: 'fa-solid fa-carrot', to: '/recetario/prices-cdi-table/', permision_id: 8, 'icon-color': '#FFA500' }, // Naranja
+    //                 { label: 'recetas', icon: 'fa-solid fa-utensils', to: '/recetario/recetas/', permision_id: 8, 'icon-color': '#FF69B4' }, // Rosa vibrante
+    //                 { label: 'Configuracion', icon: 'fa-solid fa-gears', to: '/recetario/configuracion/', permision_id: 13, 'icon-color': '#4B0082' }, // Índigo
+    //                 { label: 'Resumen Beneficio', icon: 'fa-solid fa-chart-pie', to: '/recetario/recipe-sumary-benefit/', permision_id: 14, 'icon-color': '#00FF7F' }, // Verde primavera
+    //             ]
+    //         },
+    //         {
+    //             label: 'Reportes de inventario diario',
+    //             icon: 'fa-solid fa-calendar-day',
+    //             'icon-color': '#FF4500', // Naranja rojizo
+    //             permision_id: get_id([10,11]),
+    //             items: [
+    //                 { label: 'Reportar inventario diario', icon: 'fa-solid fa-edit', to: '/daily-inventory/report-inventory', permision_id: 11, 'icon-color': '#1E90FF' }, // Azul dodger
+    //                 { label: 'Revisar reportes', icon: 'fa-solid fa-eye', to: '/daily-inventory/daily-inventory-reports', permision_id: 10, 'icon-color': '#32CD32' }, // Verde lima
+    //             ]
+    //         },
+    //         {
+    //             label: 'Reportes de inventario Mensual',
+    //             icon: 'fa-solid fa-calendar-days',
+    //             'icon-color': '#FF69B4', // Rosa vibrante
+    //             permision_id: get_id([17,18]),
+    //             items: [
+    //                 { label: 'Reportar inventario mensual', icon: 'fa-solid fa-file-circle-plus', to: '/monthly-inventory/report-monthly-inventory', permision_id: 17, 'icon-color': '#FFD700' }, // Oro
+    //                 { label: 'Revisar reportes', icon: 'fa-solid fa-eye', to: '/monthly-inventory/monthly-inventory-reports', permision_id: 18, 'icon-color': '#7FFF00' }, // Verde chartreuse
+    //             ]
+    //         },
+    //         // {
+    //         //     label: 'Reportes de inventario Cdi', icon: 'fa-solid fa-calendar',
+    //         //     permision_id:get_id([19,20]),
+    //         //     items: [
+    //         //         {
+    //         //             label: 'Reportar inventario ', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/report-inventory/',permision_id:20,
+    //         //             'icon-color': '#FF1493' // Rosa oscuro
+    //         //         },
+    //         //         {
+    //         //             label: 'Revisar reportes', icon: 'fa-solid fa-calendar', to: '/cdi-inventory/cdi-inventory-reports/',permision_id:19,
+    //         //             'icon-color': '#00FA9A' // Verde menta
+    //         //         },
+    //         //     ]
+    //         // },
+    //         {
+    //             label: 'Ordenes de compra',
+    //             icon: 'fa-solid fa-shopping-cart',
+    //             'icon-color': '#FF6347', // Tomate
+    //             permision_id: get_id([21,22,23,24,25,26,27]),
+    //             items: [
+    //                 { label: 'Nueva', icon: 'fa-solid fa-file-circle-plus', to: '/purchase-order/generate-purchase-order', permision_id: 21, 'icon-color': '#FF4500' }, // Naranja rojizo
+    //                 { label: 'Generadas por mi', icon: 'fa-solid fa-folder-open', to: '/purchase-order/purchase-order-my-orders/', permision_id: 21, 'icon-color': '#1E90FF' }, // Azul dodger
+    //                 { label: 'Alistar', icon: 'fa-solid fa-clipboard-check', to: '/purchase-order/recorrido/alistar/', permision_id: 22, 'icon-color': '#32CD32' }, // Verde lima
+    //                 { label: 'Autorizar', icon: 'fa-solid fa-check-double', to: '/purchase-order/recorrido/autorizar', permision_id: 23, 'icon-color': '#DA70D6' }, // Orquídea
+    //                 { label: 'Transportar', icon: 'fa-solid fa-truck', to: '/purchase-order/recorrido/transport/', permision_id: 24, 'icon-color': '#FF8C00' }, // Naranja oscuro
+    //                 { label: 'Recibir en la sede', icon: 'fa-solid fa-building-circle-check', to: '/purchase-order/recorrido/recibida-en-sede/', permision_id: 25, 'icon-color': '#00CED1' }, // Turquesa oscuro
+    //                 { label: 'Completada', icon: 'fa-solid fa-circle-check', to: '/purchase-order/recorrido/completed/', permision_id: 25, 'icon-color': '#32CD32' }, // Verde lima
+    //                 { label: 'Todas las ordenes', icon: 'fa-solid fa-list-ol', to: '/purchase-order/recorrido/purchase-order-reports/', permision_id: 26, 'icon-color': '#8A2BE2' }, // Azul violeta
+    //                 { label: 'Stock', icon: 'fa-solid fa-boxes-packing', to: '/purchase-order/recorrido/purchase-order-settings/', permision_id: 27, 'icon-color': '#FF1493' }, // Rosa oscuro
+    //             ]
+    //         },
+    //     ]
+    // },
 
     {
         label: 'RECURSOS HUMANOS',
@@ -236,26 +236,26 @@ async function fetchAndUpdateRoles() {
         ]
     },
 
-    {
-        label: 'ENTREGAS',
-        icon: 'fa-solid fa-truck-moving',
-        'icon-color': '#FF4500', // Naranja rojizo
-        permision_id: get_id([37]),
-        items: [
-            { label: 'Dotacion', icon: 'fa-solid fa-shirt', to: '/dotacion', permision_id: 37, 'icon-color': '#FF1493' }, // Rosa oscuro
-        ]
-    },
+    // {
+    //     label: 'ENTREGAS',
+    //     icon: 'fa-solid fa-truck-moving',
+    //     'icon-color': '#FF4500', // Naranja rojizo
+    //     permision_id: get_id([37]),
+    //     items: [
+    //         { label: 'Dotacion', icon: 'fa-solid fa-shirt', to: '/dotacion', permision_id: 37, 'icon-color': '#FF1493' }, // Rosa oscuro
+    //     ]
+    // },
 
-    {
-        label: 'CELEBRACIONES',
-        icon: 'fa-solid fa-cake-candles',
-        'icon-color': '#FF69B4', // Rosa vibrante
-        to: '/cumples',
-        permision_id: get_id([38]),
-        items: [
-            { label: 'Cumpleanos', icon: 'fa-solid fa-cake-candles', to: '/cumples', permision_id: 38, 'icon-color': '#FFD700' } // Oro
-        ]
-    },
+    // {
+    //     label: 'CELEBRACIONES',
+    //     icon: 'fa-solid fa-cake-candles',
+    //     'icon-color': '#FF69B4', // Rosa vibrante
+    //     to: '/cumples',
+    //     permision_id: get_id([38]),
+    //     items: [
+    //         { label: 'Cumpleanos', icon: 'fa-solid fa-cake-candles', to: '/cumples', permision_id: 38, 'icon-color': '#FFD700' } // Oro
+    //     ]
+    // },
 
     {
         label: 'SEDES',
@@ -277,69 +277,69 @@ async function fetchAndUpdateRoles() {
         ]
     },
 
-    {
-        label: 'CERTIFICADOS',
-        icon: 'fa-solid fa-award',
-        'icon-color': '#FFD700', // Oro
-        permision_id: get_id([41]),
-        items: [
-            { label: 'Generar certificado laboral', icon: 'fa-solid fa-certificate', to: '/certificado-laboral', permision_id: 41, 'icon-color': '#FF4500' }, // Naranja rojizo
-        ]
-    },
+    // {
+    //     label: 'CERTIFICADOS',
+    //     icon: 'fa-solid fa-award',
+    //     'icon-color': '#FFD700', // Oro
+    //     permision_id: get_id([41]),
+    //     items: [
+    //         { label: 'Generar certificado laboral', icon: 'fa-solid fa-certificate', to: '/certificado-laboral', permision_id: 41, 'icon-color': '#FF4500' }, // Naranja rojizo
+    //     ]
+    // },
 
-    {
-        label: 'SOLICITAR PERMISOS',
-        icon: 'fa-solid fa-calendar-check',
-        'icon-color': '#32CD32', // Verde lima
-        permision_id: get_id([42]),
-        items: [
-            { label: 'Vacaciones', icon: 'fa-solid fa-umbrella-beach', to: '/permiso-vacaciones', permision_id: 42, 'icon-color': '#1E90FF' }, // Azul dodger
-            { label: 'Licencia', icon: 'fa-solid fa-id-card', to: '/permiso-Licencia', permision_id: 42, 'icon-color': '#FF1493' }, // Rosa oscuro
-            { label: 'Permiso general', icon: 'fa-solid fa-calendar-check', to: '/permiso', permision_id: 42, 'icon-color': '#FFA500' }, // Naranja
-            { label: 'Permisos solicitados', icon: 'fa-solid fa-list', to: '/mis-permisos', permision_id: 42, 'icon-color': '#00FA9A' }, // Verde menta
-        ]
-    },
+    // {
+    //     label: 'SOLICITAR PERMISOS',
+    //     icon: 'fa-solid fa-calendar-check',
+    //     'icon-color': '#32CD32', // Verde lima
+    //     permision_id: get_id([42]),
+    //     items: [
+    //         { label: 'Vacaciones', icon: 'fa-solid fa-umbrella-beach', to: '/permiso-vacaciones', permision_id: 42, 'icon-color': '#1E90FF' }, // Azul dodger
+    //         { label: 'Licencia', icon: 'fa-solid fa-id-card', to: '/permiso-Licencia', permision_id: 42, 'icon-color': '#FF1493' }, // Rosa oscuro
+    //         { label: 'Permiso general', icon: 'fa-solid fa-calendar-check', to: '/permiso', permision_id: 42, 'icon-color': '#FFA500' }, // Naranja
+    //         { label: 'Permisos solicitados', icon: 'fa-solid fa-list', to: '/mis-permisos', permision_id: 42, 'icon-color': '#00FA9A' }, // Verde menta
+    //     ]
+    // },
 
-    {
-        label: ' MAS CERCA DE TI',
-        icon: 'fa-solid fa-hand-holding-heart',
-        'icon-color': '#FF69B4', // Rosa vibrante
-        roles: roles.value.todos,
-        permision_id: get_id([43]),
-        items: [
-            { label: 'Planeacíon Estrategica ', icon: 'fa-solid fa-lightbulb', to: '/mas-cerca-de-ti', permision_id: 43, 'icon-color': '#FFFF00' }, // Amarillo
-            { label: 'Un verdadero Monstruo', icon: 'fa-solid fa-ghost', to: '/informacion-empresarial', permision_id: 43, 'icon-color': '#8A2BE2' }, // Azul violeta
-            { label: 'Mis Turnos ', icon: 'fa-solid fa-business-time', to: '/turnos-trabajo-empleados', permision_id: 43, 'icon-color': '#00CED1' }, // Turquesa oscuro
-            { label: 'Evaluación clima organizacional ', icon: 'fa-solid fa-cloud-sun', to: '/clima', permision_id: 43, 'icon-color': '#FFA07A' }, // Salmón claro
-            { label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-line', to: '/desempeno', permision_id: 43, 'icon-color': '#32CD32' }, // Verde lima
-            { label: 'Encuesta de retiro ', icon: 'fa-solid fa-door-open', to: '/retiro', permision_id: 43, 'icon-color': '#FF4500' }, // Naranja rojizo
-            { label: 'PQRS ', icon: 'fa-solid fa-question', to: '/pqrs-user', permision_id: 43, 'icon-color': '#FF1493' }, // Rosa oscuro
-        ]
-    },
+    // {
+    //     label: ' MAS CERCA DE TI',
+    //     icon: 'fa-solid fa-hand-holding-heart',
+    //     'icon-color': '#FF69B4', // Rosa vibrante
+    //     roles: roles.value.todos,
+    //     permision_id: get_id([43]),
+    //     items: [
+    //         { label: 'Planeacíon Estrategica ', icon: 'fa-solid fa-lightbulb', to: '/mas-cerca-de-ti', permision_id: 43, 'icon-color': '#FFFF00' }, // Amarillo
+    //         { label: 'Un verdadero Monstruo', icon: 'fa-solid fa-ghost', to: '/informacion-empresarial', permision_id: 43, 'icon-color': '#8A2BE2' }, // Azul violeta
+    //         { label: 'Mis Turnos ', icon: 'fa-solid fa-business-time', to: '/turnos-trabajo-empleados', permision_id: 43, 'icon-color': '#00CED1' }, // Turquesa oscuro
+    //         { label: 'Evaluación clima organizacional ', icon: 'fa-solid fa-cloud-sun', to: '/clima', permision_id: 43, 'icon-color': '#FFA07A' }, // Salmón claro
+    //         { label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-line', to: '/desempeno', permision_id: 43, 'icon-color': '#32CD32' }, // Verde lima
+    //         { label: 'Encuesta de retiro ', icon: 'fa-solid fa-door-open', to: '/retiro', permision_id: 43, 'icon-color': '#FF4500' }, // Naranja rojizo
+    //         { label: 'PQRS ', icon: 'fa-solid fa-question', to: '/pqrs-user', permision_id: 43, 'icon-color': '#FF1493' }, // Rosa oscuro
+    //     ]
+    // },
 
-    {
-        label: 'CAPACITACIONES',
-        icon: 'fa-solid fa-chalkboard-user',
-        'icon-color': '#1E90FF', // Azul dodger
-        permision_id: get_id([44,45,46]),
-        items: [
-            // { label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user', },
-            { label: 'Agendar', icon: 'fa-solid fa-calendar-plus', to: '/capacitaciones', permision_id: 44, 'icon-color': '#32CD32' }, // Verde lima
-            { label: 'Mi formacion', icon: 'fa-solid fa-chalkboard-user', to: '/video-training-sequences/', permision_id: 45, 'icon-color': '#FFD700' }, // Oro
-            { label: 'Administrar Escuelas', icon: 'fa-solid fa-school', to: '/video-training-video-sesion', permision_id: 46, 'icon-color': '#FF8C00' }, // Naranja oscuro
-            // { label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones', },
-            {
-                label: 'Principal',
-                icon: 'fa-solid fa-house',
-                'icon-color': '#00FA9A', // Verde menta
-                permision_id: get_id([48,49]),
-                items: [
-                    { label: 'Recetario cucharas', icon: 'fa-solid fa-utensil-spoon', to: '/cucharas', permision_id: 48, 'icon-color': '#FF6347' }, // Tomate
-                    { label: 'Organizacion', icon: 'fa-solid fa-sitemap', to: '/samovar', permision_id: 49, 'icon-color': '#8A2BE2' }, // Azul violeta
-                ]
-            },
-        ]
-    },
+    // {
+    //     label: 'CAPACITACIONES',
+    //     icon: 'fa-solid fa-chalkboard-user',
+    //     'icon-color': '#1E90FF', // Azul dodger
+    //     permision_id: get_id([44,45,46]),
+    //     items: [
+    //         // { label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user', },
+    //         { label: 'Agendar', icon: 'fa-solid fa-calendar-plus', to: '/capacitaciones', permision_id: 44, 'icon-color': '#32CD32' }, // Verde lima
+    //         { label: 'Mi formacion', icon: 'fa-solid fa-chalkboard-user', to: '/video-training-sequences/', permision_id: 45, 'icon-color': '#FFD700' }, // Oro
+    //         { label: 'Administrar Escuelas', icon: 'fa-solid fa-school', to: '/video-training-video-sesion', permision_id: 46, 'icon-color': '#FF8C00' }, // Naranja oscuro
+    //         // { label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones', },
+    //         {
+    //             label: 'Principal',
+    //             icon: 'fa-solid fa-house',
+    //             'icon-color': '#00FA9A', // Verde menta
+    //             permision_id: get_id([48,49]),
+    //             items: [
+    //                 { label: 'Recetario cucharas', icon: 'fa-solid fa-utensil-spoon', to: '/cucharas', permision_id: 48, 'icon-color': '#FF6347' }, // Tomate
+    //                 { label: 'Organizacion', icon: 'fa-solid fa-sitemap', to: '/samovar', permision_id: 49, 'icon-color': '#8A2BE2' }, // Azul violeta
+    //             ]
+    //         },
+    //     ]
+    // },
 
     {
         label: 'Revisar',
@@ -361,17 +361,17 @@ async function fetchAndUpdateRoles() {
         ]
     },
 
-    {
-        label: 'Extras',
-        icon: 'fa-solid fa-ellipsis',
-        'icon-color': '#FF69B4', // Rosa vibrante
-        to: '/mis-permisos',
-        permision_id: get_id([52]),
-        items: [
-            { label: 'Mi carnet digital', icon: 'fa-solid fa-id-badge', to: '/mi-carnet', permision_id: 52, 'icon-color': '#FFD700' }, // Oro
-            { label: 'Organigrama empresarial', icon: 'fa-solid fa-diagram-project', to: '/organigrama', permision_id: 52, 'icon-color': '#1E90FF' }, // Azul dodger
-        ]
-    },
+    // {
+    //     label: 'Extras',
+    //     icon: 'fa-solid fa-ellipsis',
+    //     'icon-color': '#FF69B4', // Rosa vibrante
+    //     to: '/mis-permisos',
+    //     permision_id: get_id([52]),
+    //     items: [
+    //         { label: 'Mi carnet digital', icon: 'fa-solid fa-id-badge', to: '/mi-carnet', permision_id: 52, 'icon-color': '#FFD700' }, // Oro
+    //         { label: 'Organigrama empresarial', icon: 'fa-solid fa-diagram-project', to: '/organigrama', permision_id: 52, 'icon-color': '#1E90FF' }, // Azul dodger
+    //     ]
+    // },
 ];
 
 }
