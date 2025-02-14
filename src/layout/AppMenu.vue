@@ -317,29 +317,29 @@ async function fetchAndUpdateRoles() {
     //     ]
     // },
 
-    // {
-    //     label: 'CAPACITACIONES',
-    //     icon: 'fa-solid fa-chalkboard-user',
-    //     'icon-color': '#1E90FF', // Azul dodger
-    //     permision_id: get_id([44,45,46]),
-    //     items: [
-    //         // { label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user', },
-    //         { label: 'Agendar', icon: 'fa-solid fa-calendar-plus', to: '/capacitaciones', permision_id: 44, 'icon-color': '#32CD32' }, // Verde lima
-    //         { label: 'Mi formacion', icon: 'fa-solid fa-chalkboard-user', to: '/video-training-sequences/', permision_id: 45, 'icon-color': '#FFD700' }, // Oro
-    //         { label: 'Administrar Escuelas', icon: 'fa-solid fa-school', to: '/video-training-video-sesion', permision_id: 46, 'icon-color': '#FF8C00' }, // Naranja oscuro
-    //         // { label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones', },
-    //         {
-    //             label: 'Principal',
-    //             icon: 'fa-solid fa-house',
-    //             'icon-color': '#00FA9A', // Verde menta
-    //             permision_id: get_id([48,49]),
-    //             items: [
-    //                 { label: 'Recetario cucharas', icon: 'fa-solid fa-utensil-spoon', to: '/cucharas', permision_id: 48, 'icon-color': '#FF6347' }, // Tomate
-    //                 { label: 'Organizacion', icon: 'fa-solid fa-sitemap', to: '/samovar', permision_id: 49, 'icon-color': '#8A2BE2' }, // Azul violeta
-    //             ]
-    //         },
-    //     ]
-    // },
+    {
+        label: 'CAPACITACIONES',
+        icon: 'fa-solid fa-chalkboard-user',
+        'icon-color': '#1E90FF', // Azul dodger
+        permision_id: get_id([44,45,46]),
+        items: [
+            // { label: 'Guias', icon: 'fa-solid fa-book', to: '/guias-user', },
+            { label: 'Agendar', icon: 'fa-solid fa-calendar-plus', to: '/capacitaciones', permision_id: 44, 'icon-color': '#32CD32' }, // Verde lima
+            { label: 'Mi formacion', icon: 'fa-solid fa-chalkboard-user', to: '/video-training-sequences/', permision_id: 45, 'icon-color': '#FFD700' }, // Oro
+            { label: 'Administrar Escuelas', icon: 'fa-solid fa-school', to: '/video-training-video-sesion', permision_id: 46, 'icon-color': '#FF8C00' }, // Naranja oscuro
+            // { label: 'Invitaciones', icon: 'fa-solid fa-envelope', to: '/capacitaciones-invitaciones', },
+            {
+                label: 'Principal',
+                icon: 'fa-solid fa-house',
+                'icon-color': '#00FA9A', // Verde menta
+                permision_id: get_id([48,49]),
+                items: [
+                    { label: 'Recetario cucharas', icon: 'fa-solid fa-utensil-spoon', to: '/cucharas', permision_id: 48, 'icon-color': '#FF6347' }, // Tomate
+                    { label: 'Organizacion', icon: 'fa-solid fa-sitemap', to: '/samovar', permision_id: 49, 'icon-color': '#8A2BE2' }, // Azul violeta
+                ]
+            },
+        ]
+    },
 
     {
         label: 'Revisar',
