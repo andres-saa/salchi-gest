@@ -4,8 +4,10 @@ import AppMenu from './AppMenu.vue';
 
 <template>
       <h6 class="text-xl pb-3" style="color: red;">
-        Algunos apartados no estan disponibles por el momento, se esta trabajando en reestablecer todo, gracias de antemano por su paciencia.
-    </h6>
+
+        Ya casi terminamos de validar todo, se estan corrigiendo errores de integracion de apartados nuevos con existente.
+
+        </h6>
     <app-menu></app-menu>
   
 </template>

@@ -1212,6 +1212,15 @@ const router = createRouter({
 
 
         },
+
+        
+        {
+          path: '/distrimonster',
+          name: 'crud',
+          component: () => import('@/views/pages/Distrimonster.vue'),
+
+
+        },
         {
           path: '/autorizar-permisos',
           name: 'autorizar',
