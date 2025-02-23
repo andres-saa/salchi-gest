@@ -272,6 +272,23 @@
                        <Tag :style="`background-color:${button.color}`"  style="height: 1.3rem;aspect-ratio: 1 / 1;border-radius: 50%;"></Tag> <Button  @click="() => {active_button_nav = button ; login.currentSection_pqr = options[0] }" class="nav_bar--buttons-button p-2" :class="button.id == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" :label="button.name"></Button>
      
                     </li>
+
+
+                    
+
+
+                    <li  key="" class="" style="display: flex;align-items: center  ;" >
+                     
+                       
+                     <Tag :style="`background-color:#c55a11`"  style="height: 1.3rem;aspect-ratio: 1 / 1;border-radius: 50%;"></Tag> <Button  @click="() => {active_button_nav = {id: 60,
+        name: 'Filtradas',
+        color: '#c55a11',
+        exist: true
+    } ; login.currentSection_pqr = options[0] }" class="nav_bar--buttons-button p-2" :class="60 == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" label="Filtradas"></Button>
+   
+                  </li>
+
+                    
             </ul>
         </nav>
 
@@ -361,7 +378,9 @@
            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes"
            :rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines  stripedRows class="col-12  p-2"
-           :value="pqrsUser.filter(p =>  p.current_status?.status == active_button_nav?.name )" tableStyle="min-width: 50rem;" :filters="filters">
+           :value="active_button_nav?.name === 'Filtradas' 
+            ? pqrsUser .filter(p => filtros.includes(p.pqr_request_id))
+            : pqrsUser.filter(p => p.current_status?.status === active_button_nav?.name)" tableStyle="min-width: 50rem;" :filters="filters">
            <template #header>
                <div class="grid p-3" style="align-items:center;justify-content: space-between; display: flex;gap: 1rem;">
                    <h4 class="px-2"> <i class="fa-regular fa-bars-progress"></i>  <b style="text-transform: uppercase;">PQRS <b>{{ route.params.section }}</b> </b> </h4>
@@ -587,20 +606,20 @@
     
     
     
-           <Column v-for="column  in report_keys" class="p-0 text-center" style="max-width: min-content;text-transform: uppercase;" :header="column" >
+           <Column v-for="column  in report_keys" class="p-0 py-1 text-center" style="max-width: min-content;text-transform: uppercase;" :header="column" >
                 <template #body="data">
                     <div>
-                        <h6 class="m-0 py-1 px-2 text-xl" v-if="data.data.sede == 'total'" style="display: flex;background-color:  var(--blue-100);" :style="column != 'sede'? 'justify-content: center;' : 'justify-content: start;'">
-                            <b>
-                                {{ data.data[column] }}
+                        <h6  @click="setFilters(data.data[column]['pqrs'])" class="m-0 py-1 px-2 text-xl valor2" v-if="data.data.sede.valor == 'total'" style=" text-align: center; background-color:  var(--blue-100);" :style="column != 'sede'? 'justify-content: center;' : 'justify-content: start;'">
+                            <b style="cursor: pointer;">
+                                {{ data.data[column]['valor'] }}
                             </b>
                         </h6>
     
     
-                        <h6 v-else class="m-0 py-1 px-2" style="display: flex; justify-content: center;" :style="column != 'sede'? 'justify-content: center;' : 'justify-content: start;'">
+                        <h6  @click="setFilters(data.data[column]['pqrs'])"  v-else class="m-0 py-1 px-2 valor" style=" justify-content: center;cursor: pointer;" :style="column != 'sede'? 'justify-content: start    ;' : 'justify-content: start;'">
     
     
-                        {{ data.data[column] }}
+                        {{ data.data[column]['valor'] }}
                         </h6>
                     </div>
                 </template>
@@ -658,29 +677,30 @@
     
     
     
-           <Column v-for="column  in report_keys_responsible" class="p-0 text-center" style="max-width: min-content;text-transform: uppercase;" :header="column" >
+           <Column v-for="column  in report_keys_responsible" class="p-1 text-center" style="max-width: min-content;text-transform: uppercase;" :header="column" >
                 <template #body="data">
                     <div>
-                        <h6 class="m-0 py-1 px-2 text-xl " v-if="data.data.responsible_name == 'total'" style="display: flex;text-align: center; background-color:  var(--blue-100); " :style="column != 'responsible_name'? 'justify-content: center;' : 'justify-content: start;'">
+                        <h6 @click="setFilters(data.data[column]['pqrs'])" class="m-0 py-1 px-2 text-xl valor2 " v-if="data.data.responsible_name == 'total'" style="display: flex;text-align: center; background-color:  var(--blue-100); " :style="column != 'responsible_name'? 'justify-content: center;' : 'justify-content: start;'">
                             <b>
-                                {{ data.data[column] }}
+                                {{ data.data[column]['valor'] }}
                             </b>
                         </h6>
+                        
 
 
 
-                        <h6 class="m-0 py-1 px-2" v-else-if="data.data.responsible_name == 'pendiente'" style="display: flex;text-align: center; color: var(--red-900); background-color:  var(--red-100); " :style="column != 'responsible_name'? 'justify-content: center;' : 'justify-content: start;'">
+                        <h6 @click="setFilters(data.data[column]['pqrs'])" class="m-0 py-1 px-2 valor" v-else-if="data.data.responsible_name == 'pendiente'" style="display: flex;text-align: center; color: var(--red-900); background-color:  var(--red-100); " :style="column != 'responsible_name'? 'justify-content: center;' : 'justify-content: start;'">
                             <b>
-                                {{ data.data[column] }}
+                                {{ data.data[column]['valor'] }}
                             </b>
                         </h6>
                         
     
     
-                        <h6 v-else class="m-0 py-1 px-2" style="display: flex;text-align: start;" :style="column != 'responsible_name'? 'justify-content: center;' : 'justify-content: start;'">
+                        <h6 @click="setFilters(data.data[column]['pqrs'])" v-else class="m-0 py-1 px-2 valor" style="display: flex;text-align: start;" :style="column != 'responsible_name'? 'justify-content: center;' : 'justify-content: start;'">
     
     
-                        {{ data.data[column] }}
+                        {{ data.data[column]['valor'] }}
                         </h6>
                     </div>
                 </template>
@@ -742,18 +762,18 @@
            <Column v-for="column  in report_keys_type" class="p-0 text-center " style="max-width: min-content;text-transform: uppercase;" :header="column" >
                 <template #body="data">
                     <div>
-                        <h6 class="m-0 py-1 px-2 text-xl" v-if="data.data.sede == 'TOTAL'" style="display: flex;background-color:  var(--blue-100); " :style="column != 'sede'? 'justify-content: center;' : 'justify-content: start;'">
-                            <b>
-                                {{ data.data[column] }}
+                        <h6  @click="setFilters(data.data[column]['pqrs'])" class="m-0 py-1 px-2 text-xl valor2" v-if="data.data.sede.valor == 'total'" style=" text-align: center; background-color:  var(--blue-100);" :style="column != 'sede'? 'justify-content: center;' : 'justify-content: start;'">
+                            <b style="cursor: pointer;">
+                                {{ data.data[column]['valor'] }}
                             </b>
                         </h6>
     
+                        
+                        <h6  @click="setFilters(data.data[column]['pqrs'])"  v-else class="m-0 py-1 px-2 valor" style=" justify-content: center;cursor: pointer;" :style="column != 'sede'? 'justify-content: start    ;' : 'justify-content: start;'">
     
-                        <h6 v-else class="m-0 py-1 px-2" :style="column != 'sede'? 'justify-content: center;' : 'justify-content: start;'" style="display: flex; ">
     
-    
-                        {{ data.data[column] }}
-                        </h6>
+    {{ data.data[column]['valor'] }}
+    </h6>
                     </div>
                 </template>
     
@@ -859,6 +879,9 @@ import axios from 'axios';
     import pqrUser from './pqrUser.vue';
     
 
+    const filtros = ref([])
+
+
     const prepareExcelData = () => {
   // Verificar que pqrsUser tenga datos
   if (!pqrsUser.value || pqrsUser.value.length === 0) {
@@ -874,6 +897,7 @@ import axios from 'axios';
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+
 
   // Formatear las fechas seleccionadas
   const startDateFormatted = formatDate(temp_start_date.value);
@@ -961,6 +985,7 @@ import axios from 'axios';
 
   return { hojas };
 };
+
 
 
 
@@ -1143,7 +1168,6 @@ const downloadPQRExcel = async () => {
     
     const active_button_nav = ref(
     
-    
         {
             "id": 2,
             "name": "Generada",
@@ -1152,11 +1176,8 @@ const downloadPQRExcel = async () => {
             "color": "#3498DB"
         }
     
-    
-       
-    
-    
     )
+    
     
     
     const get_status = (status) => {
@@ -1619,6 +1640,33 @@ const downloadPQRExcel = async () => {
     
         update();
     };
+
+
+    const setFilters = (data) => {
+
+        if(data.length > 0) {
+            filtros.value = data
+        } else {
+            return
+        }
+
+    active_button_nav.value = {id: 60,
+        name: 'Filtradas',
+        color: '#c55a11',
+        exist: true
+    } 
+
+
+    
+    login.currentSection_pqr = options.value[0]
+    window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Quita 'smooth' si no quieres animación
+  });
+}
+
+
+
     </script>
     
     
@@ -1668,8 +1716,32 @@ const downloadPQRExcel = async () => {
     .h{
         transform: translateX(100%);
     }
+
+    .valor{
+        transition:  all ease .1s;
+        cursor: pointer;
+    }
+    .valor2{
+        transition:  all ease .1s;
+
+    }
     
+
+    .valor:hover{
+        transform: scale(1.5) rotate(5deg);
+        font-weight: bold;
+        color: var(--primary-color);
+
+    }
     
+    .valor2:hover{
+        /* transform: scale(1.5); */
+        /* transform:  rotate(5deg); */
+
+        font-weight: bold;
+        color: var(--primary-color);
+
+    }
     
     
     @keyframes an_show_actions_2 {
