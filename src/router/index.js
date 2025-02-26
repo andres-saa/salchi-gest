@@ -1207,7 +1207,7 @@ const router = createRouter({
 
         {
           path: '/pages/crud',
-          name: 'crud',
+          name: 'pages-crud',
           component: () => import('@/views/pages/Crud.vue'),
 
 
