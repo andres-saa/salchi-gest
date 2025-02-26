@@ -77,133 +77,33 @@
     </Dialog>
   
     <div style="margin-top: 10rem; max-width: 900px; margin: 10rem auto;" class="px-3">
-        <div style="width: 100%;justify-content: center;display: flex;" class="my-4">
-            <img :src="`${URI}/read-photo-product/iX6UiE6e`" alt="" style="height: 5rem;width: min-content; margin: auto;">
+        <div style="width: 100%;justify-content: center;gap:1rem; display: flex;flex-wrap: wrap;" class="my-4">
+            <img :src="`${URI}/read-photo-product/xai0dVnL`" alt="" style="height: 5rem;width: min-content; margin: auto;">
+            <img :src="`${URI}/read-photo-product/a1roeK3y`" alt="" style="height: 5rem;width: min-content; margin: auto;">
+            <img :src="`${URI}/read-photo-product/mm9Ohnu7`" alt="" style="height: 5rem;width: min-content; margin: auto;">
+            <img :src="`https://restaurant.pe/assets/images/logo-header.svg`" alt="" style="height: 5rem;width: min-content; margin: auto;">
+
+            <img :src="`https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/WhatsApp_Business_icon.png/169px-WhatsApp_Business_icon.png`" alt="" style="height: 5rem;width: min-content; margin: auto;">
+
 
         </div>
    
   
       <Tag class="p-4" severity="success">
         <h5>
-          ¿No ves algún producto? Prueba <b>Sincronizar la Districarta</b>
-          (tardará un poco mientras obtenemos todos los datos de restaurant.PE)
-          <b>2 minutos como máximo.</b>
+          <b>Sincronizar las cartas</b> ¿Como funciona? 
+          El servidor principal correra' un script que se encargara' de tomar la carta de restaurant.Pe y descargar todo el contenido nuevo incluyendo las fotos, 
+          con esto logramos que nuestro servidor (que es mas rapido) nos entregue el menu sin preguntarle cual es a restaurant.Pe 
+          <b>Esta tarea deberia tomar maximo 2 minutos</b>
         </h5>
       </Tag>
   
       <div style="display: flex; justify-content: end; width: 100%;">
-        <Button @click="refresh" severity="help" label="Sincronizar Districarta" class="my-4" />
+        <Button @click="refresh" severity="help" label="Sincronizar Las cartas" class="my-4" />
       </div>
   
-      <DataTable :value="data" class="shadow-1">
-        <!-- Producto -->
-        <Column header="Producto" class="m-0 py-0">
-          <template #body="slotProps">
-            <h6 class="m-0 p-0">{{ slotProps.data.productogeneral_descripcion }}</h6>
-          </template>
-        </Column>
   
-        <!-- Precio base -->
-        <Column header="Precio base" class="m-0 py-0 py-2">
-          <template #body="slotProps">
-            <h6 class="m-0 p-0">
-              {{ formatoPesosColombianos(slotProps.data.minor) }}
-            </h6>
-          </template>
-        </Column>
-  
-        <!-- Precio Mayor -->
-        <Column header="Precio Mayor" class="m-0 py-0">
-          <template #body="slotProps">
-            <div v-if="modificando">
-              <InputNumber
-                :inputStyle="{
-                  width: '100%',
-                  maxWidth: '10rem',
-                  height: '2rem',
-                  borderRadius: '0'
-                }"
-                v-model="slotProps.data.mayor"
-                mode="currency"
-                currency="USD"
-                locale="en-US"
-                :minFractionDigits="0"
-                :maxFractionDigits="2"
-              />
-            </div>
-            <h6 v-else class="m-0 p-0">
-              {{ formatoPesosColombianos(slotProps.data.mayor) }}
-            </h6>
-          </template>
-        </Column>
-  
-        <!-- Precio Distribuidor -->
-        <Column header="Precio Distribuidor" class="m-0 py-0">
-          <template #body="slotProps">
-            <div v-if="modificando">
-              <InputNumber
-                :inputStyle="{
-                  width: '100%',
-                  maxWidth: '10rem',
-                  height: '2rem',
-                  borderRadius: '0'
-                }"
-                v-model="slotProps.data.distribuidor"
-                mode="currency"
-                currency="USD"
-                locale="en-US"
-                :minFractionDigits="0"
-                :maxFractionDigits="2"
-              />
-            </div>
-            <h6 v-else class="m-0 p-0">
-              {{ formatoPesosColombianos(slotProps.data.distribuidor) }}
-            </h6>
-          </template>
-        </Column>
-
-        <Column header="Kilos" class="m-0 py-0">
-          <template #body="slotProps">
-            <div v-if="modificando">
-              <InputNumber
-                :inputStyle="{
-                  width: '100%',
-                  maxWidth: '10rem',
-                  height: '2rem',
-                  borderRadius: '0'
-                }"
-                v-model="slotProps.data.kilos"
-                suffix=" Kg"
-                locale="en-US"
-                min="0"
-                :minFractionDigits="0"
-                :maxFractionDigits="2"
-              />
-            </div>
-            <h6 v-else class="m-0 p-0">
-              {{ slotProps.data.kilos }} Kg
-            </h6>
-          </template>
-        </Column>
-      </DataTable>
-  
-      <div style="display: flex; gap: 1rem; justify-content: end; margin: 1rem 0;">
-        <Button
-          @click="updatePrices"
-          v-if="modificando && hasChanges"
-          severity="success"
-          label="Guardar cambios"
-        />
-        <Button
-          v-if="!modificando"
-          @click="modificando = true"
-          severity="info"
-          label="Editar"
-        />
-        <Button @click="descartar" v-if="modificando" severity="danger" label="Descartar" />
-        <!-- Botón para modificar masivamente -->
-        <Button v-if="modificando" @click="massDialog = true" severity="warning" label="Modificar Masiva" />
-      </div>
+     
     </div>
   </template>
   
@@ -261,7 +161,7 @@
   // Función para sincronizar la Districarta
   const refresh = async () => {
     try {
-      await fetchService.post(`${URI}/refresh-cache-distrimonster?quipupos=0`);
+      await fetchService.post(`${URI}/refresh-cache/6149/?quipupos=0`);
       update();
       melo.value = true
     } catch (error) {
@@ -275,8 +175,7 @@
       prices: data.value?.map((p) => ({
         id:  p.id,
         mayor: parseInt(p.mayor) ,
-        distribuidor: parseInt(p.distribuidor),
-        kilos:p.kilos  ,
+        distribuidor: parseInt(p.distribuidor)  ,
       })),
     };
   

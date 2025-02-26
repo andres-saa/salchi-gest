@@ -46,35 +46,43 @@
               <b><span class="text-white">{{ m.label }}</span></b>
             </div>
   
-            <!-- Item del submenú si no tiene sub-items -->
+            <RouterLink :to="m.to"  v-else>  
             <div
-              v-else
+             
       
-              class="px-3"
+              class="px-3 hover"
               style="display: flex; align-items: center; padding: 0.3rem; gap: 1rem; border-radius: 10rem 0 0 10rem;"
-            >
-              <div
+            > 
+              <div class=""
                 :style="`background-color:${m.color}`"
                 style="width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center;"
               >
                 <i class="text-white text-2xl" :class="m.icon"></i>
               </div>
-              <span class="text-white">{{ m.label }}</span>
+         
+                  <span class="text-white">{{ m.label }}</span>
+              
             </div>
-  
+        </RouterLink>
             <!-- Iterar sobre los sub-items del submenú -->
             <div v-for="m2 in m.items?.slice(0, 5)" :key="m2.label">
-              <div
+                <RouterLink :to="m2.to">
+              <div class="hover"
                 style="display: flex; align-items: center; gap: 1rem;"
               >
-                <div
+                <div 
                   :style="`background-color:${m2.color}`"
                   style="width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center;"
                 >
                   <i class="text-white text-2xl" :class="m2.icon"></i>
                 </div>
-                <span class="text-white">{{ m2.label }}</span>
+            
+                    <span class="text-white">{{ m2.label }}</span>
+
+               
               </div>
+
+            </RouterLink>
             </div>
           </div>
         </div>
@@ -181,7 +189,7 @@ const model = [
             { label: 'Evaluación clima organizacional ', icon: 'fa-solid fa-cloud-sun', to: '/clima', permision_id: 43, color: '#FFD93D' },
             { label: 'Evaluación de desempeño ', icon: 'fa-solid fa-chart-line', to: '/desempeno', permision_id: 43, color: '#FFD93D' },
             { label: 'Encuesta de retiro ', icon: 'fa-solid fa-door-open', to: '/retiro', permision_id: 43, color: '#FFD93D' },
-            { label: 'PQRS ', icon: 'fa-solid fa-question', to: '/pqrs-user', permision_id: 43, color: '#FFD93D' },
+            // { label: 'PQRS ', icon: 'fa-solimd fa-question', to: '/pqrs-user', permision_id: 43, color: '#FFD93D' },
         ]
     },
     {
@@ -369,6 +377,7 @@ const model = [
     },
 ];
 
+import { RouterLink } from 'vue-router';
 import { loginStore } from '../../store/user';
 import Sonando from './Sonando.vue';
 
@@ -443,5 +452,13 @@ const permisions = loginStore()
     grid-template-columns: repeat(1,1fr);
 
  }   
+}
+
+.hover{
+    transition: all .3s ease;
+}
+
+.hover:hover{
+    transform: scale(1.1);
 }
 </style>

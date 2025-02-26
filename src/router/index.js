@@ -1216,8 +1216,15 @@ const router = createRouter({
         
         {
           path: '/distrimonster',
-          name: 'crud',
+          name: 'distrimonster',
           component: () => import('@/views/pages/Distrimonster.vue'),
+
+
+        },
+        {
+          path: '/Tiendas',
+          name: 'tiendas',
+          component: () => import('@/views/pages/Tiendas.vue'),
 
 
         },

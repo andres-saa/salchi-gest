@@ -59,8 +59,9 @@ async function fetchAndUpdateRoles() {
         permision_id: get_id([50]),
         items: [
             { label: 'Sonando', icon: 'fa-solid fa-music', to: '/sonando', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
-            { label: 'Distrimonster', icon: 'fa-solid fa-music', to: '/distrimonster', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
-            
+            { label: 'Distrimonster', icon: 'fa-solid fa-solid fa-distribute-spacing-vertical', to: '/distrimonster', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
+            { label: 'Tiendas', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
+
         ]
     },
 

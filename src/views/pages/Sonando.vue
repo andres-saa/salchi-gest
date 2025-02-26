@@ -1,11 +1,37 @@
 <!-- src/components/Salchimonster.vue -->
 <template>
+        <Dialog
+      v-model:visible="melo"
+      modal
+      :closable="false"
+      style="display: flex; justify-content: center; width: 10rem;"
+    >
+      <div
+        style="display: flex; justify-content: center; align-items: center; flex-direction: column; width: 100%;"
+      >
+        <h3><b>Melo</b></h3>
+        <i class="pi pi-check text-7xl" style="font-weight: bold; color: green;"></i>
+        <Button
+          @click="melo = false"
+          icon="pi pi-times"
+          style="position: absolute; aspect-ratio: 1/1; border-radius: 50%; right: -1.5rem; top: -1.5rem"
+          severity="danger"
+        />
+      </div>
+    </Dialog>
     <img style="width: 100%; position: fixed;left: -10%; top: 0;width: 120vw;height: 100vh;object-fit: cover;z-index: -1;filter: blur(10px);"
         :src="currentPlayback?.currentSong?.thumbnail" alt="">
 
     <div class="main-container">
 
+        
+
         <div class="salchimonster-container" style="overflow: hidden;">
+
+            <div style="display: flex; justify-content: end; width: 100%;">
+        <Button @click="refresh" severity="help" label="Sincronizar lista" class="my-4" />
+      </div>
+  
             <h2 class="text-xl" style="margin:0 2rem 0 1rem;">
                 <b>
                     <i class="fa-solid fa-play" style="margin-right: 1rem;"></i> SONANDO EN <span
@@ -131,7 +157,19 @@ import axios from 'axios'
 // import { Dialog } from 'primevue'
 import { useSitesStore } from '@/store/site'
 import siteDialogSonando from '@/components/dialogos/siteDialogSonando.vue'
+import { URI } from '../../service/conection'
+import { fetchService } from '../../service/utils/fetchService'
 
+
+const refresh = async () => {
+    try {
+      await fetchService.post(`${URI}/refresh-cache/6149/?quipupos=0`);
+      update();
+      melo.value = true
+    } catch (error) {
+      console.error("Error al refrescar la caché:", error);
+    }
+  };
 // =======================================================================
 // NOTA: Ajusta estas URLs según tu configuración de backend y dominio.
 // =======================================================================
