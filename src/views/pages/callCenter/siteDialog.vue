@@ -1,138 +1,70 @@
 <template>
-    <Dialog v-model:visible="store.visibles.currentSite" :closable="
-    false"
-        :style="{ width: '380px' }" header="Seleccion de sede" :modal="true" class="p-fluid m-3"
-        style=" background-color: white;position: relative; border-radius: 1rem;padding-top: 2rem;">
+    <Dialog :closable="store.location?.site?.pe_site_id > 0" style="width: 30rem;max-width: 96%;" v-model:visible="store.visibles.currentSite" header="Selección de sede"
+        :modal="true" class="dialog">
+        <div class="dialog-content">
+            <b class="dialog-title">
+                <!-- {{ store.location }} -->
+            </b>
 
+            <!-- Contenedor principal -->
+            <div class="form-container">
+                <!-- Selección de Ciudad -->
+                <div class="form-group">
+                    <div class="label-spinner">
+                        <label for="city-dropdown" class="label">¿En qué ciudad te encuentras?</label>
+                        <ProgressSpinner v-if="spinnersView.ciudad" class="spinner" strokeWidth="8" fill="var(--white)"
+                            animationDuration=".5s" aria-label="Cargando ciudades" />
+                    </div>
+                    <Dropdown id="city-dropdown" v-model="currenCity" @click="resetNeighborhood" :options="cities"
+                        optionLabel="city_name" placeholder="SELECCIONA UNA CIUDAD" class="dropdown" required />
+                </div>
 
-
-
-       <b style="color:black">
-        <!-- {{ store.location }} -->
-       </b>
-
-        <!-- <div class="notch"
-            style="display: flex; align-items: center; width: 30%; background-color: black; border-radius: 0 0 1rem 1rem; height: 2rem; position: absolute; top: 0rem; left: 35%;">
-            <div class="led"
-                style="position:absolute ;right: 1rem; width: 0.7rem; height: 0.7rem; background-color: var(--primary-color); border-radius: 50%;: 1rem">
-            </div>
-
-        </div> -->
-
-
-        <div
-            style="width: 100%;display: flex; flex-direction: column; align-items: center; border-radius: ;background-color: ">
-
-            <!-- <img style="width: 50px;" src="http://localhost:5173/src/images/logo.png" alt=""> -->
-
-    
-            <div class="field col-12 pb-0 p-0" style="width: 100%;">
-                <div style="display: flex; ;width: min-content; justify-content:start;gap: 1rem;align-items: center;"> 
-                <label for="site_id" style="color: black; min-width: max-content;">en que ciudad te encuentras?   </label> 
-                
-                <ProgressSpinner v-if="spinnersView.ciudad" style="width: 20px; height: 20px" strokeWidth="8" fill="var(--white)"
-                
-    animationDuration=".5s" aria-label="Custom ProgressSpinner" /> 
-
+                <!-- Selección de Barrio -->
+                <div class="form-group" v-if="currenCity && currenCity.city_id !== 15">
+    <div class="label-spinner">
+        <label for="neighborhood-dropdown" class="label">¿Cuál es tu barrio?</label>
+        <div v-if="spinnersView.barrio" class="loading-neighborhood">
+            <ProgressSpinner class="spinner" strokeWidth="8" fill="var(--white)" animationDuration=".5s"
+                aria-label="Buscando barrios" />
+            <p class="loading-text">Buscando barrios...</p>
+        </div>
+    </div>
+    <Dropdown id="neighborhood-dropdown" v-model="currenNeigborhood"
+        :disabled="!possibleNeigborhoods.length" :options="possibleNeigborhoods" optionLabel="name"
+        placeholder="Selecciona un barrio" filter filterPlaceholder="Escribe el nombre de tu barrio"
+        class="dropdown" required />
 </div>
-                <Dropdown class="" @click="() => currenNeigborhood = {
-                    site: {
-                        site_name: 'default'
-                    }   
-                }" v-model="currenCity" :options="cities" placeholder="SELECCIONA UNA CIUDAD" optionLabel="city_name" required="true" />
 
-            </div>
-     
+                <!-- Vista Previa de la Sede -->
+                <div class="image-container">
+                    <img v-if="currenNeigborhood?.site_id"
+                        :src="`${URI}/read-product-image/600/site-${currenNeigborhood?.site_id}`"
+                        :class="{ 'default-image': currenNeigborhood.site?.name === 'default' }"
+                        alt="Vista previa de la sede" />
+                    <img v-else
+                        src="https://backend.salchimonster.com/read-photo-product/xai0dVnL"
+                        style="object-fit: contain;"
+                        alt="Vista previa de la sede" />
 
-            <div class="field col-12 mt-0 pt-0 p-0" style="width: 100%;gap: ; display: block;">
-                <div style="display: flex;width: min-content; justify-content:start;gap: 1rem;align-items: center;"> 
-                <label for="site_id" style="color: black;min-width: max-content;">Cual es tu barrio?   </label> 
-                
-                
-                <div v-if="spinnersView.barrio" style="display: flex; min-width: max-content;">
-                    <ProgressSpinner  style="width: 20px;  height: 20px" strokeWidth="8" fill="var(--white)"
-                
-                animationDuration=".5s" aria-label="Custom ProgressSpinner" /> 
-                
-                <p class="pl-2" style="color: black;">buscando barrios...</p>
-                </div>  
-                
-                
-
-</div>
- 
-                <Dropdown style="" filter v-model="currenNeigborhood" :disabled="!possibleNeigborhoods"
-          :options="possibleNeigborhoods" optionLabel="name" required="true"
-          placeholder="Selecciona un barrio" filterPlaceholder="Escribe el nombre de tu barrio" />
-
-          
-
-                <!-- <Dropdown v-model="seleFcarrctedCity" editable :options="possibleNeigborhoods"  placeholder="Select a City" class="w-full md:w-14rem" /> -->
-
-            </div>
-
-            <div class="field col-12 p-0" style="width: 100%; height:15rem ; position: relative;">
-
-
-                <div class="img-cont col-12 p-0" style="overflow: hidden;position: relative;">
-
-                    
-
-                    
-
-
-
-                    <img v-if="currenNeigborhood?.site_id" :src="`${URI}/read-product-image/600/site-${currenNeigborhood?.site_id}`"
-                        :class="currenNeigborhood.site?.name == 'default' ? 'default-image' : ''"
-                        style="border: 1px solid rgb(255, 255, 255); width: 100%;background-color: rgb(255, 255, 255); height: 100%; object-fit: cover; border-radius: 0.2rem;"
-                        alt="">
-
-
-                    <div
-                        style=" position: absolute;color:white; top: 0; left: 0; width: 100%;text-transform:uppercase; height: 100%; display:flex; padding: ; align-items: end;border-radius: 0.5rem; ">
-                        <p v-if="currenNeigborhood?.site_id" class="col-12 py-1"
-                            style="background-color: black; text-align: center; height: min-content;  width: 100%;  font-weight: 500; background-color: rgba(0, 0, 0, 0.7);">
-                            <span  class="text-xl lg:text-lg p-0" style=""> SALCHIMONSTER</span> <span
-                                style="text-transform: uppercase;" class="text-xl lg:text-lg p-0">{{
-                                    currentSite?.site_name }}</span>
+                    <div v-if="currenNeigborhood?.site_id" class="image-overlay">
+                        <p class="site-info">
+                            <span class="brand-name">SALCHIMONSTER </span>
+                            <span class="site-name">{{ currentSite?.site_name }}</span>
                         </p>
                     </div>
                 </div>
 
 
-
-
-
-
+                <div class="button-container">
+                    <Button label="Guardar" @click="setNeigborhood" :disabled="!currenNeigborhood?.name"
+                        class="save-button" />
+                </div>
             </div>
-
-            <div class="field col-12 p-0" style="width: 100%;  ;">
-                <Button severity="help" label="Guardar" @click="setNeigborhood" :disabled="!currenNeigborhood?.name"
-                    style="width: max-content;border: none; padding: 10px 20px;width: 100%; text-align: center;background-color: black;" b>
-                    
-                </Button>
-
-            </div>
-
-
         </div>
- 
-            <!-- <Button @click="store.setVisible('currentSite',false)" icon="pi pi-times" severity="danger" rounded
-                style="width: 2.5rem;height: 2.5rem; border: none; position: absolute; right: -1rem; top:-1rem;"/>
-                -->
-
-
-
     </Dialog>
 </template>
 
 <script setup>
-
-
-
-
-
-
 
 // import { getProductsByCategory, getCategory, getMenu } from '@/service/productServices.js'
 import { onMounted, ref, watch } from 'vue';
@@ -144,596 +76,301 @@ import {sitesService } from './service/site/sitesService'
 import {useSitesStore} from './store/site'
 import { usecartStore } from './store/shoping_cart';
 import { fetchService } from '../../../service/utils/fetchService';
-const store = useSitesStore()
-const cart = usecartStore()
 
-watch(() =>  store.location.site.site_id ,() => {
-    
+const store = useSitesStore();
+const cart = usecartStore();
 
+watch(
+    () => store.location.site.site_id,
+    () => {
+        location.reload();
+    }
+);
 
-} )
-
-const spinnersView = ref({ciudad:false, barrio:false})
-const cities = ref([]) 
-const currentSite = ref({})
-const currenCity = ref({})
-const c_neigbor = ref(localStorage.getItem('currentNeigborhood'))
+const spinnersView = ref({ ciudad: false, barrio: false });
+const cities = ref([]);
+const currentSite = ref({});
+const currenCity = ref(null);
 const currenNeigborhood = ref({
     site: {
-        name: 'default'
+        name: 'default',
+    },
+});
+const possibleNeigborhoods = ref([]);
+
+const resetNeighborhood = () => {
+    currenNeigborhood.value = { site: { site_name: 'default' } };
+};
+
+
+watch(currenCity, async () => {
+    if (currenCity.value && currenCity.value.city_id === 15) {
+        // Asigna automáticamente el barrio cuando la ciudad es 15
+        currenNeigborhood.value = {
+            neighborhood_id: 5881,
+            name: "NEW JERSEY",
+            delivery_price: 0.0,
+            site_id: 33,
+            city_id: 15
+        };
+        // (Opcional) También se puede asignar el sitio correspondiente si es necesario:
+        currentSite.value = await sitesService.getSiteById(33);
+        // Limpia la lista de barrios ya que no se usará el dropdown
+        possibleNeigborhoods.value = [];
+    } else {
+        // Si se selecciona otra ciudad, se limpia el barrio actual y se cargan los posibles barrios
+        resetNeighborhood();
+        changePossiblesNeigborhoods();
     }
-})
-
-const possibleNeigborhoods = ref()
-const changePossiblesNeigborhoods = () => {
-    getNeighborhoodsByCityId(currenCity.value.city_id).then(data => possibleNeigborhoods.value = data)
-}
+});
 
 
+const changePossiblesNeigborhoods = async () => {
+    if (currenCity.value && currenCity.value.city_id) {
+        const neighborhoods = await getNeighborhoodsByCityId(currenCity.value.city_id);
+        possibleNeigborhoods.value = neighborhoods;
+    } else {
+        possibleNeigborhoods.value = [];
+    }
+};
 
-watch(currenCity, () => { changePossiblesNeigborhoods() })
+watch(currenCity, () => {
+    changePossiblesNeigborhoods();
+});
 
+watch(
+    currenNeigborhood,
+    async () => {
+        if (currenNeigborhood.value.site_id) {
+            currentSite.value = await sitesService.getSiteById(currenNeigborhood.value.site_id);
+        } else {
+            currentSite.value = {};
+        }
+    },
+    { immediate: true }
+);
 
-
-
-watch(currenNeigborhood, async() => { 
-    
-   currentSite.value =  await sitesService.getSiteById(currenNeigborhood.value.site_id).then((data) => currentSite.value = data)
- })
-
-
-
-
-
-
-
-
-
-
-
-
-const setNeigborhood = async() => {
-
+const setNeigborhood = async () => {
     const newLocation = {
-        site:currentSite.value,
-        neigborhood:currenNeigborhood.value,
-        city:currenCity.value
+        site: currentSite.value,
+        neigborhood: currenNeigborhood.value,
+        city: currenCity.value,
+    };
+
+    store.setLocation(newLocation);
+    store.setVisible('currentSite', false);
+    router.push('/');
+};
+
+const getCities = async () => {
+    try {
+        spinnersView.value.ciudad = true;
+        const response = await fetch(`${URI}/cities`);
+        if (response.ok) {
+            const data = await response.json();
+            cities.value = data;
+        }
+    } catch (error) {
+        console.error('Error obteniendo ciudades:', error);
+    } finally {
+        spinnersView.value.ciudad = false;
     }
-    
+};
 
-
-    const pe_id = store.location.site?.pe_site_id
-
-    const data = await fetchService.get(`${URI}/get-product-integration/6149/${pe_id || 1}`)
-    cart.menu = data
-
-    store.setLocation(newLocation)
-    store.setVisible('currentSite',false)
-    showSiteDialog.value = false
-
-
-}
-
-
-const getCities = async() => {
+const getNeighborhoodsByCityId = async (city_Id) => {
     try {
-    spinnersView.value.ciudad = true
-     const response = await fetch(`${URI}/cities`)
-     if(response.ok){
-        const data = await response.json()
-        spinnersView.value.ciudad = false
-        // cities.value = data
-        return data
-     }
-     
-   } catch (error) {
-    spinnersView.value.ciudad = false
-    
-   }
-   
-}
+        spinnersView.value.barrio = true;
+        const response = await fetch(`${URI}/neighborhoods/by-city/${city_Id}`);
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        }
+        return [];
+    } catch (error) {
+        console.error('Error obteniendo barrios:', error);
+        return [];
+    } finally {
+        spinnersView.value.barrio = false;
+    }
+};
 
-
-
-
-
-
-
-
-
-
-
-const getNeighborhoodsByCityId = async(city_Id) => {
-    try {
-        spinnersView.value.barrio = true
-     const response = await fetch(`${URI}/neighborhoods/by-city/${city_Id}`)
-     if(response.ok){
-        const data = await response.json()
-        // cities.value = data
-        spinnersView.value.barrio = false
-
-        return data
-     }
-     
-   } catch (error) {
-    spinnersView.value.barrio = false
-
-    
-   }
-}
-
-onMounted(async() => {
-    getCities().then(data => cities.value = data)
-})
-
-
+onMounted(() => {
+    getCities();
+});
 </script>
 
-
 <style scoped>
-@keyframes rot {
-    0% {
-        transform: translatey(-50%) scale(1.25, 0.75);
-    }
+/* Estilos del Dialog */
+.dialog {
 
-    50% {
-        transform: translatey(-150%) scale(1, 1);
-    }
-
-    100% {
-        transform: translatey(-50%) scale(1.25, 0.75);
-    }
+    background-color: white;
+    position: relative;
+    border-radius: 1rem;
+    padding-top: 2rem;
 }
 
-* *:focus {
-    outline: none;
-    border: none;
+/* Contenedor del contenido del dialog */
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.imagen {
-    margin: 200px;
-    width: 100px;
-    /* overflow: hidden;  */
-    animation: rot 0.7s infinite;
-    transform-origin: center bottom;
+/* Título del dialog */
+.dialog-title {
+    color: black;
+    margin-bottom: 1rem;
 }
 
-.img-cart:hover {
-    transform: scale(1.3);
-}
-
-.img-cart {
-    transition: all .3s ease;
-}
-
-*{
-    text-transform: uppercase;
-}
-
-
-
-
-
-
-
-@media (min-width: 767px) {
-    .scroll {
-        max-height: 45rem;
-        overflow-y: auto;
-
-    }
-
-    .add-car {
-        width: 50%;
-    }
-}
-
-.led {
-    animation: cambiaColor 1s infinite;
-    /* 3s de duración, animación infinita */
-}
-
-@keyframes cambiaColor {
-    0% {
-        background-color: rgb(0, 0, 0);
-    }
-
-    50% {
-        background-color: rgb(30, 255, 0);
-    }
-
-    100% {
-        background-color: var(--primary-color);
-    }
-}
-
-.img-before {
-    /* background-color: rgba(0, 0, 0, 0.235); */
+/* Contenedor del formulario */
+.form-container {
     width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0%;
-    left: 0;
-    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Grupo de formulario */
+.form-group {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+/* Contenedor para label y spinner */
+.label-spinner {
     display: flex;
     align-items: center;
-    justify-content: center;
-
+    gap: 1rem;
+    margin-bottom: 0.5rem;
 }
 
-.carro:hover {
-    /* transform: scalex(1.2); */
-    background-color: #ff62004a;
-    cursor: pointer
+/* Etiquetas */
+.label {
+    color: black;
+    min-width: max-content;
 }
 
-.menu-button-new {
-    background-color: var(--primary-color);
-    /* padding: 1rem; */
-    /* margin: 0 1rem; */
-    border: none;
-    font-size: 20px;
-    /* transition: all  0.3s; */
-    /* font-weight: bold; */
-    border-radius: 10px;
-    color: #fff;
-    width: 300px;
-    transition: all 0.3s ease;
-    text-align: center;
-
-}
-
-.fondo-movil {
-    background-color: var(--primary-color);
-}
-
-.fondo-pc {
-    background-color: #626262;
-    /* overflow-x: hidden; */
-}
-
-.img-cont {
+/* Dropdown personalizado */
+.dropdown {
     width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+}
+
+/* Spinner */
+.spinner {
+    width: 20px;
+    height: 20px;
+}
+
+/* Cargando barrios */
+.loading-neighborhood {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Texto de carga */
+.loading-text {
+    color: black;
+}
+
+/* Contenedor de la imagen */
+.image-container {
+    width: 100%;
+    height: 15rem;
     position: relative;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
     overflow: hidden;
+}
+
+/* Imagen de la sede */
+.image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
-
-
+    border: 1px solid #fff;
+    border-radius: 0.2rem;
+    background-color: #fff;
 }
 
+/* Imagen por defecto */
 .default-image {
     filter: blur(10px);
     position: relative;
 }
 
-*:focus {
-    border: none;
-    outline: none;
-}
-
-.default-image::before {
-    content: 'hola';
-    width: 100%;
-    /* background-color: rgba(177, 99, 9, 0.1); */
-    height: 100%;
+/* Superposición de la imagen */
+.image-overlay {
     position: absolute;
     top: 0;
     left: 0;
-}
-
-.selected {
-    background-color: #ff620050
-}
-
-.menu-button-new:hover {
-    /* filter: brightness(1.5);  
-   */
-    background-color: black;
-    cursor: pointer;
-
-}
-
-
-
-
-.cart {
-
-    /* box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4); */
-
-
-
-}
-
-.img-cont {
-    /* background-color:rgb(255, 255, 255); */
-    /* display: flex; */
-    /* justify-content: flex-start; */
-    align-items: start;
-
-    /* box-shadow: 30px 0px 30px rgba(0, 0, 0, 0.5); */
+    width: 100%;
     height: 100%;
-    /* flex-direction: column; */
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+    border-radius: 0.5rem;
 }
 
-
-
-.imagen {
-    /* position: fixed; */
+/* Información de la sede */
+.site-info {
+    background-color: rgba(0, 0, 0, 0.7);
+    text-align: center;
     width: 100%;
-    height: auto;
-    object-fit: contain;
-    transition: all ease 0.5s;
-    /* margin-left: 1vw; */
-    border-radius: 50px;
-
-    /* filter: drop-shadow(-2px 2px 15px rgba(0, 0, 0, 0.7)); */
-
-}
-
-.imagen:hover {
-    transform: scale(1.1);
-    ;
-
-    /* box-shadow: 0px 0px 30px rgba(0, 0, 0, 1); */
-    filter: brightness(1.2) drop-shadow(-2px 2px 15px rgba(0, 0, 0, ));
-    /* filter: drop-shadow(-2px 2px 15px rgba(0, 0, 0, 0.7)); */
-
-}
-
-.producto {
-    /* filter: brightness(1.2); */
-}
-
-.info {
-    /* padding-left: 10%; */
-
-    /* padding-top: 5%; */
-    display: flex;
-    flex-direction: column;
-    align-items: fle;
-    /* gap: 10px; */
-    /* box-shadow: 0px 0px 30px rgba(0, 0, 0, 1); */
-}
-
-.ordenar {
-    transition: all 0.2s ease;
-    border: 2px solid var(--primary-color);
-    /* // font-weight: bold; */
-    font-size: 20px;
-    /* // margin-bottom: 200px; */
-    background-color: transparent;
-    border-radius: 5px;
-}
-
-.carro {
-
-    border: none;
-    /* // font-weight: bold; */
-    /* font-size: 20px; */
-    /* // margin-bottom: 200px; */
-    background-color: transparent;
-    border-radius: 5px;
-    margin: auto;
-    /* border-radius:; */
-}
-
-.whatsapp:hover {
-    transform: scale(1.1);
-}
-
-.ver-mas:hover {
-    background-color: var(--primary-color);
-    transform: scale(1.1);
-
-
-
+    font-weight: 500;
+    padding: 0.5rem 0;
     color: #fff;
-    cursor: pointer;
 }
 
-
-/* // .icono{
-//     color: var(--primary-color);
-// } */
-.ver-mas:hover>.icono {
-    /* // background-color: var(--primary-color);
-
-// display: none; */
-    color: #fff;
-    transform: translateX(5px);
+.brand-name {
+    font-size: 1.25rem;
 }
 
-.info-header {
-    display: flex;
-    justify-content: space-between;
-    /* align-items: center; */
-    /* gap: 20px; */
-}
-
-.salsa {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: start;
-    padding: 0;
-
-    margin: 0;
-
-
-}
-
-.salsa:hover {
-    color: var(--primary-color);
-}
-
-.salsas {
-    display: flex;
-    padding: 0;
-    margin: 0;
-
-
-}
-
-.whatsapp {
-    /* background-color: red; */
-    /* min-width: 1024px; */
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    transition: all ease .3s;
-    right: 5rem;
-    bottom: 9rem;
-
-    /* align-items: center; */
-    justify-content: center;
-    background-color: #25D366;
-    border-radius: 50%;
-    position: absolute;
-
-}
-
-@media (max-width:500px) {
-    .whatsapp {
-        /* background-color: red; */
-        /* min-width: 1024px; */
-        width: 4rem;
-        height: 4rem;
-        right: 5%;
-        bottom: 130%;
-
-    }
-}
-
-
-
-
-* *{
+.site-name {
     text-transform: uppercase;
- }
-
-
-.led {
-    animation: cambiaColor 1s infinite;
-    /* 3s de duración, animación infinita */
+    font-size: 1.25rem;
 }
 
-@keyframes cambiaColor {
-    0% {
-        background-color: rgb(0, 0, 0);
+/* Contenedor del botón */
+.button-container {
+    width: 100%;
+}
+
+/* Botón Guardar */
+.save-button {
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.save-button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+.save-button:not(:disabled):hover {
+    background-color: #333;
+}
+
+/* Responsividad */
+@media (max-width: 500px) {
+    .dialog {
+        width: 90%;
     }
 
-    50% {
-        background-color: rgb(30, 255, 0);
+    .site-info {
+        font-size: 1rem;
     }
 
-    100% {
-        background-color: var(--primary-color);
+    .brand-name,
+    .site-name {
+        font-size: 1rem;
     }
 }
-
-.adiciones {
-    display: flex;
-    padding: 0;
-    margin: 0;
-
-}
-
-a {
-    text-decoration: none;
-}
-
-.texto {
-    /* width: 40%; */
-    /* min-width: 200px; */
-    padding-right: 20px;
-    /* min-width: 200px; */
-    /* margin-right: 20px; */
-}
-
-.icono {
-    transition: all 0.2s ease;
-    color: var(--primary-color);
-    transform: translateX(-5px);
-    font-weight: bold;
-}
-
-.title {}
-
-.nombre-salsa::after {}
-
-
-.animador {
-    animation: para-aca 1s infinite ease;
-
-}
-
-
-@keyframes para-aca {
-    0% {
-        transform: translateX(0%);
-    }
-
-    50% {
-        transform: translateX(100%)
-    }
-
-}
-
-::-webkit-scrollbar {
-    width: 1rem;
-    /* Ancho de la barra de desplazamiento */
-    padding-top: 1rem;
-    position: absolute;
-    display: none;
-}
-
-.clase {}
-
-/* Estilo del pulgar de la barra de desplazamiento */
-/* WebKit (Chrome, Safari) */
-::-webkit-scrollbar-thumb {
-    background-color: rgb(255, 0, 0);
-    /* Color del pulgar de la barra de desplazamiento */
-    border-radius: 9px;
-    border: 5px solid var(--primary-color);
-    height: 10rem;
-    width: 10rem;
-    /* display: none;  */
-}
-
-
-
-
-.fondo-pc {
-    background-color: rgb(247, 247, 247);
-}
-
-dialog {
-    ::-webkit-scrollbar {
-        width: 0.5rem;
-        /* Ancho de la barra de desplazamiento */
-        padding-top: 1rem;
-        position: absolute;
-        /* display: none; */
-    }
-
-    .clase {}
-
-    /* Estilo del pulgar de la barra de desplazamiento */
-    /* WebKit (Chrome, Safari) */
-    ::-webkit-scrollbar-thumb {
-        background-color: var(--primary-color);
-        /* Color del pulgar de la barra de desplazamiento */
-        border-radius: 9px;
-        /* border: 5px solid var(--primary-color); */
-        height: 10rem;
-        width: 10rem;
-        /* display: none;  */
-    }
-}</style>
+</style>

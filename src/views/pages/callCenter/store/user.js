@@ -22,6 +22,7 @@ export const useUserStore = defineStore('client', {
                 address:'',
                 phone_number:'',
                 payment_method_option:''
+                
             },
         }
     },

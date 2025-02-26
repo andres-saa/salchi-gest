@@ -1,355 +1,274 @@
 <template>
-
-<div
-    class=""
-    v-if="reportes.loading.visible"
-    style="width: 100vw;transition: all ease .3s;backdrop-filter: blur(5px);  flex-direction: column;pointer-events:auto; background-color: #00000020; height: 100vh;position: fixed;display: flex;align-items: center;justify-content: center; left: 0;right: 0;z-index: 99999999;"
-  >
-  <div class="luz" style="aspect-ratio: 1  / 1;display: flex;justify-content: center;align-items: center;">
-
-    <div class="girar" style="width: 150px;z-index: -1; height: 150px;padding: 3rem; background-color: var(primary-color); position: absolute;"></div>
-    <div class="imagen" style="display: flex;padding: 1rem;border-radius: .3rem; background-color: white;  gap: 1rem; flex-direction: column; align-items:center;">
-      <img src="https://backend.salchimonster.com/read-photo-product/xai0dVnL" style="width:20vw ;max-width: 100px;" alt="">
-      <h5 style="color: black;">Cargando...</h5>
-    </div>
-  </div>
-
-  </div>
-    <div class="col-12 px-2 my-8  p-0" style="margin-top: 6rem;">
-      
-        <validate></validate>
-      
-        <p class="text-center text-2xl my-8"><b>FINALIZAR COMPRA</b> </p>
-        <div class="grid mx-auto " style="max-width:800px;">
-
-
-
-
-            <div class="col-12 md:col-6 p-1 md:px-4" style="display: flex; flex-direction: column; gap:1rem;">
-
-
-<div class="flex flex-wrap align-items-center mb-2 gap-2" style="width: 100%;">
-    <!-- <label for="username" class="p-sr-only">Username</label> -->
-    <InputText style="width: 100%;" id="username" placeholder="NOMBRE" v-model="user.user.name" invalid />
-</div>
-
-<div class="flex flex-wrap align-items-center mb-2 gap-2" style="width: 100%;">
-    <!-- <label for="username" class="p-sr-only">Username</label> -->
-    <InputText @click="siteStore.setVisible('currentSite',true)" :modelValue="siteStore.location.neigborhood.name" style="width: 100%;" id="username" placeholder="Barrio" invalid readonly />
-</div>
-
-<!-- {{ siteStore.visibles }} -->
-
-<div class="flex flex-wrap align-items-center mb-2 gap-2" style="width: 100%;">
-    <!-- <label for="username" class="p-sr-only">Username</label> -->
-    <InputText v-model="user.user.address" style="width: 100%;" id="username" placeholder="DIRECCION" invalid />
-</div>
-
-<div class="flex flex-wrap align-items-center mb-2 gap-2" style="width: 100%;">
-    <!-- <label for="username" class="p-sr-only">Username</label> -->
-    <!-- <p>El telefono debe estar disponible en WhatsApp para validar el pedido <img style="width: 1.5rem;" src="/images/WhatsApp.svg.webp" alt=""></p>  -->
-    <InputMask v-model="user.user.phone_number" style="width: 100%;"  id="basic"  mask="999 999 9999" placeholder="TELEFONO" />
-</div>
-
-<div class="flex flex-wrap align-items-center mb-2 gap-2" style="width: 100%;">
-    <!-- <label for="username" class="p-sr-only">Username</label> -->
-    <!-- <InputNumber v-model="user.user.payment_method_option" style="width: 100%;" id="username" placeholder="METODO DE PAGO" invalid /> -->
-    <Dropdown v-model="user.user.payment_method_option" style="width: 100%;" id="username" placeholder="METODO DE PAGO" invalid  :options="payment_method_options" optionLabel="name" ></Dropdown>
-</div>
-
-<Textarea v-model="store.cart.order_notes"  style="height: 8rem;resize: none;" placeholder="NOTAS:"></Textarea>
-
-
-
-</div>
-
-            <resumen class="md:col-6"></resumen>
-
-          
-
-
+    <div class="finalizar-compra-container">
+      <!-- <validate></validate> -->
+      <p class="title">FINALIZAR COMPRA</p>
+  
+      <div style="margin: auto; max-width: 800px;">
+        <div class="title" style="margin: 3rem .5rem">
+          <Tag severity="success" class="advertice">
+            El tiempo promedio de entrega es de 60 a 75 minutos, por favor téngalo en cuenta antes de ordenar
+          </Tag>
         </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-column">
+          <span>NOMBRE</span>
+          <div class="form-group">
+            <InputText id="username" placeholder="NOMBRE" v-model="user.user.name" />
+          </div>
+          <span>Ubicacio'n</span>
+          <div class="form-group">
+            <InputText
+              @click="siteStore.setVisible('currentSite', true)"
+              :modelValue="siteStore.location.neigborhood.name"
+              id="neighborhood"
+              placeholder="Ubicacion"
+              readonly
+            />
+          </div>
+  
+          <span>Metodo Entrega</span>
+          <div class="form-group">
+            <Dropdown
+              style="width: 100%;"
+              v-model="user.user.order_type"
+              id="metodo_de_entrega"
+              placeholder="Metodo de entrega"
+              :options="computedOrderTypes"
+              optionLabel="name"
+            />
+          </div>
+  
+          <!-- Mostrar dirección solo si el método no es "Pasar a recoger" (id 2) -->
+          <template v-if="!user.user.order_type || user.user.order_type.id !== 2">
+            <span>Direccio'n</span>
+            <div class="form-group">
+              <InputText v-model="user.user.address" id="address" placeholder="DIRECCION" />
+            </div>
+          </template>
+  
+          <span>Telefono</span>
+          <div class="form-group">
+            <InputText
+              v-model="user.user.phone_number"
+              id="phone_number"
+              mask="999 999 9999"
+              placeholder="TELEFONO"
+            />
+          </div>
+  
+          <!-- Mostrar campo de placa solo si el método es "Pasar a recoger" (id 2) y la sede es 33 -->
+          <template v-if="user.user.order_type && user.user.order_type.id === 2 && siteStore.location?.site?.site_id === 33">
+            <span>Placa de tu vehiculo</span>
+            <div class="form-group">
+              <InputText v-model="user.user.placa" id="placa" placeholder="Placa de tu vehiculo" />
+            </div>
+          </template>
+  
+          <span>Metodo de pago</span>
+          <div class="form-group">
+            <Dropdown
+              style="width: 100%;"
+              v-model="user.user.payment_method_option"
+              id="payment_method"
+              placeholder="METODO DE PAGO"
+              :options="
+                siteStore.location?.site?.site_id === 33
+                  ? payment_method_options.filter(option => [6, 8].includes(option.id))
+                  : siteStore.location?.site?.site_id !== 33
+                  ? payment_method_options.filter(option => ![7].includes(option.id))
+                  : payment_method_options  
+              "
+              optionLabel="name"
+            />
+          </div>
+          <span>Notas</span>
+  
+          <Textarea
+            v-model="store.cart.order_notes"
+            class="order-notes"
+            placeholder="Notas adicionales"
+          />
+  
+          <!-- En otros casos, muestra un textarea normal -->
+          <template>
+            <Textarea
+              v-model="store.cart.order_notes"
+              class="order-notes"
+              placeholder="Notas"
+            />
+          </template>
+        </div>
+  
+        <resumen class="resumen-column"></resumen>
+      </div>
     </div>
-   
-</template>
-
-
-<script setup>
+  </template>
+  
+  <script setup>
 import { useToast } from 'primevue/usetoast';
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import resumen from './resumen.vue';
 import { usecartStore } from './store/shoping_cart';
 // import { formatoPesosColombianos } from '../../service/formatoPesos';
+import { URI } from './service/conection';
+import { fetchService } from '../../../service/utils/fetchService';
 import { useSitesStore } from './store/site';
 import {useUserStore} from './store/user'
 import { paymentMethodService } from './service/restaurant/paymentMethodService';
 import { useReportesStore } from './store/ventas';
 // import validate from './validate.vue';
 
-const reportes = useReportesStore()
+  const store = usecartStore();
+  const siteStore = useSitesStore();
+  const user = useUserStore();
+  
+  const order_types = ref([]);
+  const payment_method_options = ref([]);
+  
+  onMounted(async () => {
+    user.user.order_type = {}
 
-const store = usecartStore()
-const siteStore = useSitesStore()
-const use = ref(0)
-const user = useUserStore()
-
-const payment_method_options =  ref([])
-
-onMounted( async()=> {
-    payment_method_options.value = await paymentMethodService.getPaymentMethods()
-
-    if (user.user.payment_method_option?.id != 7)
-        siteStore.setNeighborhoodPrice()
-    else {
-        siteStore.setNeighborhoodPriceCero()
-
+    payment_method_options.value = await fetchService.get(`${URI}/payment_methods`);
+    order_types.value = await fetchService.get(`${URI}/get_all_order_types`);
+  
+    if (user.user.payment_method_option?.id != 7) {
+      siteStore.setNeighborhoodPrice();
+    } else {
+      siteStore.setNeighborhoodPriceCero();
     }
-})
-
-
-watch(() => user.user.payment_method_option, (new_val) => {
-
-    if(new_val.id == 7){
-        siteStore.current_delivery = siteStore.location.neigborhood.delivery_price
-        siteStore.location.neigborhood.delivery_price = 0
-    }else{
-        siteStore.setNeighborhoodPrice()
+  });
+  
+  watch(() => user.user.order_type, (new_val) => {
+    if (new_val.id == 2) {
+      siteStore.current_delivery = siteStore.location.neigborhood.delivery_price;
+      siteStore.location.neigborhood.delivery_price = 0;
+    } else {
+      siteStore.setNeighborhoodPrice();
     }
-})
+  });
 
 
 
+  watch(() => siteStore.location?.site?.site_id,() => {
+    user.user.order_type = null
+  })
 
-</script>
-
-
-<style scoped>
-*:focus {
-    border: none;
-}
-
-.led {
-    animation: cambiaColor 1s infinite;
-    /* 3s de duración, animación infinita */
-}
-
-.name-product::first-letter {
-    text-transform: uppercase;
-}
-
-img {
-    border-radius: 50%;
-}
-
-.domi-name {
-    text-transform: capitalize;
-}
-
-.descripcion::first-letter {
-    text-transform: uppercase;
-}
-
-
-@keyframes girar {
-
-100%{
-  transform: rotate(360deg);
-}
-
-}
-
-@keyframes cambiaColor {
-    0% {
-        background-color: rgb(0, 0, 0);
+  watch(() => user.user.order_type,() => {
+    user.user.placa = null
+  })
+  
+  // Computed para filtrar los tipos de orden según la sede
+  const computedOrderTypes = computed(() => {
+    const currentSiteId = siteStore.location?.site?.site_id;
+    if (currentSiteId === 33) {
+      // Para la sede 33: permitir "Enviar por uber" (id: 1) y "Pasar a recoger" (id: 2)
+      return order_types.value.filter(option => option.id !== 3);
+    } else {
+      // Para las demás sedes: permitir "Pasar a recoger" (id: 2) y "Enviar a domicilio" (id: 3)
+      return order_types.value.filter(option => option.id !== 1);
     }
-
+  });
+  </script>
+  
+  <style scoped>
+  /* Contenedor Principal */
+  .finalizar-compra-container {
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+  
+  /* Título */
+  .title {
+    text-align: center;
+    font-size: 2rem;
+    margin: 2rem 0;
+    font-weight: bold;
+  }
+  
+  .advertice {
+    animation: anim_status_tag 2s infinite ease;
+    color: black;
+    padding: 1rem;
+    font-weight: 400;
+    font-size: 1.1rem;
+  }
+  
+  @keyframes anim_status_tag {
+    20% {
+      background-color: rgb(0, 255, 110);
+    }
     50% {
-        background-color: rgb(30, 255, 0);
+      background-color: rgb(0, 255, 204);
+      transform: scale(1.02);
     }
-
-    100% {
-        background-color: var(--primary-color);
+    80% {
+      background-color: rgb(0, 255, 140);
     }
-}
-
-.triangulo {
-    width: 0;
-    height: 0;
-    border-left: 1rem solid transparent;
-    border-right: 1rem solid transparent;
-    border-bottom: 2rem solid #ffede1;
-    /* Altura del triángulo dependiendo del ancho */
-    transform: rotate(-65deg);
-    position: absolute;
-    top: -1rem;
-    left: -1.2rem;
-}
-
-
-.container {
-    background-color: rgb(0, 0, 0);
-}
-
-.fixed {
-    position: fixed;
-    width: 25%;
-}
-
-.scrollit {
-    float: left;
-    width: 71%
-}
-
-.sumary {
-    /* background-color: green; */
-}
-
-.izq {
-    /* width: 100%; */
-
-}
-
-*:focus {
-    /* outline: none; */
-}
-
-
-.contenedor-producto {
-    align-items: center;
-    border-radius: .5rem;
-    overflow: hidden;
-    height: 7rem;
-    position: relative;
-}
-
-@media (max-width: 991px) {
-    .contenedor-producto {
-        /* background-color: #ffffffea;align-items: center;border-radius: rem;overflow: hidden;height: 7rem;position: relative; */
+  }
+  
+  /* Grid del Formulario y Resumen */
+  .form-grid {
+    display: grid;
+    max-width: 800px;
+    margin: 0 auto;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr 1fr;
     }
-}
-
-.nombre-sesion {
-    font-weight: bold;
-    /* width: auto; */
-    border-radius: 5rem;
-}
-
-.contenedor-principal {
-    /* border-radius: 2rem; */
-    /* position: sticky */
-    /* top: 100px; */
-    /* margin-bottom: 10rem; */
-    /* background-color: var(--primary-color); */
-    /* height: auto; */
-}
-
-
-.producto {
-    border-bottom: 2px solid #00000020;
-}
-
-
-
-.cantidad:focus-visible {
-    outline: none;
-
-}
-
-.imagen {
-    height: 100px;
-    object-fit: contain;
-}
-
-.contador {
-    background-color: white;
-    /* height: 3rem;  */
-
+  }
+  
+  /* Columna del Formulario */
+  .form-column {
     display: flex;
-    border-radius: 0.1rem;
-    padding: 0.1rem 1rem;
-    /* border: 1px solid var(--primary-color); */
-    border-radius: 0.5rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.274);
-    /* bottom: 0.5rem; */
-    position: absolute;
-    right: 1rem;
-    bottom: 1rem;
-    width: 8rem;
-    height: 2.5rem;
-
-}
-
-i {
-    font-weight: bold;
-}
-
-i:hover {
-    color: var(--primary-color);
-}
-
-button:hover {
-    cursor: pointer;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-    .clase {
-        /* background-color: red; */
-        min-width: 720px;
-    }
-}
-
-@media (min-width: 1200px) and (max-width: 1920px) {
-    .clase {
-        /* background-color: red; */
-        min-width: 1024px;
-
-    }
-
-    .productos-scroll {
-        overflow-y: auto;
-        border-radius: 2rem;
-        /* height: 80vh; */
-        overflow-y: auto;
-        /* max-height: 720px */
-    }
-}
-
-::-webkit-scrollbar {
-    width: 1rem;
-    /* Ancho de la barra de desplazamiento */
-    padding-top: 1rem;
-    position: absolute;
-    display: none;
-}
-
-.clase {}
-
-*:focus {
-    outline: none;
-}
-/* 
-* {
-    text-transform: lowercase;
-} */
-
-*::first-letter {
-    text-transform: uppercase;
-}
-
-input:focus {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.25rem;
+  }
+  
+  /* Grupo de Formularios */
+  .form-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  
+  /* Área de Notas */
+  .order-notes {
+    height: 8rem;
+    resize: none;
+    width: 100%;
+  }
+  
+  /* Eliminar estilos en línea de elementos enfocados */
+  *:focus {
     outline: none;
     border: none;
-}
-
-/* Estilo del pulgar de la barra de desplazamiento */
-/* WebKit (Chrome, Safari) */
-::-webkit-scrollbar-thumb {
+  }
+  
+  input,
+  textarea,
+  select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Personalizar Scrollbar */
+  ::-webkit-scrollbar {
+    width: 1rem;
+  }
+  
+  ::-webkit-scrollbar-thumb {
     background-color: rgb(255, 0, 0);
-    /* Color del pulgar de la barra de desplazamiento */
     border-radius: 9px;
     border: 5px solid var(--primary-color);
     height: 10rem;
     width: 10rem;
-    /* display: none;  */
-}
-</style>
+  }
+  </style>
+  

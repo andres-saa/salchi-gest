@@ -13,7 +13,8 @@ export const useSitesStore = defineStore('call-center-site', {
                 storage: localStorage,
                 paths:[
                     'location',
-                    'restaurant'
+                    'restaurant',
+                    'categories'
                     ]
     },
     state: () => {
@@ -31,9 +32,7 @@ export const useSitesStore = defineStore('call-center-site', {
      
             status:'closed',
             restaurant:1,
-            categories:[
-                10, //COMBOS 2 PERSONAS
-                22, //COMBOS 2 PERSONAS
+            categories:[                10, //COMBOS 2 PERSONAS
                 26, //COMBOS PERSONALES
                 // 25, //COMBOS 2X1 BURGER + PAPAS
                 8, //SALCHIPAPAS 2 PERSONAS
@@ -43,9 +42,12 @@ export const useSitesStore = defineStore('call-center-site', {
                11,   //SHOWW
                 4, //BEBIDAS
                 5, //CERVEZAS
-                // 14,//ADICIONES SALCHIPAPAS
-            ]
-
+                // 14,//ADICIONES SALCHIPAPAS  110, // SALCHIPAPA PARA 2 PERSONAS NJ
+  112, // SALCHIPAPAS PERSONALES NJ
+  113,  // PARA COMPARTIR
+  111, // BURGERMONSTER
+  109, // BEBIDAS 
+  ]
 
         }
     },
