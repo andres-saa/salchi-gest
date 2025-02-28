@@ -312,8 +312,8 @@
           <p
               class="notas"
               style="border: 1px solid; margin: 0; color: black; padding: 0.5rem;"
-              v-html="formattedNotes"
-            ></p>
+             
+            >  {{ store.currentOrder.order_notes }}</p>
 
            
 
