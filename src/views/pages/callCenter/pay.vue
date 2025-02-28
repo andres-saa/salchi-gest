@@ -64,6 +64,44 @@
               <InputText v-model="user.user.placa" id="placa" placeholder="Placa de tu vehiculo" />
             </div>
           </template>
+
+
+
+
+    <span style="display: flex; align-items: center; gap: 1rem;">
+      <Checkbox v-model="isCortesia" binary/>
+      Es una cortesía?
+    </span>
+
+    <div v-if="isCortesia" class="form-group">
+      <Dropdown
+        style="width: 100%;"
+        v-model="user.user.payment_method_option"
+        id="payment_method"
+        placeholder="Porcentaje de cortesía"
+        :options="cortesias"
+
+      >
+        <!-- Template para mostrar las opciones en la lista -->
+        <template #option="slotProps">
+          {{ slotProps.option.name }}
+          <Tag>{{ slotProps.option.percentage }}</Tag>
+        </template>
+
+        <!-- Template para mostrar el valor seleccionado -->
+        <template #value="slotProps">
+          <span v-if="slotProps.value">
+            {{ slotProps.value.name }}
+            <Tag>{{ slotProps.value.percentage }}</Tag>
+          </span>
+          <span v-else>
+            Selecciona un porcentaje
+          </span>
+        </template>
+      </Dropdown>
+    </div>
+
+
   
           <span>Metodo de pago</span>
           <div class="form-group">
@@ -82,6 +120,10 @@
               optionLabel="name"
             />
           </div>
+
+
+
+
           <span>Notas</span>
   
           <Textarea
@@ -119,6 +161,74 @@ import { paymentMethodService } from './service/restaurant/paymentMethodService'
 import { useReportesStore } from './store/ventas';
 // import validate from './validate.vue';
 
+
+
+const isCortesia = ref(false)
+
+  const cortesias = [
+  {
+    "id": 1,
+    "name": "Demora más de una hora",
+    "percentage": "15%"
+  },
+  {
+    "id": 2,
+    "name": "Pedido frío",
+    "percentage": "20%"
+  },
+  {
+    "id": 3,
+    "name": "Un pelo",
+    "percentage": "100%"
+  },
+  {
+    "id": 4,
+    "name": "Producto dañado",
+    "percentage": "100%"
+  },
+  {
+    "id": 5,
+    "name": "Faltante de bebida y adición",
+    "percentage": "0%"
+  },
+  {
+    "id": 6,
+    "name": "Responderle con lo que falta",
+    "percentage": "0%"
+  },
+  {
+    "id": 7,
+    "name": "Salsas que no son",
+    "percentage": "20%"
+  },
+  {
+    "id": 8,
+    "name": "Si se enoja y quiere cambio",
+    "percentage": "100%"
+  },
+  {
+    "id": 9,
+    "name": "Mala atención Call Center",
+    "percentage": "20%"
+  },
+  {
+    "id": 10,
+    "name": "Mala atención en Punto de venta",
+    "percentage": "20%"
+  },
+  {
+    "id": 11,
+    "name": "Influencer",
+    "percentage": "100%"
+  },
+  {
+    "id": 12,
+    "name": "No llegó el pedido",
+    "percentage": "20%"
+  }
+]
+
+
   const store = usecartStore();
   const siteStore = useSitesStore();
   const user = useUserStore();
@@ -149,6 +259,10 @@ import { useReportesStore } from './store/ventas';
   });
 
 
+  watch(isCortesia, (newval) => {
+    if (newval)   alert('El esquema de comandas cambio y el modelo actual ya no es valido, la orden se envia como una orden comun' )
+
+  })
 
   watch(() => siteStore.location?.site?.site_id,() => {
     user.user.order_type = null

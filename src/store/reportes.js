@@ -6,27 +6,27 @@ import { URI } from "../service/conection";
 
 
 export const useReportesStore = defineStore('reportes', {
-   
-    persist: {
-       
-                key: 'reportes', // La clave bajo la cual se almacenará tu estado en el storage
-                storage: localStorage,
-                paths:[
-                    'dateRange',
-                    // 'salesReport',
-                    'selectedSites',
-                    'order_status',
-                    'sumaryData',
-                     // Estado por defecto si no hay nada en localStorage
-                    // 'ventasCharData',
-                    // 'visibleNotifications',
-                    // 'NoOrdersDataGraphics',
-                    // 'OrderDataGraphics',
-                    // 'TicketDataGraphics',
-                    // 'dateReports',
-                    'sites']
 
-        
+    persist: {
+
+        key: 'reportes', // La clave bajo la cual se almacenará tu estado en el storage
+        storage: localStorage,
+        paths: [
+            'dateRange',
+            // 'salesReport',
+            'selectedSites',
+            'order_status',
+            'sumaryData',
+            // Estado por defecto si no hay nada en localStorage
+            // 'ventasCharData',
+            // 'visibleNotifications',
+            // 'NoOrdersDataGraphics',
+            // 'OrderDataGraphics',
+            // 'TicketDataGraphics',
+            // 'dateReports',
+            'sites']
+
+
     },
     state: () => {
 
@@ -35,7 +35,7 @@ export const useReportesStore = defineStore('reportes', {
         // const savedEndDate = localStorage.getItem('reportesEndDate');
         // const savedSites = localStorage.getItem('selectedSites');
         // const savedOrderStatus = localStorage.getItem('orderStatus');
-        
+
 
 
         return {
@@ -43,59 +43,60 @@ export const useReportesStore = defineStore('reportes', {
                 startDate: new Date(new Date().setDate(new Date().getDate() - 7)),
                 endDate: new Date(),
             },
+            reportar: 0,
             salesReport:
             {
                 "total_sales": {
                     "total_sales": 0,
                     "total_orders": 0,
                     "average_ticket": 0,
-                    
+
                 }
             },
-            dateReports:{
-                resumen:{
-                    start:'',
-                    end:''
+            dateReports: {
+                resumen: {
+                    start: '',
+                    end: ''
                 },
-                valorVentas:{
-                    start:'',
-                    end:''
+                valorVentas: {
+                    start: '',
+                    end: ''
                 },
-                NoOrdenes:{
-                    start:'',
-                    end:''
+                NoOrdenes: {
+                    start: '',
+                    end: ''
                 },
-                Ticket:{
-                    start:'',
-                    end:''
+                Ticket: {
+                    start: '',
+                    end: ''
                 },
 
             },
             selectedSites: [],
             order_status: 'enviada', // Estado por defecto si no hay nada en localStorage
-            ventasCharData:{},
-            ordersCharData:{},
-            ticketsCharData:{},
-            sites:[],
-            sumaryData:[],
-            loading:false,
-            visibleNotifications:false,
-            visibleOrder:{
-                visible:false,
-                order:{}
+            ventasCharData: {},
+            ordersCharData: {},
+            ticketsCharData: {},
+            sites: [],
+            sumaryData: [],
+            loading: false,
+            visibleNotifications: false,
+            visibleOrder: {
+                visible: false,
+                order: {}
             },
 
-            Loading:{
-                visible:false,
-                tittle:'Cargando',
-                progress:0
+            Loading: {
+                visible: false,
+                tittle: 'Cargando',
+                progress: 0
             },
-            sitesStatus:[],
-            visible_add_pqr:false,
-            NoOrdersDataGraphics:{},
-            OrderDataGraphics:{},
-            TicketDataGraphics:{}
-            
+            sitesStatus: [],
+            visible_add_pqr: false,
+            NoOrdersDataGraphics: {},
+            OrderDataGraphics: {},
+            TicketDataGraphics: {}
+
 
 
 
@@ -135,24 +136,24 @@ export const useReportesStore = defineStore('reportes', {
             // Obtiene la fecha actual y elimina las horas, minutos y segundos
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-        
+
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
-        
+
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
-        
+
             // Obtiene las fechas de inicio y fin del estado y elimina las horas, minutos y segundos
             const start_date = new Date(state.dateRange.startDate);
             start_date.setHours(0, 0, 0, 0);
-        
+
             const end_date = new Date(state.dateRange.endDate);
             end_date.setHours(0, 0, 0, 0);
-        
+
             // Calcula la diferencia en días
             const diffTime = Math.abs(end_date - start_date);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
+
             // Determina el nombre del rango basado en la diferencia de días
             let rangeName = '';
             if (start_date.getTime() === today.getTime() && end_date.getTime() === tomorrow.getTime()) {
@@ -178,28 +179,26 @@ export const useReportesStore = defineStore('reportes', {
                         rangeName = null;
                 }
             }
-        
+
             return {
                 diffDays,
                 rangeName
             };
         }
-        
-        
-        
-        
+
+
+
+
     },
 
 
-   
+
 
     actions: {
 
         async fetchSalesReport() {
 
-            if(this.selectedSites.length<1){
-              await  this.getSites()
-            }
+
 
             const formattedStartDate = this.formatDate(this.dateRange.startDate);
             const formattedEndDate = this.formatDate(this.dateRange.endDate);
@@ -221,40 +220,6 @@ export const useReportesStore = defineStore('reportes', {
 
             const url = `${URI}/sales_report?${queryParams.toString()}`;
 
-            // try {
-            //     this.setLoading(true, 'cargando reporte')
-            //     const response = await fetch(url, {
-            //         method: 'GET', // Método GET especificado aquí
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             // Agrega aquí otros encabezados si son necesarios
-            //         }
-            //     });
-
-            //     if (!response.ok) {
-            //         // this.setLoading(false, 'cargando reporte')
-            //         throw new Error(`HTTP error! status: ${response.status}`);
-                    
-            //     }
-
-            //     const data = await response.json();
-            //     this.salesReport = data
-              
-            //     // this.fetchDilyReport()
-            //     // this.fetchDilyOrdersReport()
-            //     // this.fetchTicketsReport()
-              
-            //     this.setLoading(false, 'cargando reporte')
-
-
-
-               
-            // } catch (error) {
-            //     console.error('Fetch error:', error);
-            //     this.setLoading(false, 'cargando reporte')
-            // }
-
-            // this.fetchSumaryReport()
         },
 
 
@@ -267,16 +232,16 @@ export const useReportesStore = defineStore('reportes', {
             this.dateRange.startDate = new Date(startDate);
             this.dateRange.endDate = new Date(endDate);
 
-            
+
         },
 
 
 
         async fetchDilyReport() {
-              const formattedStartDate = this.formatDate(this.dateRange.startDate)
-              const formattedEndDate = this.formatDate(this.dateRange.endDate)
-              const siteIds = this.selectedSites.map(site => site.site_id).join(',');
-        
+            const formattedStartDate = this.formatDate(this.dateRange.startDate)
+            const formattedEndDate = this.formatDate(this.dateRange.endDate)
+            const siteIds = this.selectedSites.map(site => site.site_id).join(',');
+
             // Construir la URL con parámetros de consulta
             const queryParams = new URLSearchParams({
                 site_ids: siteIds,
@@ -284,9 +249,9 @@ export const useReportesStore = defineStore('reportes', {
                 start_date: formattedStartDate,
                 end_date: formattedEndDate
             });
-        
+
             const url = `${URI}/daily_sales?${queryParams.toString()}`;
-        
+
             try {
                 const response = await fetch(url, {
                     method: 'GET', // Método GET especificado aquí
@@ -295,18 +260,18 @@ export const useReportesStore = defineStore('reportes', {
                         // Agrega aquí otros encabezados si son necesarios
                     }
                 });
-        
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-        
+
                 const data = await response.json();
                 // salesReport.value = data
 
                 this.setChartData(data)
                 return (data)
-        
-        
+
+
                 // Maneja la respuesta
                 console.log(data);
             } catch (error) {
@@ -318,18 +283,18 @@ export const useReportesStore = defineStore('reportes', {
 
 
 
-        async getSites ()  {
+        async getSites() {
             try {
                 const response = await fetch(`${URI}/sites`)
-        
-                if(!response.ok){
+
+                if (!response.ok) {
                     throw 'paila'
                 }
-        
+
                 const data = await response.json()
                 this.selectedSites = data?.filter(s => s?.show_on_web)
                 this.sites = data?.filter(s => s?.show_on_web)
-                
+
             } catch (error) {
                 console.log(error)
             }
@@ -352,164 +317,109 @@ export const useReportesStore = defineStore('reportes', {
             const formattedStartDate = this.formatDate(this.dateRange.startDate)
             const formattedEndDate = this.formatDate(this.dateRange.endDate)
             const siteIds = this.selectedSites.map(site => site.site_id).join(',');
-      
-          // Construir la URL con parámetros de consulta
-          const queryParams = new URLSearchParams({
-              site_ids: siteIds,
-              status: this.order_status,
-              start_date: formattedStartDate,
-              end_date: formattedEndDate
-          });
-      
-          const url = `${URI}/daily_orders?${queryParams.toString()}`;
-      
-          try {
-              const response = await fetch(url, {
-                  method: 'GET', // Método GET especificado aquí
-                  headers: {
-                      'Content-Type': 'application/json',
-                      // Agrega aquí otros encabezados si son necesarios
-                  }
-              });
-      
-              if (!response.ok) {
-                  throw new Error(`HTTP error! status: ${response.status}`);
-              }
-      
-              const data = await response.json();
-              // salesReport.value = data
 
-              this.setCharOrdersData(data)
-              return (data)
-      
-      
-              // Maneja la respuesta
-              console.log(data);
-          } catch (error) {
-              console.error('Fetch error:', error);
-          }
-      },
+            // Construir la URL con parámetros de consulta
+            const queryParams = new URLSearchParams({
+                site_ids: siteIds,
+                status: this.order_status,
+                start_date: formattedStartDate,
+                end_date: formattedEndDate
+            });
 
+            const url = `${URI}/daily_orders?${queryParams.toString()}`;
 
-      async fetchTicketsReport() {
-        const formattedStartDate = this.formatDate(this.dateRange.startDate)
-        const formattedEndDate = this.formatDate(this.dateRange.endDate)
-        const siteIds = this.selectedSites.map(site => site.site_id).join(',');
-  
-      // Construir la URL con parámetros de consulta
-      const queryParams = new URLSearchParams({
-          site_ids: siteIds,
-          status: this.order_status,
-          start_date: formattedStartDate,
-          end_date: formattedEndDate
-      });
-  
-      const url = `${URI}/daily_average_ticket?${queryParams.toString()}`;
-  
-      try {
-          const response = await fetch(url, {
-              method: 'GET', // Método GET especificado aquí
-              headers: {
-                  'Content-Type': 'application/json',
-                  // Agrega aquí otros encabezados si son necesarios
-              }
-          });
-  
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-  
-          const data = await response.json();
-          // salesReport.value = data
-
-          this.setCharTicketsData(data)
-          return (data)
-  
-  
-          // Maneja la respuesta
-          console.log(data);
-      } catch (error) {
-          console.error('Fetch error:', error);
-      }
-  },
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-        setChartData (data) {
-            const keys = [];
-            const values = [];
-            const values2 = [];
-            data.current_period.forEach(obj => {
-                Object.keys(obj).forEach(key => {
-                    if (!keys.includes(key)) {
-                        keys.push(key);
+            try {
+                const response = await fetch(url, {
+                    method: 'GET', // Método GET especificado aquí
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Agrega aquí otros encabezados si son necesarios
                     }
                 });
-    
-                Object.values(obj).forEach(value => {
-                    values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
-                });
-            });
 
-            data.previous_period.forEach(obj => {
-                Object.values(obj).forEach(value => {
-                    values2.push(value); // Si quieres valores únicos, debes verificar antes de añadir
-                });
-            });
-    
-            this.ventasCharData = {
-                labels: keys,
-            datasets: [
-                {
-                    label: 'Periodo actual',
-                    data: values,
-                    fill:  true,
-                    tension: 0.4,
-                    backgroundColor: this.order_status == 'enviada'? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
-                    borderColor:this.order_status == 'enviada'? '#3b82f6' :  'rgba(255, 99, 132, 1)', // Color del borde
-                    borderWidth: 1.8,
-                },
-                {
-                    label: 'Periodo anterior',
-                    data: values2,
-                    fill: this.order_status == 'enviada',
-                    borderDash: [5, 5],
-                    tension: 0.4,
-                    backgroundColor: this.order_status == 'enviada'? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
-                    borderColor:this.order_status == 'enviada'? 'rgba(255, 99, 132, 1)' :  'rgba(0, 99, 132, 1)', // Color del borde
-                    borderWidth: 1.8,
-                },
-    
-            ]
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                // salesReport.value = data
+
+                this.setCharOrdersData(data)
+                return (data)
+
+
+                // Maneja la respuesta
+                console.log(data);
+            } catch (error) {
+                console.error('Fetch error:', error);
             }
-    
-    
-    
-    
-        
-           
         },
 
-        setCharOrdersData (data) {
+
+        async fetchTicketsReport() {
+            const formattedStartDate = this.formatDate(this.dateRange.startDate)
+            const formattedEndDate = this.formatDate(this.dateRange.endDate)
+            const siteIds = this.selectedSites.map(site => site.site_id).join(',');
+
+            // Construir la URL con parámetros de consulta
+            const queryParams = new URLSearchParams({
+                site_ids: siteIds,
+                status: this.order_status,
+                start_date: formattedStartDate,
+                end_date: formattedEndDate
+            });
+
+            const url = `${URI}/daily_average_ticket?${queryParams.toString()}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET', // Método GET especificado aquí
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Agrega aquí otros encabezados si son necesarios
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                // salesReport.value = data
+
+                this.setCharTicketsData(data)
+                return (data)
+
+
+                // Maneja la respuesta
+                console.log(data);
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        setChartData(data) {
             const keys = [];
             const values = [];
             const values2 = [];
@@ -519,7 +429,7 @@ export const useReportesStore = defineStore('reportes', {
                         keys.push(key);
                     }
                 });
-    
+
                 Object.values(obj).forEach(value => {
                     values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
                 });
@@ -530,42 +440,42 @@ export const useReportesStore = defineStore('reportes', {
                     values2.push(value); // Si quieres valores únicos, debes verificar antes de añadir
                 });
             });
-    
-            this.ordersCharData = {
+
+            this.ventasCharData = {
                 labels: keys,
-            datasets: [
-                {
-                    label: 'Periodo actual',
-                    data: values,
-                    fill: true,
-                    tension: 0.4,
-                    backgroundColor: this.order_status == 'enviada'? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
-                    borderColor:this.order_status == 'enviada'? '#3b82f6' :  'rgba(255, 99, 132, 1)', // Color del borde
-                    borderWidth: 1.8,
-                },
-                {
-                    label: 'Periodo anterior',
-                    data: values2,
-                    fill: this.order_status == 'enviada',
-                    borderDash: [5, 5],
-                    tension: 0.4,
-                    backgroundColor: this.order_status == 'enviada'? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
-                    borderColor:this.order_status == 'enviada'? 'rgba(255, 99, 132, 1)' :  'rgba(0, 99, 132, 1)', // Color del borde
-                    borderWidth: 1.8,
-                },
-    
-            ]
+                datasets: [
+                    {
+                        label: 'Periodo actual',
+                        data: values,
+                        fill: true,
+                        tension: 0.4,
+                        backgroundColor: this.order_status == 'enviada' ? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
+                        borderColor: this.order_status == 'enviada' ? '#3b82f6' : 'rgba(255, 99, 132, 1)', // Color del borde
+                        borderWidth: 1.8,
+                    },
+                    {
+                        label: 'Periodo anterior',
+                        data: values2,
+                        fill: this.order_status == 'enviada',
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        backgroundColor: this.order_status == 'enviada' ? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
+                        borderColor: this.order_status == 'enviada' ? 'rgba(255, 99, 132, 1)' : 'rgba(0, 99, 132, 1)', // Color del borde
+                        borderWidth: 1.8,
+                    },
+
+                ]
             }
-    
-    
-    
-    
-        const documentStyle = getComputedStyle(document.documentElement);
-    
-       
-    },
-    setCharTicketsData (data) {
-        const keys = [];
+
+
+
+
+
+
+        },
+
+        setCharOrdersData(data) {
+            const keys = [];
             const values = [];
             const values2 = [];
             data.current_period.forEach(obj => {
@@ -574,7 +484,7 @@ export const useReportesStore = defineStore('reportes', {
                         keys.push(key);
                     }
                 });
-    
+
                 Object.values(obj).forEach(value => {
                     values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
                 });
@@ -585,107 +495,158 @@ export const useReportesStore = defineStore('reportes', {
                     values2.push(value); // Si quieres valores únicos, debes verificar antes de añadir
                 });
             });
-    
+
+            this.ordersCharData = {
+                labels: keys,
+                datasets: [
+                    {
+                        label: 'Periodo actual',
+                        data: values,
+                        fill: true,
+                        tension: 0.4,
+                        backgroundColor: this.order_status == 'enviada' ? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
+                        borderColor: this.order_status == 'enviada' ? '#3b82f6' : 'rgba(255, 99, 132, 1)', // Color del borde
+                        borderWidth: 1.8,
+                    },
+                    {
+                        label: 'Periodo anterior',
+                        data: values2,
+                        fill: this.order_status == 'enviada',
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        backgroundColor: this.order_status == 'enviada' ? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
+                        borderColor: this.order_status == 'enviada' ? 'rgba(255, 99, 132, 1)' : 'rgba(0, 99, 132, 1)', // Color del borde
+                        borderWidth: 1.8,
+                    },
+
+                ]
+            }
+
+
+
+
+            const documentStyle = getComputedStyle(document.documentElement);
+
+
+        },
+        setCharTicketsData(data) {
+            const keys = [];
+            const values = [];
+            const values2 = [];
+            data.current_period.forEach(obj => {
+                Object.keys(obj).forEach(key => {
+                    if (!keys.includes(key)) {
+                        keys.push(key);
+                    }
+                });
+
+                Object.values(obj).forEach(value => {
+                    values.push(value); // Si quieres valores únicos, debes verificar antes de añadir
+                });
+            });
+
+            data.previous_period.forEach(obj => {
+                Object.values(obj).forEach(value => {
+                    values2.push(value); // Si quieres valores únicos, debes verificar antes de añadir
+                });
+            });
+
             this.ticketsCharData = {
                 labels: keys,
-            datasets: [
-                {
-                    label: 'Periodo actual',
-                    data: values,
-                    fill: true,
-                    tension: 0.4,
-                    backgroundColor: this.order_status == 'enviada'? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
-                    borderColor:this.order_status == 'enviada'? '#3b82f6' :  'rgba(255, 99, 132, 1)', // Color del borde
-                    borderWidth: 1.8,
-                },
-                {
-                    label: 'Periodo anterior',
-                    data: values2,
-                    fill: this.order_status == 'enviada',
-                    borderDash: [5, 5],
-                    tension: 0.4,
-                    backgroundColor: this.order_status == 'enviada'? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
-                    borderColor:this.order_status == 'enviada'? 'rgba(255, 99, 132, 1)' :  'rgba(0, 99, 132, 1)', // Color del borde
-                    borderWidth: 1.8,
-                },
-    
-            ]
+                datasets: [
+                    {
+                        label: 'Periodo actual',
+                        data: values,
+                        fill: true,
+                        tension: 0.4,
+                        backgroundColor: this.order_status == 'enviada' ? '#d0e1fd60' : 'rgba(255, 99, 132, 0.2)', // Color de fondo
+                        borderColor: this.order_status == 'enviada' ? '#3b82f6' : 'rgba(255, 99, 132, 1)', // Color del borde
+                        borderWidth: 1.8,
+                    },
+                    {
+                        label: 'Periodo anterior',
+                        data: values2,
+                        fill: this.order_status == 'enviada',
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        backgroundColor: this.order_status == 'enviada' ? 'rgba(255, 99, 132, 0.2)' : 'rgba(0, 99, 132,0.5)', // Color de fondo
+                        borderColor: this.order_status == 'enviada' ? 'rgba(255, 99, 132, 1)' : 'rgba(0, 99, 132, 1)', // Color del borde
+                        borderWidth: 1.8,
+                    },
+
+                ]
             }
-    
-    
 
 
-    const documentStyle = getComputedStyle(document.documentElement);
 
-   
-},
-        setSelectedSites(sites) {
-            this.selectedSites = sites;
-            localStorage.setItem('selectedSites', JSON.stringify(sites));
-          },
+
+            const documentStyle = getComputedStyle(document.documentElement);
+
+
+        },
 
         setOrderStatus(status) {
             this.order_status = status;
             localStorage.setItem('orderStatus', status);
-          },
-          toogleVisibleNotifications(status) {
+        },
+        toogleVisibleNotifications(status) {
             this.visibleNotifications = !this.visibleNotifications
-          },
-          
-          setLoading(visibleValue,tittleValue='cargando') {
+        },
+
+        setLoading(visibleValue, tittleValue = 'cargando') {
             // if(this.loading.visible  && visibleValue ){
             //     return
             // }
 
-            if(this.loading?.visible == true && visibleValue == true) {
+            if (this.loading?.visible == true && visibleValue == true) {
                 return
             }
 
-            if(!visibleValue){
+            if (!visibleValue) {
                 setTimeout(() => {
                     this.loading = {
-                        visible:visibleValue,
-                        tittle: visibleValue == false? 'cargando' : tittleValue,
+                        visible: visibleValue,
+                        tittle: visibleValue == false ? 'cargando' : tittleValue,
                         progress: this.loading.progress
-                        }
+                    }
                 }, 0);
-            }else
-            this.loading = {
-            visible:visibleValue,
-            tittle: visibleValue == false? 'cargando' : tittleValue,
-            progress:  this.loading.progress
-            }
-          },
+            } else
+                this.loading = {
+                    visible: visibleValue,
+                    tittle: visibleValue == false ? 'cargando' : tittleValue,
+                    progress: this.loading.progress
+                }
+        },
 
-          setVisibleOrder(visible, order={}){
-            if(!visible){
+        setVisibleOrder(visible, order = {}) {
+            if (!visible) {
                 this.visibleOrder.order = {}
             }
 
             this.visibleOrder = {
-                visible:visible,
-                order:order
+                visible: visible,
+                order: order
             }
 
-          },
-        
-        
-          async setSitesStatus() {
-            
+        },
+
+
+        async setSitesStatus() {
+
             try {
                 const response = await fetch(`${URI}/sites/online-status`)
 
-                if(!response.ok){
+                if (!response.ok) {
                     throw 'paila'
                 }
 
                 this.sitesStatus = await response.json()
             } catch (error) {
-                
-            }
-          },
 
-          startSitesStatusUpdate() {
+            }
+        },
+
+        startSitesStatusUpdate() {
             this.setSitesStatus(); // Llama inmediatamente al inicio para obtener el estado actual
             setInterval(async () => {
                 await this.setSitesStatus(); // Llama a la acción cada 30 segundos

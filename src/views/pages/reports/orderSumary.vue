@@ -316,6 +316,12 @@ watch(() => store.dateRange, async() => {
 },{deep:true})
 
 
+watch(() => store.reportar, async() => {
+    // alert('hola')
+   await  fetchSumaryReport()
+},{deep:true})
+
+
 const getSeverity = (state) => {
     switch (state) {
         case 'enviada':
