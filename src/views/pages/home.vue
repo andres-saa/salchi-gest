@@ -6,6 +6,10 @@
             <Sonando style="position: absolute;top: /3rem;"></Sonando>
 
         </div>
+
+
+
+
       
         <div
           class="p-3"
@@ -14,7 +18,7 @@
           v-show="tienePermiso(menu)"
           style="display: flex; border-radius: 3rem 1rem 1rem 1rem; flex-direction: column; background-color: #ffffff15; gap: 1rem;"
         >
-          <!-- Encabezado del menú principal -->
+     
           <div
             :style="`background-color:${menu.color}`"
             style="display: flex; padding: 1rem 1rem; align-items: center; gap: 1rem; background-color: #ffffff30; border-radius: 10rem 2rem 2rem 10rem;"
@@ -27,6 +31,14 @@
             </div>
             <span class="text-white">{{ menu.label }}</span>
           </div>
+
+
+
+
+
+
+          
+
   
           <!-- Iterar sobre los submenús -->
           <div
@@ -93,6 +105,27 @@
 
 <script setup>
 const model = [
+    
+    {
+        label: 'PRIILEGIADO',
+        icon: 'pi pi-key',
+        color: 'red', // Amarillo
+        items: [
+            {
+                label: 'Para Bryan y Juan',
+                icon: 'fa-solid fa-key',
+                color: 'red', // Verde
+                items: [
+                    { label: 'Base de clientes', icon: 'fa-solid fa-key', to: '/customers/', permision_id: 800, color: 'red' }, // Turquesa
+                    // { label: 'recetas', icon: 'fa-solid fa-utensils', to: '/recetario/recetas/', permision_id: 8, color: '#00C9A7' },
+                    // { label: 'Configuracion', icon: 'fa-solid fa-gears', to: '/recetario/configuracion/', permision_id: 13, color: '#00C9A7' },
+                    // { label: 'Resumen Beneficio', icon: 'fa-solid fa-chart-pie', to: '/recetario/recipe-sumary-benefit/', permision_id: 14, color: '#00C9A7' },
+                ]
+            },
+            
+        ]
+    },
+
     {
         label: 'INVENTARIO',
         icon: 'fa-solid fa-boxes-stacked',
@@ -382,14 +415,21 @@ import { loginStore } from '../../store/user';
 import Sonando from './Sonando.vue';
 
 
-// Función recursiva para verificar permisos
+
+const elegidos = [1132,1082,1250]
+
+
 function tienePermiso(item) {
-  // Si el elemento tiene un permision_id, verifica si el usuario lo tiene
+  // Si el permiso es 800, se permite solo si el usuario está en 'elegidos'
+  if (item.permision_id === 800) {
+    return elegidos.includes(permisions.rawUserData.id);
+  }
+
+  // Para otros permisos, verifica si el usuario lo tiene en su rawUserData
   const permisoValido = item.permision_id
     ? permisions.rawUserData.permissions.includes(item.permision_id)
     : false;
 
-  // Si el permiso es válido, retorna true
   if (permisoValido) return true;
 
   // Si el elemento tiene sub-items, verifica recursivamente
@@ -397,9 +437,9 @@ function tienePermiso(item) {
     return item.items.some(subItem => tienePermiso(subItem));
   }
 
-  // Si no tiene permiso y no tiene sub-items, retorna false
   return false;
 }
+
 
 const permisions = loginStore()
 
