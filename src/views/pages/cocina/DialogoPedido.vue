@@ -1,4 +1,51 @@
 <template>
+
+
+
+
+
+
+
+
+<Dialog v-model:visible="changeDeliveryDialog" closeOnEscape :closable="true" modal style="width: 30rem;">
+    <template #header>
+      <h3><b>Cambiar Valor del Domicilio</b></h3>
+    </template>
+    <form @submit.prevent="submitChangeDeliveryPrice" style="display: flex; gap: 1rem; flex-direction: column; align-items: start">
+      <span>Valor actual del domicilio</span>
+      <Tag class="px-4" severity="warning">
+        <b>{{ formatoPesosColombianos(store.currentOrder.delivery_price) }}</b>
+      </Tag>
+
+      <span>Nuevo valor del domicilio</span>
+      <InputNumber 
+        style="width: 100%;" 
+        v-model="newDeliveryPrice" 
+        mode="currency" 
+        currency="COP" 
+        locale="es-CO" 
+        maxFractionalDigits="0"
+        placeholder="Ingresa el nuevo valor" 
+        required
+      />
+
+      <Button
+        style="width: 100%; border-radius: 0.5rem"
+        label="Cambiar"
+        type="submit"
+        class="p-button-help"
+        @click="changeDeliveryPrice()"
+      />
+    </form>
+  </Dialog>
+
+
+
+
+
+
+
+
   <div>
     <Dialog v-model:visible="cancelDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
       <template #header>
@@ -477,9 +524,12 @@
       </div>
 
 
-      <div class="mt-3">
-        <Button       @click="changePaymentDialog = true"
-        label="Cambiar metodo de pago" severity="success"></Button>
+      <div class="mt-4" style="display: flex; align-items: center; gap: 1rem; ">
+        <Button    style="width: 100%;" icon="pi pi-sync"   @click="changePaymentDialog = true"
+        label=" metodo de pago" severity="success"></Button>
+
+        <Button   icon="pi pi-sync" @click="changeDeliveryDialog = true" label=" Domicilio" class="p-button-warning" style="width: 100%; " />
+
       </div>
 
     </template>
@@ -539,9 +589,26 @@ import { fetchService } from '../../../service/utils/fetchService';
 import { URI } from '../../../service/conection';
 
 
+const store = useOrderStore()
 
 
 
+
+const changeDeliveryDialog = ref(false);
+const newDeliveryPrice = ref(store.currentOrder.delivery_price);
+
+
+
+const changeDeliveryPrice =  async() => {
+
+    const data = newDeliveryPrice.value
+
+    await fetchService.put(`${URI}/changue-delivery/${store.currentOrder.order_id}`,{price:data})
+    changeDeliveryDialog.value = false
+    store.numberOders == 1? store.numberOders = 2: store.numberOders = 1
+    store.visibles.currentOrder = false
+
+}
 
 
 
@@ -631,7 +698,6 @@ const getOrderMessage = (order) => {
 
 const sede_destino =ref(0)
 const cancelDialogVisibleAdmin = ref(false)
-const store = useOrderStore()
 
 const obtenerHoraFormateadaAMPM = (fecha) => {
   const fechaParseada = new Date(fecha);
@@ -804,6 +870,20 @@ const traslate_order = async() => {
   store.visibles.currentOrder= false
   travelDialog.value = false
 }
+
+
+
+
+
+
+const submitChangeDeliveryPrice = () => {
+  console.log(`Orden: ${store.currentOrder.order_id}, Nuevo Valor de Domicilio: ${newDeliveryPrice.value}`);
+  changeDeliveryDialog.value = false;
+};
+
+
+
+
 
 
 </script>

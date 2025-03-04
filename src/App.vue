@@ -18,7 +18,7 @@ const sonido2 = new Audio('/sound/pip2.wav')
 const sonido3 = new Audio('/sound/pip3.wav')
 const sonido_pqr = new Audio('/sound/pqr_audio.mp3')
 const appStore = useAppStore()
-
+const sonido_order = new Audio('/sound/order.wav')
 
 
 const newVersion = ref(false)
@@ -34,6 +34,7 @@ const toast = useToast()
 const intervalId = ref()
 const intervalId2 = ref()
 const intervalId3 = ref()
+const intervalId4 = ref()
 const sounds = [sonido1, sonido2, sonido3]; // Array de sonidos
 
 
@@ -110,6 +111,18 @@ onMounted( async() => {
     }, 10000);
 
 
+    intervalId4.value = setInterval(async() => {
+
+    const recent_pqr = await orderService.recent_order()
+    if (recent_pqr && orderStore.numberOders != recent_pqr) {
+        // const randomSoundIndex = Math.floor(Math.random() * sounds.length); // Genera un índice aleatorio
+        sonido_order.play(); // Reproduce el sonido seleccionado al azar
+        orderStore.numberOders = recent_pqr; // Actualiza el store
+        toast.add({ severity: 'success', summary: 'Nuevo pedido recibido', detail: 'Un pedido por atender', life: 3000 });
+        
+    fetchTransferRequestsNoLoading();
+    }
+    }, 10000);
 
 } )
 </script>

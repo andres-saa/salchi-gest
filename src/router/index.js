@@ -772,6 +772,14 @@ const router = createRouter({
         },
 
         {
+          path: '/validate',
+          name: 'validate',
+          component: () => import('@/views/pages/tienda/ValidateSection.vue'),
+          
+          
+        },
+
+        {
           path: '/cumples',
           name: 'cumples',
           component: () => import('@/views/pages/cumples.vue')

@@ -1,0 +1,1 @@
+h6:first-letter{text-transform:uppercase}@keyframes parpadeo_color{40%{background-color:#ef0;color:#000}60%{background-color:#00ff84;color:#000}80%{background-color:#ef0;color:#000}}.tag{animation:parpadeo_color 1s infinite ease}
