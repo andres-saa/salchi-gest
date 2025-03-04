@@ -79,7 +79,9 @@ async function fetchAndUpdateRoles() {
                     { label: 'Menu', icon: 'fa-solid fa-book-open', to: '/tienda-menu/productos/SALCHIPAPAS/3', permision_id: 2, 'icon-color': '#DAF7A6' }, // Verde claro
                     { label: 'Reportes de ventas', icon: 'fa-solid fa-chart-line', to: '/reporte-ventas/order-sumary', permision_id: 3, 'icon-color': '#C70039' }, // Rojo intenso
                     { label: 'Domicilios', icon: 'fa-solid fa-truck-fast', to: '/domicilios/1', permision_id: 4, 'icon-color': '#900C3F' }, // Burdeos
+                    
                     { label: 'Transferencias', icon: 'fa-solid fa-right-left', to: '/transfer/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
+                    { label: 'Validar pedidos', icon: 'fa-solid fa-right-left', to: '/validate/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
                     { label: 'Ingresar pedido', icon: 'fa-solid fa-cart-plus', to: '/call-center-vender', permision_id: 6, 'icon-color': '#FFC0CB' }, // Rosa
                     { label: 'Solicitudes de cancelacion', icon: 'fa-solid fa-ban', to: '/cancellation-requests/revisar/', permision_id: 7, 'icon-color': '#FF4500' }, // Naranja rojizo
                     { label: 'Control', icon: 'fa-solid fa-sliders', to: '/cancellation-requests/revisar/', 'icon-color': '#1E90FF' }, // Azul
