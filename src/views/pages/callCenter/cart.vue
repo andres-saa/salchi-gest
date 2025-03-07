@@ -196,27 +196,6 @@ watch(
     { deep: true }
 );
 
-onMounted(async () => {
-    if (user.user.payment_method_option?.productogeneral_id != 7)
-        siteStore.setNeighborhoodPrice();
-    else {
-        siteStore.setNeighborhoodPriceCero();
-    }
-
-    const product_id = 53;
-    // if (product_id) {
-    //   adicionales.value = await adicionalesService.getAditional(product_id)
-    // }
-
-    // agrupados.value = store.cart.additions.reduce((acumulador, elemento) => {
-    //     let grupo = elemento.group;
-    //     if (!acumulador[grupo]) {
-    //         acumulador[grupo] = [];
-    //     }
-    //     acumulador[grupo].push(elemento);
-    //     return acumulador;
-    // }, {});
-});
 
 // const getAditional = () => {
 //     const ids = store.cart.map((p) => p.product.producto_id);
@@ -234,7 +213,7 @@ onMounted(async () => {
 
 /* Sección principal cuando hay productos en el carrito */
 .cart-has-products {
-    margin-bottom: 5rem;
+    margin-bottom: 20rem;
     /* Puedes agregar estilos generales si deseas */
 }
 

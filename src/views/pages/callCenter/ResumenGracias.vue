@@ -60,42 +60,45 @@
 
             <hr class="43f0 43f2" />
 
-            <!-- Subtotales y totales -->
-            <div class=" summary-grid">
-                <div class="43f6 43f0 43f0">
+          
+
+
+            <div class="grid summary-grid">
+                <div class="col-6 my-0 py-0">
                     <span><b>Subtotal</b></span>
                 </div>
-                <div class="43f6 43f0 text-right 43f0 text-end">
+                <div class="col-6 my-0 text-right py-0 text-right text-end" style="">
                     <span>
                         <b>{{ formatoPesosColombianos(store.cartTotal) }}</b>
                     </span>
                 </div>
 
-                <div class="43f6 43f0 43f0">
+                <div class="col-6 my-0 py-0" >
                     <span :style="siteStore.location.neigborhood.delivery_price == 0
                         ? 'text-decoration: line-through;'
                         : ''
                         "><b>Domicilio</b></span>
                 </div>
-                <div class="43f6 43f0 text-right 43f0 text-end">
+                <div  class="col-6 my-0 text-right py-0 text-end">
                     <!-- {{ siteStore.location }} -->
-                    <span v-if="siteStore.location.neigborhood.delivery_price == 0" class="primary-color">
+                    <span v-if="siteStore.location.neigborhood.delivery_price === 0 && siteStore.location.site.site_id  != 33" class="primary-color">
                         <b>
                             {{
                                 route.path.includes('reservas')
                                     ? 'Ir a la sede'
-                                    : 'Recoger en local'
+                                    : '$0'
                             }}
                         </b>
                     </span>
-                    <span v-else-if="siteStore.location.neigborhood.delivery_price">
+                    <span >
                         <b>{{ formatoPesosColombianos(siteStore.location.neigborhood.delivery_price) }}</b>
                     </span>
+                    
                 </div>
-                <div class="43f6 43f0 43f0">
+                <div class="col-6 my-0 py-0">
                     <span><b>Total</b></span>
                 </div>
-                <div class="43f6 43f0 text-right 43f0 text-end" v-if="siteStore.location.neigborhood.delivery_price">
+                <div class="col-6 my-0 text-right py-0 text-end" v-if="siteStore.location.neigborhood.delivery_price || siteStore.location.neigborhood.delivery_price === 0">
                     <!-- {{ siteStore.location }} -->
                     <span><b>{{ formatoPesosColombianos(
                         store.cartTotal +
@@ -103,10 +106,11 @@
                             ) }}</b></span>
                 </div>
 
-                <Button @click="siteStore.visibles.currentSite = true" v-else label="Calcular mi domicilio"
-                    style="min-width: max-content;"></Button>
+                <!-- <Button @click="siteStore.visibles.currentSite = true" v-else label="Calcular mi domicilio"
+                    style="min-width: max-content;"></Button> -->
             </div>
-
+            <!-- Botones de navegación y acciones -->
+           
         </div>
     </div>
 </template>
@@ -193,6 +197,7 @@ watch(
 /* Forzar texto a “end” */
 .text-end {
     text-align: end;
+    width: 100%;
 }
 
 /* Contenedor de adiciones agrupadas */

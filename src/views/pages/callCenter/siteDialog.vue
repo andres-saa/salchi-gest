@@ -76,16 +76,16 @@ import {sitesService } from './service/site/sitesService'
 import {useSitesStore} from './store/site'
 import { usecartStore } from './store/shoping_cart';
 import { fetchService } from '../../../service/utils/fetchService';
-
+import router from '../../../router';
 const store = useSitesStore();
 const cart = usecartStore();
 
-watch(
-    () => store.location.site.site_id,
-    () => {
-        location.reload();
-    }
-);
+// watch(
+//     () => store.location.site.site_id,
+//     () => {
+//         location.reload();
+//     }
+// );
 
 const spinnersView = ref({ ciudad: false, barrio: false });
 const cities = ref([]);
@@ -159,7 +159,7 @@ const setNeigborhood = async () => {
 
     store.setLocation(newLocation);
     store.setVisible('currentSite', false);
-    router.push('/');
+    // router.push('/');
 };
 
 const getCities = async () => {

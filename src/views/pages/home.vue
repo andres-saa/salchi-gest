@@ -2,10 +2,10 @@
     <div class="container p-3">
       <div class="buttons">
 
-        <div style="border: 2px solid red;border-radius: 1rem;position: relative; overflow: hidden;"> 
+        <!-- <div style="border: 2px solid red;border-radius: 1rem;position: relative; overflow: hidden;"> 
             <Sonando style="position: absolute;top: /3rem;"></Sonando>
 
-        </div>
+        </div> -->
 
 
 

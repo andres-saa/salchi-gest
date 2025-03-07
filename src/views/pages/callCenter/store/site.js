@@ -76,7 +76,7 @@ export const useSitesStore = defineStore('call-center-site', {
         async setNeighborhoodPrice(){
        
                 try {
-                    const response = await axios.get(`${URI}/neighborhood/${this.location.neigborhood.neighborhood_id}/`);
+                    const response = await axios.get(`${URI}/neighborhood/${this.location?.neigborhood?.neighborhood_id}/`);
                     if (response.status === 200) {
                         this.location.neigborhood = response.data
                         return response.data;

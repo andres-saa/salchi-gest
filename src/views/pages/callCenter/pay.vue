@@ -40,7 +40,7 @@
           </div>
   
           <!-- Mostrar dirección solo si el método no es "Pasar a recoger" (id 2) -->
-          <template v-if="!user.user.order_type || user.user.order_type.id !== 2">
+          <template v-if="!user.user.order_type || user.user.order_type?.id !== 2">
             <span>Direccio'n</span>
             <div class="form-group">
               <InputText v-model="user.user.address" id="address" placeholder="DIRECCION" />
@@ -58,7 +58,7 @@
           </div>
   
           <!-- Mostrar campo de placa solo si el método es "Pasar a recoger" (id 2) y la sede es 33 -->
-          <template v-if="user.user.order_type && user.user.order_type.id === 2 && siteStore.location?.site?.site_id === 33">
+          <template v-if="user.user.order_type && user.user.order_type?.id === 2 && siteStore.location?.site?.site_id === 33">
             <span>Placa de tu vehiculo</span>
             <div class="form-group">
               <InputText v-model="user.user.placa" id="placa" placeholder="Placa de tu vehiculo" />
@@ -112,15 +112,38 @@
               placeholder="METODO DE PAGO"
               :options="
                 siteStore.location?.site?.site_id === 33
-                  ? payment_method_options.filter(option => [6, 8].includes(option.id))
+                  ? payment_method_options.filter(option => [6, 8].includes(option?.id))
                   : siteStore.location?.site?.site_id !== 33
-                  ? payment_method_options.filter(option => ![7].includes(option.id))
+                  ? payment_method_options.filter(option => ![7].includes(option?.id))
                   : payment_method_options  
               "
               optionLabel="name"
             />
           </div>
 
+
+
+
+          <span v-if="user.user?.order_type?.id != 2">Domicilio</span>
+          <div class="form-group">
+            <InputNumber
+            v-if="user.user?.order_type?.id != 2"
+              style="width: 100%;"
+              prefix="$"
+              min="0"
+              v-model="siteStore.location.neigborhood.delivery_price"
+              id="payment_method"
+              placeholder="Domicilio"
+              :options="
+                siteStore.location?.site?.site_id === 33
+                  ? payment_method_options.filter(option => [6, 8].includes(option?.id))
+                  : siteStore.location?.site?.site_id !== 33
+                  ? payment_method_options.filter(option => ![7].includes(option?.id))
+                  : payment_method_options  
+              "
+              optionLabel="name"
+            />
+          </div>
 
 
 
@@ -241,20 +264,15 @@ const isCortesia = ref(false)
 
     payment_method_options.value = await fetchService.get(`${URI}/payment_methods`);
     order_types.value = await fetchService.get(`${URI}/get_all_order_types`);
-  
-    if (user.user.payment_method_option?.id != 7) {
-      siteStore.setNeighborhoodPrice();
-    } else {
-      siteStore.setNeighborhoodPriceCero();
-    }
+
   });
   
   watch(() => user.user.order_type, (new_val) => {
-    if (new_val.id == 2) {
+    if (new_val?.id == 2) {
       siteStore.current_delivery = siteStore.location.neigborhood.delivery_price;
       siteStore.location.neigborhood.delivery_price = 0;
     } else {
-      siteStore.setNeighborhoodPrice();
+      // siteStore.setNeighborhoodPrice();
     }
   });
 
@@ -277,10 +295,10 @@ const isCortesia = ref(false)
     const currentSiteId = siteStore.location?.site?.site_id;
     if (currentSiteId === 33) {
       // Para la sede 33: permitir "Enviar por uber" (id: 1) y "Pasar a recoger" (id: 2)
-      return order_types.value.filter(option => option.id !== 3);
+      return order_types.value.filter(option => option?.id !== 3);
     } else {
       // Para las demás sedes: permitir "Pasar a recoger" (id: 2) y "Enviar a domicilio" (id: 3)
-      return order_types.value.filter(option => option.id !== 1);
+      return order_types.value.filter(option => option?.id !== 1);
     }
   });
   </script>

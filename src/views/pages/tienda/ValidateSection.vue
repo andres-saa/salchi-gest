@@ -70,22 +70,22 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 </template>
 
 
-<Column style="" class="py-1 pl-0" field="order_id" header="ID orden" frozen />
-<!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
-<Column style="" class="py-1 pl-0" field="total_order_price" header="Monto de la orden"  >
+<Column style="" class="py-1 " field="order_id" header="ID orden" frozen />
+<!-- <Column style="" class="py-1 " field="Metodo de pago" header="ID orden" frozen /> -->
+<Column style="" class="py-1 " field="total_order_price" header="Monto de la orden"  >
 <template #body="data">
     {{formatToColombianPeso(data.data.total_order_price)   }}
 </template>
 </Column>
 
 
-<Column style="" class="py-1 pl-0" field="total_order_price" header="Hora"  >
+<Column style="" class="py-1 " field="total_order_price" header="Hora"  >
 <template #body="data">
     {{ extraerHora(data.data.latest_status_timestamp ) }}
 </template>
 </Column>
 
-<Column style="" class="py-1 pl-0" field="delivery_price" header="Domicilio"  >
+<Column style="" class="py-1 " field="delivery_price" header="Domicilio"  >
 <template #body="data">
     {{formatToColombianPeso(data.data.delivery_price)   }}
 </template>
@@ -93,21 +93,22 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 
 
 
-<Column style="" class="py-1 pl-0" field="Total" header="Total"  >
+<Column style="" class="py-1 " field="Total" header="Total"  >
 <template #body="data">
     {{formatToColombianPeso(data.data.delivery_price + data.data.total_order_price)   }}
 </template>
 </Column>
-<!-- <Column style="" class="py-1 pl-0" field="Metodo de pago" header="ID orden" frozen /> -->
+<!-- <Column style="" class="py-1 " field="Metodo de pago" header="ID orden" frozen /> -->
 
 
 
 
-<Column style="" class="py-1 pl-0" field="user_name" header="Cliente"  />
+<Column style="" class="py-1" field="user_name" header="Cliente"  />
 
-<Column style="" class="py-1 pl-0" field="user_phone" header="Telefono cliente"  />
-<!-- <Column style="" class="py-1 pl-0" field="user_phone" header="ID orden" frozen /> -->
+<Column style="" class="py-1" field="user_phone" header="Telefono cliente"  />
+<!-- <Column style="" class="py-1 " field="user_phone" header="ID orden" frozen /> -->
 
+<Column style="max-width: 10rem;" class="py-1 " field="order_notes" header="Notas"  />
 
 
 
@@ -127,6 +128,8 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
     
 </template>
 </Column>
+
+
 
 
 </DataTable>

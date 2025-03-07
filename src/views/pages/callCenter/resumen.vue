@@ -73,24 +73,24 @@
                     </span>
                 </div>
 
-                <div class="col-6 my-0 py-0" v-if=" siteStore.location.site.site_id  != 33">
+                <div class="col-6 my-0 py-0" >
                     <span :style="siteStore.location.neigborhood.delivery_price == 0
                         ? 'text-decoration: line-through;'
                         : ''
                         "><b>Domicilio</b></span>
                 </div>
-                <div v-if=" siteStore.location.site.site_id  != 33" class="col-6 my-0 text-right py-0 text-end">
+                <div  class="col-6 my-0 text-right py-0 text-end">
                     <!-- {{ siteStore.location }} -->
                     <span v-if="siteStore.location.neigborhood.delivery_price === 0 && siteStore.location.site.site_id  != 33" class="primary-color">
                         <b>
                             {{
                                 route.path.includes('reservas')
                                     ? 'Ir a la sede'
-                                    : 'Recoger en local'
+                                    : '$0'
                             }}
                         </b>
                     </span>
-                    <span v-else-if="siteStore.location.neigborhood.delivery_price > 0">
+                    <span >
                         <b>{{ formatoPesosColombianos(siteStore.location.neigborhood.delivery_price) }}</b>
                     </span>
                     
@@ -207,11 +207,7 @@ const agrupados = ref({});
 onMounted(() => {
     // update();
 
-    if (user.user.payment_method_option?.id != 7 && !route.path.includes('reservas'))
-        siteStore.setNeighborhoodPrice();
-    else {
-        siteStore.setNeighborhoodPriceCero();
-    }
+
 });
 
 watch(
