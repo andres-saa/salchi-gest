@@ -170,7 +170,8 @@ const categories = ref([
   112, // SALCHIPAPAS PERSONALES NJ
   113,  // PARA COMPARTIR
   111, // BURGERMONSTER
-  109, // BEBIDAS 
+  109,
+  115 // BEBIDAS 
             ]
 
   },
