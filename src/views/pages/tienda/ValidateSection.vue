@@ -87,7 +87,7 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 
 <Column style="" class="py-1 " field="delivery_price" header="Domicilio"  >
 <template #body="data">
-    {{formatToColombianPeso(data.data.delivery_price)   }}
+    {{formatToColombianPeso(data.data.pe_json?.delivery?.delivery_costoenvio)   }}
 </template>
 </Column>
 
@@ -95,7 +95,7 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 
 <Column style="" class="py-1 " field="Total" header="Total"  >
 <template #body="data">
-    {{formatToColombianPeso(data.data.delivery_price + data.data.total_order_price)   }}
+    {{formatToColombianPeso(data.data.pe_json?.delivery?.delivery_costoenvio + data.data.total_order_price)   }}
 </template>
 </Column>
 <!-- <Column style="" class="py-1 " field="Metodo de pago" header="ID orden" frozen /> -->
