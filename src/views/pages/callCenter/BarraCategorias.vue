@@ -39,22 +39,27 @@
   const cart = usecartStore();
   
   // Orden personalizado de las categorías (IDs)
-  const codigos = [                10, //COMBOS 2 PERSONAS
-                26, //COMBOS PERSONALES
-                // 25, //COMBOS 2X1 BURGER + PAPAS
-                8, //SALCHIPAPAS 2 PERSONAS
-                9, //SALCHIPAPAS PERSONALES
-                13, //PRODUCTO NUEVO
-                27, //POLLO
-               11,   //SHOWW
-                4, //BEBIDAS
-                5, //CERVEZAS
-                // 14,//ADICIONES SALCHIPAPAS  110, // SALCHIPAPA PARA 2 PERSONAS NJ
-  112, // SALCHIPAPAS PERSONALES NJ
-  113,  // PARA COMPARTIR
-  111, // BURGERMONSTER
-  109, // BEBIDAS 
-  ];
+  const codigos = [
+    10,
+    26,
+    8,
+    9,
+    13,
+    27,
+    11,
+    4,
+    5,
+    110, // SALCHIPAPA PARA 2 PERSONAS NJ
+    112, // SALCHIPAPAS PERSONALES NJ
+    113, // PARA COMPARTIR
+    111, // BURGERMONSTER
+    109, // BEBIDAS
+    115,
+    118, 
+    119, 
+    116,
+    117
+ ]
   
   // Filtra y ordena las categorías con base en 'codigos'
   const filteredAndSortedCategories = computed(() => {
