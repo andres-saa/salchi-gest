@@ -303,7 +303,7 @@
 
 
 
-          <div class="" style="display: grid ;color: ;margin-top: 0.5rem; grid-template-columns: auto auto">
+          <div class="" style="display: grid ;margin-top: 1rem; grid-template-columns: auto auto">
             <div class="">
               <span style="font-weight: bold;"><b>Subtotal</b></span>
             </div>
@@ -316,11 +316,11 @@
 
 
             <div class="">
-              <span style="font-weight: bold;"><b>Domicilio</b></span>
+              <span class="m-0 " style="font-weight: bold;"><b>Domicilio</b></span>
             </div>
 
             <div class="">
-              <p style="text-align: end;font-weight: bold;color: black;"> <b>
+              <p class="m-0 p-0" style="text-align: end;font-weight: bold;color: black;"> <b>
                
                   {{ formatoPesosColombianos(store.currentOrder.pe_json?.delivery?.delivery_costoenvio) }}
                 </b>
@@ -346,7 +346,7 @@
             </div>
             <div class="">
 
-              <p style="text-align: end;color: black;font-weight: bold;"><b>{{ formatoPesosColombianos(store.currentOrder.pe_json.delivery.delivery_pagocon)
+              <p class="m-0 p-0" style="text-align: end;color: black;font-weight: bold;"><b>{{ formatoPesosColombianos(store.currentOrder.pe_json.delivery.delivery_pagocon)
               }}</b></p>
 
             </div>
@@ -357,10 +357,10 @@
           </div>
           <p  style="font-weight: bold;background-color: black;color: white;padding: 0; margin: 0; margin-top: 0.5rem;"><b>Notas</b></p>
           <p
-              class="notas"
+              class="notas p-2 m-0"
               style="border: 1px solid; margin: 0; color: black; padding: 0.5rem;"
              
-            >  {{ store.currentOrder.order_notes }}</p>
+            >  {{ store.currentOrder.order_notes?.toLowerCase() }}</p>
 
            
 
@@ -370,19 +370,19 @@
               <b>cliente</b>
               </p>
 
-              <div style="display: grid; grid-template-columns: auto auto;">
+              <div style="display: grid;gap: .5rem; grid-template-columns: auto auto; align-items: start;">
 
 
 
 
                 <div class="" style="">
-              <span><b>NOMBRE</b></span>
+              <span><b>Nombre</b></span>
             </div>
             <div class="">
-              <p style="text-align: end;color: black;">
+              <span style="text-align: start;color: black; padding-left: 2rem;">
 
                 {{ store.currentOrder.user_name }}
-              </p>
+              </span>
 
             </div>
 
@@ -394,9 +394,20 @@
               <span><b>Metodo de entrega</b></span>
             </div>
             <div class="">
-              <p style="text-align: end;color: black;">
+              <span style="text-align: start;color: black;padding-left: 2rem;">
 
                 {{ store.currentOrder.order_type }}
+              </span>
+
+            </div>
+
+            
+            <div class="" style="">
+              <span><b>Fecha de entrega</b></span>
+            </div>
+            <div class="">
+              <p style="text-align: start;color: black; padding-left: 2rem;">
+                {{ new Date(store.currentOrder.pe_json.delivery.delivery_horaentrega).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}
               </p>
 
             </div>
@@ -408,7 +419,7 @@
               <span><b>Placa del vehiculo</b></span>
             </div>
             <div class=""  v-if="store.currentOrder.placa">
-              <p style="text-align: end;color: black;">
+              <p style="text-align: start;color: black; padding-left: 2rem;">
 
                 {{ store.currentOrder.placa }}
               </p>
@@ -423,23 +434,23 @@
               <span><b>telefono</b></span>
             </div>
             <div>
-              <p style="text-align: end;color: black;">
+              <span style="text-align: start;color: black; padding-left: 2rem;">
 
                 {{ store.currentOrder.user_phone }}
 
-
-              </p>
+                
+              </span>
             </div>
             <div style="" v-if="store.currentOrder.order_type != 'Pasar a recoger'">
               <span><b>direccion </b></span>
             </div>
-            <div v-if="store.currentOrder.order_type != 'Pasar a recoger'" >
-              <p style="text-align: end;color: black;">
+            <div style="margin-left: 2rem;" v-if="store.currentOrder.order_type != 'Pasar a recoger'" >
+              <span style="text-align: start;color: black;">
 
-                {{ store.currentOrder.user_address }}
+                {{ store.currentOrder.user_address?.toLowerCase() }}
 
 
-              </p>
+              </span>
             </div>
 
 
@@ -449,10 +460,10 @@
               <span><b>metodo de pago</b></span>
             </div>
             <div >
-              <p style="text-align: end;color: black;">
+              <span style="text-align: start;color: black;padding-left: 2rem;">
 
-                {{ store.currentOrder.payment_method }}
-              </p>
+                {{ store.currentOrder.payment_method?.toLowerCase() }}
+              </span>
             </div>
 
               </div>
@@ -964,7 +975,7 @@ span {
 }
 
 *{
-  text-transform: uppercase;
+  text-transform: capitalize;
   /* color: black; */
 }
 
@@ -977,6 +988,8 @@ span {
     font-size: 40pt;
   }
 }
+
+
 
 </style>
 

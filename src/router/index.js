@@ -772,9 +772,24 @@ const router = createRouter({
         },
 
         {
+          path: '/transfer-distri',
+          name: 'transfer-distri',
+          component: () => import('@/views/pages/tienda/TransferSessionDistri.vue'),
+          
+          
+        },
+
+        {
           path: '/validate',
           name: 'validate',
           component: () => import('@/views/pages/tienda/ValidateSection.vue'),
+          
+          
+        },
+        {
+          path: '/validate-distri',
+          name: 'validate-distri',
+          component: () => import('@/views/pages/tienda/ValidateSectionDistri.vue'),
           
           
         },

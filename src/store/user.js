@@ -13,7 +13,7 @@ export const loginStore = defineStore('user', {
                 paths:[
                     'userData',
                     'currentSection_pqr',
-                    'currentSection_users'
+                    'currentSection_users',
                     ]
 
         
@@ -32,6 +32,8 @@ export const loginStore = defineStore('user', {
                 name:'Basico',
                 x:0
             },
+            bar_color:'rgba(0, 1, 22, 1)',
+            colorized:true
             
             
             

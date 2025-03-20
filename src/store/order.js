@@ -20,6 +20,7 @@ export const useOrderStore = defineStore('cart', {
         currentOrder: {},
         visibles: {
             currentOrder: false,
+            currentOrderDistri:false
         },
         TodayOrders: [],
         Notification: new Audio('/sound/pip.mp3'),

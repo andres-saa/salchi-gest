@@ -13,15 +13,15 @@
       
         <div
           class="p-3"
-          v-for="menu in model"
+          v-for="menu in model.slice(0,1)"
           :key="menu.label"
           v-show="tienePermiso(menu)"
-          style="display: flex; border-radius: 3rem 1rem 1rem 1rem; flex-direction: column; background-color: #ffffff15; gap: 1rem;"
+          style="display: flex; border-radius: 1rem 1rem 1rem 1rem; flex-direction: column; background-color: #ffffff15; gap: 1rem;"
         >
      
           <div
             :style="`background-color:${menu.color}`"
-            style="display: flex; padding: 1rem 1rem; align-items: center; gap: 1rem; background-color: #ffffff30; border-radius: 10rem 2rem 2rem 10rem;"
+            style="display: flex; padding: 1rem 1rem; align-items: center; gap: 1rem; background-color: #ffffff30; border-radius: 1rem 1rem 1rem 1rem;"
           >
             <div
               :style="`background-color:${menu.color}`"
@@ -31,8 +31,6 @@
             </div>
             <span class="text-white">{{ menu.label }}</span>
           </div>
-
-
 
 
 
@@ -413,7 +411,7 @@ const model = [
 import { RouterLink } from 'vue-router';
 import { loginStore } from '../../store/user';
 import Sonando from './Sonando.vue';
-
+import sesion from './callCenter/sesion.vue';
 
 
 const elegidos = [1132,1082,1250]
@@ -461,11 +459,11 @@ const permisions = loginStore()
      padding-top: 3rem;
      margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(1,1fr);
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    max-width: 1920px;
+    max-width: 400px;
     align-items: stretch; /* Estirar elementos para llenar el espacio */
 
 }
@@ -473,7 +471,7 @@ const permisions = loginStore()
 
 @media (width<1400px) {
  .buttons{
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(1,1fr);
 
  }   
 }
@@ -481,7 +479,7 @@ const permisions = loginStore()
 
 @media (width<1200px) {
  .buttons{
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(1,1fr);
 
  }   
 }

@@ -45,19 +45,30 @@
 </template>
 
 <script setup>
-import { onMounted,ref,watch } from 'vue'
+import { onMounted,ref,watch,onUnmounted } from 'vue'
 import {productService} from '../../../service/ProductService'
 import TarjetaMenu from '@/components/TarjetaMenu.vue'
 import { useRoute } from 'vue-router'
 import { useSitesStore } from '../../../store/site'
 import { nextTick } from 'vue'
 import { siteService } from '../../../service/siteService'
+import { loginStore } from '../../../store/user'
 
+
+const userStore = loginStore()
 const siteStore = useSitesStore()
 const route = useRoute()
 const products = ref([])
 const noProducts = ref (false)
 
+
+onMounted(() => {
+    userStore.bar_color = 'var(--primary-color)'
+})
+
+onUnmounted(() => {
+    userStore.bar_color = 'rgba(0, 1, 22, 1)'
+})
 
 onMounted( async () => {
     getProducts()

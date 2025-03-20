@@ -52,9 +52,22 @@ import { useReportesStore } from './store/ventas';
 import { useSitesStore } from './store/site';
 import { URI } from './service/conection';
 const sitestore = useSitesStore()
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 const store = useReportesStore()
 const cart = usecartStore()
+import { loginStore } from '../../../store/user';
+
+const userStore = loginStore()
+
+onMounted(() => {
+    userStore.bar_color = 'var(--primary-color)',
+    userStore.colorized = false
+})
+
+onUnmounted(() => {
+    userStore.bar_color = 'rgba(0, 1, 22, 1)'
+    userStore.colorized = true
+})
 
 
 const codigos = [

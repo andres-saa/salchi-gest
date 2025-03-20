@@ -1,20 +1,20 @@
 <template>
     <div ref="categoryBar"
       style="position: sticky;  box-shadow: 0 1rem .5rem #00000020;
-   top: 3rem;padding: .2rem; z-index: 99    ;display: flex;align-items: center; background-color: var(--primary-color); overflow-x: auto;">
+   top: 3rem;padding: .2rem; z-index: 99    ;display: flex;align-items: center; background-color: white; overflow-x: auto;">
            
            <Button @click="siteStore.visibles.currentSite = true" severity="help"
                 
-                class="  mx-4 text-lg titulo"  style="font-weight: 400;min-height: 100%; border-radius: .3rem; text-transform: uppercase;min-width: max-content;">
+                class="  ml-4 text-lg titulo"  style="font-weight: 400;min-height: 100%;border-radius: 10rem;  text-transform: uppercase;min-width: max-content;">
                 <span class="text-lg" style="min-width: max-content;">Nuevo pedido</span>
         </Button>
       <div class="container" style="justify-content: start; align-items: center;">
         <div v-for="(section, index) in filteredAndSortedCategories" :key="section.categoria_id"
           :id="'categoryButton-' + section.categoria_id" class="container-button">
-          <a @click.prevent="smoothScrollTo(section.categoria_id)">
+          <a @click.prevent="smoothScrollTo(section.categoria_id)" >
             <Button class="bar-button" :class="{ selected: cart.currentSection === section.categoria_id }"
               :label="section.categoria_descripcion">
-              <img
+              <img class="mr-2"
                 :src="`${URI}/get-image?image_url=${cart?.menu?.data.find(p => p.categoria_id == section.categoria_id)?.productogeneral_urlimagen}`"
                 alt="" />
               <span><b>{{ section.categoria_descripcion }}</b></span>
@@ -189,8 +189,8 @@
   
   .bar-button:hover {
   
-    background-color: #000000;
-    color: #fff;
+    background-color: #00000023;
+    color: #000000;
   
     /* para evitar quiebres de línea */
   }
@@ -204,7 +204,7 @@
   }
   
   .selected {
-    background-color: #000;
+    background-color: var(--primary-color);
     color: #fff;
   }
   

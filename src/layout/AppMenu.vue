@@ -51,27 +51,35 @@ async function fetchAndUpdateRoles() {
     // },
 
 
-
     {
-        label: 'INTEGRACIONES',
-        icon: 'fa-solid fa-sync',
-        'icon-color': 'yellow', // Verde lima
-        permision_id: get_id([50]),
-        items: [
-            { label: 'Sonando', icon: 'fa-solid fa-music', to: '/sonando', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
-            { label: 'Distrimonster', icon: 'fa-solid fa-solid fa-distribute-spacing-vertical', to: '/distrimonster', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
-            { label: 'Tiendas', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
-
-        ]
-    },
-
+    label: 'INTEGRACIONES',
+    icon: 'fa-solid fa-plug', // Mejor para representar integraciones
+    'icon-color': 'yellow', // Verde lima
+    permision_id: get_id([50]),
+    items: [
+        { label: 'Sonando', icon: 'fa-solid fa-music', to: '/sonando', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
+        { 
+            label: 'Distrimonster', 
+            icon: 'fa-solid fa-truck', // Representa la distribución de alimentos
+            permision_id: 50, 
+            'icon-color': '#FF4500',
+            items: [
+                { label: 'Transferencias', icon: 'fa-solid fa-truck-moving', to: '/transfer-distri/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
+                { label: 'Validar pedidos', icon: 'fa-solid fa-check-circle', to: '/validate-distri/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
+                { label: 'Almacen', icon: 'fa-solid fa-warehouse', to: '/distrimonster', permision_id: 5, 'icon-color': '#581845' } // Púrpura oscuro
+            ]
+        },
+        { label: 'Tiendas', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 50, 'icon-color': '#FF4500' } // Naranja rojizo
+    ]
+}
+,
     {
         label: 'VENTAS',
         icon: 'fa-solid fa-cash-register',
         'icon-color': '#FF5733', // Rojo vivo
         items: [
             {
-                label: 'Tienda',
+                label: 'Tiendas',
                 icon: 'fa-solid fa-store',
                 'icon-color': '#FF8D1A', // Naranja vibrante
                 items: [
@@ -89,6 +97,28 @@ async function fetchAndUpdateRoles() {
                 ],
                 permision_id: get_id([1,2,3,4,5,6,7,31]),
             },
+
+            {
+                label: 'Distrimonster',
+                icon: 'fa-solid fa-store',
+                'icon-color': '#FF8D1A', // Naranja vibrante
+                items: [
+                    // { label: 'Cocina', icon: 'fa-solid fa-utensils', to: '/cocina/', permision_id: 1, 'icon-color': '#FFC300' }, // Amarillo
+                    // { label: 'Menu', icon: 'fa-solid fa-book-open', to: '/tienda-menu/productos/SALCHIPAPAS/3', permision_id: 2, 'icon-color': '#DAF7A6' }, // Verde claro
+                    // { label: 'Reportes de ventas', icon: 'fa-solid fa-chart-line', to: '/reporte-ventas/order-sumary', permision_id: 3, 'icon-color': '#C70039' }, // Rojo intenso
+                    // { label: 'Domicilios', icon: 'fa-solid fa-truck-fast', to: '/domicilios/1', permision_id: 4, 'icon-color': '#900C3F' }, // Burdeos
+                    
+                    { label: 'Transferencias', icon: 'fa-solid fa-right-left', to: '/transfer-distri/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
+                    { label: 'Validar pedidos', icon: 'fa-solid fa-right-left', to: '/validate-distri/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
+                    // { label: 'Ingresar pedido', icon: 'fa-solid fa-cart-plus', to: '/call-center-vender', permision_id: 6, 'icon-color': '#FFC0CB' }, // Rosa
+                    // { label: 'Solicitudes de cancelacion', icon: 'fa-solid fa-ban', to: '/cancellation-requests/revisar/', permision_id: 7, 'icon-color': '#FF4500' }, // Naranja rojizo
+                    // { label: 'Control', icon: 'fa-solid fa-sliders', to: '/cancellation-requests/revisar/', 'icon-color': '#1E90FF' }, // Azul
+                    // { label: 'Info sedes ', icon: 'fa-solid fa-building', to: '/directorio', permision_id: 31, 'icon-color': '#32CD32' }, // Verde lima
+                ],
+                permision_id: get_id([1,2,3,4,5,6,7,31]),
+            },
+
+            
             // {
             //     label: 'Cajeros',
             //     icon: 'fa-solid fa-cash-register',
@@ -102,6 +132,18 @@ async function fetchAndUpdateRoles() {
             // }
         ]
     },
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
     {
@@ -381,6 +423,8 @@ async function fetchAndUpdateRoles() {
         ]
     },
 ];
+
+login.model = model.value
 
 }
 
