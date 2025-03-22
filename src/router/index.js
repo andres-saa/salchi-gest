@@ -766,9 +766,25 @@ const router = createRouter({
         {
           path: '/transfer',
           name: 'transfer',
-          component: () => import('@/views/pages/tienda/TransferSession.vue'),
+          component: () => import('@/views/pages/tienda/Transfer.vue'),
           
-          
+          children:[
+            {
+              path: '/transfer/transfer-sesion-no-confirmed',
+              name: 'transfer-sesion-no-confirmed',
+              component: () => import('@/views/pages/tienda/TransferSessionNoConfirmed.vue'),
+            },
+            {
+              path: '/transfer/transfer-sesion-confirmed',
+              name: 'transfer-sesion-confirmed',
+              component: () => import('@/views/pages/tienda/TransferSessionConfirmed.vue'),
+            },
+            {
+              path: '/transfer/transfer-sesion',
+              name: 'transfer-sesion',
+              component: () => import('@/views/pages/tienda/TransferSession.vue'),
+            },
+          ]
         },
 
         {

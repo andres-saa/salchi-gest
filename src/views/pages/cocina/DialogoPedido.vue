@@ -193,7 +193,7 @@
   
               <div style="display: grid; gap:0 1rem; grid-template-columns: auto auto;">
                
-                <p class="p-0 m-0">
+                <p v-if="store.currentOrder?.site_id == 32" class="p-0 m-0">
                   <b>
                     (    {{ product.pedido_cantidad  * product.kilos}} kg )      </b>
                     {{ product.pedido_nombre_producto }}
@@ -202,6 +202,15 @@
                   <br>
                 </p>
             
+
+                <p v-else class="p-0 m-0">
+                  <b>
+                    ( {{ product.pedido_cantidad }} )  </b>
+                    {{ product.pedido_nombre_producto }}
+             
+           
+                  <br>
+                </p>
                 
                 
             

@@ -8,6 +8,6 @@ export const PathService = {
 
     isActiveRoute (route) {
         const router = useRoute()
-        return router.path.includes(route)
+        return router.path == route
     }
 }

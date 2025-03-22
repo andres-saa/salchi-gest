@@ -4,8 +4,8 @@
         <nav  class="nav-bar shadow-1 ">
             <ul>
                 <li class="nav-bar--item" v-for="(button, index) in navItems" :key="index">
-                    <router-link :to="`/cancellation-requests/${button.path}/`">
-                        <Button :icon="button.icon" text :class="isActive(button.path)? 'nav-var--item-button-selected': '' " severity="help" class=" nav-var--item-button" :label="button.label" />
+                    <router-link :to="`/transfer/${button.path}/`">
+                        <Button :icon="button.icon" text :class="isActive(`/transfer/${button.path}/`)? 'nav-var--item-button-selected': '' " severity="help" class=" nav-var--item-button" :label="button.label" />
                     </router-link>
                 </li>
             </ul>
@@ -13,13 +13,8 @@
 
 
         <div class="container">
-            <div>
-1
-            </div>
-            <div>
-                2
-            </div>
-            <!-- <router-view/> -->
+            <h6 class="text-center" >Los pedidos de Distrimonster seguiran' apareciendo hasta 15 dias  en pendiente de validacion, Para las tiendas se debe validar el mismo dia' , luego no podra' hacerlo</h6>
+            <router-view/>
         </div>
        
 
@@ -42,19 +37,19 @@ const cancellationRequests = ref([])
 
     const navItems = [
     {
-        label:'Por revisar',
+        label:'Por Confirmar',
         icon:'pi pi-history',
-        path:'revisar'
+        path:'transfer-sesion'
     },
     {
-        label:'Revisadas aprobadas',
+        label:'Confirmadas',
         icon:'pi pi-check',
-        path:'aprobadas'
+        path:'transfer-sesion-confirmed'
     },
     {
-        label:'revisadas rechazadas',
+        label:'Cliente no confirma',
         icon:'pi pi-times',
-        path:'rechazadas'
+        path:'transfer-sesion-no-confirmed'
     },
 
 

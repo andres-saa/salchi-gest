@@ -252,6 +252,26 @@ export const orderService = {
         }
     }
     ,
+    async rejectOrder(order_id, responsible_id) {
+        const store = useReportesStore();
+        try {
+            store.setLoading(true);
+            const data = { responsible_id };
+            const response = await axios.put(`${URI}/reject_order/${order_id}`, data);
+            if (response.status === 200) {
+                store.setLoading(false);
+                return response.data;
+            } else {
+                console.error('An error occurred while authorizing the order:', response.status);
+                store.setLoading(false);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while authorizing the order:', error);
+            store.setLoading(false);
+            return null;
+        }
+    },
 
     async aproveOrder(order_id, responsible_id) {
         const store = useReportesStore();

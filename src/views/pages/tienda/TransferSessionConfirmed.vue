@@ -3,7 +3,7 @@
 
         <p  class=" text-4xl text-center px-4" style="font-weight: bold; margin-top: 0rem;">
 
-       Transferencias Por Confirmar
+       Transferencias Confirmadas
     </p>
 
         <Dialog v-model:visible="cancelDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
@@ -36,21 +36,6 @@
             </form>
         </Dialog>
 
-
-
-        <Dialog v-model:visible="rejectDialogVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
-            <template #header>
-              <h3> <b>El cliente no realizo' la transferencia</b> </h3>
-            </template>
-
-            <form @submit.prevent="reject(rejectData.order_id)" style="display: flex;gap: 1rem; flex-direction: column;align-items:start">
-        
-              
-            
-              <Button style="width: 100%;border-radius:0.5rem" label="Archivar (Transferencia no confirmada)" type="submit" class="p-button-danger" />
-
-            </form>
-        </Dialog>
 
 
 
@@ -146,8 +131,6 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
             <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="show(data.data.order_id)" style="height: 1.8rem;width: 2rem;" severity="success" class="p-1" icon="pi pi-check" />
             <!-- <Button v-if="route.params.request_status != 'rechazadas'" @click="show(false,data.data.id)" style="height: 1.8rem;width: 2rem;background:var(--primary-color);border:none"  severity="danger" class="p-1"
             icon="pi pi-times" /> -->
-
-            <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="show2(data.data.order_id)" style="height: 1.8rem;width: 2rem;" severity="danger" class="p-1" icon="pi pi-trash" />
 
         
     </div>
@@ -321,14 +304,6 @@ const authoize = async( order_id) => {
 }
 
 
-const reject = async( order_id) => {
-    const responsible_id = userStore.rawUserData.id
-    await orderService.rejectOrder(order_id,responsible_id)
-    rejectDialogVisible.value = false
-    fetchTransferRequests();
-
-}
-
 const update = async() => {
 const transfersd = await fetchService.post(`${URI}/transaction_report/`,
     {
@@ -365,12 +340,10 @@ onMounted  (async() => {
 const cancelDialogVisible = ref(false)
 const TransferRequests = ref([])
 const aceptDialogVisible =ref(false)
-const rejectDialogVisible =ref(false)
 const userStore = loginStore()
 const cancelData = ref({
-})
 
-const rejectData = ref({})
+})
 
 const modes = ref([
 
@@ -440,16 +413,6 @@ const show = (id) => {
     cancelData.value.order_id = id
 
 }
-
-
-const show2 = (id) => {
-    
-    rejectDialogVisible.value = true
-    rejectData.value.order_id = id
-
-}
-
-
 
 
 const resolve = async(desition,id,observation) => {
@@ -538,7 +501,7 @@ onMounted(async() => {
 
 // Función para cargar las Transferencias de cancelación
 const fetchTransferRequests = async () => {
-    TransferRequests.value = await orderService.getOrdersTransfer();
+    TransferRequests.value = await fetchService.get(`${URI}/order-to-transfer-confirmed`);
 
 };
 
