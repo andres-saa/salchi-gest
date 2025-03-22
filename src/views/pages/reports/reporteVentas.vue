@@ -136,13 +136,17 @@
   
   function setDateRange(days) {
     const today = new Date();
-    const tomorrow = new Date(today);
+    const tomorrow = new Date(today).setDate(today.getDate() + 1);
+   
     const pastDate = new Date(today);
     pastDate.setDate(today.getDate() - days);
     pastDate.setHours(10, 0, 0, 0);
   
     let end;
-    if (days === 1) {
+    if (days === 0) {
+      end = new Date(tomorrow);
+      end.setHours(4, 0, 0, 0);
+    } else if (days === 1) {
       end = new Date(today);
       end.setHours(4, 0, 0, 0);
     } else {
