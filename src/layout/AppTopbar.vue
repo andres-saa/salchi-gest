@@ -144,7 +144,7 @@ const checkScreenWidth = () => {
 </script>
 
 <template>
-    <div style="transition: all 1s ease;"  class="layout-topbar md:px-4" :style="`background-color:${User_store.bar_color} ;max-width: 100vw;` ">
+    <div @mouseleave="visible_menu = false" style="transition: all 1s ease;"  class="layout-topbar md:px-4" :style="`background-color:${User_store.bar_color} ;max-width: 100vw;` ">
 
 
         
