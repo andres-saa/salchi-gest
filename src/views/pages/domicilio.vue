@@ -68,13 +68,48 @@
                 <Button severity="help" label="Crear" @click="createNeighborhood" class="p-button m-0" />
             </template>
         </Dialog>
+
+
+
+
+
+        <Dialog class="mx-3" header="Descargar informe de barrios" style="width: 30rem;background-color: white; max-width:90vw ;" modal v-model:visible="visibleDownloadDialog">
+
+            <div style="display: flex;flex-direction: column;gap: 1rem;height: 100%; background-color: white;">
+                <label for="sedes"> <strong>Seleciona las sedes</strong> </label>
+               
+                <MultiSelect v-model="selectedSites" filter filterPlaceholder="Busca un barrio..." :options="sites.filter(s => s.show_on_web)" optionLabel="site_name"  id="sedes" style="width: 100%;max-width: 25rem;"></MultiSelect>
+
+                <div style="display: flex;flex-direction: column;gap: .3rem;">
+                    <div v-for="sede in selectedSites" style="display: flex;align-items: center;gap: 1rem;"> 
+                        <img style="aspect-ratio: 1 / 1; object-fit: cover;width: 2rem;" :src="`${URI}/read-product-image/96/site-${sede?.site_id}`" alt="">
+
+                        <strong>{{ sede.site_name }}</strong></div>
+                </div>
+
+              
+               
+            </div>
+                        <template #footer>
+
+            <div>
+            <Button icon="pi pi-download" severity="help" label="Descargar Informe"></Button>
+            </div>
+</template>
+        </Dialog>
+
+
+
+
+
+
     
         <div class="col-12 m-auto  p-0" style="max-width: 700px;">
-    
-    
-    
             <div class="col-12 p-0 m-0" style="display: flex; justify-content: end; border: none;">
         <Button style="" raised   severity="help"  size="small" class="  m-0 my-5" label="Nuevo Barrio"
+                                @click="showCreateDialog = true"></Button>
+
+                                <Button  style="" raised  icon="pi pi-download"  severity="danger"  size="small" class="ml-3  my-0 my-5" label="Descargar informe"
                                 @click="showCreateDialog = true"></Button>
     </div>
     
@@ -163,7 +198,8 @@
     
     import {useReportesStore} from '@/store/reportes.js'
     const store = useReportesStore()
-    
+    const visibleDownloadDialog = ref(true)
+    const selectedSites = ref([])
     const guardando  = ref(false)
     const barriosToAdd = ref([{}])
     const removeBarrio = (index) => {
@@ -469,6 +505,7 @@
     import { getUserId } from '@/service/valoresReactivosCompartidos';
     import router from '@/router';
     import InputNumber from 'primevue/inputnumber';
+import { tr } from 'date-fns/locale';
     // import { getUserId } from '@/service/valoresReactivosCompartidos';
     // import { getUsers } from '@/service/userServices'
     // import { siteDropValues } from '@/service/valoresReactivosCompartidos';

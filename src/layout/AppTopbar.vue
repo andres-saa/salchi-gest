@@ -166,11 +166,11 @@ const checkScreenWidth = () => {
         </button>
 
 
-        <div style="display: flex;justify-content: center;width: 100%; align-items: center;">
+        <div class="icons" style="justify-content: center;width: 100%; align-items: center;">
                     <div @mouseover="visible_menu = false" style="height: 3rem;width: 3rem"></div>
 
                     <div @mouseleave="visible_menu = false" style="width: .5rem;"></div>
-            <div style="display: flex;justify-content: center;"  v-show="tienePermiso(link)"  v-for="link in User_store?.model?.filter(p => p.items.some(p => p.to))"  > 
+                <div style="display: flex;justify-content: center;"  v-show="tienePermiso(link)"  v-for="link in User_store?.model?.filter(p => p.items.some(p => p.to))"  > 
                 <div @mouseleave="visible_menu = false" style="width: .5rem;"></div>
 
                 <div style="display: flex;justify-content: center;">
@@ -292,4 +292,22 @@ button:focus{
     filter:grayscale(1) brightness(300) ;
   
 }
+
+
+.icons{
+    display: flex;
+}
+
+@media (width < 1200px) {
+
+    .icons{
+        display: none;
+
+    }
+    
+}
+
+
+
+
 </style>
