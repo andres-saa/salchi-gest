@@ -76,7 +76,7 @@
       </div>
     </Dialog>
   
-    <div style="margin-top: 10rem; max-width: 900px; margin: 10rem auto;" class="px-3">
+    <div style="margin-top: 10rem; max-width: 1200px; margin: 10rem auto;" class="px-3">
         <div style="width: 100%;justify-content: center;display: flex;" class="my-4">
             <img :src="`${URI}/read-photo-product/iX6UiE6e`" alt="" style="height: 5rem;width: min-content; margin: auto;">
 
@@ -162,7 +162,22 @@
           </template>
         </Column>
 
-        <Column header="Kilos" class="m-0 py-0">
+
+        <Column header="Unidad de medida" class="m-0 py-0">
+          <template #body="slotProps">
+            <div v-if="modificando">
+              
+             <Dropdown   :options="unit_measures.unit_measures" optionValue="id" v-model="slotProps.data.unit_measure_id" optionLabel="name" style="height: 2rem;width: 100%;display:flex; align-items: center;">
+
+             </Dropdown>
+            </div>
+            <h6 v-else class="m-0 p-0">
+              {{ slotProps.data.unit_measure }}
+            </h6>
+          </template>
+        </Column>
+
+        <Column header="Presentacion (kg)" class="m-0 py-0">
           <template #body="slotProps">
             <div v-if="modificando">
               <InputNumber
@@ -172,7 +187,7 @@
                   height: '2rem',
                   borderRadius: '0'
                 }"
-                v-model="slotProps.data.kilos"
+                v-model="slotProps.data.presentacion"
                 suffix=" Kg"
                 locale="en-US"
                 min="0"
@@ -181,10 +196,35 @@
               />
             </div>
             <h6 v-else class="m-0 p-0">
-              {{ slotProps.data.kilos }} Kg
+              {{ slotProps.data.presentacion }} Kg
             </h6>
           </template>
         </Column>
+
+        
+     
+
+
+        
+        <Column header="Unid. Med. Pres." class="m-0 py-0">
+          <template #body="slotProps">
+            <div v-if="modificando">
+              <Dropdown :options="unit_measures.presentation_measures" optionValue="id" v-model="slotProps.data.presentation_unit_measure_id" optionLabel="name" style="height: 2rem;width: 100%;display:flex; align-items: center;">
+
+              </Dropdown>
+            </div>
+            <h6 v-else class="m-0 p-0">
+              {{ slotProps.data.presentation_unit_measure }}
+            </h6>
+          </template>
+        </Column>
+
+
+
+
+
+
+
       </DataTable>
   
       <div style="display: flex; gap: 1rem; justify-content: end; margin: 1rem 0;">
@@ -227,6 +267,7 @@
   const data = ref([]);
   const oririginal_data = ref([]);
   const modificando = ref(false);
+  const unit_measures = ref({"unit_measures":[], "presentation_measures":[]})
   
   // Computed para detectar cambios en la data
   const hasChanges = computed(() => {
@@ -244,6 +285,16 @@
       data.value = productos;
       // Crear copia profunda de los datos originales
       oririginal_data.value = JSON.parse(JSON.stringify(productos));
+    } catch (error) {
+      console.error("Error al actualizar los datos:", error);
+    }
+
+
+    try {
+      const response2 = await fetchService.get(
+        `${URI}/distrimonster-measures/`
+      );
+      unit_measures.value = response2
     } catch (error) {
       console.error("Error al actualizar los datos:", error);
     }
@@ -276,7 +327,9 @@
         id:  p.id,
         mayor: parseInt(p.mayor) ,
         distribuidor: parseInt(p.distribuidor),
-        kilos:p.kilos  ,
+        presentacion:p.presentacion,
+        presentation_unit_measure_id:p.presentation_unit_measure_id,
+        unit_measure_id:p.unit_measure_id
       })),
     };
   

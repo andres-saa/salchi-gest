@@ -118,7 +118,7 @@
     </Dialog>
   
   
-    <Dialog class="mx-3"  closeOnEscape :closable="false" v-model:visible="store.visibles.currentOrderDistri" modal
+    <Dialog class="mx-3"  closeOnEscape :closable="false" v-model:visible="store.visibles.currentOrder" modal
       style="max-height: 95vh;width: 35rem; position: relative;">
   
       <div class="">
@@ -149,7 +149,7 @@
             <p class="" id="id" style="font-weight: bold;min-width: 100%; width: max-content; text-align: center; color: black; margin:0rem;"> ID:{{ store.currentOrder.order_id }} </p>
   
   
-            <p class="" id="id" style="font-weight: bold;min-width: 100%; width: max-content; text-align: center; color: black; margin:0rem;"> {{ store.currentOrder.user_name }} </p>
+            <p class="" id="id" style="font-weight: bold;min-width: 100%; width: max-content; text-align: center; color: black; margin:0rem;">              {{ store.currentOrder.user_name }} {{ store.currentOrder.second_name }} {{ store.currentOrder.first_last_name }} {{ store.currentOrder.second_last_name }} </p>
   
   
   
@@ -170,14 +170,14 @@
             <div class=""
               style="font-weight: bold;color:white;margin: 0; background-color: black;align-items: center;display: grid; grid-template-columns: auto auto; ">
   
-              <div style="width: 100%;" >
+              <div class="px-2" style="width: 100%;" >
   
                 <b> productos</b>
   
   
               </div>
             
-              <div >
+              <div class="px-2">
                 <p style="text-align: end;font-weight: bold;">
                   <b>
                     total
@@ -191,14 +191,26 @@
            
             <div  v-for="product in store?.currentOrder?.pe_json?.listaPedidos">
   
-              <div style="display: grid; grid-template-columns: auto auto;">
+              <div style="display: grid; gap:0 1rem; grid-template-columns: auto auto;">
                
-                <p class="p-0 m-0">
-              (    {{ product.pedido_cantidad }} )
-                  {{ product.pedido_nombre_producto }}
+                <p v-if="store.currentOrder?.site_id == 32" class="p-0 m-0">
+                  <b>
+                    (    {{ product.pedido_cantidad  }} kg )      </b>
+                    {{ product.pedido_nombre_producto }}
+             
+           ( {{  product.pedido_cantidad /  product.presentacion  }} {{product.presentation_unit_measure}})
                   <br>
                 </p>
             
+
+                <p v-else class="p-0 m-0">
+                  <b>
+                    ( {{ product.pedido_cantidad }} )  </b>
+                    {{ product.pedido_nombre_producto }}
+             
+           
+                  <br>
+                </p>
                 
                 
             
@@ -355,7 +367,7 @@
               </div>
   
             </div>
-            <p  style="font-weight: bold;background-color: black;color: white;padding: 0; margin: 0; margin-top: 0.5rem;"><b>Notas</b></p>
+            <p class="px-2"  style="font-weight: bold;background-color: black;color: white;padding: 0; margin: 0; margin-top: 0.5rem;"><b>Notas</b></p>
             <p
                 class="notas p-2 m-0"
                 style="border: 1px solid; margin: 0; color: black; padding: 0.5rem;"
@@ -366,11 +378,11 @@
   
   
   
-                <p  style="background-color: black;font-weight: bold;margin-top: 1rem; color: white;">
+                <p class="px-2"  style="background-color: black;font-weight: bold;margin-top: 1rem; color: white;">
                 <b>cliente</b>
                 </p>
   
-                <div style="display: grid;gap: .5rem; grid-template-columns: auto auto; align-items: start;">
+                <div style="display: grid;gap:1rem 2rem; grid-template-columns: auto auto; align-items: start;">
   
   
   
@@ -379,9 +391,22 @@
                 <span><b>Nombre</b></span>
               </div>
               <div class="">
-                <span style="text-align: start;color: black; padding-left: 2rem;">
+                <span style="text-align: start;color: black; ">
   
                   {{ store.currentOrder.user_name }} {{ store.currentOrder.second_name }} {{ store.currentOrder.first_last_name }} {{ store.currentOrder.second_last_name }}
+                </span>
+  
+              </div>
+  
+
+
+              <div v-if="store.currentOrder.site_id == 32" class="" style="">
+                <span><b>Cedula / Nit</b></span>
+              </div>
+              <div v-if="store.currentOrder.site_id == 32" class="">
+                <span style="text-align: start;color: black;">
+  
+                  {{ store.currentOrder.cedula_nit }} 
                 </span>
   
               </div>
@@ -394,7 +419,7 @@
                 <span><b>Metodo de entrega</b></span>
               </div>
               <div class="">
-                <span style="text-align: start;color: black;padding-left: 2rem;">
+                <span style="text-align: start;color: black;">
   
                   {{ store.currentOrder.order_type }}
                 </span>
@@ -402,12 +427,12 @@
               </div>
   
               
-              <div class="" style="">
+              <div v-if="store.currentOrder.site_id == 32" class="" style="">
                 <span><b>Fecha de entrega</b></span>
               </div>
-              <div class="">
-                <p style="text-align: start;color: black; padding-left: 2rem;">
-                  {{ new Date(store.currentOrder.pe_json.delivery.delivery_horaentrega).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}
+              <div v-if="store.currentOrder.site_id == 32" class="">
+                <p style="text-align: start;color: black; ">
+                  {{store.currentOrder.pe_json.delivery.delivery_horaentrega }}
                 </p>
   
               </div>
@@ -419,7 +444,7 @@
                 <span><b>Placa del vehiculo</b></span>
               </div>
               <div class=""  v-if="store.currentOrder.placa">
-                <p style="text-align: start;color: black; padding-left: 2rem;">
+                <p style="text-align: start;color: black; ">
   
                   {{ store.currentOrder.placa }}
                 </p>
@@ -434,17 +459,42 @@
                 <span><b>telefono</b></span>
               </div>
               <div>
-                <span style="text-align: start;color: black; padding-left: 2rem;">
+                <span style="text-align: start;color: black; ">
   
                   {{ store.currentOrder.user_phone }}
   
                   
                 </span>
               </div>
+
+
+
+              
+  
+              <div v-if="store.currentOrder.site_id == 32"  style="">
+                <span><b>Correo</b></span>
+              </div>
+              <div v-if="store.currentOrder.site_id == 32">
+                <span  style="text-align: start;color: black; ">
+  
+                  {{ store.currentOrder.email }}
+  
+                  
+                </span>
+              </div>
+
+
+
+
+
+
+
+
+
               <div style="" v-if="store.currentOrder.order_type != 'Pasar a recoger'">
                 <span><b>direccion </b></span>
               </div>
-              <div style="margin-left: 2rem;" v-if="store.currentOrder.order_type != 'Pasar a recoger'" >
+              <div style="" v-if="store.currentOrder.order_type != 'Pasar a recoger'" >
                 <span style="text-align: start;color: black;">
   
                   {{ store.currentOrder.user_address?.toLowerCase() }}
@@ -460,7 +510,7 @@
                 <span><b>metodo de pago</b></span>
               </div>
               <div >
-                <span style="text-align: start;color: black;padding-left: 2rem;">
+                <span style="text-align: start;color: black;">
   
                   {{ store.currentOrder.payment_method?.toLowerCase() }}
                 </span>
@@ -546,7 +596,7 @@
       </template>
   
   
-      <Button class="shadow-4" @click="store.setVisible('currentOrderDistri', false)" icon="pi pi-times" rounded severity="danger"
+      <Button class="shadow-4" @click="store.setVisible('currentOrder', false)" icon="pi pi-times" rounded severity="danger"
         style="position: absolute;top: 0;border-radius: 50%; right:-1rem; top: -1rem;"></Button>
   
   
@@ -617,7 +667,7 @@
       await fetchService.put(`${URI}/changue-delivery/${store.currentOrder.order_id}`,{price:data})
       changeDeliveryDialog.value = false
       store.numberOders == 1? store.numberOders = 2: store.numberOders = 1
-      store.visibles.currentOrderDistri = false
+      store.visibles.currentOrder = false
   
   }
   
@@ -662,7 +712,7 @@
   
         // Cerrar el diálogo
         changePaymentDialog.value = false
-        store.visibles.currentOrderDistri= false
+        store.visibles.currentOrder= false
   
         // Opcional: Mostrar una notificación de éxito
         console.log('Método de pago cambiado exitosamente')
@@ -793,7 +843,7 @@
       ventanaImpresion.document.write(estilosPagina[i].outerHTML);
     }
   
-    ventanaImpresion.document.write('<style>  @media print { html{height: min-content;}  *{text-transform:uppercase;align-items:center; width:100%; font-family: sans-serif;padding:0;margin:0; font-size:o.9rem !IMPORTANT} body { padding:0; -webkit-print-color-adjust: exact; /* Chrome, Safari */ color-adjust: exact; /* Firefox */ } }  </style>');
+    ventanaImpresion.document.write('<style>  @media print { html{height: min-content;}  *{text-transform:uppercase;align-items:center; width:100%; font-family: sans-serif;padding:0;margin:0; font-size:o.9rem !IMPORTANT} body {  -webkit-print-color-adjust: exact; /* Chrome, Safari */ color-adjust: exact; /* Firefox */ } }  </style>');
     ventanaImpresion.document.write('</head><body>');
     ventanaImpresion.document.write(contenidoFactura);
   
@@ -878,7 +928,7 @@
                                                       "order_id": order_id
                                                     },`trasladando orden ${order_id}`)
   
-    store.visibles.currentOrderDistri= false
+    store.visibles.currentOrder= false
     travelDialog.value = false
   }
   

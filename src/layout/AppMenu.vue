@@ -66,7 +66,9 @@ async function fetchAndUpdateRoles() {
             items: [
                 // { label: 'Transferencias', icon: 'fa-solid fa-truck-moving', to: '/transfer-distri/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
                 // { label: 'Validar pedidos', icon: 'fa-solid fa-check-circle', to: '/validate-distri/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
-                { label: 'Almacen', icon: 'fa-solid fa-warehouse', to: '/distrimonster', permision_id: 5, 'icon-color': '#581845' } // Púrpura oscuro
+                { label: 'Almacen', icon: 'fa-solid fa-warehouse', to: '/distrimonster', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
+                { label: 'Usurarios', icon: 'fa-solid fa-warehouse', to: '/distrimonster-users', permision_id: 5, 'icon-color': '#581845' } // Púrpura oscuro
+
             ]
         },
         { label: 'Tiendas', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 50, 'icon-color': '#FF4500' } // Naranja rojizo

@@ -1261,6 +1261,13 @@ const router = createRouter({
 
         },
         {
+          path: '/distrimonster-users',
+          name: 'distrimonster-users',
+          component: () => import('@/views/pages/DistrimonsterUsers.vue'),
+
+
+        },
+        {
           path: '/Tiendas',
           name: 'tiendas',
           component: () => import('@/views/pages/Tiendas.vue'),
