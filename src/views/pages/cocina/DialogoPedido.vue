@@ -687,7 +687,7 @@
 
               <div class="px-0" style="width: 100%;" >
   
-                <b> V. unit</b>
+                <b> V. Kilo</b>
 
 
               </div>
@@ -730,7 +730,7 @@
         
 
           
-          {{  product.pedido_cantidad /  product.presentacion  }} {{product.unit_measure}}
+          {{   product.presentacion  }} {{product.unit_measure}}
                 <br>
               </p>
             
