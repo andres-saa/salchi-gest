@@ -188,7 +188,7 @@
                   borderRadius: '0'
                 }"
                 v-model="slotProps.data.presentacion"
-                suffix=" Kg"
+                :suffix=" ` ${slotProps.data.unit_measure}`"
                 locale="en-US"
                 min="0"
                 :minFractionDigits="0"
@@ -196,7 +196,7 @@
               />
             </div>
             <h6 v-else class="m-0 p-0">
-              {{ slotProps.data.presentacion }} Kg
+              {{ slotProps.data.presentacion }} {{ slotProps.data.unit_measure }}
             </h6>
           </template>
         </Column>
@@ -220,6 +220,32 @@
         </Column>
 
 
+
+        <Column header="Kilos domi (kg)" class="m-0 py-0">
+          <template #body="slotProps">
+            <div v-if="modificando">
+              <InputNumber
+                :inputStyle="{
+                  width: '100%',
+                  maxWidth: '10rem',
+                  height: '2rem',
+                  borderRadius: '0'
+                }"
+                v-model="slotProps.data.kilos_delivery"
+                :suffix=" ` kg`"
+                locale="en-US"
+                min="0"
+                :minFractionDigits="0"
+                :maxFractionDigits="2"
+              />
+            </div>
+            <h6 v-else class="m-0 p-0">
+              {{ slotProps.data.kilos_delivery }} Kg
+            </h6>
+          </template>
+        </Column>
+
+        
 
 
 
@@ -329,7 +355,8 @@
         distribuidor: parseInt(p.distribuidor),
         presentacion:p.presentacion,
         presentation_unit_measure_id:p.presentation_unit_measure_id,
-        unit_measure_id:p.unit_measure_id
+        unit_measure_id:p.unit_measure_id,
+        kilos_delivery:p.kilos_delivery
       })),
     };
   
