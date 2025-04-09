@@ -71,7 +71,13 @@ async function fetchAndUpdateRoles() {
 
             ]
         },
-        { label: 'Tiendas', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 50, 'icon-color': '#FF4500' } // Naranja rojizo
+        { label: 'Tiendas', icon: 'fa-solid fa-store', permision_id: 50, 'icon-color': '#FF4500',
+            items:[
+            { label: 'Almacen', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 50, 'icon-color': '#FF4500'},
+            { label: 'Cartas QR', icon: 'fa-solid fa-store', to: '/cartas', permision_id: 50, 'icon-color': '#FF4500'},
+            { label: 'Banners', icon: 'fa-solid fa-store', to: '/banners', permision_id: 50, 'icon-color': '#FF4500'}
+            ]
+         } // Naranja rojizo
     ]
 }
 ,

@@ -1301,7 +1301,29 @@ const router = createRouter({
                 },
               ]
             },
+         
           ]
+
+        },
+        {
+          path: '/banners',
+          name: 'banners',
+          component: () => import('@/views/pages/Banners.vue'),
+
+        },
+
+        {
+          path: '/cartas',
+          name: 'cartas',
+          component: () => import('@/views/pages/Cartas.vue'),
+          children:[
+            {
+              path: '/cartas/:carta_id/:carta_name',
+              name: 'carta',
+              component: () => import('@/views/pages/Carta.vue'),
+    
+            },
+          ],
 
         },
         {
