@@ -119,6 +119,21 @@ const router = createRouter({
             component: () => import('@/views/pages/customers/customer.vue'),
           },
 
+
+          {
+            path: '/chat',
+            name: 'chat',
+            component: () => import('@/views/pages/chat/Chat.vue'),
+            children:[
+              {
+                path: '/chat/salchimonster',
+                name: 'chat-salchimonster',
+                component: () => import('@/views/pages/chat/Salchimonster.vue'),
+              }
+         
+            ]
+          },
+
           {
             path: '/sonando',
             name: 'sonando',
@@ -1271,7 +1286,22 @@ const router = createRouter({
           path: '/Tiendas',
           name: 'tiendas',
           component: () => import('@/views/pages/Tiendas.vue'),
-
+          children:[
+            {
+              path: '/tiendas/site/:site_id/:site_name',
+              name: 'Tiendas-site-category-id',
+              component: () => import('@/views/pages/TiendaCategory.vue'),
+    
+              children:[
+                {
+                  path: '/tiendas/categoria/:site_id/:site_name/:category_name',
+                  name: 'Tiendas-categoria-category-id',
+                  component: () => import('@/views/pages/TiendaCategory.vue'),
+        
+                },
+              ]
+            },
+          ]
 
         },
         {

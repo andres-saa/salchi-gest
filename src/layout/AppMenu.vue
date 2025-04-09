@@ -118,6 +118,36 @@ async function fetchAndUpdateRoles() {
 
 
 
+    {
+        label: 'CHAT',
+        icon: 'fa-brands fa-whatsapp',
+        'icon-color': '#32CD32', // Rojo vivo
+        items: [
+            {
+                label: 'Salchimonster',
+                icon: 'fa-solid fa-whatsapp',
+                'icon-color': 'green', // Naranja vibrante
+                to:'/chat/salchimonster',
+                permision_id: get_id([1,2,3,4,5,6,7,31]),
+            },
+
+            
+            // {
+            //     label: 'Cajeros',
+            //     icon: 'fa-solid fa-cash-register',
+            //     'icon-color': '#FF69B4', // Rosa vibrante
+            //     items: [
+            //         { label: 'Reportes', icon: 'fa-solid fa-file-invoice-dollar', to: '/cachier-money/reportes/', permision_id: 1, 'icon-color': '#FF1493' }, // Rosa oscuro
+            //         { label: 'Registros', icon: 'fa-solid fa-book', to: '/cachier-money/registros/', permision_id: 1, 'icon-color': '#ADFF2F' }, // Verde amarillento
+            //         { label: 'Salidas', icon: 'fa-solid fa-money-bill-trend-up', to: '/cachier-money/salidas/', permision_id: 1, 'icon-color': '#00CED1' }, // Turquesa
+            //     ],
+            //     permision_id: get_id([1,2,3,4,5,6,7]),
+            // }
+        ]
+    },
+
+
+
 
 
 

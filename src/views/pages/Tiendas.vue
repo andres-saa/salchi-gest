@@ -1,4 +1,8 @@
 <template>
+
+  <div style=" margin: 0 auto;" class="px-2 md:px-4 xl:px-6">
+
+
   <!-- Diálogo de éxito -->
   <Dialog
     v-model:visible="melo"
@@ -76,7 +80,7 @@
     </div>
   </Dialog>
 
-  <div style="margin-top: 10rem; max-width: 900px; margin: 10rem auto;" class="px-3">
+  <div style="margin-top: 10rem;  margin: 5rem auto 2rem auto  ;" class="">
       <div style="width: 100%;justify-content: center;gap:1rem; display: flex;flex-wrap: wrap;" class="my-4">
           <img :src="`${URI}/read-photo-product/xai0dVnL`" alt="" style="height: 5rem;width: min-content; margin: auto;">
           <img :src="`${URI}/read-photo-product/a1roeK3y`" alt="" style="height: 5rem;width: min-content; margin: auto;">
@@ -105,6 +109,31 @@
 
    
   </div>
+
+
+  <div style="display: flex; flex-wrap: wrap; box-shadow: 0 0rem 1rem #00000030; padding:0 1rem;border-radius: .5rem;gap:.5rem;padding: 1rem;">
+    <div  v-for="s in site.filter(s => s.show_on_web)" style="display: flex; align-items: center; border: 1px solid;border-radius: .5rem;background-color: #00000030;">
+    <RouterLink active-class="active"
+    exact-active-class="full-active" style=""  :to="`/tiendas/site/${s.pe_site_id           }/${s.site_name}`" >
+      <Button :label="s.site_name" text style="color: black; outline: none;box-shadow: none;">
+
+      </Button>
+
+    </RouterLink>
+    <!-- <i class="fa-solid fa-pipe p-0 m-0" style="opacity: .7;"></i> -->
+  </div>
+
+  </div>
+
+<div class="">
+  <RouterView></RouterView>
+
+</div>
+
+
+
+</div>
+
 </template>
 
 <script setup>
@@ -119,6 +148,12 @@ import Column from "primevue/column";
 import Tag from "primevue/tag";
 import { formatoPesosColombianos } from "../../service/formatoPesos";
 
+
+const site = ref([])
+
+onMounted( async() => {
+  site.value = await fetchService.get(`${URI}/sites`)
+})
 // Variables reactivas
 const melo = ref(false);
 const massDialog = ref(false);
@@ -164,7 +199,7 @@ const response = ref('')
 const refresh = async () => {
   try {
   
-  const res =        await fetchService.post(`${URI}/refresh-cache/`);    ;
+  const res =        await fetchService.get(`${URI}/tiendas/refresh_all`);    ;
 response.value = res
 melo.value = true
 } catch (error) {
@@ -222,4 +257,17 @@ const cancelarMass = () => {
 
 <style scoped>
 /* Estilos adicionales si se requieren */
+
+
+/* *:focus{
+  outline: 0;
+  box-shadow: 0;
+} */
+
+.active {
+  box-shadow: 0rem .5rem 1rem .5rem #00000030;
+  background-color: rgba(0, 255, 221, 0.322);
+  color: white;
+  border-radius: .5rem;
+}
 </style>

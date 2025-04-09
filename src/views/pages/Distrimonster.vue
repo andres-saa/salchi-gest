@@ -114,161 +114,161 @@
         </template>
       </Column>
 
-      <!-- Precio Mayor -->
-      <Column header="Precio Mayor" class="m-0 py-0">
-        <template #body="slotProps">
-          <div v-if="modificando">
-            <InputNumber
-              :inputStyle="{
-                width: '100%',
-                maxWidth: '10rem',
-                height: '2rem',
-                borderRadius: '0'
-              }"
-              v-model="slotProps.data.mayor"
-              mode="currency"
-              currency="USD"
-              locale="en-US"
-              :minFractionDigits="0"
-              :maxFractionDigits="2"
-            />
-          </div>
-          <h6 v-else class="m-0 p-0">
-            {{ formatoPesosColombianos(slotProps.data.mayor) }}
-          </h6>
-        </template>
-      </Column>
+            <!-- Precio Mayor -->
+            <Column header="Precio Mayor" class="m-0 py-0">
+              <template #body="slotProps">
+                <div v-if="modificando">
+                  <InputNumber
+                    :inputStyle="{
+                      width: '100%',
+                      maxWidth: '10rem',
+                      height: '2rem',
+                      borderRadius: '0'
+                    }"
+                    v-model="slotProps.data.mayor"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US"
+                    :minFractionDigits="0"
+                    :maxFractionDigits="2"
+                  />
+                </div>
+                <h6 v-else class="m-0 p-0">
+                  {{ formatoPesosColombianos(slotProps.data.mayor) }}
+                </h6>
+              </template>
+            </Column>
 
-      <!-- Precio Distribuidor -->
-      <Column header="Precio Distribuidor" class="m-0 py-0">
-        <template #body="slotProps">
-          <div v-if="modificando">
-            <InputNumber
-              :inputStyle="{
-                width: '100%',
-                maxWidth: '10rem',
-                height: '2rem',
-                borderRadius: '0'
-              }"
-              v-model="slotProps.data.distribuidor"
-              mode="currency"
-              currency="USD"
-              locale="en-US"
-              :minFractionDigits="0"
-              :maxFractionDigits="2"
-            />
-          </div>
-          <h6 v-else class="m-0 p-0">
-            {{ formatoPesosColombianos(slotProps.data.distribuidor) }}
-          </h6>
-        </template>
-      </Column>
+            <!-- Precio Distribuidor -->
+            <Column header="Precio Distribuidor" class="m-0 py-0">
+              <template #body="slotProps">
+                <div v-if="modificando">
+                  <InputNumber
+                    :inputStyle="{
+                      width: '100%',
+                      maxWidth: '10rem',
+                      height: '2rem',
+                      borderRadius: '0'
+                    }"
+                    v-model="slotProps.data.distribuidor"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US"
+                    :minFractionDigits="0"
+                    :maxFractionDigits="2"
+                  />
+                </div>
+                <h6 v-else class="m-0 p-0">
+                  {{ formatoPesosColombianos(slotProps.data.distribuidor) }}
+                </h6>
+              </template>
+            </Column>
 
 
-      <Column header="Unidad de medida" class="m-0 py-0">
-        <template #body="slotProps">
-          <div v-if="modificando">
+            <Column header="Unidad de medida" class="m-0 py-0">
+              <template #body="slotProps">
+                <div v-if="modificando">
+                  
+                <Dropdown   :options="unit_measures.unit_measures" optionValue="id" v-model="slotProps.data.unit_measure_id" optionLabel="name" style="height: 2rem;width: 100%;display:flex; align-items: center;">
+
+                </Dropdown>
+                </div>
+                <h6 v-else class="m-0 p-0">
+                  {{ slotProps.data.unit_measure }}
+                </h6>
+              </template>
+            </Column>
+
+            <Column header="Presentacion (kg)" class="m-0 py-0">
+              <template #body="slotProps">
+                <div v-if="modificando">
+                  <InputNumber
+                    :inputStyle="{
+                      width: '100%',
+                      maxWidth: '10rem',
+                      height: '2rem',
+                      borderRadius: '0'
+                    }"
+                    v-model="slotProps.data.presentacion"
+                    :suffix=" ` ${slotProps.data.unit_measure}`"
+                    locale="en-US"
+                    min="0"
+                    :minFractionDigits="0"
+                    :maxFractionDigits="2"
+                  />
+                </div>
+                <h6 v-else class="m-0 p-0">
+                  {{ slotProps.data.presentacion }} {{ slotProps.data.unit_measure }}
+                </h6>
+              </template>
+            </Column>
+
             
-           <Dropdown   :options="unit_measures.unit_measures" optionValue="id" v-model="slotProps.data.unit_measure_id" optionLabel="name" style="height: 2rem;width: 100%;display:flex; align-items: center;">
-
-           </Dropdown>
-          </div>
-          <h6 v-else class="m-0 p-0">
-            {{ slotProps.data.unit_measure }}
-          </h6>
-        </template>
-      </Column>
-
-      <Column header="Presentacion (kg)" class="m-0 py-0">
-        <template #body="slotProps">
-          <div v-if="modificando">
-            <InputNumber
-              :inputStyle="{
-                width: '100%',
-                maxWidth: '10rem',
-                height: '2rem',
-                borderRadius: '0'
-              }"
-              v-model="slotProps.data.presentacion"
-              :suffix=" ` ${slotProps.data.unit_measure}`"
-              locale="en-US"
-              min="0"
-              :minFractionDigits="0"
-              :maxFractionDigits="2"
-            />
-          </div>
-          <h6 v-else class="m-0 p-0">
-            {{ slotProps.data.presentacion }} {{ slotProps.data.unit_measure }}
-          </h6>
-        </template>
-      </Column>
-
-      
-   
+        
 
 
-      
-      <Column header="Unid. Med. Pres." class="m-0 py-0">
-        <template #body="slotProps">
-          <div v-if="modificando">
-            <Dropdown :options="unit_measures.presentation_measures" optionValue="id" v-model="slotProps.data.presentation_unit_measure_id" optionLabel="name" style="height: 2rem;width: 100%;display:flex; align-items: center;">
+            
+            <Column header="Unid. Med. Pres." class="m-0 py-0">
+              <template #body="slotProps">
+                <div v-if="modificando">
+                  <Dropdown :options="unit_measures.presentation_measures" optionValue="id" v-model="slotProps.data.presentation_unit_measure_id" optionLabel="name" style="height: 2rem;width: 100%;display:flex; align-items: center;">
 
-            </Dropdown>
-          </div>
-          <h6 v-else class="m-0 p-0">
-            {{ slotProps.data.presentation_unit_measure }}
-          </h6>
-        </template>
-      </Column>
+                  </Dropdown>
+                </div>
+                <h6 v-else class="m-0 p-0">
+                  {{ slotProps.data.presentation_unit_measure }}
+                </h6>
+              </template>
+            </Column>
 
 
 
 
 
-      <Column header="Kilos domi (kg)" class="m-0 py-0">
-        <template #body="slotProps">
-          <div v-if="modificando">
-            <InputNumber
-              :inputStyle="{
-                width: '100%',
-                maxWidth: '10rem',
-                height: '2rem',
-                borderRadius: '0'
-              }"
-              v-model="slotProps.data.kilos_delivery"
-              :suffix=" ` kg`"
-              locale="en-US"
-              min="0"
-              :minFractionDigits="0"
-              :maxFractionDigits="2"
-            />
-          </div>
-          <h6 v-else class="m-0 p-0">
-            {{ slotProps.data.kilos_delivery }} Kg
-          </h6>
-        </template>
-      </Column>
+            <Column header="Kilos domi (kg)" class="m-0 py-0">
+              <template #body="slotProps">
+                <div v-if="modificando">
+                  <InputNumber
+                    :inputStyle="{
+                      width: '100%',
+                      maxWidth: '10rem',
+                      height: '2rem',
+                      borderRadius: '0'
+                    }"
+                    v-model="slotProps.data.kilos_delivery"
+                    :suffix=" ` kg`"
+                    locale="en-US"
+                    min="0"
+                    :minFractionDigits="0"
+                    :maxFractionDigits="2"
+                  />
+                </div>
+                <h6 v-else class="m-0 p-0">
+                  {{ slotProps.data.kilos_delivery }} Kg
+                </h6>
+              </template>
+            </Column>
 
-      
-      
-      
-      <Column header="Posicion" class="m-0 py-0" style="width: min-content;">
-        <template #body="slotProps">
-          <div v-if="modificando">
-            <InputNumber  v-model="slotProps.data.index" optionLabel="name" :inputStyle="{
-                width: '100%',
-                maxWidth: '10rem',
-                height: '2rem',
-                borderRadius: '0'
-              }" style="height: 2rem;width: 3rem;display:flex; align-items: center;">
+            
+            
+            
+            <Column header="Posicion" class="m-0 py-0" style="width: min-content;">
+              <template #body="slotProps">
+                <div v-if="modificando">
+                  <InputNumber  v-model="slotProps.data.index" optionLabel="name" :inputStyle="{
+                      width: '100%',
+                      maxWidth: '10rem',
+                      height: '2rem',
+                      borderRadius: '0'
+                    }" style="height: 2rem;width: 3rem;display:flex; align-items: center;">
 
-            </InputNumber>
-          </div>
-          <h6 v-else class="m-0 p-0">
-            {{ slotProps.data.index }}
-          </h6>
-        </template>
-      </Column>
+                  </InputNumber>
+                </div>
+                <h6 v-else class="m-0 p-0">
+                  {{ slotProps.data.index }}
+                </h6>
+              </template>
+            </Column>
 
 
 
