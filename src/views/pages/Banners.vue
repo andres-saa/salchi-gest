@@ -6,7 +6,8 @@
     <h2><b>Arrastra y Reordena las Imágenes</b></h2>
 
     <Button
-      style="margin:1rem 0;background-color: var(--primary-color);border: none;"
+      style="margin:1rem 0;"
+      severity="help"
       label="Agregar Imágenes"
       icon="pi pi-upload"
       @click="openAddImageDialog"
@@ -19,31 +20,45 @@
       modal
       style="width: 40rem;"
     >
+      <!-- Área de drop que también responde al click para abrir el file selector -->
       <div
-        class="image"
-        style="
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          justify-content: end;
-          align-items: end;
-        "
+        class="drop-zone"
+        @dragover.prevent="onDragOverFiles"
+        @dragleave.prevent="onDragLeaveFiles"
+        @drop.prevent="handleDropFiles"
+        :class="{ 'drag-over-zone': isDragging }"
+        @click="triggerFileSelect"
       >
-        <!-- Vista previa de la primera imagen seleccionada -->
-        <img
-          v-if="imagePreview"
-          :src="imagePreview"
-          alt="Preview"
-          style="
-            width: 100%;
-            aspect-ratio: 19 / 9;
-            background-color: rgb(255, 255, 255);
-            object-fit: cover;
-            border-radius: 0.2rem;
-          "
+        <p>
+          Arrastra y suelta tus imágenes aquí o haz clic para seleccionarlas.
+        </p>
+
+        <!-- Previsualización de las imágenes seleccionadas -->
+        <div v-if="selectedPreviews.length > 0" class="preview-container">
+          <div
+            v-for="(src, index) in selectedPreviews"
+            :key="index"
+            class="preview-item"
+          >
+            <img
+              :src="src"
+              alt="Preview"
+              style="width: 100%; object-fit: cover; border-radius: 0.2rem;"
+            />
+          </div>
+        </div>
+
+        <!-- Input oculto para seleccionar archivos -->
+        <input
+          type="file"
+          ref="fileInput"
+          @change="handleFileUpload"
+          style="display: none;"
+          multiple
+          accept="image/*"
         />
 
-        <!-- Spinner de carga mientras sube -->
+        <!-- Spinner de carga mientras se suben las imágenes -->
         <div
           v-if="uploading"
           style="
@@ -60,23 +75,15 @@
         >
           <ProgressSpinner strokeWidth="8" style="color: white" />
         </div>
-
-        <Button class="my-3" severity="help" @click="triggerFileSelect"
-          >Agregar foto</Button
-        >
-        <input
-          type="file"
-          ref="fileInput"
-          @change="handleFileUpload"
-          style="display: none;"
-          multiple
-          accept="image/*"
-        />
       </div>
 
       <template #footer>
         <div class="col-12 px-0 pb-0">
-          <Button @click="confirmAddImages" severity="success" label="Guardar" />
+          <Button
+            @click="confirmAddImages"
+            severity="success"
+            label="Guardar"
+          />
         </div>
       </template>
     </Dialog>
@@ -95,11 +102,8 @@
         @dragleave="onDragLeave"
         @drop="onDrop(index)"
       >
-        <!-- Muestra la imagen usando tu URI base -->
-        <img
-          :src="`${URI}/read-photo-product/${img.src}`"
-          :alt="img.title"
-        />
+        <!-- Muestra la imagen usando la URI base -->
+        <img :src="`${URI}/read-photo-product/${img.src}`" :alt="img.title" />
 
         <!-- Botón de eliminar -->
         <Button
@@ -128,8 +132,13 @@
         style="width: 350px"
       >
         <div class="confirmation-content">
-          <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #ff9800"></i>
-          <span class="message">¿Estás seguro de que deseas eliminar esta imagen?</span>
+          <i
+            class="pi pi-exclamation-triangle"
+            style="font-size: 2rem; color: #ff9800"
+          ></i>
+          <span class="message">
+            ¿Estás seguro de que deseas eliminar esta imagen?
+          </span>
         </div>
         <div class="dialog-footer">
           <Button
@@ -157,12 +166,12 @@ import axios from 'axios'
 // Componente opcional
 import Banner from './Banner.vue'
 
-// Importa tu servicio y tu URI base
+// Importa tu servicio y la URI base
 import { productService } from '@/service/ProductService'
 import { URI } from '../../service/conection'
 
 // -------------------- ESTADOS --------------------
-const images = ref([])       // Lista de banners en local
+const images = ref([]) // Lista de imágenes locales
 const draggedItemIndex = ref(-1)
 const dragOverIndex = ref(-1)
 
@@ -173,11 +182,12 @@ const imageToDelete = ref(null)
 // Diálogo para agregar imágenes
 const isAddImageDialogOpen = ref(false)
 const uploading = ref(false)
-const selectedFiles = ref([])
-const imagePreview = ref(null)
+const selectedFiles = ref([])       // Archivos seleccionados (array de File)
+const selectedPreviews = ref([])      // Array de URLs para previsualizar
 const fileInput = ref(null)
+const isDragging = ref(false)         // Bandera para resaltar el drop zone
 
-// Ordenamos localmente las imágenes según index
+// Ordenamos localmente las imágenes según su índice
 const sortedImages = computed(() => {
   return images.value.slice().sort((a, b) => a.index - b.index)
 })
@@ -188,21 +198,14 @@ onMounted(async () => {
 })
 
 // -------------------- FUNCIONES A BACKEND --------------------
-/** GET /banners/ */
 async function fetchBanners() {
   try {
     const response = await axios.get(`${URI}/banners/`)
-    // Suponiendo que el backend retorna un array de objetos con al menos: id, index, img_identifier, etc.
-    // Mapeas si necesitas adaptarlo a tu uso en `images`:
     images.value = response.data.map((banner, idx) => ({
       ...banner,
-      // Asegúrate de que existan: "id", "index", "src" o "img_identifier", etc.
-      // Si tu backend devuelve "img_identifier" en vez de "src", cambia la propiedad
-      // o adáptalo para tu <img :src="...">
-      // Ejemplo:
       id: banner.id ?? (Date.now() + Math.random()),
       index: banner.index ?? idx,
-      src: banner.img_identifier, // para poder usar 'img.src' en el template
+      src: banner.img_identifier,
       title: banner.title ?? 'Sin título'
     }))
   } catch (error) {
@@ -210,27 +213,24 @@ async function fetchBanners() {
   }
 }
 
-/** POST /banners/ con { index, img_identifier } */
 async function createBanner(bannerData) {
   // bannerData = { index, img_identifier }
   const response = await axios.post(`${URI}/banners/`, bannerData)
   return response.data
 }
 
-/** POST /banners/reorder con { banners: [ { index, img_identifier }, ... ] } */
 async function reorderBanners(bannersArray) {
   // bannersArray = [ { index, img_identifier }, ... ]
-  const response = await axios.post(`${URI}/banners/reorder`, bannersArray )
+  const response = await axios.post(`${URI}/banners/reorder`, bannersArray)
   return response.data
 }
 
-/** DELETE /banners/{banner_id} */
 async function deleteBanner(bannerId) {
   const response = await axios.delete(`${URI}/banners/${bannerId}`)
   return response.data
 }
 
-// -------------------- DRAG & DROP --------------------
+// -------------------- DRAG & DROP SOBRE IMÁGENES EXISTENTES --------------------
 function onDragStart(index) {
   draggedItemIndex.value = index
 }
@@ -246,30 +246,25 @@ function onDragLeave() {
 async function onDrop(index) {
   if (index === draggedItemIndex.value) return
 
-  // Hallamos el item arrastrado
   const draggedItem = sortedImages.value[draggedItemIndex.value]
-  const originalIndex = images.value.findIndex((img) => img.id === draggedItem.id)
-
-  // Lo quitamos y lo insertamos en la nueva posición
+  const originalIndex = images.value.findIndex(
+    (img) => img.id === draggedItem.id
+  )
   images.value.splice(originalIndex, 1)
   images.value.splice(index, 0, draggedItem)
 
-  // Reasignamos los índices
   images.value.forEach((img, idx) => {
     img.index = idx
   })
 
-  // Limpiamos estados de drag
   draggedItemIndex.value = -1
   dragOverIndex.value = -1
 
-  // Envía el nuevo orden al backend
   try {
-    // Prepara el array que tu endpoint necesita
     const reorderData = images.value.map((img) => ({
-      id:img.id,
+      id: img.id,
       index: img.index,
-      img_identifier: img.src  // Si tu backend espera "img_identifier", se lo pasamos así
+      img_identifier: img.src
     }))
     await reorderBanners(reorderData)
   } catch (error) {
@@ -292,12 +287,11 @@ async function confirmDelete() {
   if (!imageToDelete.value) return
   try {
     await deleteBanner(imageToDelete.value.id)
-
-    // Removemos local
-    const indexToRemove = images.value.findIndex((img) => img.id === imageToDelete.value.id)
+    const indexToRemove = images.value.findIndex(
+      (img) => img.id === imageToDelete.value.id
+    )
     if (indexToRemove !== -1) {
       images.value.splice(indexToRemove, 1)
-      // Reasignamos índices
       images.value.forEach((img, idx) => {
         img.index = idx
       })
@@ -313,71 +307,76 @@ function openAddImageDialog() {
   isAddImageDialogOpen.value = true
 }
 
-// Dispara la selección de archivos en el input
 function triggerFileSelect() {
   fileInput.value.click()
 }
 
-// Maneja los archivos seleccionados
+// Maneja la selección desde el explorador de archivos
 function handleFileUpload(event) {
   const files = event.target.files
   if (!files || files.length === 0) return
-
-  selectedFiles.value = Array.from(files)
-  // Muestra preview sólo de la primera
-  if (selectedFiles.value.length > 0) {
-    imagePreview.value = URL.createObjectURL(selectedFiles.value[0])
-  }
-
-  // Para poder volver a seleccionar la misma imagen
+  const newFiles = Array.from(files)
+  selectedFiles.value = selectedFiles.value.concat(newFiles)
+  const newPreviews = newFiles.map((file) => URL.createObjectURL(file))
+  selectedPreviews.value = selectedPreviews.value.concat(newPreviews)
   event.target.value = ''
 }
 
+// Funciones para el área de arrastrar y soltar
+function onDragOverFiles() {
+  isDragging.value = true
+}
+
+function onDragLeaveFiles() {
+  isDragging.value = false
+}
+
+function handleDropFiles(e) {
+  isDragging.value = false
+  const files = e.dataTransfer.files
+  if (!files || files.length === 0) return
+  const newFiles = Array.from(files)
+  selectedFiles.value = selectedFiles.value.concat(newFiles)
+  const newPreviews = newFiles.map((file) => URL.createObjectURL(file))
+  selectedPreviews.value = selectedPreviews.value.concat(newPreviews)
+}
+
+// Envía las imágenes seleccionadas una a una al backend
 async function confirmAddImages() {
   if (selectedFiles.value.length === 0) {
     alert('Por favor selecciona al menos una imagen.')
     return
   }
-
   uploading.value = true
   try {
-    // Sube cada archivo y crea un banner en el backend
     for (const file of selectedFiles.value) {
-      // 1) Subir la imagen al backend usando productService
-      //    Asumiendo que `uploadPhoto` devuelve un objeto con { image_identifier: '...' }
       const formData = new FormData()
       formData.append('file', file)
-
       const response = await productService.uploadPhoto(formData)
-      // Asegúrate de que `response.image_identifier` exista
       const { image_identifier } = response
 
-      // 2) Crear el banner con ese identificador
-      //    El backend espera BannerAppSchema: { index: number, img_identifier: string }
       const bannerData = {
         index: images.value.length,
         img_identifier: image_identifier
       }
       const created = await createBanner(bannerData)
-
-      // 3) Agregar a la lista local
       images.value.push({
         id: created.id ?? Date.now() + Math.random(),
         index: created.index ?? images.value.length - 1,
-        src: created.img_identifier, // usar 'src' local para tu <img>
+        src: created.img_identifier,
         title: file.name
       })
     }
-
-    // Limpieza de estado
+    // Limpia el estado de archivos y previsualizaciones
     selectedFiles.value = []
-    imagePreview.value = null
+    selectedPreviews.value = []
     isAddImageDialogOpen.value = false
   } catch (error) {
     console.error('Error al subir las imágenes o crear banners:', error)
     alert('Hubo un error al subir las imágenes.')
   } finally {
     uploading.value = false
+    location.reload()
   }
 }
 </script>
@@ -418,14 +417,37 @@ async function confirmAddImages() {
   border-color: #aaa;
 }
 
-/* Botón de eliminar en la esquina superior derecha */
 .delete-button {
   position: absolute;
   top: 8px;
   right: 8px;
 }
 
-/* Diálogo de confirmación */
+.drop-zone {
+  border: 2px dashed #ccc;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.drop-zone.drag-over-zone {
+  background-color: #f0f0f0;
+  border-color: #aaa;
+}
+
+.preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.preview-item {
+  width: 100px;
+}
+
 .confirmation-content {
   display: flex;
   align-items: center;

@@ -1,15 +1,9 @@
 <template>
-
-
-
-
-
    <div style="padding: 3rem;">
-
-      <h2 style="text-transform: capitalize;"><b>      {{ route.params.carta_name }}
-      </b></h2>
-
-
+     <h2 style="text-transform: capitalize;">
+       <b>{{ route.params.carta_name }}</b>
+     </h2>
+ 
      <Button
        style="margin:1rem 0;background-color: var(--primary-color);border: none;"
        label="Agregar Imágenes"
@@ -25,52 +19,36 @@
        modal
        style="width: 40rem;"
      >
+       <!-- Zona para arrastrar y soltar archivos -->
        <div
-         class="image"
-         style="
-           display: flex;
-           flex-direction: column;
-           position: relative;
-           justify-content: end;
-           align-items: end;
-           padding: 0 .5rem;
-         "
+         class="drop-zone"
+         @dragover.prevent="onDragOverFiles"
+         @dragleave.prevent="onDragLeaveFiles"
+         @drop.prevent="handleDropFiles"
+         :class="{ 'drag-over-zone': isDragging }"
+         @click="triggerFileSelect"
        >
-         <!-- Vista previa de la primera imagen seleccionada -->
-         <img
-           v-if="imagePreview"
-           :src="imagePreview"
-           alt="Preview"
-           style="
-             width: 100%;
-             aspect-ratio: 19 / 9;
-             background-color: rgb(255, 255, 255);
-             object-fit: cover;
-             border-radius: 0.2rem;
-           "
-         />
- 
-         <!-- Spinner de carga mientras sube -->
+         <p>
+           Arrastra y suelta tus imágenes aquí o haz clic para seleccionarlas.
+         </p>
+         <!-- Muestra las previsualizaciones de todos los archivos seleccionados -->
          <div
-           v-if="uploading"
-           style="
-             position: absolute;
-             left: 0;
-             top: 0;
-             width: 100%;
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             height: 100%;
-             background-color: #ffffff80;
-           "
+           v-if="selectedPreviews.length > 0"
+           class="preview-container"
          >
-           <ProgressSpinner strokeWidth="8" style="color: white" />
+           <div
+             v-for="(src, index) in selectedPreviews"
+             :key="index"
+             class="preview-item"
+           >
+             <img
+               :src="src"
+               alt="Preview"
+               style="width: 100%; object-fit: contain; border-radius: 0.2rem;"
+             />
+           </div>
          </div>
- 
-         <Button class="my-3 " label="Agregar foto" severity="help" @click="triggerFileSelect"
-           ></Button
-         >
+         <!-- Input oculto para seleccionar archivos -->
          <input
            type="file"
            ref="fileInput"
@@ -79,6 +57,13 @@
            multiple
            accept="image/*"
          />
+         <!-- Spinner de carga mientras se suben las imágenes -->
+         <div
+           v-if="uploading"
+           style="position: absolute; left: 0; top: 0; width: 100%; display: flex; justify-content: center; align-items: center; height: 100%; background-color: #ffffff80;"
+         >
+           <ProgressSpinner strokeWidth="8" style="color: white" />
+         </div>
        </div>
  
        <template #footer>
@@ -102,23 +87,12 @@
          @dragleave="onDragLeave"
          @drop="onDrop(index)"
        >
-         <!-- Muestra la imagen usando tu URI base -->
-         <img
-           :src="`${URI}/read-photo-product/${img.src}`"
-           :alt="img.title"
-         />
+         <!-- Muestra la imagen usando la URI base -->
+         <img :src="`${URI}/read-photo-product/${img.src}`" :alt="img.title" />
  
          <!-- Botón de eliminar -->
          <Button
-           style="
-             border-radius: 50%;
-             position: absolute;
-             background-color: var(--primary-color);
-             border: 3px solid;
-             aspect-ratio: 1 / 1;
-             right: -1.5rem;
-             top: -1.5rem;
-           "
+           style="border-radius: 50%; position: absolute; background-color: var(--primary-color); border: 3px solid; aspect-ratio: 1 / 1; right: -1.5rem; top: -1.5rem;"
            icon="pi pi-times"
            severity="info"
            class="delete-button"
@@ -136,7 +110,9 @@
        >
          <div class="confirmation-content">
            <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #ff9800"></i>
-           <span class="message">¿Estás seguro de que deseas eliminar esta imagen?</span>
+           <span class="message">
+             ¿Estás seguro de que deseas eliminar esta imagen?
+           </span>
          </div>
          <div class="dialog-footer">
            <Button
@@ -160,21 +136,17 @@
  <script setup>
  import { ref, computed, onMounted, watch } from 'vue'
  import axios from 'axios'
+ import { useRoute } from 'vue-router'
  
- // Componente opcional
- // import carta from './carta.vue'
- 
- // Importa tu servicio y tu URI base
+ // Importa tu servicio, la URI base y el fetchService
  import { productService } from '@/service/ProductService'
  import { URI } from '../../service/conection'
-import { useRoute } from 'vue-router'
-import { fetchService } from '../../service/utils/fetchService'
+ import { fetchService } from '../../service/utils/fetchService'
  
-
-
  const route = useRoute()
+ 
  // -------------------- ESTADOS --------------------
- const images = ref([])       // Lista de cartas en local
+ const images = ref([]) // Lista de cartas en local
  const draggedItemIndex = ref(-1)
  const dragOverIndex = ref(-1)
  
@@ -185,9 +157,10 @@ import { fetchService } from '../../service/utils/fetchService'
  // Diálogo para agregar imágenes
  const isAddImageDialogOpen = ref(false)
  const uploading = ref(false)
- const selectedFiles = ref([])
- const imagePreview = ref(null)
+ const selectedFiles = ref([])       // Almacenará todos los archivos seleccionados
+ const selectedPreviews = ref([])      // Almacenará las URLs de previsualización
  const fileInput = ref(null)
+ const isDragging = ref(false)         // Para destacar la zona de drop
  
  // Ordenamos localmente las imágenes según index
  const sortedImages = computed(() => {
@@ -199,28 +172,24 @@ import { fetchService } from '../../service/utils/fetchService'
    await fetchcartas()
  })
  
-
- watch(() => route.params.carta_id, async() => {
-   await fetchcartas()
- })
+ watch(
+   () => route.params.carta_id,
+   async () => {
+     await fetchcartas()
+   }
+ )
+ 
  // -------------------- FUNCIONES A BACKEND --------------------
  /** GET /cartas/ */
  async function fetchcartas() {
    try {
-
-   const cartaId = route.params.carta_id
+     const cartaId = route.params.carta_id
      const response = await fetchService.get(`${URI}/carta/${cartaId}`)
-     // Suponiendo que el backend retorna un array de objetos con al menos: id, index, img_identifier, etc.
-     // Mapeas si necesitas adaptarlo a tu uso en `images`:
      images.value = response.map((carta, idx) => ({
        ...carta,
-       // Asegúrate de que existan: "id", "index", "src" o "img_identifier", etc.
-       // Si tu backend devuelve "img_identifier" en vez de "src", cambia la propiedad
-       // o adáptalo para tu <img :src="...">
-       // Ejemplo:
        id: carta.id ?? (Date.now() + Math.random()),
        index: carta.index ?? idx,
-       src: carta.img_identifier, // para poder usar 'img.src' en el template
+       src: carta.img_identifier, // para usar en el src de la imagen
        title: carta.title ?? 'Sin título'
      }))
    } catch (error) {
@@ -228,19 +197,16 @@ import { fetchService } from '../../service/utils/fetchService'
    }
  }
  
- /** POST /cartas/ con { index, img_identifier } */
+ /** POST /cartas/ con { index, img_identifier, carta_id } */
  async function createcarta(cartaData) {
-   // cartaData = { index, img_identifier }
+   // cartaData = { index, img_identifier, carta_id }
    const response = await fetchService.post(`${URI}/carta/`, cartaData)
-   location.reload()
-
    return response
  }
  
  /** POST /cartas/reorder con { cartas: [ { index, img_identifier }, ... ] } */
  async function reordercartas(cartasArray) {
-   // cartasArray = [ { index, img_identifier }, ... ]
-   const response = await axios.post(`${URI}/carta/reorder`, cartasArray )
+   const response = await axios.post(`${URI}/carta/reorder`, cartasArray)
    return response.data
  }
  
@@ -250,7 +216,7 @@ import { fetchService } from '../../service/utils/fetchService'
    return response.data
  }
  
- // -------------------- DRAG & DROP --------------------
+ // -------------------- DRAG & DROP IMÁGENES EXISTENTES --------------------
  function onDragStart(index) {
    draggedItemIndex.value = index
  }
@@ -266,30 +232,24 @@ import { fetchService } from '../../service/utils/fetchService'
  async function onDrop(index) {
    if (index === draggedItemIndex.value) return
  
-   // Hallamos el item arrastrado
    const draggedItem = sortedImages.value[draggedItemIndex.value]
    const originalIndex = images.value.findIndex((img) => img.id === draggedItem.id)
  
-   // Lo quitamos y lo insertamos en la nueva posición
    images.value.splice(originalIndex, 1)
    images.value.splice(index, 0, draggedItem)
  
-   // Reasignamos los índices
    images.value.forEach((img, idx) => {
      img.index = idx
    })
  
-   // Limpiamos estados de drag
    draggedItemIndex.value = -1
    dragOverIndex.value = -1
  
-   // Envía el nuevo orden al backend
    try {
-     // Prepara el array que tu endpoint necesita
      const reorderData = images.value.map((img) => ({
-       id:img.id,
+       id: img.id,
        index: img.index,
-       img_identifier: img.src  // Si tu backend espera "img_identifier", se lo pasamos así
+       img_identifier: img.src
      }))
      await reordercartas(reorderData)
    } catch (error) {
@@ -312,12 +272,11 @@ import { fetchService } from '../../service/utils/fetchService'
    if (!imageToDelete.value) return
    try {
      await deletecarta(imageToDelete.value.id)
- 
-     // Removemos local
-     const indexToRemove = images.value.findIndex((img) => img.id === imageToDelete.value.id)
+     const indexToRemove = images.value.findIndex(
+       (img) => img.id === imageToDelete.value.id
+     )
      if (indexToRemove !== -1) {
        images.value.splice(indexToRemove, 1)
-       // Reasignamos índices
        images.value.forEach((img, idx) => {
          img.index = idx
        })
@@ -328,7 +287,8 @@ import { fetchService } from '../../service/utils/fetchService'
    closeDeleteDialog()
  }
  
- // -------------------- AGREGAR NUEVOS cartaS --------------------
+ // -------------------- AGREGAR NUEVAS CARTAS --------------------
+ // Abre el diálogo para agregar imágenes
  function openAddImageDialog() {
    isAddImageDialogOpen.value = true
  }
@@ -338,21 +298,39 @@ import { fetchService } from '../../service/utils/fetchService'
    fileInput.value.click()
  }
  
- // Maneja los archivos seleccionados
+ // Maneja la selección a través del explorador de archivos
  function handleFileUpload(event) {
    const files = event.target.files
    if (!files || files.length === 0) return
  
-   selectedFiles.value = Array.from(files)
-   // Muestra preview sólo de la primera
-   if (selectedFiles.value.length > 0) {
-     imagePreview.value = URL.createObjectURL(selectedFiles.value[0])
-   }
- 
-   // Para poder volver a seleccionar la misma imagen
+   const newFiles = Array.from(files)
+   selectedFiles.value = selectedFiles.value.concat(newFiles)
+   const newPreviews = newFiles.map(file => URL.createObjectURL(file))
+   selectedPreviews.value = selectedPreviews.value.concat(newPreviews)
    event.target.value = ''
  }
  
+ // Funciones para la zona de drop con drag & drop
+ function onDragOverFiles() {
+   isDragging.value = true
+ }
+ 
+ function onDragLeaveFiles() {
+   isDragging.value = false
+ }
+ 
+ function handleDropFiles(event) {
+   isDragging.value = false
+   const files = event.dataTransfer.files
+   if (!files || files.length === 0) return
+ 
+   const newFiles = Array.from(files)
+   selectedFiles.value = selectedFiles.value.concat(newFiles)
+   const newPreviews = newFiles.map(file => URL.createObjectURL(file))
+   selectedPreviews.value = selectedPreviews.value.concat(newPreviews)
+ }
+ 
+ // Envía cada imagen de forma secuencial y al finalizar recarga la página
  async function confirmAddImages() {
    if (selectedFiles.value.length === 0) {
      alert('Por favor selecciona al menos una imagen.')
@@ -361,44 +339,35 @@ import { fetchService } from '../../service/utils/fetchService'
  
    uploading.value = true
    try {
-     // Sube cada archivo y crea un carta en el backend
      for (const file of selectedFiles.value) {
-       // 1) Subir la imagen al backend usando productService
-       //    Asumiendo que `uploadPhoto` devuelve un objeto con { image_identifier: '...' }
        const formData = new FormData()
        formData.append('file', file)
- 
        const response = await productService.uploadPhoto(formData)
-       // Asegúrate de que `response.image_identifier` exista
        const { image_identifier } = response
  
-       // 2) Crear el carta con ese identificador
-       //    El backend espera cartaAppSchema: { index: number, img_identifier: string }
        const cartaData = {
          index: images.value.length,
          img_identifier: image_identifier,
-         carta_id:route.params.carta_id
+         carta_id: route.params.carta_id
        }
        const created = await createcarta(cartaData)
- 
-       // 3) Agregar a la lista local
        images.value.push({
          id: created.id ?? Date.now() + Math.random(),
          index: created.index ?? images.value.length - 1,
-         src: created.img_identifier, // usar 'src' local para tu <img>
+         src: created.img_identifier,
          title: file.name
        })
      }
- 
      // Limpieza de estado
      selectedFiles.value = []
-     imagePreview.value = null
+     selectedPreviews.value = []
      isAddImageDialogOpen.value = false
    } catch (error) {
      console.error('Error al subir las imágenes o crear cartas:', error)
      alert('Hubo un error al subir las imágenes.')
    } finally {
      uploading.value = false
+     location.reload() // Recarga la página al finalizar
    }
  }
  </script>
@@ -430,8 +399,8 @@ import { fetchService } from '../../service/utils/fetchService'
    max-width: 15rem;
    display: block;
    margin: 0 auto 0.5rem;
-   aspect-ratio: 19 / 9;
-   object-fit: cover;
+   /* aspect-ratio: 19 / 9; */
+   object-fit: contain;
  }
  
  .draggable-item.drag-over {
@@ -439,14 +408,36 @@ import { fetchService } from '../../service/utils/fetchService'
    border-color: #aaa;
  }
  
- /* Botón de eliminar en la esquina superior derecha */
  .delete-button {
    position: absolute;
    top: 8px;
    right: 8px;
  }
  
- /* Diálogo de confirmación */
+ .drop-zone {
+   border: 2px dashed #ccc;
+   padding: 1rem;
+   text-align: center;
+   cursor: pointer;
+   position: relative;
+ }
+ .drop-zone.drag-over-zone {
+   background-color: #f0f0f0;
+   border-color: #aaa;
+ }
+ 
+ .preview-container {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+   margin-top: 1rem;
+   justify-content: center;
+ }
+ 
+ .preview-item {
+   width: 100px;
+ }
+ 
  .confirmation-content {
    display: flex;
    align-items: center;
