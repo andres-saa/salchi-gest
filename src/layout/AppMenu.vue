@@ -133,7 +133,7 @@ async function fetchAndUpdateRoles() {
                 label: 'Salchimonster',
                 icon: 'fa-solid fa-whatsapp',
                 'icon-color': 'green', // Naranja vibrante
-                to:'/chat/salchimonster',
+                to:'/chat/',
                 permision_id: get_id([1,2,3,4,5,6,7,31]),
             },
 
