@@ -5,5 +5,6 @@
 
 // const URI = 'http://167.71.178.54:9000'
 const URI = 'https://backend.salchimonster.com'
+const URI_MESSAGES = 'https://message-service.salchimonster.com'
 
-export { URI }
+export { URI, URI_MESSAGES }

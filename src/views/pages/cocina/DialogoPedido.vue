@@ -1054,6 +1054,24 @@
                   {{ store.currentOrder.payment_method?.toLowerCase() }}
                 </span>
               </div>
+
+              <div v-if="store.currentOrder.epayco_ref">
+                <span><b>Estado del pago</b></span>
+              </div>
+              <div v-if="store.currentOrder.epayco_ref">
+                <span style="text-align: start;color: black;">
+                  Aprobado
+                </span>
+              </div>
+
+              <div v-if="store.currentOrder.epayco_ref">
+                <span><b>Referencia de pago</b></span>
+              </div>
+              <div v-if="store.currentOrder.epayco_ref">
+                <span style="text-align: start;color: black;">
+                  {{store.currentOrder.epayco_ref}}
+                </span>
+              </div>
   
                 </div>
              

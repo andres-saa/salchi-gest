@@ -166,7 +166,7 @@ const checkScreenWidth = () => {
         </button>
 
 
-        <div class="icons" style="justify-content: center;width: 100%; align-items: center;">
+        <!-- <div class="icons" style="justify-content: center;width: 100%; align-items: center;">
                     <div @mouseover="visible_menu = false" style="height: 3rem;width: 3rem"></div>
 
                     <div @mouseleave="visible_menu = false" style="width: .5rem;"></div>
@@ -194,7 +194,7 @@ const checkScreenWidth = () => {
 
                 
            
-        </div>
+        </div> -->
 
    
 

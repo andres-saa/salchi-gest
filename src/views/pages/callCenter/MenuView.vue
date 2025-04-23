@@ -26,7 +26,7 @@
   
   <VistaProducto></VistaProducto>
 
-  <div style="position: fixed;overflow: hidden;background-color: white;border-radius: 10rem;background-color: black; top:12rem;display: flex;flex-direction: column;left:1rem;padding: .5rem;gap: 1rem; ">
+  <!-- <div style="position: fixed;overflow: hidden;background-color: white;border-radius: 10rem;background-color: black; top:12rem;display: flex;flex-direction: column;left:1rem;padding: .5rem;gap: 1rem; ">
 
 <div v-for="(i, index) in categories" style="display: flex;align-items: center; flex-direction: column;">
     <Button :style="siteStore.categories == i.codigos? 'background-color:yellow' : 'background-color:white'" style="padding: .5rem; border-radius: 50%;aspect-ratio: 1 / 1;" size="small" text :label="i.name" class="text-white button" @click="siteStore.categories = i.codigos">
@@ -36,7 +36,7 @@
 </div>
 
 
-</div>
+</div> -->
 </div>
 
 
@@ -109,8 +109,9 @@ onMounted(async () => {
   const site_id = siteStore.location.site?.site_id
   const pe_id = siteStore.location.site?.pe_site_id
 
-  const data = await fetchService.get(`${URI}/get-product-integration/6149/${pe_id || 1}`)
-  cartStore.menu = data
+  const data = await fetchService.get(`${URI}/tiendas/${pe_id || 1}/products`)
+
+  cartStore.menu = data.categorias
 
 })
 

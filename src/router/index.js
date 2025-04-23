@@ -126,9 +126,9 @@ const router = createRouter({
             component: () => import('@/views/pages/chat/Chat.vue'),
             children:[
               {
-                path: '/chat/salchimonster',
-                name: 'chat-salchimonster',
-                component: () => import('@/views/pages/chat/Salchimonster.vue'),
+                path: '/chat/messages/:restaurant_id/:user_id/:user_name/:color',
+                name: 'chat-users',
+                component: () => import('@/views/pages/chat/Messages.vue'),
               }
          
             ]

@@ -1,19 +1,16 @@
 <template>
-  <div class="container">
-      <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu?.listaCategorias
-          ?.sort((a, b) => codigos.indexOf(parseInt(a.categoria_id)) - codigos.indexOf(parseInt(b.categoria_id)))"
+  <div class="containerm" lang="es" translate="yes">
+      <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu.filter(p => p.products  && p.visible)"
           :key="section.categoria_id">
 
 
 
           <div class="category-header">
-              <span class="category-name py-2 px-5"  style="border-radius: 10rem;" :class="cart.currentSection  == section.categoria_id ? 'selected' : 3">
+              <span class="category-name" style="margin: 0 1rem;">
                   <b>{{ section.categoria_descripcion }}</b>
-
-                  <!-- {{ cart.currentSection }} -->
               </span>
               <!-- <img @click="open(image.producto)" v-for="(image, index) in cart?.menu?.data
-                  .filter(p => p.categoria_id === section.categoria_id)
+                  .filter(p => p.categoria_id === section.categoria_id  &&  (p?.productogeneral_precio > 0 || p?.lista_presentacion?.[0].producto_precio > 0))
                   .map(p => { return { imagen: p.productogeneral_urlimagen, producto: p } })
                   .slice(0, 4)" :key="index" class="category-img" :src="`${URI}/get-image?image_url=${image.imagen}`"
                   alt="Imagen de categoría"> -->
@@ -24,7 +21,7 @@
 
           <div class="section">
 
-              <div v-for="(product, index) in cart?.menu?.data?.filter(d => d.categoria_id == section.categoria_id && d.productogeneral_estado == 'Activo')"
+              <div v-for="(product, index) in section?.products"
                   :key="product.id" class="" style="width: 100%;">
 
                   <div class="card-container">

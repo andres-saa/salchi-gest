@@ -9,18 +9,30 @@
                 <span class="text-lg" style="min-width: max-content;">Nuevo pedido</span>
         </Button>
       <div class="container" style="justify-content: start; align-items: center;">
-        <div v-for="(section, index) in filteredAndSortedCategories" :key="section.categoria_id"
-          :id="'categoryButton-' + section.categoria_id" class="container-button">
-          <a @click.prevent="smoothScrollTo(section.categoria_id)" >
-            <Button class="bar-button" :class="{ selected: cart.currentSection === section.categoria_id }"
-              :label="section.categoria_descripcion">
-              <img class="mr-2"
-                :src="`${URI}/get-image?image_url=${cart?.menu?.data.find(p => p.categoria_id == section.categoria_id)?.productogeneral_urlimagen}`"
-                alt="" />
-              <span><b>{{ section.categoria_descripcion }}</b></span>
-            </Button>
-          </a>
-        </div>
+        <div class="container" style="justify-content: start; align-items: center">
+      <div
+        v-for="(section, index) in cart?.menu?.filter(p => p.products  && p.visible)"
+        :key="section.categoria_id"
+        :id="'categoryButton-' + section.categoria_id"
+        class="container-button"
+      >
+        <a @click.prevent="smoothScrollTo(section.categoria_id)">
+          <Button
+            class="bar-button"
+            :class="{ selected: cart.currentSection === section.categoria_id }"
+            :label="section.categoria_descripcion"
+          >
+            <img
+              :src="`${URI}/get-image?image_url=${section.products?.[0]?.productogeneral_urlimagen}`"
+              alt=""
+            />
+            <span
+              ><b>{{ section.categoria_descripcion }}</b></span
+            >
+          </Button>
+        </a>
+      </div>
+    </div>
       </div>
     </div>
   </template>

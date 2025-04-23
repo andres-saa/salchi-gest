@@ -122,12 +122,17 @@ const isSmallScreen = ref(window.innerWidth < 991);
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .fade-enter-active, .fade-leave-active {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .fade-enter, .fade-leave-to { /* .fade-leave-active en versiones anteriores de Vue */
     opacity: 0;
     transform: translateY(2rem);
+}
+
+*:focus{
+    box-shadow: none;
+    // outline: none;
 }
 </style>
