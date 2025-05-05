@@ -16,7 +16,7 @@ export const fetchService = {
     const store = useReportesStore();
     try {
       // Muestra el loading solo si loadingMessage es distinto de false
-      if (loadingMessage !== false) {
+      if (loadingMessage != false) {
         store.setLoading(loadingMessage, 'cargando');
       }
 

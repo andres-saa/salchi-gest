@@ -125,11 +125,30 @@ const router = createRouter({
             name: 'chat',
             component: () => import('@/views/pages/chat/Chat.vue'),
             children:[
+
               {
-                path: '/chat/messages/:restaurant_id/:user_id/:user_name/:color',
-                name: 'chat-users',
-                component: () => import('@/views/pages/chat/Messages.vue'),
-              }
+                path: '/chat/chats',
+                name: 'chats',
+                component: () => import('@/views/pages/chat/chats.vue'),
+                children:[
+                  {
+                    path: '/chat/chats/messages/:restaurant_id/:user_id/:user_name/:color',
+                    name: 'chat-users',
+                    component: () => import('@/views/pages/chat/Messages.vue'),
+                  },
+
+              
+                 
+                ],
+                
+              },
+              {
+                path: '/chat/templates',
+                name: 'chat-templates',
+                component: () => import('@/views/pages/chat/templates.vue'),
+              },
+
+              
          
             ]
           },

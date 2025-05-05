@@ -24,7 +24,7 @@ export const usecartStore = defineStore('salchi_super_cart_web4432', {
     last_order: '',
     sending_order: false,
     was_reserva: false,
-    menu:menu
+    menu:[{}]
   }),
 
   getters: {

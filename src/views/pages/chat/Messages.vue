@@ -1,152 +1,574 @@
 <template>
-    <div style="height: 100%; position: relative;display: flex;justify-content: center;">
-        <ProgressSpinner v-if="loadingMore" style="width: 50px; height: 50px;position: absolute;z-index: 100;color: white" strokeWidth="8" fill="transparent"
-    animationDuration=".3s" aria-label="Custom ProgressSpinner" />
-      <div style="position: relative; height: 100%;width: 100%; ">
-        <!-- Contenedor de mensajes con ref para monitorear el scroll -->
-        <div
-          ref="messagesContainer"
-          style="padding: 1rem; display: flex; flex-direction: column; gap: 0rem; overflow-y: auto; max-height: 100%;padding-bottom: 4rem;"
-        >
-          <div
-            v-for="message in messages"
-            :key="message?.message_data?.id"
-            style="width: 100%; display: flex; gap: 1rem; padding-bottom: 1rem;"
-            :style="message?.message_data?.employer_id ? 'justify-content: end;' : 'justify-content: start;'"
+
+
+<Dialog v-model:visible="message_acctions" header="Acciones del mensaje" :modal="true" :style="{ width: '90vw', maxWidth: ' 30rem' }" :closable="true" :dismissableMask="false" style="background-color:rgb(0, 1, 22);display: flex;">
+
+  <div
+            :style="markedMessages.message_data.employer_id
+                    ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
+                    : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
+            style="padding:1rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
+                   max-width:100%;min-width:10rem;position:relative;display:flex;flex-direction:column;gap:.5rem;"
           >
-            <!-- Avatar para mensajes entrantes -->
-            <div 
-              v-if="!message?.message_data?.employer_id"
-              :style="`background-color:${user?.color}`"
-              style="height: 100%; width: 3rem; aspect-ratio: 1/1; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;"
-            >
-              <h5 style="margin: 0; color: white; font-weight: 400;">
-                {{ getInitials(user?.name) }}
-              </h5>
-            </div>
-  
-            <!-- Contenido del mensaje con truncamiento, saltos de línea y formato en negrita -->
-            <div
-              :style="message?.message_data?.employer_id ? 'background-color: #0a3744; border-radius: .5rem 0 .5rem .5rem;' : 'background-color: #2f2f41; border-radius: 0 .5rem .5rem .5rem;'"
-              style="padding: 1rem 1rem 2.5rem 1rem;  
-                /* si una “palabra” supera el ancho, quiebra ahí */
-                overflow-wrap: break-word;
-                word-break: break-word; /* para Safari */ max-width: 60%;min-width: 10rem; position: relative;"
-            >
-              <h6 style="color: white; margin: 0; font-weight: 300;">
-                <!-- Usamos v-html y la función formatContent para interpretar los saltos de línea y *asteriscos* -->
-                <span
-                  v-if="!isExpanded(message?.message_data?.id)"
-                  v-html="formatContent(message?.message_data?.content.substring(0, 200) + (message?.message_data?.content.length > 200 ? '...' : ''))"
-                ></span>
-                <span
-                  v-else
-                  v-html="formatContent(message?.message_data?.content)"
-                ></span>
-                <button
-                  v-if="message?.message_data?.content.length > 200"
-                  @click="toggleExpand(message?.message_data?.id)"
-                  style="background: none; border: none; color: rgb(33, 150, 243); cursor: pointer; padding: 0 0.5rem;"
+
+          <Button class="options" style="color: white;">
+              <i class="pi pi-angle-down text-xl"></i>
+            </Button>
+            <!-- Adjuntos -->
+            <template v-if="markedMessages.message_data.file_type">
+              <template v-if="markedMessages.message_data.file_type === 'image'">
+              <div> 
+                <img class="img-fluid"
+                :src="markedMessages.currentSrc"                   
+                @click="setWatchingImg(markedMessages.full)"        
+                style="border-radius:.3rem;width:18rem;object-fit:cover;cursor:pointer"
+              />
+              </div>
+             
+            </template>
+
+              <template v-else-if="markedMessages.message_data.file_type === 'audio'">
+                <audio :src="fileUrl(markedMessages.message_data)" controls style="width:100%;min-width:20rem;max-width: 100%;background-color: white; border-radius: .5rem;" />
+              </template>
+
+              <template v-else>
+                <a
+                  :href="fileUrl(markedMessages.message_data)"
+                  target="_blank"
+                  style="color:#2196f3;text-decoration:none;align-self:flex-start;display:flex;align-items:center;gap:.5rem"
                 >
-                  Ver {{ isExpanded(message?.message_data?.id) ? 'menos' : 'más' }}
-                </button>
-              </h6>
-           
+                  <i class="pi pi-file" /> Descargar archivo
+                </a>
+              </template>
+            </template>
 
-              <h6
-                style="color: white; margin: 0; font-weight: 300; position: absolute;min-width: 10rem; bottom: .5rem; right: 1rem; min-width: max-content; display: flex; gap: .5rem"
-              >   <span style="opacity: .5;"> {{ message.time }}</span>
-                <i v-if="message?.message_data.current_status_id == 3 && message?.message_data?.employer_id" style="color: greenyellow;" class="fa-solid fa-check-double"></i>
-                <i v-if="message?.message_data.current_status_id == 2 && message?.message_data?.employer_id" style="color: greenyellow;" class="fa-solid fa-check"></i>
-                <i v-if="message?.message_data.current_status_id == 1 && message?.message_data?.employer_id" style="color: gray;" class="fa-solid fa-check"></i>
-                
+            <!-- Texto -->
+            <h6 style="color:white;margin:0;font-weight:300">
+              <span
+                v-if="!isExpanded(markedMessages.message_data.id)"
+                v-html="formatContent(markedMessages.message_data.content?.substring(0,200) +
+                        (markedMessages.message_data.content?.length > 200 ? '…' : ''))"
+              />
+              <span v-else v-html="formatContent(markedMessages.message_data.content)" />
+              <button
+                v-if="markedMessages.message_data.content?.length > 200"
+                @click="toggleExpand(message.message_data.id)"
+                style="background:none;border:none;color:#2196f3;cursor:pointer;padding:0 .5rem"
+              >
+                Ver {{ isExpanded(markedMessages.message_data.id) ? 'menos' : 'más' }}
+              </button>
+            </h6>
 
-              </h6>
-  
-              <!-- Burbuja de mensaje "tail" -->
-              <svg
-                v-if="!message?.message_data?.employer_id"
-                style="position: absolute; left: -8px; top: 0; color: #2f2f41;"
-                viewBox="0 0 8 13"
-                height="13"
-                width="8"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <title>tail-in</title>
-                <path
-                  opacity="0.13"
-                  fill="#0000000"
-                  d="M1.533,3.568L8,12.193V1H2.812 C1.042,1,0.474,2.156,1.533,3.568z"
-                ></path>
-                <path
-                  fill="currentColor"
-                  d="M1.533,2.568L8,11.193V0L2.812,0C1.042,0,0.474,1.156,1.533,2.568z"
-                ></path>
-              </svg>
-  
-              <svg
-                v-else
-                style="position: absolute; right: -8px; top: 0; color: #0a3744;"
-                viewBox="0 0 8 13"
-                height="13"
-                width="8"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <title>tail-out</title>
-                <path
-                  opacity="0.13"
-                  d="M5.188,1H0v11.193l6.467-8.625 C7.526,2.156,6.958,1,5.188,1z"
-                ></path>
-                <path
-                  fill="currentColor"
-                  d="M5.188,0H0v11.193l6.467-8.625C7.526,1.156,6.958,0,5.188,0z"
-                ></path>
-              </svg>
-            </div>
-  
-            <!-- Avatar para mensajes de employer -->
-            <div
-              v-if="message?.message_data?.employer_id"
-              style="height: 100%; width: 3rem; min-width: 3rem; aspect-ratio: 1/1; background-color: rgb(3 88 95 / 53%); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;"
+            <!-- Hora e iconos -->
+            <h6
+              style="color:white;margin:0;font-weight:300;position:absolute;bottom:.5rem;right:1rem;min-width:max-content;display:flex;gap:.5rem"
             >
-              <h5 style="margin: 0; color: white; font-weight: 400;">
-                {{ getInitials(message?.message_data?.employer_name) }}
-              </h5>
-            </div>
+              <span style="opacity:.5">{{ markedMessages.time }}</span>
+              <i v-if="markedMessages.message_data.current_status_id == 3 && markedMessages.message_data.employer_id" class="fa-solid fa-check-double" style="color:greenyellow" />
+              <i v-else-if="markedMessages.message_data.current_status_id == 2 && markedMessages.message_data.employer_id" class="fa-solid fa-check" style="color:greenyellow" />
+              <i v-else-if="markedMessages.message_data.current_status_id == 1 && markedMessages.message_data.employer_id" class="fa-solid fa-check" style="color:gray" />
+            </h6>
+            
+            <!-- Cola -->
+
+          
+            <svg
+              v-if="!markedMessages.message_data.employer_id"
+              style="position:absolute;left:-8px;top:0;color:#2f2f41"
+              viewBox="0 0 8 13" height="13" width="8"
+            >
+              <path opacity="0.13" fill="#0000000" d="M1.533,3.568L8,12.193V1H2.812C1.042,1,0.474,2.156,1.533,3.568z"/>
+              <path fill="currentColor" d="M1.533,2.568L8,11.193V0L2.812,0C1.042,0,0.474,1.156,1.533,2.568z"/>
+            </svg>
+            <svg
+              v-else
+              style="position:absolute;right:-8px;top:0;color:#0a3744"
+              viewBox="0 0 8 13" height="13" width="8"
+            >
+              <path opacity="0.13" d="M5.188,1H0v11.193l6.467-8.625C7.526,2.156,6.958,1,5.188,1z"/>
+              <path fill="currentColor" d="M5.188,0H0v11.193l6.467-8.625C7.526,1.156,6.958,0,5.188,0z"/>
+            </svg>
+          </div>
+
+  <div style="display: flex; gap: 1rem; flex-direction: column; padding:1rem  0rem;">
+    <!-- <Button label="Eliminar" icon="pi pi-trash" severity="danger" @click="message_acctions = false" /> -->
+    <!-- <Button label="Reenviar" icon="pi pi-paper-plane" severity="success" @click="message_acctions = false" /> -->
+    <Textarea v-model="responseText"  autoResize rows="4" placeholder="Escribe un mensaje…" style="width: 100%; background-color: ;" />
+
+    <Button label="Responder" icon="pi pi-check" severity="info" @click="send_context(responseText)" />
+    <!-- <Button label="Copiar enlace" icon="pi pi-copy" severity="warning" @click="message_acctions = false" /> -->
+
+  </div>
+</Dialog>
+  <div
+    style="height: 100%; position: relative; display: flex; justify-content: center;"
+    @dragover.prevent
+    @dragenter="isDragging = true"
+    @dragleave="handleDragLeave"
+    @drop="handleDrop"
+  >
+    <!-- Overlay de arrastre -->
+    <div
+      v-if="isDragging"
+      style="position: absolute; inset: 0; background: #00000080; z-index: 500000; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.6rem; pointer-events: none;"
+    >
+      Suelte aquí
+    </div>
+
+
+
+    <!-- Spinner de carga de mensajes antiguos -->
+    <ProgressSpinner
+      v-if="loadingMore"
+      style="width: 50px; height: 50px; position: absolute; z-index: 100; color: white"
+      strokeWidth="8"
+      fill="transparent"
+      animationDuration=".3s"
+      aria-label="Custom ProgressSpinner"
+    />
+
+    <div style="position: relative; height: 100%; width: 100%">
+      <!-- Contenedor de mensajes -->
+      <div
+        ref="messagesContainer"
+        style="padding: 1rem; display: flex; flex-direction: column; gap: 0rem; overflow-y: auto; max-height: 100%; padding-bottom: 4rem;"
+      >       
+        <div   
+        
+          v-for="message in messages"
+          :key="message.message_data.id"
+          
+         
+        >
+
+
+        <div class="message"  :style="message.message_data.employer_id ? 'justify-content: end;' : 'justify-content: start;'" style="width: 100%; display: flex; gap: 1rem;  padding-bottom: 1rem;">  
+          
+
+          
+          <div
+            v-if="!message.message_data.employer_id"
+            :style="`background-color:${user?.color}`"
+            style="height: 100%; width: 3rem; aspect-ratio: 1/1; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;"
+          >
+
+          
+            <h5 style="margin: 0; color: white; font-weight: 400">{{ getInitials(user?.name) }}</h5>
+          </div>
+
+          <!-- Burbuja -->
+          <div
+            :style="message.message_data.employer_id
+                    ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
+                    : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
+            style="padding:3rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
+                   max-width:60%;min-width:10rem;position:relative;display:flex;flex-direction:column;gap:.5rem;"
+          >
+
+          <Button class="options" style="color: white;" @click="setMarkedMessage(message)">
+              <i class="pi pi-angle-down text-xl p-1"></i>
+            </Button>
+            <!-- Adjuntos -->
+            <template v-if="message.message_data.file_type">
+              <template v-if="message.message_data.file_type === 'image'">
+              <img class="img-fluid"
+                :src="message.currentSrc"                   
+                @click="setWatchingImg(message.full)"        
+                style="max-width:38rem;border-radius:.3rem;width:18rem;object-fit:cover;cursor:pointer"
+              />
+            </template>
+
+              <template v-else-if="message.message_data.file_type === 'audio'">
+                <audio :src="fileUrl(message.message_data)" controls style="width:100%;min-width:20rem;max-width: 100%;background-color: white; border-radius: .5rem;" />
+              </template>
+
+              <template v-else>
+                <a
+                  :href="fileUrl(message.message_data)"
+                  target="_blank"
+                  style="color:#2196f3;text-decoration:none;align-self:flex-start;display:flex;align-items:center;gap:.5rem"
+                >
+                  <i class="pi pi-file" /> Descargar archivo
+                </a>
+              </template>
+            </template>
+
+
+
+
+  <div class="message" v-if="message.contest"  :style="message.message_data.employer_id ? 'justify-content: end;' : 'justify-content: start;'" style="width: 100%; display: flex; gap: 1rem; ">
+         
+
+          <!-- Burbuja -->
+          <div 
+            :style="message.message_data.employer_id
+                    ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
+                    : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
+            style="padding:;overflow-wrap:break-word;word-break:break-word;
+                   max-width:100%;min-width:10rem;position:relative;display:flex;opacity:.5; flex-direction:column;gap:.5rem;"
+          >
+                                                
+         
+            <!-- Adjuntos -->
+            <template v-if="message.contest.message_data.file_type">
+              <template v-if="message.contest.message_data.file_type === 'image'">
+              <img class="img-fluid"
+                :src="message.contest.currentSrc"                   
+                @click="setWatchingImg(message.contest.full)"        
+                style="max-width:38rem;border-radius:.3rem;width:18rem;object-fit:cover;cursor:pointer"
+              />
+            </template>
+
+              <template v-else-if="message.contest.message_data.file_type === 'audio'">
+                <audio :src="fileUrl(message.contest.message_data)" controls style="width:100%;min-width:20rem;max-width: 100%;background-color: white; border-radius: .5rem;" />
+              </template>
+
+              <template v-else>
+                <a
+                  :href="fileUrl(message.contest.message_data)"
+                  target="_blank"
+                  style="color:#2196f3;text-decoration:none;align-self:flex-start;display:flex;align-items:center;gap:.5rem"
+                >
+                  <i class="pi pi-file" /> Descargar archivo
+                </a>
+              </template>
+            </template>
+
+            <!-- Texto -->
+            <h6 style="color:white;margin:0;font-weight:300">
+              <span
+                v-if="!isExpanded(message.message_data.id)"
+                v-html="formatContent(message.contest.message_data.content?.substring(0,200) +
+                        (message.contest.message_data.content?.length > 30 ? '…' : ''))"
+              />
+              <span v-else v-html="formatContent(message.contest.message_data.content)" />
+              <button
+                v-if="message.contest.message_data.content?.length > 30"
+                @click="toggleExpand(message.contest.message_data.id)"
+                style="background:none;border:none;color:#2196f3;cursor:pointer;padding:0 .5rem"
+              >
+                
+              </button>
+            </h6>
+
+            <!-- Hora e iconos -->
+            
+            
+            <!-- Cola -->
+
+          
+         
+          </div>
+
+          <!-- Avatar employer -->
+         
+        </div>
+            <!-- Texto -->
+            <h6 style="color:white;margin:0;font-weight:300">
+
+
+              
+              <span
+                v-if="!isExpanded(message.message_data.id)"
+                v-html="formatContent(message.message_data.content?.substring(0,200) +
+                        (message.message_data.content?.length > 200 ? '…' : ''))"
+              />
+
+
+              
+
+
+              <span v-else v-html="formatContent(message.message_data.content)" />
+              
+              <button
+                v-if="message.message_data.content?.length > 200"
+                @click="toggleExpand(message.message_data.id)"
+                style="background:none;border:none;color:#2196f3;cursor:pointer;padding:0 .5rem"
+              >  
+                Ver {{ isExpanded(message.message_data.id) ? 'menos' : 'más' }}
+              </button>
+            </h6>
+
+            <!-- Hora e iconos -->
+            <h6
+              style="color:white;margin:0;font-weight:300;position:absolute;bottom:.5rem;right:1rem;min-width:max-content;display:flex;gap:.5rem"
+            >
+              <span style="opacity:.5">{{ message.time }}</span>
+              <i v-if="message.message_data.current_status_id == 3 && message.message_data.employer_id" class="fa-solid fa-check-double" style="color:greenyellow" />
+              <i v-else-if="message.message_data.current_status_id == 2 && message.message_data.employer_id" class="fa-solid fa-check" style="color:greenyellow" />
+              <i v-else-if="message.message_data.current_status_id == 1 && message.message_data.employer_id" class="fa-solid fa-check" style="color:gray" />
+            </h6>
+            
+            <!-- Cola -->
+
+          
+            <svg
+              v-if="!message.message_data.employer_id"
+              style="position:absolute;left:-8px;top:0;color:#2f2f41"
+              viewBox="0 0 8 13" height="13" width="8"
+            >
+              <path opacity="0.13" fill="#0000000" d="M1.533,3.568L8,12.193V1H2.812C1.042,1,0.474,2.156,1.533,3.568z"/>
+              <path fill="currentColor" d="M1.533,2.568L8,11.193V0L2.812,0C1.042,0,0.474,1.156,1.533,2.568z"/>
+            </svg>
+            <svg
+              v-else
+              style="position:absolute;right:-8px;top:0;color:#0a3744"
+              viewBox="0 0 8 13" height="13" width="8"
+            >
+              <path opacity="0.13" d="M5.188,1H0v11.193l6.467-8.625C7.526,2.156,6.958,1,5.188,1z"/>
+              <path fill="currentColor" d="M5.188,0H0v11.193l6.467-8.625C7.526,1.156,6.958,0,5.188,0z"/>
+            </svg>
+          </div>
+
+          <!-- Avatar employer -->
+          <div
+            v-if="message.message_data.employer_id"
+            style="height: 100%; width: 3rem; min-width: 3rem; aspect-ratio: 1/1; background-color: rgb(3 88 95 / 53%); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;"
+          >
+            <h5 style="margin: 0; color: white; font-weight: 400">{{ getInitials(message.message_data.employer_name) }}</h5>
           </div>
         </div>
-  
-        <!-- Botón para bajar manualmente. Se muestra cuando el usuario no está al fondo -->
-        <Button
-          icon="pi pi-angle-down"
-          v-if="showNewMessagesButton || nuevos_counter > 0"
-          @click="scrollToBottomNoSmooth"
-          :style="downButtonStyle"
-        ></Button>
-  
-        <Button
-          :label="nuevos_counter"
-          v-if="nuevos_counter > 0"
-          @click="scrollToBottomNoSmooth"
-          :style="downButtonStyle2"
-        ></Button>
-
-
+        
+          <!-- Avatar entrante -->
+          
+        </div>
       </div>
+
+      <!-- Botones de scroll -->
+      <Button icon="pi pi-angle-down" v-if="showNewMessagesButton || nuevos_counter > 0" @click="scrollToBottomNoSmooth" :style="downButtonStyle" />
+      <Button :label="nuevos_counter" v-if="nuevos_counter > 0" @click="scrollToBottomNoSmooth" :style="downButtonStyle2" />
     </div>
-  </template>
-  
-  <script setup>
+
+    <!-- Dialog de archivos -->
+    <Dialog
+      v-model:visible="showFilesDialog"
+      header="Archivos a enviar"
+      :modal="true"
+      :style="{ width: '90vw', maxWidth: '40rem' }"
+      @dragover.prevent
+      @drop="handleDrop"
+      :close="removeAllfiles"
+      :closable="true"
+      :dismissableMask="false"
+      style="background-color:rgb(0, 1, 22);display: flex;"
+    >
+      <div v-if="droppedFiles.length === 0" style="text-align: center; opacity: 0.6;">
+        Arrastra archivos aquí
+      </div>
+      <div v-else style="max-height: 60vh; overflow-y: auto">
+        <div
+          v-for="(item, idx) in droppedFiles"
+          :key="idx"
+          style="display: flex; align-items: center; flex-direction: column; position: relative; gap: 1rem; margin-bottom: 1rem; padding: 1rem;"
+        >
+          <template v-if="item.type.startsWith('image/')">
+            <div style="position: relative; border-radius: .3rem;">
+              <img :src="item.preview" style="width: 30rem; box-shadow: 0 0 1rem #00000090; object-fit: cover; border-radius: .3rem" />
+              <Button icon="pi pi-times" severity="danger" @click="removeFile(idx)" style="position:absolute;width:1.5rem;height:1.5rem;right:0;border-radius:.3rem" />
+            </div>
+          </template>
+
+          <template v-else-if="item.type.startsWith('audio/')">
+            <div style="position: relative;">
+              <audio :src="item.preview" controls style="width: 100%" />
+              <Button icon="pi pi-times" severity="danger" @click="removeFile(idx)" style="position:absolute;width:1.5rem;height:1.5rem;right:0;border-radius:.3rem" />
+            </div>
+          </template>
+
+          <template v-else>
+            <div style="position: relative;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1200px-PDF_file_icon.svg.png" style="width: 10rem;" />
+              <Button icon="pi pi-times" severity="danger" @click="removeFile(idx)" style="position:absolute;width:1.5rem;height:1.5rem;right:0;border-radius:.3rem" />
+            </div>
+          </template>
+
+          <span style="flex: 1 1 auto">{{ item.name }}</span>
+          <InputText v-model="item.caption" placeholder="Texto opcional…" style="flex: 1 1 auto; width: 100%; background-color: #ffffff20;" />
+        </div>
+      </div>
+      <template #footer>
+        <div style="width: 100%; justify-content: end; display: flex;">
+          <Button label="Enviar" icon="pi pi-check" severity="success" @click="sendFiles" :disabled="droppedFiles.length === 0" />
+        </div>
+      </template>
+    </Dialog>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div v-if="whatchingImg" style="background-color: #00000080;position: fixed; width: 100vw; height: 100vh;left: 0;top: 0;z-index: 1000000;display: flex;align-items: center;justify-content: center;opacity:1" >
+
+    <div style="max-height: 90vh;position: relative;max-width:90vw">
+
+      <img style=" height: 90vh; max-width:100%" :src="currentimg" />
+
+      <Button @click="() => whatchingImg = false" style="position: absolute;right: -1rem;top:-1rem;border: 3px solid black;" icon="pi pi-times" severity="danger" rounded></Button>
+    </div>
+  </div>
+
+
+</template>
+
+
+  <script setup lang="ts">
   import { ref, onMounted, onUnmounted, watch, nextTick, computed } from 'vue'
   import { useRoute } from 'vue-router'
   import { fetchService } from '../../../service/utils/fetchService'
   import { URI, URI_MESSAGES } from '../../../service/conection'
   import { useChatStore } from '@/store/chat'
+import { onBeforeRouteLeave } from 'vue-router'
 
+  const controller = ref<AbortController|null>(null)
+
+  const message_acctions = ref(false)
   const chats = useChatStore()
   defineEmits(['down'])
 
+  function handlePaste (e) {
+  const items = Array.from(e.clipboardData?.items || [])
 
+  items.forEach(item => {
+    // Acepta cualquier DataTransferItem que sea archivo
+    if (item.kind === 'file') {
+      const file = item.getAsFile()
+      if (!file) return
+
+      droppedFiles.value.push({
+        file,
+        name: file.name || `pasted-${Date.now()}.${file.type.split('/')[1] || 'bin'}`,
+        type: file.type,
+        caption: '',
+        // Para imágenes, PDF o audio podemos mostrar una vista previa;
+        // para otros tipos queda vacío pero igual servirá para el envío.
+        preview: URL.createObjectURL(file)
+      })
+
+      showFilesDialog.value = true
+    }
+  })
+}
+
+const props = defineProps({
+  send_function: {
+    type: Function,
+    default: () => {}
+  },
+  change_expiration: {
+    type: Function,
+    default: () => {}
+  },
+  send_text: {
+    type: Function,
+    default: () => {}
+  },
+})
+
+onMounted(() => window.addEventListener('paste', handlePaste))
+onUnmounted(() => window.removeEventListener('paste', handlePaste))
+onMounted(() => {
+  window.addEventListener('paste', handlePaste);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('paste', handlePaste);
+  // ...tu cleanup existente
+});
+
+// --- NUEVAS refs para DnD y diálogo ---
+const isDragging = ref(false);
+const droppedFiles = ref([]); // { file, name, type, preview, caption }
+const showFilesDialog = ref(false);
+
+
+
+const whatchingImg = ref(false)
+const currentimg = ref('')
+const setWatchingImg = (img) => {
+  whatchingImg.value = true
+  currentimg.value = `${img}`
+}
+
+// Genera la URL de previsualización para cualquier tipo compatible
+function createPreview (file) {
+  try {
+    return URL.createObjectURL(file)
+  } catch {
+    return ''
+  }
+}
+
+function removeFile (idx) {
+  const removed = droppedFiles.value.splice(idx, 1)
+  if (removed.length && removed[0].preview) URL.revokeObjectURL(removed[0].preview)
+}
+
+
+function removeAllfiles () {
+  alert('removeAllfiles')
+  droppedFiles.value.forEach(f => f.preview && URL.revokeObjectURL(f.preview))
+  droppedFiles.value = []
+}
+
+function handleDragLeave (e) {
+  if (e.currentTarget === e.target) isDragging.value = false
+}
+
+function fileUrl (msgData: any) {
+  return `${URI_MESSAGES}/files/${msgData.file_type}s/${msgData.file_id}?size=thumbnail`
+}
+
+function fileUrlVisual (msgData: any) {
+  return `${URI_MESSAGES}/files/${msgData.file_type}s/${msgData.file_id}?size=visual`
+}
+
+function clearAllPreviews () {
+  droppedFiles.value.forEach(f => f.preview && URL.revokeObjectURL(f.preview))
+  droppedFiles.value = []
+}
+
+function cancelFiles () {
+  clearAllPreviews()
+  showFilesDialog.value = false
+}
+
+
+// Asegúrate de limpiar si el usuario cierra el diálogo con la X o cambia de ruta
+watch(showFilesDialog, visible => {
+  if (!visible) clearAllPreviews()
+})
+
+onUnmounted(() => {
+  clearAllPreviews()
+})
+
+  
   const markAsRead = async (msg) => {
   // Evita llamadas repetidas
   if (msg.message_data.current_status_id >= 3 || msg._marking) return
@@ -161,6 +583,56 @@
 }
 
 
+
+const send_context = (msg) => {
+
+  props.send_text(msg,markedMessages.value)
+  message_acctions.value = false
+}
+
+
+const handleDrop = (e) => {
+  e.preventDefault();
+  isDragging.value = false;
+
+  const files = Array.from(e.dataTransfer.files || []);
+  files.forEach((f) => {
+    const obj = {
+      file: f,
+      name: f.name,
+      type: f.type,
+      caption: '',
+      preview: '',
+    };
+    if (f.type.startsWith('image/')) {
+      obj.preview = URL.createObjectURL(f);
+    }
+    droppedFiles.value.push(obj);
+  });
+
+  if (droppedFiles.value.length) showFilesDialog.value = true;
+};
+
+const sendFiles = () => {
+  // TODO: implementa la subida real
+// `  console.log('Enviar', props.send_function, droppedFiles.value);
+//   // Vacía y cierra
+//   droppedFiles.value.forEach((f) => f.preview && URL.revokeObjectURL(f.preview));
+//   droppedFiles.value = [];
+//   showFilesDialog.value = false;`
+  const data = [...droppedFiles.value]
+  showFilesDialog.value = false
+  droppedFiles.value.forEach((f) => f.preview && URL.revokeObjectURL(f.preview))
+  droppedFiles.value = []
+
+  props.send_function(data)
+
+// cerramos el dialogo y limpiamos los archivos
+
+  // Envío de archivos (aquí puedes implementar la lógica de envío real)
+  // console.log('Archivos a enviar:', getAllFiles())
+  // props.send_function(getAllFiles())
+};
 
 
 const checkVisibleUnread = () => {
@@ -203,17 +675,68 @@ const checkVisibleUnread = () => {
   const messagesContainer = ref(null)
   const showNewMessagesButton = ref(false)
   const nuevos_counter = ref(0)
+  const responseText = ref('')
   // Variables para paginación
   const paginationOffset = ref(0)
-  const paginationLimit = ref(100)
+  const paginationLimit = ref(20)
   const loadingMore = ref(false)
   const noMoreMessages = ref(false)
   // Variable para indicar si han llegado nuevos mensajes (para el botón)
   const newMessagesArrived = ref(false)
   // Objeto reactivo para almacenar el estado de expansión de cada mensaje
   const expandedMessages = ref({})
-
+  const markedMessages = ref({
+                "message_data": {
+                    "id": 3559,
+                    "user_id": 10,
+                    "restaurant_id": 1,
+                    "content": "final del mensaje\n",
+                    "created_at": "2025-05-03T02:16:30.361038+00:00",
+                    "current_status_id": 1,
+                    "employer_id": 1082,
+                    "employer_name": "ANDRES FELIPE ARrECHEA",
+                    "wa_id": "wamid.HBgMNTczMjI2ODkyOTg4FQIAERgSQzg4QzYyQzg0MDg0RkY2OEVDAA==",
+                    "wa_timestamp": "1746238590",
+                    "context_message_id": "wamid.HBgMNTczMjI2ODkyOTg4FQIAERgSNDIyNUIxQkZEMkE1MTA4RDA3AA==",
+                    "local_dt": "2025-05-02T21:16:30",
+                    "file_type": null,
+                    "file_id": null
+                },
+                "time": "09:16 PM",
+                "date": "02/05/2025",
+                "day_label": "hoy",
+                "contest": {
+                    "message_data": {
+                        "id": 3490,
+                        "user_id": 10,
+                        "restaurant_id": 1,
+                        "content": "fsfs",
+                        "created_at": "2025-05-03T01:28:04.499413+00:00",
+                        "current_status_id": 1,
+                        "employer_id": 1082,
+                        "employer_name": "ANDRES FELIPE ARrECHEA",
+                        "wa_id": "wamid.HBgMNTczMjI2ODkyOTg4FQIAERgSNDIyNUIxQkZEMkE1MTA4RDA3AA==",
+                        "wa_timestamp": "1746235684",
+                        "context_message_id": "null",
+                        "file_type": null,
+                        "file_id": null,
+                        "local_dt": "2025-05-02T20:28:04",
+                        "time": "08:28 PM",
+                        "date": "02/05/2025",
+                        "day_label": "hoy"
+                    },
+                    "time": "08:28 PM",
+                    "date": "02/05/2025",
+                    "day_label": "hoy"
+                }
+            })
   const last_message = ref({})
+
+
+  const setMarkedMessage = (msg) => {
+      message_acctions.value = true
+      markedMessages.value = msg
+  }                                 
   
   // Función para alternar el estado expandido de un mensaje según su id
   const toggleExpand = (id) => {
@@ -273,22 +796,67 @@ const checkVisibleUnread = () => {
   
   // Extraer iniciales a partir del nombre
 
+  const enhanceImageMessage = (msg: any) => {
+  if (msg.message_data.file_type == 'image') {
+
+  // 1️⃣ URLs
+  const base = `${URI_MESSAGES}/files/images/${msg.message_data.file_id}`;
+  msg.thumbnail = `${base}?size=thumbnail`;
+  msg.full      = `${base}?size=visual`;
+
+  // 2️⃣ arrancamos mostrando la miniatura
+  msg.currentSrc = msg.thumbnail;
+
+  // 3️⃣ precargamos la versión visual y la sustituimos al terminar
+  const preload = new Image();
+  preload.src = msg.full;
+  preload.onload = () => { msg.currentSrc = msg.full };
+
+  };
+
+  if (msg.contest) {
+    // 1️⃣ URLs
+
+
+    const baseContest = `${URI_MESSAGES}/files/images/${msg.contest.message_data.file_id}`;
+    msg.contest.thumbnail = `${baseContest}?size=thumbnail`;
+    msg.contest.full      = `${baseContest}?size=visual`;
+
+    // 2️⃣ arrancamos mostrando la miniatura
+    msg.contest.currentSrc = msg.contest.thumbnail;
+
+    // 3️⃣ precargamos la versión visual y la sustituimos al terminar
+    const preloadContest = new Image();
+    preloadContest.src = msg.contest.full;
+    preloadContest.onload = () => { msg.contest.currentSrc = msg.contest.full };
+  }; // Si no hay contest, no hacemos nada más
   
+};
+
+
   // Función de actualización de mensajes (carga y actualización)
   const update = async (cargar = true) => {
-    if (cargar) {
+   
       // Carga manual: reinicia paginación y conversación
+      controller.value?.abort()
+      controller.value = new AbortController()
+
       paginationOffset.value = 0
       noMoreMessages.value = false
-  
+      if (!route.params.user_id || !route.params.restaurant_id) return
       const result = await fetchService.get(
         `${URI_MESSAGES}/conversation/${route.params.restaurant_id}/${route.params.user_id}/${paginationOffset.value}/${20}`,
-        cargar
+        false,
+        { signal: controller.value.signal }
+
       )
   
+
+      result?.[0]?.messages?.forEach(enhanceImageMessage);
+      
       messages.value = result?.[0]?.messages || []
       user.value = result?.[0]?.user || {}
-  
+
       await nextTick()
   
       if (first.value) {
@@ -296,31 +864,31 @@ const checkVisibleUnread = () => {
         first.value = false
       }
 
-    } else {
-      // Actualización automática: obtiene mensajes nuevos
-      const lastMessage = messages.value.length > 0
-        ? messages.value[messages.value.length - 1].message_data.id
-        : 0
+    // } else {
+    //   // Actualización automática: obtiene mensajes nuevos
+    //   const lastMessage = messages.value.length > 0
+    //     ? messages.value[messages.value.length - 1].message_data.id
+    //     : 0
   
-      const result = await fetchService.get(
-        `${URI_MESSAGES}/conversation/${route.params.user_id}/new?lastMessageId=${lastMessage}`,
-        cargar
-      )
+    //   const result = await fetchService.get(
+    //     `${URI_MESSAGES}/conversation/${route.params.user_id}/new?lastMessageId=${lastMessage}`,
+    //     cargar
+    //   )
   
-      const nuevos = result?.[0]?.messages || []
-      const mensajesNuevos = nuevos.filter(
-        newMsg =>
-          !messages.value.some(
-            msg => msg.message_data.id === newMsg.message_data.id
-          )
-      )
-      messages.value = [...messages.value, ...mensajesNuevos]
-      showNewMessagesButton.value = true
-      newMessagesArrived.value = true
-      user.value = result?.[0]?.user || {}
-  
+    //   const nuevos = result?.[0]?.messages || []
+    //   const mensajesNuevos = nuevos.filter(
+    //     newMsg =>
+    //       !messages.value.some(
+    //         msg => msg.message_data.id === newMsg.message_data.id
+    //       )
+    //   )
+    //   messages.value = [...messages.value, ...mensajesNuevos]
+    //   showNewMessagesButton.value = true
+    //   newMessagesArrived.value = true
+    //   user.value = result?.[0]?.user || {}
+
       await nextTick()
-    }
+    
   }
   
   watch(newMessagesArrived, (new_val) => {
@@ -329,42 +897,29 @@ const checkVisibleUnread = () => {
     }
   })
   
-  const fetchNewMessages = async () => {
-    const lastMessage = messages.value.length > 0
-      ? messages.value[messages.value.length - 1].message_data.id
-      : 0
-    const result = await fetchService.get(
-      `${URI_MESSAGES}/conversation-last-message/${route.params.restaurant_id}/${route.params.user_id}/`,
-      false
-    )
-    const nuevos = result?.[0]?.messages || []
-    const wa_user_id = result?.[0]?.wa_id || []
+  const fetchNewMessages = async (mensajeNuevo) => {
+  // 1️⃣ Enriquecemos el mensaje (añadir miniaturas, etc.)
+  enhanceImageMessage(mensajeNuevo)
+  console.log('fetchNewMessages', mensajeNuevo)
 
-    const mensajesNuevos = nuevos.filter(
-      newMsg =>
-        !messages.value.some(
-          msg => msg.message_data.id === newMsg.message_data.id && !newMsg.employer_id
-        )
-    )
-    messages.value = [...messages.value, ...mensajesNuevos]
-    await nextTick()
+  // 2️⃣ Buscamos si ya existe un mensaje con ese wa_id
+  const idx = messages.value.findIndex(
+    m => m.message_data.wa_id === mensajeNuevo.message_data.wa_id
+  )
 
-
-    scrollToBottomNoSmooth()
-
-    if(mensajesNuevos && mensajesNuevos?.[0] && !mensajesNuevos?.[0]?.message_data?.employer_id){
-      if (wa_user_id == route.params.user_id){
-        nuevos_counter.value ++
-        newMessagesArrived.value = true
-        showNewMessagesButton.value = true
-      
-
-      }
-    }
-    
-
+  if (idx !== -1) {
+    // 2a. Ya existe → lo reemplazamos en la misma posición
+    messages.value[idx] = mensajeNuevo
+  } else {
+    // 2b. No existe → lo añadimos al final (ajusta a tu UX si prefieres al inicio)
+    messages.value.push(mensajeNuevo)
   }
-  
+
+  // 3️⃣ Esperamos al siguiente “tick” para que el DOM termine de renderizar
+  await nextTick()
+}
+
+    
   // Carga de mensajes anteriores (paginación) al hacer scroll hacia arriba
   const loadMoreMessages = async () => {
     
@@ -454,11 +1009,15 @@ const checkVisibleUnread = () => {
     }
   
     socket.onmessage = (event) => {
-      console.log('Mensaje recibido por WebSocket:', event.data)
-      if (event.data === `actualizar-${route.params.user_id}`) {
-        fetchNewMessages()
+      const data = JSON.parse(event.data)
+      if (event.data) {
+        fetchNewMessages(data)
+        props.change_expiration(false)
+
       }
     }
+
+    
   
     socket.onerror = (error) => {
       console.error('Error en el WebSocket:', error)
@@ -491,6 +1050,7 @@ const checkVisibleUnread = () => {
     () => route.params,
     () => {
       first.value = true
+      messages.value = []
       update()
       if (socket) {
         socket.close()
@@ -502,10 +1062,33 @@ const checkVisibleUnread = () => {
     
   )
 
+// Cuando el componente se desmonte, abortamos la petición si quedó colgada
+onUnmounted(() => {
+  controller.value?.abort()
+})
 
+// Justo antes de navegar fuera de esta ruta, abortamos la petición
+onBeforeRouteLeave((to, from, next) => {
+  controller.value?.abort()
+  next()
+})
+
+// Si quieres reiniciar la petición cada vez que cambian los params:
+watch(
+  () => route.params,
+  () => {
+    update()
+  }
+)
+
+
+  const getAllFiles = () => {
+    return droppedFiles.value.map((file) => file.file)
+  }
   defineExpose({
   scrollToBottom,
-  scrollToBottomNoSmooth
+  scrollToBottomNoSmooth,
+  getAllFiles
 })
   </script>
   
@@ -529,5 +1112,35 @@ const checkVisibleUnread = () => {
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
   }
+
+
+  .img-fluid{
+    transition: all ease .3s;
+  }
+  .img-fluid:hover {
+    filter: brightness(1.1);
+    
+    /* transform: scale(1.02); */
+  }
+
+  .message {
+    transition: all ease .3s;
+  }
+
+  .options {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color:rgba(10, 56, 68, 0);
+    padding: .5rem;
+    border-radius:  0 .5rem 0 .5rem;
+    z-index: 99;
+    opacity: 0;
+    transition: all ease .3s;
+  }
+  .message:hover  .options {
+    opacity: 1;
+  }
+  
   </style>
   

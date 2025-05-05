@@ -1,6 +1,6 @@
 <template>
   <div class="containerm" lang="es" translate="yes">
-      <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu.filter(p => p.products  && p.visible)"
+      <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu?.filter(p => p.products  && p.visible)"
           :key="section.categoria_id">
 
 

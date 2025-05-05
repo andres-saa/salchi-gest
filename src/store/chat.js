@@ -2,14 +2,14 @@ import { defineStore } from "pinia";
 // import { URI } from "../service/conection";
 
 
-export const useChatStore = defineStore('chat', {
+export const useChatStore = defineStore('chate', {
    
     persist: {
        
-                key: 'client', 
+                key: 'cliente', 
                 storage: localStorage,
                 paths:[
-                    'user','last_messages'
+                    'user','last_messages','sidebars'
 
                     ]
     },
@@ -37,7 +37,19 @@ export const useChatStore = defineStore('chat', {
                         "wa_id": "573225958424"
                     }
                 ]
-            }
+            },
+            sidebars: {
+                "1": [],
+                "7": []
+            }, current_user:{
+                id: 0,
+                nombre: "andres",
+                wa_id: "573226892988",
+                fecha_ultimo_mensaje: "12/04/2025",
+                hora_ultimo_mensaje: "08:01 PM",
+                abreviatura: "hoy",
+                mensaje_truncado: "nuevo mensaje brother",
+            },
         }
     },
 
