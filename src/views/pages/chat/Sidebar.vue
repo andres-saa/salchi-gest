@@ -54,7 +54,7 @@
         text
         v-for="(button, index) in colorMap"
         :key="index"
-        @click="() => current = button"
+        @click="() => setCurrent(button)"
         class="status"
         :label="button.label"
         :style="button.label === current.label ? { backgroundColor: button.bg, color: '#fff' }
@@ -63,7 +63,7 @@
     </div>
 
     <!-- ▲▲▲  LISTA DE CHATS  ▲▲▲ -->
-    <div class="chats"  ref="chatsContainer" @scroll="handleScroll">
+    <div class="" :class="animable? 'chats active-new' : 'chats'"  ref="chatsContainer" @scroll="handleScroll">
       <RouterLink 
         
         active-class="active"
@@ -75,7 +75,7 @@
         <div  class="chat" @click="() => chats.current_user = chat">
           
           <!-- imagen + iniciales -->
-          <div style="grid-area: imagen;height:100%;width:100%;display:flex;align-items:center;">
+          <div class="avatar" style="grid-area: imagen;height:100%;width:100%;display:flex;align-items:center;">
             <div style="height:3rem; width:3rem; aspect-ratio:1/1; border-radius:50%; display:flex; align-items:center; justify-content:center; text-transform:uppercase;font-size:1.3rem;"
                  :style="`background-color:${chat.color}`">
               {{ getInitials(chat.nombre) }}
@@ -325,6 +325,10 @@ watch(current_restaurant, async (val) => {
   connectWebSocket()  
 
   await loadPage()
+  animable.value = false
+  setTimeout(() => {
+    animable.value = true
+  },0);
 })
 
 /* ░░░  CICLO DE VIDA  ░░░ */
@@ -338,6 +342,20 @@ onUnmounted(() => {
   chatsContainer.value?.removeEventListener('scroll', handleScroll)
   if (socket) socket.close()
 })
+
+const animable = ref(true)
+
+const setCurrent = (btn) => {
+  current.value = btn
+  animable.value = false
+  setTimeout(() => {
+    animable.value = true
+  },0);
+}
+// watch(current, () => {
+//   
+
+// })
 </script>
 
 
@@ -413,9 +431,19 @@ onUnmounted(() => {
   transition: all ease 0.3s;
 }
 
+
+.avatar{
+  transition: .2s ease all;
+}
 .chat:hover {
   background-color: rgba(255, 255, 255, 0.13);
   box-shadow: 0 0 0rem black;
+}
+
+.chat:hover .avatar {
+  /* background-color: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 0 0rem black; */
+  transform: scale(1.3);
 }
 
 .active {
@@ -466,6 +494,23 @@ h4 {
   justify-content: space-between;
   padding: 1rem;
 }
+
+
+
+.active-new{
+  animation: .8s active ease;
+}
+    
+@keyframes active {
+    0%{
+        opacity: 0;
+        transform: translateY(-3rem);
+      
+    }
+
+    
+}
+
 
 .statuses {
   display: flex;

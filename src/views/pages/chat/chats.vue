@@ -3,9 +3,9 @@
 
     <div class="chat-container " >
  
-     <Sidebar :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}"  />
+     <Sidebar class="sidebar-left" :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}"  />
      <Main />
-     <Sidebar  :restaurant=" {
+     <Sidebar class="sidebar-right" :restaurant=" {
           id:7,
           name:'Distrimoster',
           img:'https://backend.salchimonster.com/read-photo-product/iX6UiE6e'
@@ -34,7 +34,9 @@
         gap: .5rem;
         background-color:rgb(0 0 22);
         /* max-width: 1200px; */
-        max-height: calc(100vh - 4rem) 
+        max-height: calc(100vh - 4rem) ;
+        animation:  active .3s ease;
+        overflow: hidden;
     }
     
     @media (width < 600px) {
@@ -48,7 +50,47 @@
     }
     
     
+    @keyframes active {
+    0%{
+        opacity: 0;
+        transform: translateY(-3rem);
+    }
+
     
+}
+
+
+
+.sidebar-left{
+    animation: active-left .3s ease;
+}
+
+
+.sidebar-right{
+    animation: active-right .3s ease;
+}
+    
+    
+@keyframes active-left {
+    0%{
+        opacity: 0;
+        transform: translatex(-30rem);
+    }
+
+    
+}
+
+
+    
+@keyframes active-right {
+    0%{
+        opacity: 0;
+        transform: translatex(30rem);
+    }
+
+    
+}
+
     </style>
     
     

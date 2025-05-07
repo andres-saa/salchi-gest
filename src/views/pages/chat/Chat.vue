@@ -2,19 +2,22 @@
 
 
     <div class="chat-container-master " >
-    <div class="icons-bar" style="display: flex;flex-direction: column;height: 100%;gap: 1rem; background-color: #ffffff20;padding: .5rem;border-radius: .5rem;">
+    <div class="icons-bar"  style="display: flex;flex-direction: column;height: 100%;gap: 1rem; background-color: #ffffff20;padding: .5rem;border-radius: .5rem;">
     
-        <RouterLink to="/chat/chats">
+        <div class="icons" :class="route.fullPath == '/chat/'? 'icons' : 'icons-active'" style="display: flex;flex-direction: column;height: 100%;gap: 1rem;">
+            <RouterLink to="/chat/chats">
             <Button  severity="success" icon="pi pi-whatsapp text-2xl" text></Button>
 
-        </RouterLink>
+            </RouterLink>
 
-        <RouterLink to="/chat/templates">
-            <Button severity="danger" icon="pi pi-sync text-2xl" text></Button>
+            <RouterLink to="/chat/templates">
+                <Button severity="danger" icon="pi pi-sync text-2xl" text></Button>
 
-        </RouterLink>
-        <Button severity="warning"  icon="pi pi-chart-bar text-2xl" text></Button>
+            </RouterLink>
+            <Button severity="warning"  icon="pi pi-chart-bar text-2xl" text></Button>
     
+        </div>
+        
     </div>
      
     <RouterView/>
@@ -28,7 +31,10 @@
     <script setup>
     import Sidebar from './Sidebar.vue'
     import Main from './Main.vue'
-    
+    import { useRoute } from 'vue-router';
+
+
+    const route = useRoute()
     
     </script>
     
@@ -57,7 +63,15 @@
     }
     }
     
-    
+    .icons{
+        transform: translateX(-4rem);
+        transition: all .3s ease;
+    }
+
+
+    .icons-active{
+        transform: translateX(0);
+    }
     
     </style>
     

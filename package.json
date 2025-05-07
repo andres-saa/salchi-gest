@@ -33,6 +33,7 @@
         "vue": "^3.2.41",
         "vue-pdf-embed": "^1.2.1",
         "vue-router": "^4.1.5",
+        "vue3-emoji-picker": "^1.1.8",
         "vuedraggable": "^4.1.0",
         "xlsx": "^0.18.5",
         "xlsx-style": "^0.8.13"

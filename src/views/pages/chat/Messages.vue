@@ -1,7 +1,7 @@
 <template>
 
 
-<Dialog v-model:visible="message_acctions" header="Acciones del mensaje" :modal="true" :style="{ width: '90vw', maxWidth: ' 30rem' }" :closable="true" :dismissableMask="false" style="background-color:rgb(0, 1, 22);display: flex;">
+<Dialog v-model:visible="message_acctions" :close="showEmojiPicker = false" header="Acciones del mensaje" :modal="true" :style="{ width: '90vw', maxWidth: ' 30rem' }" :closable="true" :dismissableMask="false" style="background-color:rgb(0, 1, 22);display: flex;">
 
   <div
             :style="markedMessages.message_data.employer_id
@@ -11,17 +11,19 @@
                    max-width:100%;min-width:10rem;position:relative;display:flex;flex-direction:column;gap:.5rem;"
           >
 
-          <Button class="options" style="color: white;">
+          <!-- <Button class="options" style="color: white;">
               <i class="pi pi-angle-down text-xl"></i>
-            </Button>
+            </Button> -->
             <!-- Adjuntos -->
             <template v-if="markedMessages.message_data.file_type">
               <template v-if="markedMessages.message_data.file_type === 'image'">
               <div> 
                 <img class="img-fluid"
-                :src="markedMessages.currentSrc"                   
-                @click="setWatchingImg(markedMessages.full)"        
-                style="border-radius:.3rem;width:18rem;object-fit:cover;cursor:pointer"
+                :src=" get_url(markedMessages)"                   
+                @click="setWatchingImg(get_url(markedMessages) )" 
+
+       
+                style="border-radius:.3rem;width:18rem;object-fit:contain;aspect-ratio: 1 / 1; cursor:pointer"
               />
               </div>
              
@@ -93,10 +95,32 @@
   <div style="display: flex; gap: 1rem; flex-direction: column; padding:1rem  0rem;">
     <!-- <Button label="Eliminar" icon="pi pi-trash" severity="danger" @click="message_acctions = false" /> -->
     <!-- <Button label="Reenviar" icon="pi pi-paper-plane" severity="success" @click="message_acctions = false" /> -->
-    <Textarea v-model="responseText"  autoResize rows="4" placeholder="Escribe un mensaje…" style="width: 100%; background-color: ;" />
 
-    <Button label="Responder" icon="pi pi-check" severity="info" @click="send_context(responseText)" />
+    <div>
+      <EmojiPicker class="emoji-picker"
+    v-if="showEmojiPicker"
+
+        :native="true"
+        style="position:absolute;bottom:4rem;z-index:1000;"
+        @select="addEmoji"
+      />
+
+      <Button style="position: absolute;right: -1rem;"></Button>
+    </div>
+ 
+
+  
+        <Textarea v-model="responseText"  autoResize rows="4" placeholder="Escribe un mensaje…" style="width: 100%; background-color: ;" />
+
+
+        <div style="display: flex;">
+    <Button class="emoji-picker" text style="font-size:2rem;" @click="showEmojiPicker=!showEmojiPicker">
+          <i class="fa fa-laugh-wink emoji-picker"/>
+        </Button>
+    <Button label="Responder" icon="pi pi-send" severity="help"   style="width: 100%;" @click="send_context(responseText)" />
     <!-- <Button label="Copiar enlace" icon="pi pi-copy" severity="warning" @click="message_acctions = false" /> -->
+      </div>
+ 
 
   </div>
 </Dialog>
@@ -106,6 +130,7 @@
     @dragenter="isDragging = true"
     @dragleave="handleDragLeave"
     @drop="handleDrop"
+    :class="animable?  'container-messages' : '.container-oculto'"
   >
     <!-- Overlay de arrastre -->
     <div
@@ -131,7 +156,7 @@
       <!-- Contenedor de mensajes -->
       <div
         ref="messagesContainer"
-        style="padding: 1rem; display: flex; flex-direction: column; gap: 0rem; overflow-y: auto; max-height: 100%; padding-bottom: 4rem;"
+        style="padding: 1rem; display: flex; flex-direction: column; gap: 0rem; overflow-y: auto; height: 100%; padding-bottom: 4rem;"
       >       
         <div   
         
@@ -161,21 +186,27 @@
             :style="message.message_data.employer_id
                     ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
                     : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
-            style="padding:3rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
-                   max-width:60%;min-width:10rem;position:relative;display:flex;flex-direction:column;gap:.5rem;"
+            style="padding:1rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
+                   max-width:60%;min-width:15rem;position:relative;display:flex; flex-direction:column;gap:.5rem;"
           >
 
-          <Button class="options" style="color: white;" @click="setMarkedMessage(message)">
-              <i class="pi pi-angle-down text-xl p-1"></i>
+          <Button class="options" v-if="message.message_data.employer_id" style="color: white;" @click="setMarkedMessage(message)">
+              <i class="fa-solid fa-message text-xl p-1"></i>
+            </Button>
+
+            <Button class="options2" v-if="!message.message_data.employer_id" style="color: white;" @click="setMarkedMessage(message)">
+              <i class="fa-solid fa-message text-xl p-1"></i>
             </Button>
             <!-- Adjuntos -->
             <template v-if="message.message_data.file_type">
               <template v-if="message.message_data.file_type === 'image'">
               <img class="img-fluid"
-                :src="message.currentSrc"                   
-                @click="setWatchingImg(message.full)"        
-                style="max-width:38rem;border-radius:.3rem;width:18rem;object-fit:cover;cursor:pointer"
-              />
+                :src="get_url(message) "                   
+                @click="setWatchingImg(get_url(message))"   
+          
+     
+                style="max-width:38rem;border-radius:.3rem;width:18rem;object-fit:cover;aspect-ratio: 1 / 1 ; cursor:pointer"
+              /> 
             </template>
 
               <template v-else-if="message.message_data.file_type === 'audio'">
@@ -213,8 +244,10 @@
             <template v-if="message.contest.message_data.file_type">
               <template v-if="message.contest.message_data.file_type === 'image'">
               <img class="img-fluid"
-                :src="message.contest.currentSrc"                   
-                @click="setWatchingImg(message.contest.full)"        
+                :src="get_url( message.contest)"                   
+                @click="setWatchingImg(get_url( message.contest))"  
+              
+      
                 style="max-width:38rem;border-radius:.3rem;width:18rem;object-fit:cover;cursor:pointer"
               />
             </template>
@@ -251,18 +284,13 @@
               </button>
             </h6>
 
-            <!-- Hora e iconos -->
-            
-            
-            <!-- Cola -->
-
-          
-         
           </div>
 
-          <!-- Avatar employer -->
-         
         </div>
+
+
+
+
             <!-- Texto -->
             <h6 style="color:white;margin:0;font-weight:300">
 
@@ -293,7 +321,7 @@
             <h6
               style="color:white;margin:0;font-weight:300;position:absolute;bottom:.5rem;right:1rem;min-width:max-content;display:flex;gap:.5rem"
             >
-              <span style="opacity:.5">{{ message.time }}</span>
+              <span style="opacity:.5">{{ message.date }} - {{ message.time }}</span> 
               <i v-if="message.message_data.current_status_id == 3 && message.message_data.employer_id" class="fa-solid fa-check-double" style="color:greenyellow" />
               <i v-else-if="message.message_data.current_status_id == 2 && message.message_data.employer_id" class="fa-solid fa-check" style="color:greenyellow" />
               <i v-else-if="message.message_data.current_status_id == 1 && message.message_data.employer_id" class="fa-solid fa-check" style="color:gray" />
@@ -331,6 +359,20 @@
         
           <!-- Avatar entrante -->
           
+        </div>
+        <div v-if="chats.sending" style="display: flex; gap: 1rem; justify-content: end;width: 100%; ">
+          <div style="background-color: #0a3744;max-width: 20rem; width: 100%;border-radius: .5rem;height: 4rem;">
+            <h6 style="color:white;margin:0;font-weight:300;display:flex;align-items:center;gap:.5rem;height: 100%;padding:1rem 1rem 1rem 1rem;">
+              <i class="pi pi-send" style="color: white" />  <progressSpinner style="width: 1.5rem; height: 1.5rem; color: white" strokeWidth="8" fill="transparent" animationDuration=".3s" aria-label="Custom ProgressSpinner" />
+            </h6>
+          </div>
+
+          <div
+           
+            style="height: 100%; width: 3rem; min-width: 3rem; aspect-ratio: 1/1; background-color: rgb(3 88 95 / 53%); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;padding: .5rem;"
+          >
+            <img style="height: 2rem; width: 2rem;aspect-ratio: 1/1;object-fit: contain;" src="https://backend.salchimonster.com/read-photo-product/xai0dVnL" alt="">
+          </div>
         </div>
       </div>
 
@@ -444,12 +486,37 @@
   import { URI, URI_MESSAGES } from '../../../service/conection'
   import { useChatStore } from '@/store/chat'
 import { onBeforeRouteLeave } from 'vue-router'
+import EmojiPicker from 'vue3-emoji-picker';
 
+
+
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+
+  // Verifica si el clic ocurrió dentro de un elemento con clase 'emoji-picker'
+  if (!target.closest('.emoji-picker')) {
+    showEmojiPicker.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
+
+
+
+
+const showEmojiPicker = ref(false);
   const controller = ref<AbortController|null>(null)
 
   const message_acctions = ref(false)
   const chats = useChatStore()
-  defineEmits(['down'])
+  const emit = defineEmits(['down'])
 
   function handlePaste (e) {
   const items = Array.from(e.clipboardData?.items || [])
@@ -500,6 +567,7 @@ onUnmounted(() => {
   window.removeEventListener('paste', handlePaste);
   // ...tu cleanup existente
 });
+const addEmoji = e => { responseText.value += e.i; showEmojiPicker.value=false; };
 
 // --- NUEVAS refs para DnD y diálogo ---
 const isDragging = ref(false);
@@ -512,7 +580,7 @@ const whatchingImg = ref(false)
 const currentimg = ref('')
 const setWatchingImg = (img) => {
   whatchingImg.value = true
-  currentimg.value = `${img}`
+  currentimg.value = `${img}?size=visual`
 }
 
 // Genera la URL de previsualización para cualquier tipo compatible
@@ -587,6 +655,7 @@ onUnmounted(() => {
 const send_context = (msg) => {
 
   props.send_text(msg,markedMessages.value)
+  responseText.value = ''
   message_acctions.value = false
 }
 
@@ -667,7 +736,10 @@ const checkVisibleUnread = () => {
   return firstInitial + secondInitial;
 };
 
-  
+    let socket: WebSocket | null = null
+  let reconnectTimer: number | null = null
+  let shouldReconnect = true   // ← nuevo flag
+
   // Variables reactivas
   const first = ref(true)
   const messages = ref([])
@@ -795,48 +867,17 @@ const checkVisibleUnread = () => {
   })
   
   // Extraer iniciales a partir del nombre
+  const get_url = (msg: any, size='thumbnail') => {
 
-  const enhanceImageMessage = (msg: any) => {
-  if (msg.message_data.file_type == 'image') {
-
-  // 1️⃣ URLs
-  const base = `${URI_MESSAGES}/files/images/${msg.message_data.file_id}`;
-  msg.thumbnail = `${base}?size=thumbnail`;
-  msg.full      = `${base}?size=visual`;
-
-  // 2️⃣ arrancamos mostrando la miniatura
-  msg.currentSrc = msg.thumbnail;
-
-  // 3️⃣ precargamos la versión visual y la sustituimos al terminar
-  const preload = new Image();
-  preload.src = msg.full;
-  preload.onload = () => { msg.currentSrc = msg.full };
-
-  };
-
-  if (msg.contest) {
-    // 1️⃣ URLs
-
-
-    const baseContest = `${URI_MESSAGES}/files/images/${msg.contest.message_data.file_id}`;
-    msg.contest.thumbnail = `${baseContest}?size=thumbnail`;
-    msg.contest.full      = `${baseContest}?size=visual`;
-
-    // 2️⃣ arrancamos mostrando la miniatura
-    msg.contest.currentSrc = msg.contest.thumbnail;
-
-    // 3️⃣ precargamos la versión visual y la sustituimos al terminar
-    const preloadContest = new Image();
-    preloadContest.src = msg.contest.full;
-    preloadContest.onload = () => { msg.contest.currentSrc = msg.contest.full };
-  }; // Si no hay contest, no hacemos nada más
-  
-};
-
+    const base  = `${URI_MESSAGES}/files/images/${msg.message_data.file_id}?size=${size}`;
+    return base
+    
+  }
 
   // Función de actualización de mensajes (carga y actualización)
   const update = async (cargar = true) => {
-   
+    animable.value = false
+    loadingMore.value = true
       // Carga manual: reinicia paginación y conversación
       controller.value?.abort()
       controller.value = new AbortController()
@@ -852,43 +893,23 @@ const checkVisibleUnread = () => {
       )
   
 
-      result?.[0]?.messages?.forEach(enhanceImageMessage);
+      // result?.[0]?.messages?.forEach(enhanceImageMessage);
       
       messages.value = result?.[0]?.messages || []
       user.value = result?.[0]?.user || {}
-
-      await nextTick()
+    
+      setTimeout(() => {
+        animable.value = true
+      },0);
+    
   
       if (first.value) {
-        scrollToBottomNoSmooth()
+        // scrollToBottomNoSmooth()
         first.value = false
       }
 
-    // } else {
-    //   // Actualización automática: obtiene mensajes nuevos
-    //   const lastMessage = messages.value.length > 0
-    //     ? messages.value[messages.value.length - 1].message_data.id
-    //     : 0
-  
-    //   const result = await fetchService.get(
-    //     `${URI_MESSAGES}/conversation/${route.params.user_id}/new?lastMessageId=${lastMessage}`,
-    //     cargar
-    //   )
-  
-    //   const nuevos = result?.[0]?.messages || []
-    //   const mensajesNuevos = nuevos.filter(
-    //     newMsg =>
-    //       !messages.value.some(
-    //         msg => msg.message_data.id === newMsg.message_data.id
-    //       )
-    //   )
-    //   messages.value = [...messages.value, ...mensajesNuevos]
-    //   showNewMessagesButton.value = true
-    //   newMessagesArrived.value = true
-    //   user.value = result?.[0]?.user || {}
 
-      await nextTick()
-    
+      loadingMore.value = false
   }
   
   watch(newMessagesArrived, (new_val) => {
@@ -899,8 +920,8 @@ const checkVisibleUnread = () => {
   
   const fetchNewMessages = async (mensajeNuevo) => {
   // 1️⃣ Enriquecemos el mensaje (añadir miniaturas, etc.)
-  enhanceImageMessage(mensajeNuevo)
-  console.log('fetchNewMessages', mensajeNuevo)
+  // enhanceImageMessage(mensajeNuevo)
+
 
   // 2️⃣ Buscamos si ya existe un mensaje con ese wa_id
   const idx = messages.value.findIndex(
@@ -912,7 +933,18 @@ const checkVisibleUnread = () => {
     messages.value[idx] = mensajeNuevo
   } else {
     // 2b. No existe → lo añadimos al final (ajusta a tu UX si prefieres al inicio)
-    messages.value.push(mensajeNuevo)
+   
+    if (route.params.user_id === mensajeNuevo.message_data.wa_user_id){
+      messages.value.push(mensajeNuevo)
+      
+      
+       if (!mensajeNuevo.message_data.employer_id){
+        showNewMessagesButton.value = true
+        nuevos_counter.value ++ 
+       }
+
+    }
+    
   }
 
   // 3️⃣ Esperamos al siguiente “tick” para que el DOM termine de renderizar
@@ -975,7 +1007,7 @@ const checkVisibleUnread = () => {
     if (messagesContainer.value) {
       messagesContainer.value.scrollTo({
         bottom: 0,
-        behavior: 'smooth'
+        // behavior: 'smooth'
       })
       showNewMessagesButton.value = false
       newMessagesArrived.value = false
@@ -986,10 +1018,13 @@ const checkVisibleUnread = () => {
   // Scroll sin animación (para la primera carga)
   const scrollToBottomNoSmooth = () => {
     if (messagesContainer.value) {
-      messagesContainer.value.scrollTo({
+      setTimeout(() => {
+        messagesContainer.value.scrollTo({
         top: messagesContainer.value.scrollHeight,
-        behavior:'smooth'
+        // behavior:'smooth'
       })
+      }, 100);
+      
       showNewMessagesButton.value = false
       newMessagesArrived.value = false
     }
@@ -997,37 +1032,52 @@ const checkVisibleUnread = () => {
   }
   
   // Configuración del WebSocket para actualizaciones
-  let socket = null
-  const connectWebSocket = () => {
-    if (!route.params.user_id) return
-  
-    const wsUrl = `wss://sockets-service.salchimonster.com/ws/${route?.params?.user_id}`
-    socket = new WebSocket(wsUrl)
-  
-    socket.onopen = () => {
-      console.log('Conexión WebSocket establecida a:', wsUrl)
+
+  function disconnectSocket () {
+    // Anula reconexión pendiente
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer)
+      reconnectTimer = null
     }
-  
+    // Cierra y limpia el socket actual
+    if (socket) {
+      shouldReconnect = false         // ← evita el setTimeout del onclose
+      socket.close(1000, 'route‑change')
+      socket.onopen = socket.onmessage = socket.onerror = socket.onclose = null
+      socket = null
+    }
+  }
+
+  function connectWebSocket () {
+    if (!route.params.user_id) return
+
+    const wsUrl = `wss://sockets-service.salchimonster.com/ws/${route.params.user_id}`
+    socket = new WebSocket(wsUrl)
+    shouldReconnect = true            // ← sólo reconectar si se cae “solo”
+
+    socket.onopen = () => {
+      console.log('🟢 Conectado a', wsUrl)
+    }
+
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data)
-      if (event.data) {
+      if (data) {
         fetchNewMessages(data)
+        
         props.change_expiration(false)
-
       }
     }
 
-    
-  
-    socket.onerror = (error) => {
-      console.error('Error en el WebSocket:', error)
-    }
-  
-    socket.onclose = () => {
-      console.warn('WebSocket cerrado. Se intentará reconectar en 5 segundos...')
-      setTimeout(() => connectWebSocket(), 5000)
+    socket.onerror = (err) => console.error('WebSocket error', err)
+
+    socket.onclose = (ev) => {
+      console.log('🔴 Socket cerrado', ev.reason || ev.code)
+      if (shouldReconnect) {
+        reconnectTimer = window.setTimeout(connectWebSocket, 5000)
+      }
     }
   }
+
   
   onMounted(() => {
     update()
@@ -1047,24 +1097,25 @@ const checkVisibleUnread = () => {
   })
   
   watch(
-    () => route.params,
-    () => {
-      first.value = true
-      messages.value = []
-      update()
-      if (socket) {
-        socket.close()
-      }
-      scrollToBottomNoSmooth()
-      connectWebSocket()
-      nuevos_counter.value = 0
-    }
-    
-  )
+  () => route.params,
+  () => {
+    first.value = true
+    messages.value = []
+    disconnectSocket()      // ← ahora sí mata la conexión previa
+    update()
+    scrollToBottomNoSmooth()
+    connectWebSocket()      // ← y abre la conexión nueva
+    nuevos_counter.value = 0
+  }
+)
+
+// Limpieza global del componente
+
 
 // Cuando el componente se desmonte, abortamos la petición si quedó colgada
 onUnmounted(() => {
   controller.value?.abort()
+  disconnectSocket()
 })
 
 // Justo antes de navegar fuera de esta ruta, abortamos la petición
@@ -1074,6 +1125,7 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 // Si quieres reiniciar la petición cada vez que cambian los params:
+const animable = ref(true)
 watch(
   () => route.params,
   () => {
@@ -1129,17 +1181,53 @@ watch(
 
   .options {
     position: absolute;
-    right: 0;
+    left: -3rem;
     top: 0;
-    background-color:rgba(10, 56, 68, 0);
+    background-color:#ff6200;
     padding: .5rem;
-    border-radius:  0 .5rem 0 .5rem;
+    border-radius:  50%;
     z-index: 99;
     opacity: 0;
     transition: all ease .3s;
   }
-  .message:hover  .options {
+
+
+
+  .options2 {
+    position: absolute;
+    right: -3rem;
+    top: 0;
+    background-color:#ff6200;
+    padding: .5rem;
+    border-radius:  50%;
+    z-index: 99;
+    opacity: 0;
+    transition: all ease .3s;
+  }
+
+
+
+  .message:hover  .options, .message:hover  .options2 {
     opacity: 1;
+  }
+
+      
+  @keyframes active {
+    0%{
+        opacity: 0;
+        transform: translatey(-3rem);
+    }
+
+    
+}
+
+  .container-messages{
+    animation:  active  .3s ease;
+  }
+
+  .container-oculto{
+    opacity: 0;
+    overflow: hidden;
   }
   
   </style>

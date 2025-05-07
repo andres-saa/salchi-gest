@@ -44,15 +44,7 @@ export const useChatsStore = defineStore('client', {
                 }
 
             },
-            current_user:{
-                id: 0,
-                nombre: "andres",
-                wa_id: "573226892988",
-                fecha_ultimo_mensaje: "12/04/2025",
-                hora_ultimo_mensaje: "08:01 PM",
-                abreviatura: "hoy",
-                mensaje_truncado: "nuevo mensaje brother",
-            },
+           
         }
     },
 

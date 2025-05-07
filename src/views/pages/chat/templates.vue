@@ -1,7 +1,7 @@
 <!-- TemplateManager.vue - Gestor de plantillas de WhatsApp con PrimeVue ConfirmDialog (sin SweetAlert) -->
 <template>
   
-  <div class="p-4 " style="max-width: 70rem;width: 100%; margin: auto; background-color: white;border-radius: 1rem;transition: all .3s ease;">
+  <div class="p-4 templates-container" style="max-width: 70rem;width: 100%; margin: auto; background-color: white;border-radius: 1rem;transition: all .3s ease;">
     <!-- Encabezado y búsqueda -->
 
   <div style="height: 100%;">
@@ -282,4 +282,18 @@ function askRemove(tpl){
 
 <style scoped>
 .field label { @apply block mb-1; }
+
+
+
+
+.templates-container{
+  animation:  active .3s ease;
+}
+
+
+@keyframes active {
+    0%{
+        opacity: 0;
+        transform: translateY(-3rem);
+        }}
 </style>

@@ -15,7 +15,7 @@
 
         <div class="top-bar-info">
           <strong><h5 style="text-transform:capitalize;margin:0;">
-            {{ route.params.user_name?.substring(0, 20) }}...
+            {{ route.params.user_name?.substring(0, 20) }}  
           </h5></strong>
           <div>
                           <Button
@@ -85,12 +85,13 @@
         :native="true"
         style="position:absolute;bottom:4rem;z-index:1000;"
         @select="addEmoji"
+        class="emoji-picker"
       />
 
       <!-- área entrada -->
       <div class="message-area">
         <Button text style="color:yellow;font-size:2rem;" @click="showEmojiPicker=!showEmojiPicker">
-          <i class="fas fa-laugh-wink"/>
+          <i class="fas fa-laugh-wink emoji-picker"/>
         </Button>
 
         <!-- textarea ↔ audio chip -->
@@ -113,10 +114,10 @@
 
       <!-- controles -->
       <div style="position:relative;transition:.2s;">
-        <Button class="btn-descuento" icon="pi pi-send btn-descuento"
-                style="transition:.2s;" label="Enviar Descuento"/>
+        <!-- <Button class="btn-descuento" icon="pi pi-send btn-descuento"
+                style="transition:.2s;" label="Enviar Descuento"/> -->
 
-        <!-- mic / stop -->
+   
         <Button
           text style="height:100%;"
           v-if="!recordedAudio && messageBody.trim()===''"
@@ -146,7 +147,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { loginStore } from '@/store/user';
@@ -156,6 +157,28 @@ import Messages from './Messages.vue';
 import EmojiPicker from 'vue3-emoji-picker';
 import 'vue3-emoji-picker/css';
 import { useChatStore } from '@/store/chat'
+
+
+
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+
+  // Verifica si el clic ocurrió dentro de un elemento con clase 'emoji-picker'
+  if (!target.closest('.emoji-picker')) {
+    showEmojiPicker.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
+
+
 /* ───── estado ───── */
 const route = useRoute();
 const login = loginStore();
@@ -267,14 +290,17 @@ const send_text_message = async (body,context=null) => {
   fd.append('to', route.params.user_id);
   fd.append('type', 'text');
   fd.append('text', JSON.stringify({ body }));
+  messageBody.value = '';
 
   try {
+
+    chatStore.sending = true;
     await fetchService.post(`${URI_MESSAGES}/webhook/send/text/`, fd, false);
   } catch (e) {
     console.error('Error al enviar texto', e);
   }
+  chatStore.sending = false;
 
-  messageBody.value = '';
 };
 
 /* ───── enviar audio ───── */
@@ -340,8 +366,12 @@ const send_files = async wrappers => {
     }));
   });
 
+  chatStore.sending = true;
+
   try { await fetchService.post(`${URI_MESSAGES}/webhook/send`, fd, false); }
   catch (e) { console.error('Error al enviar archivos', e); }
+  chatStore.sending = false;
+
 };
 
 /* enter textarea */
