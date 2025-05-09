@@ -1,7 +1,7 @@
 <template>
 
 
-<Dialog v-model:visible="message_acctions" :close="showEmojiPicker = false" header="Acciones del mensaje" :modal="true" :style="{ width: '90vw', maxWidth: ' 30rem' }" :closable="true" :dismissableMask="false" style="background-color:rgb(0, 1, 22);display: flex;">
+<Dialog v-model:visible="message_acctions" :close="() =>  close " header="Acciones del mensaje" :modal="true" :style="{ width: '90vw', maxWidth: ' 50rem' }" :closable="true" :dismissableMask="false" style="background-color:rgb(0, 1, 22);display: flex;">
 
   <div
             :style="markedMessages.message_data.employer_id
@@ -124,6 +124,8 @@
 
   </div>
 </Dialog>
+
+
   <div
     style="height: 100%; position: relative; display: flex; justify-content: center;"
     @dragover.prevent
@@ -142,7 +144,6 @@
 
 
 
-    <!-- Spinner de carga de mensajes antiguos -->
     <ProgressSpinner
       v-if="loadingMore"
       style="width: 50px; height: 50px; position: absolute; z-index: 100; color: white"
@@ -170,7 +171,6 @@
         <div class="message"  :style="message.message_data.employer_id ? 'justify-content: end;' : 'justify-content: start;'" style="width: 100%; display: flex; gap: 1rem;  padding-bottom: 1rem;">  
           
 
-          
           <div
             v-if="!message.message_data.employer_id"
             :style="`background-color:${user?.color}`"
@@ -193,10 +193,17 @@
           <Button class="options" v-if="message.message_data.employer_id" style="color: white;" @click="setMarkedMessage(message)">
               <i class="fa-solid fa-message text-xl p-1"></i>
             </Button>
+           
 
             <Button class="options2" v-if="!message.message_data.employer_id" style="color: white;" @click="setMarkedMessage(message)">
               <i class="fa-solid fa-message text-xl p-1"></i>
             </Button>
+            
+
+
+
+
+
             <!-- Adjuntos -->
             <template v-if="message.message_data.file_type">
               <template v-if="message.message_data.file_type === 'image'">
@@ -650,7 +657,11 @@ onUnmounted(() => {
   }
 }
 
-
+const close = () => {
+   responseText.value = ''
+    showEmojiPicker.value = false
+ 
+}
 
 const send_context = (msg) => {
 
@@ -724,7 +735,11 @@ const checkVisibleUnread = () => {
 }
 
 
-
+  watch(message_acctions, (newval) => {
+    if (!newval){
+      close()
+    }
+  })
 
   const cargando = ref(false)
   const route = useRoute()
@@ -821,13 +836,31 @@ const checkVisibleUnread = () => {
   }
   
   // Función para formatear el contenido: muestra saltos de línea y pone en negrita el texto entre asteriscos
-  const formatContent = (content) => {
-    if (!content) return ''
-    let formatted = content.replace(/\n/g, '<br/>')
-    formatted = formatted.replace(/\*([^*]+)\*/g, '<strong>$1</strong>')
-    return formatted
-  }
+  function formatContent(content) {
+  if (!content) return '';
+
+  // Convertir saltos de línea
+  let formatted = content.replace(/\n/g, '<br/>');
+
+  // Negrita entre asteriscos
+  formatted = formatted.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+
+  // Detectar y convertir URLs en links clicables
+  formatted = formatted.replace(
+    /((https?:\/\/|www\.)[^\s<]+)/g,
+    (match) => {
+      const url = match.startsWith('http') ? match : `https://${match}`;
+      return `<a href="${url}" target="_blank" style="color:#42a5f5;text-decoration:underline;">${match}</a>`;
+    }
+  );
+
+
+
+
   
+
+  return formatted;
+}
   // Computed para el estilo del botón de scroll
   const downButtonStyle = computed(() => {
     return {
@@ -1182,14 +1215,37 @@ watch(
   .options {
     position: absolute;
     left: -3rem;
-    top: 0;
+
     background-color:#ff6200;
     padding: .5rem;
     border-radius:  50%;
     z-index: 99;
     opacity: 0;
     transition: all ease .3s;
+
   }
+
+
+  @keyframes enter {
+
+    0%{
+
+      transform: translateX(3rem);
+    }
+    
+  }
+
+  
+  @keyframes out {
+
+    0%{
+
+      transform: translateX(-3rem);
+    }
+
+}
+
+
 
 
 
@@ -1202,14 +1258,23 @@ watch(
     border-radius:  50%;
     z-index: 99;
     opacity: 0;
-    transition: all ease .3s;
+    transition: all ease .2s;
   }
 
 
 
-  .message:hover  .options, .message:hover  .options2 {
+  .message:hover  .options {
+    animation: enter .2s ease ;
     opacity: 1;
   }
+
+
+
+   .message:hover  .options2 {
+    animation: out .2s ease ;
+    opacity: 1;
+  }
+
 
       
   @keyframes active {

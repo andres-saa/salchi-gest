@@ -5,15 +5,15 @@
     <div class="icons-bar"  style="display: flex;flex-direction: column;height: 100%;gap: 1rem; background-color: #ffffff20;padding: .5rem;border-radius: .5rem;">
     
         <div class="icons" :class="route.fullPath == '/chat/'? 'icons' : 'icons-active'" style="display: flex;flex-direction: column;height: 100%;gap: 1rem;">
-            <RouterLink to="/chat/chats">
+            <RouterLink to="/chat/chats" active-class="active">
             <Button  severity="success" icon="pi pi-whatsapp text-2xl" text></Button>
-
             </RouterLink>
 
-            <RouterLink to="/chat/templates">
+            <RouterLink to="/chat/templates" active-class="active">
                 <Button severity="danger" icon="pi pi-sync text-2xl" text></Button>
 
             </RouterLink>
+
             <Button severity="warning"  icon="pi pi-chart-bar text-2xl" text></Button>
     
         </div>
@@ -72,6 +72,13 @@
     .icons-active{
         transform: translateX(0);
     }
+    
+
+    .active{
+        background-color: rgba(255, 255, 255, 0.137);
+        color: white;
+    }
+
     
     </style>
     

@@ -1,5 +1,66 @@
 <!-- TemplateManager.vue - Gestor de plantillas de WhatsApp con PrimeVue ConfirmDialog (sin SweetAlert) -->
 <template>
+
+
+<Dialog v-model:visible="difundiendo" modal header="Difundir Plantilla" style="width:100vw;max-width: 80rem;background-color: white;">
+    <div style="height: 100%;">
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); max-width:max-content;gap:.5rem; align-items: center;">
+        <h6 class="m-0 p-0"> <strong>Id plantilla :</strong></h6> <h6 class="m-0 p-0">{{ selectedTemplate?.id }}</h6>
+        <h6 class="m-0 p-0"> <strong>Nombre plantilla :</strong></h6> <h6 class="m-0 p-0">{{ selectedTemplate?.name }}</h6>
+        <h6 class="m-0 p-0"> <strong>Estado :</strong></h6> <h6 class="m-0 p-0">{{ selectedTemplate?.status }}</h6>
+        <h6 class="m-0 p-0"> <strong>Categoria :</strong></h6> <h6 class="m-0 p-0">{{ selectedTemplate?.category }}</h6>
+        <h6 class="m-0 p-0"> <strong>Mensaje :</strong></h6>
+        <h6 class="m-0 " style="background-color: #0a3744;padding: 1rem;border-radius: .5rem;color: white;">
+          {{ selectedTemplate?.components?.find(c => c.type == 'BODY')?.text }}
+        </h6>
+      </div>
+
+      <h5><strong>Usuarios</strong></h5>
+      <div class="statuses" style="display: flex; gap: 1rem;">
+        <Button
+          v-for="(button, index) in colorMap"
+          :key="index"
+          style="height: 2.3rem; border-radius: .3rem; padding: .5rem;"
+          text
+          @click="toggleStatus(button)"
+          class="status"
+          :label="button.label"
+          :style="selectedStatuses.includes(button.label)
+            ? { backgroundColor: button.bg, color: '#fff' }
+            : { backgroundColor: '#ffffff20', color: button.bg }"
+        />
+      </div>
+
+      <div style="width: 100%; height: 50vh; margin-top: 1rem;">
+        <DataTable :rows="10" paginator
+                   stripedRows showGridlines
+                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                   :rowsPerPageOptions="[5,10,15,25,100]"
+                   currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes"
+                   responsiveLayout="scroll" scrollable
+                   :value="filteredUsers" header="clientes">
+          <Column class="py-1" header="Nombre" field="nombre" />
+          <Column class="py-1" header="Número" field="wa_id" />
+          <Column class="py-1" header="Clasificación" field="clasification" />
+        </DataTable>
+      </div>
+
+      
+    </div>
+
+    <template #footer>
+        <Button label="Cancelar" text severity="secondary" @click="difundiendo=false" />
+        <Button 
+          label="Enviar a todos" 
+          severity="help" 
+          icon="pi pi-broadcast" 
+          :loading="sendingBulk" 
+          @click="broadcastTemplate" 
+          autofocus 
+        />
+      </template>
+  </Dialog>
+
   
   <div class="p-4 templates-container" style="max-width: 70rem;width: 100%; margin: auto; background-color: white;border-radius: 1rem;transition: all .3s ease;">
     <!-- Encabezado y búsqueda -->
@@ -12,7 +73,7 @@
           <i class="pi pi-search" />
           <InputText v-model.trim="globalFilter" placeholder="Buscar…" class="w-full" />
         </span>
-        <Dropdown v-model="restaurant" :options="resturants.filter((r) => r.exist)" optionLabel="name" optionValue="waba_id" placeholder="Selecciona un restaurante" class="w-full md:w-80 my-3" />
+        <Dropdown v-model="restaurant" :options="resturants.filter((r) => r.exist)" optionLabel="name"  placeholder="Selecciona un restaurante" class="w-full md:w-80 my-3" />
 
       </div>
         <!-- Tabla de plantillas -->
@@ -34,9 +95,9 @@
         <Column class="my-1 py-1" headerStyle="width:8rem" header="Acciones">
           <template #body="{data}">
             <div class="flex gap-2">
-              <Button icon="pi pi-eye" rounded text severity="secondary" @click="openEdit(data)" />
-              <Button icon="pi pi-trash" rounded text severity="danger"  @click="askRemove(data)" />
-              <Button icon="pi pi-sync"  label="Difundir" severity="danger"  @click="askRemove(data)" />
+              <Button icon="pi pi-eye"   severity="warning" @click="openEdit(data)" />
+              <Button icon="pi pi-trash"   severity="danger"  @click="askRemove(data)" />
+              <Button icon="pi pi-sync"  label="Difundir" severity="help"  @click="openToDifundir(data)" />
 
             </div>
           </template>
@@ -133,9 +194,12 @@ import ConfirmDialog from 'primevue/confirmdialog'
 import { useConfirm } from 'primevue/useconfirm'
 import { fetchService } from '@/service/utils/fetchService'
 import { URI_MESSAGES,URI } from '@/service/conection'
+import { loginStore } from '@/store/user';
 
+const login = loginStore()
 /* ------- state ------- */
 const templates = ref([])
+const selectedTemplate = ref({})
 const loading   = ref(false)
 const globalFilter = ref('')
 const dialogVisible = ref(false)
@@ -148,9 +212,53 @@ const buttons  = ref([])
 const examples = ref({})
 const editingName = ref(null)
 const restaurant = ref({})
+const users = ref([{}])
+const current = ref(  {label: 'PREOCUPANTE',  bg: '#e74c3c', icon: 'fa-triangle-exclamation' }, // rojo
+)
+
+
+
+ const selectedStatuses = ref([])
+
+const colorMap = ref([
+
+  { label: 'SIN DATOS', bg: '#7f8c8d', icon: 'fa-circle-question' },
+  { label: 'PREOCUPANTE', bg: '#e74c3c', icon: 'fa-triangle-exclamation' },
+  { label: 'CASUAL', bg: '#e67e22', icon: 'fa-person-walking' },
+  { label: 'FRECUENTE', bg: '#27ae60', icon: 'fa-repeat' },
+  { label: 'TOP', bg: '#2980b9', icon: 'fa-ranking-star' },
+  { label: 'ESTRELLA', bg: '#8e44ad', icon: 'fa-star' }
+])
+
+
+/* Función para alternar selección de filtros */
+function toggleStatus(button) {
+  const label = button.label
+  // Si pulsa TODO, limpia todas las selecciones
+  if (label === 'TODO') {
+    selectedStatuses.value = []
+    return
+  }
+  // Si 'TODO' estaba seleccionado, quítalo
+  const idxTodo = selectedStatuses.value.indexOf('TODO')
+  if (idxTodo > -1) selectedStatuses.value.splice(idxTodo, 1)
+  // Alterna la selección del label
+  const idx = selectedStatuses.value.indexOf(label)
+  if (idx === -1) selectedStatuses.value.push(label)
+  else selectedStatuses.value.splice(idx, 1)
+}
+
+/* Computed para filtrar usuarios */
+const filteredUsers = computed(() => {
+  if (selectedStatuses.value.length === 0) {
+    return users.value
+  }
+  return users.value.filter(u => selectedStatuses.value.includes(u.clasification))
+})
+
 /* servicios */
 const confirm = useConfirm()
-
+const difundiendo = ref(false)
 /* cat / lang / btn types */
 const categories = [ {label:'AUTHENTICATION',value:'AUTHENTICATION'}, {label:'MARKETING',value:'MARKETING'}, {label:'UTILITY',value:'UTILITY'} ]
 const languages  = [ {label:'Español (CO)',value:'es_CO'},{label:'Español (ES)',value:'es_ES'},{label:'English (US)',value:'en_US'} ]
@@ -165,13 +273,24 @@ const filteredTemplates = computed(()=>{
 
 onMounted( async() => {
   resturants.value = await fetchService.get(`${URI}/restaurants`)
-  restaurant.value = resturants.value[0]?.waba_id || null
+  restaurant.value = resturants.value[0] || null
   if (!restaurant.value == null) {
     return
   }
   fetchTemplates
 })
 
+
+const openToDifundir = (template) => {
+
+  selectedTemplate.value = template
+  difundiendo.value = true
+}
+
+
+watch( difundiendo, () => {
+  selectedStatuses.value = []
+})
 /* placeholders */
 const placeholders = ref([])
 watch(bodyText,val=>{
@@ -185,13 +304,23 @@ watch(bodyText,val=>{
 // onMounted()
 async function fetchTemplates(){
   loading.value = true
-  try{ templates.value = await fetchService.get(`${URI_MESSAGES}/wabas/${restaurant.value}/templates/`) } finally { loading.value=false }
+  try{ templates.value = await fetchService.get(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates/`) } finally { loading.value=false }
 }
+
+
+
+const update_users = async()  => {
+  users.value = await fetchService.get(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates/users/${restaurant.value.id}`)
+}
+
+
 
 watch(restaurant, async (newVal) => {
   if (!newVal) return
   fetchTemplates()
-})
+  selectedStatuses.value = []
+  await update_users()
+},{deep:true})
 
 /* helpers */
 function statusSeverity(s){ return {APPROVED:'success',PENDING:'warning',REJECTED:'danger'}[s]||'info' }
@@ -253,9 +382,9 @@ async function saveTemplate(){
 
     if(editingId.value){
       // Meta actualiza con ?name=<template_name>
-      await fetchService.post(`${URI_MESSAGES}/wabas/${restaurant.value}/templates/${editingId.value}`, payload)
+      await fetchService.post(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates/${editingId.value}`, payload)
     } else {
-      await fetchService.post(`${URI_MESSAGES}/wabas/${restaurant.value}/templates`, payload)
+      await fetchService.post(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates`, payload)
     }
 
     await fetchTemplates()
@@ -273,11 +402,42 @@ function askRemove(tpl){
     acceptLabel: 'Sí',
     rejectLabel: 'No',
     accept: async () => {
-      await fetchService.delete(`${URI_MESSAGES}/wabas/${restaurant.value}/templates/${tpl.name}`)
+      await fetchService.delete(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates/${tpl.name}`)
       await fetchTemplates()
     }
   })
 }
+
+const sendingBulk = ref(false)
+
+async function broadcastTemplate() {
+  if (!selectedTemplate.value) return
+  const recipients = filteredUsers.value.map(u => u.wa_id)  // array de números
+
+  // Construir FormData
+  const fd = new FormData()
+  fd.append("messaging_product", "whatsapp")
+  fd.append("employer_id", login.rawUserData.id.toString())
+  fd.append("context_message_id", "")  // o su hilo si aplica
+  fd.append("restaurant_id", restaurant.value.id)
+  fd.append("template", JSON.stringify(selectedTemplate.value))
+  // Agregamos cada destinatario
+  recipients.forEach(to => fd.append("recipients", to))
+
+  sendingBulk.value = true
+  try {
+    await fetchService.post(
+      `${URI_MESSAGES}/webhook/send/template/bulk/`,
+      fd,
+      false
+    )
+    console.log(`✅ Difusión iniciada para ${recipients.length} usuarios`)
+    difundiendo.value = false  // cerramos el diálogo
+  } catch (err) {
+    console.error("✗ Error en difusión masiva:", err)
+  } finally {
+    sendingBulk.value = false
+  }}
 </script>
 
 <style scoped>
