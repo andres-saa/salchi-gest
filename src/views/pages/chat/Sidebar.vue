@@ -443,7 +443,9 @@ const setCurrent = (btn) => {
 .chat:hover .avatar {
   /* background-color: rgba(255, 255, 255, 0.13);
   box-shadow: 0 0 0rem black; */
-  transform: scale(1.3);
+  transform: scale(1.2);
+  filter: brightness(1.4);
+  
 }
 
 .active {

@@ -187,17 +187,41 @@
                     ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
                     : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
             style="padding:1rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
-                   max-width:60%;min-width:15rem;position:relative;display:flex; flex-direction:column;gap:.5rem;"
+                   max-width:60%;min-width:15rem;position:relative;display:flex; flex-direction:column;gap:1rem;"
           >
 
-          <Button class="options" v-if="message.message_data.employer_id" style="color: white;" @click="setMarkedMessage(message)">
+
+          <div>
+
+            <Button class="options" v-if="message.message_data.employer_id" style="color: white;" @click="setMarkedMessage(message)">
               <i class="fa-solid fa-message text-xl p-1"></i>
             </Button>
-           
+            <Button class="options-variant" @click="copyMessage(message)" v-if="message.message_data.employer_id" style="color: white;left: -6rem  ;background-color:#2196f3;" >
+              <i class="fa-solid fa-copy text-xl p-1"></i>
+            </Button>
 
+            <Button class="options-variant-template" @click="copyMessage(message)" v-if="message.message_data.employer_id" style="color: white;left: -9rem  ;background-color:orangered;" >
+              <i class="fa-solid fa-send text-xl p-1"></i>
+            </Button>
+           
+          </div>
+
+
+          <div>
             <Button class="options2" v-if="!message.message_data.employer_id" style="color: white;" @click="setMarkedMessage(message)">
               <i class="fa-solid fa-message text-xl p-1"></i>
             </Button>
+
+            <Button class="options2-variant" @click="copyMessage(message)" v-if="!message.message_data.employer_id" style="color: white;right: -6rem  ;background-color:#2196f3;" >
+              <i class="fa-solid fa-copy text-xl p-1"></i>
+            </Button>
+
+            <Button class="options-variant-template2" @click="copyMessage(message)" v-if="!message.message_data.employer_id" style="color: white;right: -9rem  ;background-color:orangered;" >
+              <i class="fa-solid fa-send text-xl p-1"></i>
+            </Button>
+          </div>
+
+            
             
 
 
@@ -494,8 +518,10 @@
   import { useChatStore } from '@/store/chat'
 import { onBeforeRouteLeave } from 'vue-router'
 import EmojiPicker from 'vue3-emoji-picker';
+import { useToast } from 'primevue/usetoast'
 
 
+const toast = useToast()
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
@@ -514,8 +540,27 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-
-
+const copyMessage = (msg: any) => {
+  const texto = msg.message_data.content ?? ''
+  navigator.clipboard.writeText(texto)
+    .then(() => {
+      toast.add({           // ← dispara el toast
+        severity: 'success',
+        summary: 'Copiado',
+        detail: 'El texto ha sido copiado al portapapeles',
+        life: 2000
+      })
+    })
+    .catch(err => {
+      toast.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo copiar el texto',
+        life: 2000
+      })
+      console.error('Error copiando al portapapeles:', err)
+    })
+}
 
 
 const showEmojiPicker = ref(false);
@@ -1204,6 +1249,7 @@ watch(
   }
   .img-fluid:hover {
     filter: brightness(1.1);
+
     
     /* transform: scale(1.02); */
   }
@@ -1224,6 +1270,23 @@ watch(
     transition: all ease .3s;
 
   }
+
+  .options-variant {
+    position: absolute;
+    left: -3rem;
+
+    background-color:#ff6200;
+    padding: .5rem;
+    border-radius:  50%;
+    z-index: 99;
+    opacity: 0;
+    transition: all ease .3s;
+
+  }
+
+
+ 
+  
 
 
   @keyframes enter {
@@ -1262,6 +1325,51 @@ watch(
   }
 
 
+  .options2-variant {
+    position: absolute;
+    right: -3rem;
+    top: 0;
+    background-color:#ff6200;
+    padding: .5rem;
+    border-radius:  50%;
+    z-index: 99;
+    opacity: 0;
+    transition: all ease .2s;
+
+  }
+
+
+  .options-variant-template {
+    position: absolute;
+    left: -3rem;
+    /* top: 0; */
+    background-color:#ff6200;
+    padding: .5rem;
+    border-radius:  50%;
+    z-index: 99;
+    opacity: 0;
+    transition: all ease .2s;
+
+
+  }
+
+  .options-variant-template2 {
+    position: absolute;
+    right: -3rem;
+    top: 0;
+    background-color:#ff6200;
+    padding: .5rem;
+    border-radius:  50%;
+    z-index: 99;
+    opacity: 0;
+    transition: all ease .2s;
+
+  }
+
+
+
+
+
 
   .message:hover  .options {
     animation: enter .2s ease ;
@@ -1275,6 +1383,36 @@ watch(
     opacity: 1;
   }
 
+  .message:hover   .options-variant {
+    animation: enter .5s ease ;
+    opacity: 1;
+  }
+
+
+    .message:hover   .options2-variant {
+      animation: out .5s ease ;
+      opacity: 1;
+    }
+
+
+    .message:hover   .options-variant-template {
+    animation: enter .8s ease ;
+    opacity: 1;
+  }
+
+
+    .message:hover   .options-variant-template2 {
+      animation: out .8s ease ;
+      opacity: 1;
+    }
+
+
+
+  .options:hover, .options2:hover, .options-variant:hover, .options2-variant:hover, .options-variant-template:hover, .options-variant-template2:hover{
+
+    transform: scale(1.1);
+    filter:brightness(1.3);
+  }
 
       
   @keyframes active {

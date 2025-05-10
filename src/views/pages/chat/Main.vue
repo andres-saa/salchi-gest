@@ -146,16 +146,29 @@
         </Button>
 
 
+
       
       </div>
-      <Button
-          severity="danger" style=""
+
+      <div style="display: flex; gap: 1rem; flex-direction: column;">
+        <Button
+          severity="danger" style="" icon="pi pi-clock" class="p-2"
           @click="() =>  showTemplates = true"
-          label="Plantillas" 
+          label="Despertar" 
        
         >
           <!-- <i :class=" 'pi pi- text-2xl text-white'"/> -->
         </Button>
+        <Button icon="pi pi-bolt"
+          severity="warning" style="" class="p-2"
+          @click="() =>  showTemplates = true"
+          label="Rapidas" 
+       
+        >
+          <!-- <i :class=" 'pi pi- text-2xl text-white'"/> -->
+        </Button>
+      </div>
+   
     </div>
 
     <Dialog v-model:visible="showTemplates" header="Envio de plantilla" style="width: 50rem;">
