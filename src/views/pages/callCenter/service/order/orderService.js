@@ -14,7 +14,6 @@ const cart = usecartStore();
 const site = useSitesStore();
 const user = useUserStore();
 
-
 const preparar_orden = () => {
   user.user.was_reserva = false;
   cart.sending_order = true;
@@ -51,6 +50,7 @@ const preparar_orden = () => {
     user_name: user.user.name,
     user_phone: user.user.phone_number?.split(" ").join(""),
     user_address: ` ${user.user.address} ${site.location?.neigborhood?.name}` || "",
+    email: user.user.email
   };
 
   const order = {
@@ -92,6 +92,7 @@ const preparar_orden_reserva = () => {
     user_name: user.user.name,
     user_phone: user.user.phone_number?.split(" ").join(""),
     user_address: `Debe ir a la sede` || "",
+    email: user.user.email,
   };
 
   const order = {
@@ -252,7 +253,8 @@ function validateOrder(order) {
     !order.user_data.user_phone ||
     order.user_data.user_phone.trim() == "" ||
     !order.user_data.user_address ||
-    order.user_data.user_address.trim() == ""
+    order.user_data.user_address.trim() == "" ||
+    order.user_data.email.trim() == ""
   ) {
     alert("Sus datos estan incompletos por favor reviselos");
     cart.sending_order = false;

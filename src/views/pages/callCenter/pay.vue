@@ -46,6 +46,14 @@
               <InputText v-model="user.user.address" id="address" placeholder="DIRECCION" />
             </div>
           </template>
+
+
+    
+            <span>Correo Electronico</span>
+            <div class="form-group">
+              <InputText v-model="user.user.email" id="email" placeholder="Correo Electronico" />
+            </div>
+   
   
           <span>Telefono</span>
           <div class="form-group">

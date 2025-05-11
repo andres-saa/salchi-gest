@@ -88,7 +88,7 @@
          @drop="onDrop(index)"
        >
          <!-- Muestra la imagen usando la URI base -->
-         <img :src="`${URI}/read-photo-product/${img.src}`" :alt="img.title" />
+         <img :src="`${URI}/read-photo-product/${img.src}/300`" :alt="img.title" />
  
          <!-- Botón de eliminar -->
          <Button
