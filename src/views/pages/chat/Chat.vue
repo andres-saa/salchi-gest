@@ -1,7 +1,9 @@
 <template>
 
 
-    <div class="chat-container-master " >
+    <div class="chat-container-master " style="" :style="chatTheme.current_chat_theme.bg" >
+
+        
     <div class="icons-bar"  style="display: flex;flex-direction: column;height: 100%;gap: 1rem; background-color: #ffffff20;padding: .5rem;border-radius: .5rem;">
     
         <div class="icons" :class="route.fullPath == '/chat/'? 'icons' : 'icons-active'" style="display: flex;flex-direction: column;height: 100%;gap: 1rem;">
@@ -33,8 +35,17 @@
     import Main from './Main.vue'
     import { useRoute } from 'vue-router';
 
+    import {chatThemeStore} from '@/store/chatTheme'
+
+
+
+    const chatTheme  = chatThemeStore()
+
 
     const route = useRoute()
+
+
+    
     
     </script>
     
@@ -48,8 +59,6 @@
         min-width: 1268px;
         padding: .5rem !important;
         gap: .5rem;
-        background-color:rgb(0 0 22);
-        /* max-width: 1200px; */
         max-height: calc(100vh - 3rem) 
     }
     

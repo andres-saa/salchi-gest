@@ -145,9 +145,6 @@
           <i class="pi pi-send text-2xl text-white"/>
         </Button>
 
-
-
-      
       </div>
 
       <div style="display: flex; gap: 1rem; flex-direction: column;">

@@ -7,7 +7,7 @@
             :style="markedMessages.message_data.employer_id
                     ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
                     : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
-            style="padding:1rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
+            style="padding:1rem 1rem 1rem 1rem;overflow-wrap:break-word;word-break:break-word;
                    max-width:100%;min-width:10rem;position:relative;display:flex;flex-direction:column;gap:.5rem;"
           >
 
@@ -76,16 +76,23 @@
           
             <svg
               v-if="!markedMessages.message_data.employer_id"
-              style="position:absolute;left:-8px;top:0;color:#2f2f41"
+              style="position:absolute;left:-8px;top:0"
               viewBox="0 0 8 13" height="13" width="8"
+
+              :style="markedMessages.message_data.employer_id
+                    ? `${chatTheme.current_chat_theme.pico_user}`
+                    : `${chatTheme.current_chat_theme.pico_employer}`"
             >
               <path opacity="0.13" fill="#0000000" d="M1.533,3.568L8,12.193V1H2.812C1.042,1,0.474,2.156,1.533,3.568z"/>
               <path fill="currentColor" d="M1.533,2.568L8,11.193V0L2.812,0C1.042,0,0.474,1.156,1.533,2.568z"/>
             </svg>
             <svg
               v-else
-              style="position:absolute;right:-8px;top:0;color:#0a3744"
+              style="position:absolute;right:-8px;top:0;"
               viewBox="0 0 8 13" height="13" width="8"
+              :style="markedMessages.message_data.employer_id
+                    ? `${chatTheme.current_chat_theme.pico_user}`
+                    : `${chatTheme.current_chat_theme.pico_employer}`"
             >
               <path opacity="0.13" d="M5.188,1H0v11.193l6.467-8.625C7.526,2.156,6.958,1,5.188,1z"/>
               <path fill="currentColor" d="M5.188,0H0v11.193l6.467-8.625C7.526,1.156,6.958,0,5.188,0z"/>
@@ -184,8 +191,8 @@
           <!-- Burbuja -->
           <div
             :style="message.message_data.employer_id
-                    ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
-                    : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
+                    ? `${chatTheme.current_chat_theme.m_employer};border-radius:.5rem 0 .5rem .5rem;`
+                    : `${chatTheme.current_chat_theme.m_user} ; border-radius:0 .5rem .5rem .5rem;`"
             style="padding:1rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
                    max-width:60%;min-width:15rem;position:relative;display:flex; flex-direction:column;gap:1rem;"
           >
@@ -193,7 +200,7 @@
 
           <div>
 
-            <Button class="options" v-if="message.message_data.employer_id" style="color: white;" @click="setMarkedMessage(message)">
+            <Button class="options" v-if="message?.message_data?.employer_id" style="color: white;" @click="setMarkedMessage(message)">
               <i class="fa-solid fa-message text-xl p-1"></i>
             </Button>
             <Button class="options-variant" @click="copyMessage(message)" v-if="message.message_data.employer_id" style="color: white;left: -6rem  ;background-color:#2196f3;" >
@@ -263,9 +270,9 @@
 
           <!-- Burbuja -->
           <div 
-            :style="message.message_data.employer_id
-                    ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
-                    : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
+          :style="message.message_data.employer_id
+                    ? `${chatTheme.current_chat_theme.m_employer};border-radius:.5rem 0 .5rem .5rem;`
+                    : `${chatTheme.current_chat_theme.m_user} ; border-radius:0 .5rem .5rem .5rem;`"
             style="padding:;overflow-wrap:break-word;word-break:break-word;
                    max-width:100%;min-width:10rem;position:relative;display:flex;opacity:.5; flex-direction:column;gap:.5rem;"
           >
@@ -299,13 +306,13 @@
             </template>
 
             <!-- Texto -->
-            <h6 style="color:white;margin:0;font-weight:300">
-              <span
+            <h6 style="color:white;margin:0;font-weight:300"  :style="chatTheme.current_chat_theme.text">
+              <span 
                 v-if="!isExpanded(message.message_data.id)"
                 v-html="formatContent(message.contest.message_data.content?.substring(0,200) +
                         (message.contest.message_data.content?.length > 30 ? '…' : ''))"
-              />
-              <span v-else v-html="formatContent(message.contest.message_data.content)" />
+              /> 
+              <span v-else v-html="formatContent(message.contest.message_data.content)" /> 
               <button
                 v-if="message.contest.message_data.content?.length > 30"
                 @click="toggleExpand(message.contest.message_data.id)"
@@ -323,11 +330,11 @@
 
 
             <!-- Texto -->
-            <h6 style="color:white;margin:0;font-weight:300">
+            <h6 style="color:white;margin:0;font-weight:300" :style="chatTheme.current_chat_theme.text">
 
 
               
-              <span
+              <span  
                 v-if="!isExpanded(message.message_data.id)"
                 v-html="formatContent(message.message_data.content?.substring(0,200) +
                         (message.message_data.content?.length > 200 ? '…' : ''))"
@@ -352,7 +359,7 @@
             <h6
               style="color:white;margin:0;font-weight:300;position:absolute;bottom:.5rem;right:1rem;min-width:max-content;display:flex;gap:.5rem"
             >
-              <span style="opacity:.5">{{ message.date }} - {{ message.time }}</span> 
+              <span style="opacity:.5" :style="chatTheme.current_chat_theme.text">{{ message.date }} - {{ message.time }}</span> 
               <i v-if="message.message_data.current_status_id == 3 && message.message_data.employer_id" class="fa-solid fa-check-double" style="color:greenyellow" />
               <i v-else-if="message.message_data.current_status_id == 2 && message.message_data.employer_id" class="fa-solid fa-check" style="color:greenyellow" />
               <i v-else-if="message.message_data.current_status_id == 1 && message.message_data.employer_id" class="fa-solid fa-check" style="color:gray" />
@@ -363,16 +370,22 @@
           
             <svg
               v-if="!message.message_data.employer_id"
-              style="position:absolute;left:-8px;top:0;color:#2f2f41"
+              style="position:absolute;left:-8px;top:0"
               viewBox="0 0 8 13" height="13" width="8"
+              :style="message.message_data.employer_id
+                    ? `${chatTheme.current_chat_theme.pico_user}`
+                    : `${chatTheme.current_chat_theme.pico_employer}`"
             >
               <path opacity="0.13" fill="#0000000" d="M1.533,3.568L8,12.193V1H2.812C1.042,1,0.474,2.156,1.533,3.568z"/>
               <path fill="currentColor" d="M1.533,2.568L8,11.193V0L2.812,0C1.042,0,0.474,1.156,1.533,2.568z"/>
             </svg>
             <svg
               v-else
-              style="position:absolute;right:-8px;top:0;color:#0a3744"
+              style="position:absolute;right:-8px;top:0"
               viewBox="0 0 8 13" height="13" width="8"
+              :style="message.message_data.employer_id
+                    ? `${chatTheme.current_chat_theme.pico_user}`
+                    : `${chatTheme.current_chat_theme.pico_employer}`"
             >
               <path opacity="0.13" d="M5.188,1H0v11.193l6.467-8.625C7.526,2.156,6.958,1,5.188,1z"/>
               <path fill="currentColor" d="M5.188,0H0v11.193l6.467-8.625C7.526,1.156,6.958,0,5.188,0z"/>
@@ -519,6 +532,12 @@
 import { onBeforeRouteLeave } from 'vue-router'
 import EmojiPicker from 'vue3-emoji-picker';
 import { useToast } from 'primevue/usetoast'
+
+
+
+import {chatThemeStore} from '@/store/chatTheme'
+const chatTheme  = chatThemeStore()
+
 
 
 const toast = useToast()
@@ -695,7 +714,7 @@ onUnmounted(() => {
   msg._marking = true
 
   try {
-    await fetchService.post(`${URI_MESSAGES}/read-message/${msg.message_data.id}/${route.params.restaurant_id}`,false)
+    await fetchService.post(`${URI_MESSAGES}/read-message/${msg.message_data.user_id}/${route.params.restaurant_id}`,false)
     msg.message_data.current_status_id = 3         // ← actualiza el icono ✓✓
   } catch (err) {
     console.error('No se pudo marcar como leído', err)
@@ -774,7 +793,7 @@ const checkVisibleUnread = () => {
 
     const rect = el.getBoundingClientRect()
     const fullyVisible = rect.top >= contRect.top && rect.bottom <= contRect.bottom
-
+ 
     if (fullyVisible) markAsRead(msg)
   })
 }
@@ -1155,6 +1174,9 @@ const checkVisibleUnread = () => {
       }
     }
   }
+
+
+  
 
   
   onMounted(() => {

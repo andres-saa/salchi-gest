@@ -125,6 +125,11 @@
           <h5 class="field">Dirección (opcional)</h5>
           <InputText v-model="userAddress" style="width: 100%;" placeholder="Escriba su dirección"></InputText>
         </div>
+
+        <div class="input" v-if="selectedType ">
+          <h5 class="field">Correo Electronico</h5>
+          <InputText v-model="userEmail" style="width: 100%;" placeholder="Escriba su Correo"></InputText>
+        </div>
   
 
       </div>
@@ -176,6 +181,7 @@
     const userName = ref('');
     const userPhone = ref('');
     const userAddress = ref('');
+    const userEmail = ref('')
     const comments = ref('');
     const rating = ref(null);
     const networs = ref([])
@@ -223,11 +229,21 @@ watch(() => store.visible_add_pqr, (newVal) => {
         return;
       }
     
+
+
+      
+      if (!userEmail.value) {
+        alert('Por favor, Ingrese su email');
+        return;
+      }
     
-      if (selectedType.value != 8 && (!userName.value || !userPhone.value)) {
+    
+      if (selectedType.value != 8 && (!userName.value || !userPhone.value )) {
         alert('Por favor, complete los campos obligatorios (nombre y teléfono).');
         return;
       }
+
+      
 
 
 
@@ -260,7 +276,8 @@ watch(() => store.visible_add_pqr, (newVal) => {
           user_name: userName.value || '',
           user_phone: userPhone.value?.toString() || '',
           user_address: userAddress.value || '',
-          site_id: selecteSite.value || null
+          site_id: selecteSite.value || null,
+          email:userEmail.value || ''
         }
       };
     

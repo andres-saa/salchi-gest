@@ -72,7 +72,7 @@
         :to="`/chat/chats/messages/${current_restaurant.id}/${chat.wa_id}/${chat.nombre}/${chat.color}?expirado=${chat.expirado}&?expira-en?=${chat.tiempo_para_expirar}`"
       >
         <!-- …tu card de chat intacta… -->
-        <div  class="chat" @click="() => chats.current_user = chat">
+        <div  class="chat" @click="()  => setUserMark(chat)">
           
           <!-- imagen + iniciales -->
           <div class="avatar" style="grid-area: imagen;height:100%;width:100%;display:flex;align-items:center;">
@@ -82,27 +82,27 @@
             </div>
           </div>
           <!-- nombre -->
-          <div style="grid-area:nombre; text-transform:capitalize;">{{ chat.nombre }}</div>
+          <div style="grid-area:nombre; text-transform:capitalize;" :style="chatTheme.current_chat_theme.text">{{ chat.nombre }}</div>
 
           <!-- expiración -->
           <div v-if="chat.tiempo_para_expirar || !chat.expirado"
-               style="grid-area:expiration; text-align:end; text-transform:capitalize; color:#ffffff80;">
+               style="grid-area:expiration; text-align:end; text-transform:capitalize;opacity: .5 ;" :style="chatTheme.current_chat_theme.text">
             Expira en {{ chat.tiempo_para_expirar }}
           </div>
           <div v-else
-               style="grid-area:expiration; text-align:end; text-transform:capitalize; color:#ff000080;">
+               style="grid-area:expiration; text-align:end; text-transform:capitalize;opacity: .5 ; " :style="chatTheme.current_chat_theme.text">
             Expirado
           </div>
 
           <!-- mensaje y fecha -->
-          <span style="grid-area:mensaje; color:#ffffff80;">{{ chat.mensaje_truncado }}</span>
-          <span style="grid-area:fecha; text-align:end;">{{ chat.abreviatura || chat.fecha_ultimo_mensaje }}</span>
+          <span style="grid-area:mensaje; color:#ffffff80;opacity: .5;" :style="chatTheme.current_chat_theme.text">{{ chat.mensaje_truncado }}</span>
+          <span style="grid-area:fecha; text-align:end; " :style="chatTheme.current_chat_theme.text"> {{ chat.abreviatura || chat.fecha_ultimo_mensaje }}</span>
 
           <!-- badge mensajes sin leer -->
-          <div style="grid-area:check; display:flex; justify-content:end; gap:.5rem;">
+          <div style="grid-area:check; display:flex; justify-content:end; gap:.5rem;" >
             <div v-if="chat.unreaded > 0"
-                 style="height:1.5rem;width:1.5rem;border-radius:50%;background-color:rgb(156,39,176);display:flex;align-items:center;justify-content:center;font-weight:bold;">
-              <span style="color:white;">{{ chat.unreaded }}</span>
+                 style="height:1.5rem;width:1.5rem;border-radius:50%;background-color:rgb(156,39,176);display:flex;align-items:center;justify-content:center;font-weight:bold;" >
+              <span style="color:white;" :style="chatTheme.current_chat_theme.text">{{ chat.unreaded }}</span>
             </div>
             <i style="color:greenyellow;" class="fa-solid fa-check-double"></i>
           </div>
@@ -129,6 +129,13 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { URI_MESSAGES } from '@/service/conection.js'
 import { fetchService } from '@/service/utils/fetchService.js'
 import { useChatStore } from '@/store/chat'
+import {chatThemeStore} from '@/store/chatTheme'
+
+
+
+const chatTheme  = chatThemeStore()
+
+
 
 /* ░░░  PROPS  ░░░ */
 const props = defineProps({ restaurant: Object })
@@ -150,6 +157,20 @@ const buttons = ref([
   { label: 'Preocupantes', textColor: '#F44336' },
   { label: 'Top',          textColor: '#9C27B0' }
 ])
+
+
+
+const setUserMark = async (user) => {
+  chats.current_user = user
+
+  try {
+    await fetchService.post(`${URI_MESSAGES}/read-message/${user.user_id}/${current_restaurant.value.id}`,false)
+  } catch (err) {
+    console.error('No se pudo marcar como leído', err)
+  }
+
+  user.unreaded = 0
+}
 
 
 const colorMap = ref([
@@ -181,34 +202,51 @@ const getInitials = name => {
   return (p[0][0] || '') + (p[1]?.[0] || '')
 }
 
-/* Añade los nuevos ítems al final y recalcula totales */
+
+
+
+
+const toNumUnread = v => v === '9+' ? 10 : Number(v ?? 0)
+
 const appendChats = (id, newItems) => {
-  // Lista actual (reactiva) del sidebar para este restaurante
+  // Lista reactiva actual
   const list = chats.sidebars[id] || []
 
   newItems.forEach(newChat => {
-    // ¿Ya existe un chat con el mismo wa_id?
     const idx = list.findIndex(c => c.wa_id === newChat.wa_id)
 
     if (idx === -1) {
-      // ► No existía: lo añadimos
+      // ▸ Chat nuevo
       list.push(newChat)
-    } else if (list[idx].ultimo_mensaje_id !== newChat.ultimo_mensaje_id) {
-      // ► Sí existía pero tiene un mensaje más reciente: lo reemplazamos
-      list[idx] = newChat
+    } else {
+      const current = list[idx]
+
+      const idChanged       = current.ultimo_mensaje_id !== newChat.ultimo_mensaje_id
+      const unreadDecreased = toNumUnread(newChat.unreaded) < toNumUnread(current.unreaded)
+
+      // ▸ Reemplazamos si llegó un mensaje nuevo O si se redujeron los pendientes
+      if (idChanged || unreadDecreased) {
+        list[idx] = newChat
+      }
+      // Si no cambió nada relevante, lo dejamos como está
     }
-    // Si idx ≠ -1 y el ultimo_mensaje_id NO cambió, no hacemos nada
   })
 
-  // Persistimos la lista ya actualizada en el store reactivo
+  // Actualizamos el store reactivo
   chats.sidebars[id] = list
 
-  // Recalculamos los no leídos (por si cambiaron)
+  // Re-calcular total de no leídos del sidebar
   totalUnread.value = list.reduce(
-    (t, c) => t + Number(c.unreaded || 0),
+    (sum, c) => sum + toNumUnread(c.unreaded),
     0
   )
 }
+
+
+
+
+
+
 
 /* ░░░  CARGAR UNA PÁGINA  ░░░ */
 const loadPage = async () => {

@@ -1,7 +1,7 @@
 <template>
 
 
-    <div class="chat-container " >
+    <div class="chat-container " :style="chatTheme.current_chat_theme.bg" >
  
      <Sidebar class="sidebar-left" :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}"  />
      <Main />
@@ -19,6 +19,13 @@
     import Sidebar from './Sidebar.vue'
     import Main from './Main.vue'
     
+    import {chatThemeStore} from '@/store/chatTheme'
+
+
+
+    const chatTheme  = chatThemeStore()
+
+
     
     </script>
     
