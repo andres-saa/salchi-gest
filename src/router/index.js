@@ -1336,6 +1336,13 @@ const router = createRouter({
         },
 
         {
+          path: '/redimir-correo',
+          name: 'redimir-correo',
+          component: () => import('@/views/pages/redimir-correo.vue'),
+
+        },
+
+        {
           path: '/cartas',
           name: 'cartas',
           component: () => import('@/views/pages/Cartas.vue'),

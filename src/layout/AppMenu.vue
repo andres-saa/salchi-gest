@@ -57,6 +57,12 @@ async function fetchAndUpdateRoles() {
     'icon-color': 'yellow', // Verde lima
     permision_id: get_id([50]),
     items: [
+
+
+    
+
+
+    
         { label: 'Sonando', icon: 'fa-solid fa-music', to: '/sonando', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
         { 
             label: 'Distrimonster', 
@@ -75,7 +81,8 @@ async function fetchAndUpdateRoles() {
             items:[
             { label: 'Almacen', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 50, 'icon-color': '#FF4500'},
             { label: 'Cartas QR', icon: 'fa-solid fa-store', to: '/cartas', permision_id: 50, 'icon-color': '#FF4500'},
-            { label: 'Banners', icon: 'fa-solid fa-store', to: '/banners', permision_id: 50, 'icon-color': '#FF4500'}
+            { label: 'Banners', icon: 'fa-solid fa-store', to: '/banners', permision_id: 50, 'icon-color': '#FF4500'},
+            { label: 'Redimir codigo correo', icon: 'fa-solid fa-send', to: '/redimir-correo', permision_id: 50, 'icon-color': '#FF4500'}
             ]
          } // Naranja rojizo
     ]

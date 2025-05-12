@@ -733,6 +733,20 @@ const dataColumns = ref([
         vif: true
     },
     {
+        columnName: 'Email',
+        columnValue: 'email',
+        columnType: 'other',
+        size: '15rem',
+        vif: true
+    },
+    {
+        columnName: 'Sede',
+        columnValue: 'site_name',
+        columnType: 'other',
+        size: '15rem',
+        vif: true
+    },
+    {
         columnName: 'Direccion Usuario',
         columnValue: 'user_address',
         columnType: 'other',
@@ -801,88 +815,103 @@ const descuento = ref();
  * NUEVO método para descargar el Excel usando la API:
  * https://excel-creator.salchimonster.com/crear_excel
  */
-const downloadExcel = async () => {
-    store.setLoading(true)
-    if (!customers.value || customers.value.length === 0) {
-        alert('No hay datos disponibles para descargar.');
-        return;
-    }
 
-    // Agrupar por clasificación
-    const groupedByClassification = customers.value.reduce((acc, user) => {
-        const classification = user.classification || 'SIN CLASIFICACION';
-        if (!acc[classification]) {
-            acc[classification] = [];
-        }
-        acc[classification].push({
-            'ID de Usuario': user.user_id || '---',
-            'Nombre': user.user_name || '---',
-            'Teléfonos': user.phone_numbers || '---',
-            'Dirección': user.user_address || '---',
-            'No. Compras':
-                user.times_purchased !== undefined ? user.times_purchased : '---',
-            'Total Gastado': user.total_spent
-                ? formatoPesosColombianos(user.total_spent)
-                : 0,
-            'Primera Compra': user.joined_date || '---',
-            'Última Compra': user.last_purchase || '---'
-        });
-        return acc;
-    }, {});
 
-    // Crear la estructura de "hojas" para la API
-    const hojas = Object.keys(groupedByClassification).map((classification) => {
-        return {
-            hoja: classification,
-            title: `Reporte de ${classification}`,
-            column_widths: {
-                'ID de Usuario': 15,
-                Nombre: 25,
-                Teléfonos: 15,
-                Dirección: 30,
-                'No. Compras': 15,
-                'Total Gastado': 15,
-                'Primera Compra': 18,
-                'Última Compra': 18
-            },
-            data: groupedByClassification[classification]
-        };
-    });
 
-    try {
-        
-        const response = await fetch(
-            'https://excel-creator.salchimonster.com/crear-excel',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ hojas })
-            }
-        );
+ const downloadExcel = async () => {
+  store.setLoading(true)
 
-        if (!response.ok) {
-            throw new Error('Error al generar el Excel');
-        }
+  if (!customers.value || customers.value.length === 0) {
+    alert('No hay datos disponibles para descargar.')
+    return
+  }
 
-        // La API devuelve directamente un archivo Excel como Blob
-        const blob = await response.blob();
+  /* ---------- 1. Función utilitaria para formatear un usuario ---------- */
+  const formatUser = user => ({
+    'ID de Usuario'  : user.user_id        || '---',
+    'Nombre'         : user.user_name      || '---',
+    'Teléfonos'      : user.phone_numbers  || '---',
+    'Correo Electronico': user.email       || '---',
+    'Sede'           : user.site_name      || '---',
+    'Dirección'      : user.user_address   || '---',
+    'No. Compras'    : user.times_purchased !== undefined ? user.times_purchased : '---',
+    'Total Gastado'  : user.total_spent ? formatoPesosColombianos(user.total_spent) : 0,
+    'Primera Compra' : user.joined_date    || '---',
+    'Última Compra'  : user.last_purchase  || '---'
+  })
 
-        // Crear URL de descarga y disparar la descarga
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'Reporte_de_Usuarios_Clasificacion.xlsx');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        store.setLoading(false)
-    } catch (error) {
-        console.error('Error al descargar el Excel:', error);
-        alert('Error al descargar el Excel');
-        store.setLoading(false)
-    }
-};
+  /* ---------- 2. Agrupar por clasificación ---------- */
+  const groupedByClassification = customers.value.reduce((acc, user) => {
+    const classification = user.classification || 'SIN CLASIFICACION'
+    if (!acc[classification]) acc[classification] = []
+    acc[classification].push(formatUser(user))
+    return acc
+  }, {})
+
+  /* ---------- 3. Construir la hoja “TODOS” ---------- */
+  const hojaTodos = {
+    hoja  : 'TODOS',
+    title : 'Reporte de TODOS los usuarios',
+    column_widths: {
+      'ID de Usuario'   : 15,
+      Nombre            : 35,
+      Teléfonos         : 15,
+      'Correo Electronico': 50,
+      Sede              : 40,
+      Dirección         : 40,
+      'No. Compras'     : 15,
+      'Total Gastado'   : 25,
+      'Primera Compra'  : 25,
+      'Última Compra'   : 18
+    },
+    data: customers.value.map(formatUser)   // todos los usuarios sin filtrar
+  }
+
+  /* ---------- 4. Construir las hojas por clasificación ---------- */
+  const hojasClasificacion = Object.keys(groupedByClassification).map(classification => ({
+    hoja  : classification,
+    title : `Reporte de ${classification}`,
+    column_widths: hojaTodos.column_widths,   // reutilizamos las mismas dimensiones
+    data  : groupedByClassification[classification]
+  }))
+
+  /* ---------- 5. Unir hojas (TODOS + clasificaciones) ---------- */
+  const hojas = [hojaTodos, ...hojasClasificacion]
+
+  /* ---------- 6. Enviar a la API y descargar ---------- */
+  try {
+    const response = await fetch(
+      'https://excel-creator.salchimonster.com/crear-excel',
+      {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify({ hojas })
+      }
+    )
+
+    if (!response.ok) throw new Error('Error al generar el Excel')
+
+    const blob = await response.blob()
+    const url  = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href  = url
+    link.setAttribute('download', 'Reporte_de_Usuarios_Clasificacion.xlsx')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('Error al descargar el Excel:', error)
+    alert('Error al descargar el Excel')
+  } finally {
+    store.setLoading(false)
+  }
+}
+
+
+
+
+
 
 const open_to_edit = (pq) => {
     editing.value = true;
