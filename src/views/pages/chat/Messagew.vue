@@ -69,8 +69,8 @@
     style="color:white;margin:0;font-weight:300;position:absolute;bottom:.5rem;right:1rem;min-width:max-content;display:flex;gap:.5rem"
   >
     <span style="opacity:.5">{{ props.message.time }}</span>
-    <i v-if="props.message.message_data.current_status_id == 3 && props.message.message_data.employer_id" class="fa-solid fa-check-double" style="color:greenyellow" />
-    <i v-else-if="props.message.message_data.current_status_id == 2 && props.message.message_data.employer_id" class="fa-solid fa-check" style="color:greenyellow" />
+    <i v-if="props.message.message_data.current_status_id == 3 && props.message.message_data.employer_id" class="fa-solid fa-check-double" style="color:green" />
+    <i v-else-if="props.message.message_data.current_status_id == 2 && props.message.message_data.employer_id" class="fa-solid fa-check" style="color:green" />
     <i v-else-if="props.message.message_data.current_status_id == 1 && props.message.message_data.employer_id" class="fa-solid fa-check" style="color:gray" />
   </h6>
   

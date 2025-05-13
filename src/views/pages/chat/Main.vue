@@ -1,20 +1,21 @@
 <!-- ChatView.vue (versión corregida) -->
 <template>
-  <div class="main-container">
+  <div class="main-container" :style="chatTheme.current_chat_theme.bg_image" style="">
     <!-- █████ TOP BAR █████ -->
-    <div class="top-bar" style="border-radius:.5rem;gap:1rem;">
+    <div class="top-bar" style="border-radius:.5rem;gap:1rem; " :style="chatTheme.current_chat_theme.bg_bars">
       <div class="top-bar-left">
         <div style="height:3rem;width:3rem;display:flex;align-items:center;">
           <div
+          
             class="cliente-img"
             :style="`background-color:${route.params.color}`"
-            style="height:100%;width:3rem;color:white;aspect-ratio:1/1;border-radius:50%;display:flex;align-items:center;justify-content:center;text-transform:uppercase;font-size:1.3rem;">
+            style="height:100%;color: white;font-weight: bold; width:3rem;aspect-ratio:1/1;border-radius:50%;display:flex;align-items:center;justify-content:center;text-transform:uppercase;font-size:1.3rem;">
             {{ getInitials(route.params.user_name) }}
           </div>
-        </div>
+        </div> 
 
         <div class="top-bar-info">
-          <strong><h5 style="text-transform:capitalize;margin:0;">
+          <strong><h5 style="text-transform:capitalize;margin:0;" :style="chatTheme.current_chat_theme.text">
             {{ route.params.user_name?.substring(0, 20) }}  
           </h5></strong>
           <div>
@@ -31,7 +32,7 @@
                 }"
               >
                 <!-- Ícono -->
-                <i
+                <i 
                   :class="['fa-solid', colorMap[chatStore.current_user.clasification]?.icon]"
                   aria-hidden="true"
                   style="font-size: 0.9rem"
@@ -60,8 +61,8 @@
      
         <Button icon="pi pi-shopping-cart" class="p-2"
                 style="color:white;min-width:max-content;" severity="warning" label="Ing. Ped"/>
-        <Button text class="p-2"><i class="pi pi-search text-2xl text-white"/></Button>
-        <Button text class="p-2"><i class="pi pi-bars text-2xl text-white"/></Button>
+        <Button text class="p-2"><i :style="chatTheme.current_chat_theme.text" class="pi pi-search text-2xl "/></Button>
+        <Button text class="p-2"><i :style="chatTheme.current_chat_theme.text" class="pi pi-bars text-2xl "/></Button>
       </div>
     </div>
 
@@ -71,7 +72,7 @@
         <Messages v-if="route.params.user_id"  :send_function="send_files" :send_text="send_text_message"  :change_expiration="change_expiration" ref="Messages_element"/>
 
         <div v-else style="display:flex; justify-content: center;align-items: center; height:100%;">
-          <h2 style="color:white;font-size: 3rem;opacity: .5;">Selecciona un chat...</h2>
+          <h2 style="color:white;font-size: 3rem;opacity: .5;" :style="chatTheme.current_chat_theme.text">Selecciona un chat...</h2>
     
 
         </div>
@@ -79,7 +80,7 @@
     </div>
 
     <!-- █████ CHAT BAR █████ -->
-    <div class="chat-bar" tabindex="0" v-if="route.params?.user_id">
+    <div class="chat-bar" tabindex="0" v-if="route.params?.user_id"  :style="chatTheme.current_chat_theme.bg_bars">
       <EmojiPicker
         v-if="showEmojiPicker"
         :native="true"
@@ -89,8 +90,8 @@
       />
 
       <!-- área entrada -->
-      <div class="message-area">
-        <Button text style="color:yellow;font-size:2rem;" @click="showEmojiPicker=!showEmojiPicker">
+      <div class="message-area" >
+        <Button text style="font-size:2rem;" @click="showEmojiPicker=!showEmojiPicker">
           <i class="fas fa-laugh-wink emoji-picker"/>
         </Button>
 
@@ -102,12 +103,13 @@
           class="message"
           :disabled="isExpired"
           @keydown="handleKeydown"
+          :style="chatTheme.current_chat_theme.text"
         />
 
         <div v-else class="audio-chip" @keydown.enter.prevent="sendRecordedAudio">
           <audio style="width:100%;min-width:28rem;max-width:42rem;" :src="recordedAudio.url" controls/>
           <Button text class="btn-audio-trash p-2" @click="discardAudio">
-            <i class="pi pi-trash text-2xl p-0"/>
+            <i :style="chatTheme.current_chat_theme.text" class="pi pi-trash text-2xl p-0"/>
           </Button>
         </div>
       </div>
@@ -123,9 +125,9 @@
           v-if="!recordedAudio && messageBody.trim()===''"
           @click="handleMicToggle"
         >
-          <i :class="isRecording
+          <i :style="chatTheme.current_chat_theme.text" :class="isRecording 
                 ? 'pi pi-stop text-2xl text-red-500'
-                : 'pi pi-microphone text-2xl text-white'"/>
+                : 'pi pi-microphone text-2xl '"/>
         </Button>
 
         
@@ -137,24 +139,24 @@
           text
           @click="sendRecordedAudio"
         >
-          <i class="pi pi-send text-2xl text-white"/>
+          <i :style="chatTheme.current_chat_theme.text" class="pi pi-send text-2xl "/>
         </Button>
 
         <!-- enviar texto -->
-        <Button v-else text @click="send_text_message(messageBody)">
-          <i class="pi pi-send text-2xl text-white"/>
+        <Button :style="chatTheme.current_chat_theme.text" v-else text @click="send_text_message(messageBody)">
+          <i class="pi pi-send text-2xl "/>
         </Button>
 
       </div>
 
       <div style="display: flex; gap: 1rem; flex-direction: column;">
-        <Button
+        <Button 
           severity="danger" style="" icon="pi pi-clock" class="p-2"
           @click="() =>  showTemplates = true"
           label="Despertar" 
        
         >
-          <!-- <i :class=" 'pi pi- text-2xl text-white'"/> -->
+          <!-- <i :class=" 'pi pi- text-2xl '"/> -->
         </Button>
         <Button icon="pi pi-bolt"
           severity="warning" style="" class="p-2"
@@ -162,7 +164,7 @@
           label="Rapidas" 
        
         >
-          <!-- <i :class=" 'pi pi- text-2xl text-white'"/> -->
+          <!-- <i :class=" 'pi pi- text-2xl '"/> -->
         </Button>
       </div>
    
@@ -237,6 +239,11 @@ import 'vue3-emoji-picker/css';
 import { useChatStore } from '@/store/chat'
 import { URI } from '../../../service/conection';
 
+import {chatThemeStore} from '@/store/chatTheme'
+
+
+
+const chatTheme  = chatThemeStore()
 
 
 function statusSeverity(s){ return {APPROVED:'success',PENDING:'warning',REJECTED:'danger'}[s]||'info' }
@@ -664,16 +671,16 @@ async function sendBulkTest(message = '🔔 Mensaje de prueba') {
 <style scoped>
 /* ——— estilos base ——— */
 .main-container{width:100%;background:#ffffff11;display:grid;height:100vh;max-height:calc(100vh - 4rem);border-radius:.5rem;grid-template-rows:4.5rem 1fr max-content;
-background-image: url(/images/patrones-con-ilustraciones-neon-3475.webp);background-size: cover;}
+background-size: cover;}
 .btn-descuento{position:absolute;right:1.5rem;top:-5rem;min-width:max-content;margin:0;color:#FFC107;background:#ffffff10;}
 .btn-descuento:hover{background:#FFC107;color:#000;}
 .message-area{width:100%;display:flex;}
 h5{margin:0;padding:0;color:white;}
-.top-bar-info{display:flex;color:rgba(255,255,255,.336);align-items:center;gap:.5rem;}
+.top-bar-info{display:flex;align-items:center;gap:.5rem;}
 .top-bar-left{display:flex;gap:1rem;}
 .top-bar,.chat-bar{width:100%;background:rgba(255,255,255,.062);height:100%;display:flex;padding:1rem .5rem;align-items:center;justify-content:space-between;}
 .cliente-img{border-radius:50%;height:100%;aspect-ratio:1/1;}
-.message{background:rgba(255,255,255,.103);border:none;border-radius:.5rem;width:100%;max-height:10rem;color:white;font-family:roboto;font-size:medium;padding:1rem;min-height:min-content;outline:none;}
+.message{background:rgba(255,255,255,.103);border-radius:.5rem;width:100%;max-height:10rem;font-family:roboto;font-size:medium;padding:1rem;min-height:min-content;outline:none;}
 /* scroll */
 ::-webkit-scrollbar{width:12px;}::-webkit-scrollbar-track{background:#94949423;}::-webkit-scrollbar-thumb{background:#ffffff20;border-radius:6px;}::-webkit-scrollbar-thumb:hover{background:#ffffff;}
 html{scrollbar-width:thin;scrollbar-color:#888 #f1f1f1;}

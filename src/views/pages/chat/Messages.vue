@@ -5,12 +5,15 @@
 
   <div
             :style="markedMessages.message_data.employer_id
-                    ? 'background-color:#0a3744;border-radius:.5rem 0 .5rem .5rem;'
-                    : 'background-color:#2f2f41;border-radius:0 .5rem .5rem .5rem;'"
+                  ? `${chatTheme.current_chat_theme.m_employer};border-radius:.5rem 0 .5rem .5rem;`
+                    : `${chatTheme.current_chat_theme.m_user} ; border-radius:0 .5rem .5rem .5rem;`"
             style="padding:1rem 1rem 1rem 1rem;overflow-wrap:break-word;word-break:break-word;
-                   max-width:100%;min-width:10rem;position:relative;display:flex;flex-direction:column;gap:.5rem;"
+                   max-width:100%;min-width:10rem;position:relative;display:flex;flex-direction:column;gap:.5rem;box-shadow: 0 0 1rem #ccc;"
           >
 
+
+     
+                    
           <!-- <Button class="options" style="color: white;">
               <i class="pi pi-angle-down text-xl"></i>
             </Button> -->
@@ -46,12 +49,12 @@
 
             <!-- Texto -->
             <h6 style="color:white;margin:0;font-weight:300">
-              <span
+              <span :style="chatTheme.current_chat_theme.text"
                 v-if="!isExpanded(markedMessages.message_data.id)"
                 v-html="formatContent(markedMessages.message_data.content?.substring(0,200) +
                         (markedMessages.message_data.content?.length > 200 ? '…' : ''))"
               />
-              <span v-else v-html="formatContent(markedMessages.message_data.content)" />
+              <span :style="chatTheme.current_chat_theme.text" v-else v-html="formatContent(markedMessages.message_data.content)" />
               <button
                 v-if="markedMessages.message_data.content?.length > 200"
                 @click="toggleExpand(message.message_data.id)"
@@ -65,7 +68,7 @@
             <h6
               style="color:white;margin:0;font-weight:300;position:absolute;bottom:.5rem;right:1rem;min-width:max-content;display:flex;gap:.5rem"
             >
-              <span style="opacity:.5">{{ markedMessages.time }}</span>
+              <span :style="chatTheme.current_chat_theme.text" style="opacity:.5">{{ markedMessages.time }}</span>
               <i v-if="markedMessages.message_data.current_status_id == 3 && markedMessages.message_data.employer_id" class="fa-solid fa-check-double" style="color:greenyellow" />
               <i v-else-if="markedMessages.message_data.current_status_id == 2 && markedMessages.message_data.employer_id" class="fa-solid fa-check" style="color:greenyellow" />
               <i v-else-if="markedMessages.message_data.current_status_id == 1 && markedMessages.message_data.employer_id" class="fa-solid fa-check" style="color:gray" />
@@ -80,8 +83,8 @@
               viewBox="0 0 8 13" height="13" width="8"
 
               :style="markedMessages.message_data.employer_id
-                    ? `${chatTheme.current_chat_theme.pico_user}`
-                    : `${chatTheme.current_chat_theme.pico_employer}`"
+                    ? `${chatTheme.current_chat_theme.pico_employer}`
+                    : `${chatTheme.current_chat_theme.pico_user}`"
             >
               <path opacity="0.13" fill="#0000000" d="M1.533,3.568L8,12.193V1H2.812C1.042,1,0.474,2.156,1.533,3.568z"/>
               <path fill="currentColor" d="M1.533,2.568L8,11.193V0L2.812,0C1.042,0,0.474,1.156,1.533,2.568z"/>
@@ -91,8 +94,8 @@
               style="position:absolute;right:-8px;top:0;"
               viewBox="0 0 8 13" height="13" width="8"
               :style="markedMessages.message_data.employer_id
-                    ? `${chatTheme.current_chat_theme.pico_user}`
-                    : `${chatTheme.current_chat_theme.pico_employer}`"
+                    ? `${chatTheme.current_chat_theme.pico_employer}`
+                    : `${chatTheme.current_chat_theme.pico_user}`"
             >
               <path opacity="0.13" d="M5.188,1H0v11.193l6.467-8.625C7.526,2.156,6.958,1,5.188,1z"/>
               <path fill="currentColor" d="M5.188,0H0v11.193l6.467-8.625C7.526,1.156,6.958,0,5.188,0z"/>
@@ -112,7 +115,7 @@
         @select="addEmoji"
       />
 
-      <Button style="position: absolute;right: -1rem;"></Button>
+
     </div>
  
 
@@ -359,7 +362,7 @@
             <h6
               style="color:white;margin:0;font-weight:300;position:absolute;bottom:.5rem;right:1rem;min-width:max-content;display:flex;gap:.5rem"
             >
-              <span style="opacity:.5" :style="chatTheme.current_chat_theme.text">{{ message.date }} - {{ message.time }}</span> 
+              <span style="opacity:.5"  :style="chatTheme.current_chat_theme.text">{{ message.date }} - {{ message.time }}</span> 
               <i v-if="message.message_data.current_status_id == 3 && message.message_data.employer_id" class="fa-solid fa-check-double" style="color:greenyellow" />
               <i v-else-if="message.message_data.current_status_id == 2 && message.message_data.employer_id" class="fa-solid fa-check" style="color:greenyellow" />
               <i v-else-if="message.message_data.current_status_id == 1 && message.message_data.employer_id" class="fa-solid fa-check" style="color:gray" />
@@ -373,8 +376,8 @@
               style="position:absolute;left:-8px;top:0"
               viewBox="0 0 8 13" height="13" width="8"
               :style="message.message_data.employer_id
-                    ? `${chatTheme.current_chat_theme.pico_user}`
-                    : `${chatTheme.current_chat_theme.pico_employer}`"
+                    ? `${chatTheme.current_chat_theme.pico_employer}`
+                    : `${chatTheme.current_chat_theme.pico_user}`"
             >
               <path opacity="0.13" fill="#0000000" d="M1.533,3.568L8,12.193V1H2.812C1.042,1,0.474,2.156,1.533,3.568z"/>
               <path fill="currentColor" d="M1.533,2.568L8,11.193V0L2.812,0C1.042,0,0.474,1.156,1.533,2.568z"/>
@@ -384,8 +387,8 @@
               style="position:absolute;right:-8px;top:0"
               viewBox="0 0 8 13" height="13" width="8"
               :style="message.message_data.employer_id
-                    ? `${chatTheme.current_chat_theme.pico_user}`
-                    : `${chatTheme.current_chat_theme.pico_employer}`"
+                    ? `${chatTheme.current_chat_theme.pico_employer}`
+                    : `${chatTheme.current_chat_theme.pico_user}`"
             >
               <path opacity="0.13" d="M5.188,1H0v11.193l6.467-8.625C7.526,2.156,6.958,1,5.188,1z"/>
               <path fill="currentColor" d="M5.188,0H0v11.193l6.467-8.625C7.526,1.156,6.958,0,5.188,0z"/>
@@ -707,15 +710,22 @@ onUnmounted(() => {
   clearAllPreviews()
 })
 
+
+
   
   const markAsRead = async (msg) => {
   // Evita llamadas repetidas
-  if (msg.message_data.current_status_id >= 3 || msg._marking) return
-  msg._marking = true
+  if (
+    msg.message_data.readed ) {
+    return
+  }
+
 
   try {
     await fetchService.post(`${URI_MESSAGES}/read-message/${msg.message_data.user_id}/${route.params.restaurant_id}`,false)
-    msg.message_data.current_status_id = 3         // ← actualiza el icono ✓✓
+    msg.message_data.current_status_id = 3  
+    nuevos_counter.value = 0     // ← actualiza el icono ✓✓
+    chats.resetUnreadForSidebar(msg.message_data.user_id, route.params.restaurant_id)
   } catch (err) {
     console.error('No se pudo marcar como leído', err)
   }

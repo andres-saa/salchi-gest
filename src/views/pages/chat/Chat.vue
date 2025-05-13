@@ -16,7 +16,7 @@
 
             </RouterLink>
 
-            <Button severity="warning"  icon="pi pi-chart-bar text-2xl" text></Button>
+            <Button :style="style? 'background-color:white;color:black' : 'background-color:black;color:white'"  @click="alternateTheme" severity="warning"  icon="pi pi-eye text-2xl" text></Button>
     
         </div>
         
@@ -34,7 +34,7 @@
     import Sidebar from './Sidebar.vue'
     import Main from './Main.vue'
     import { useRoute } from 'vue-router';
-
+    import { computed, onMounted } from 'vue';
     import {chatThemeStore} from '@/store/chatTheme'
 
 
@@ -42,11 +42,35 @@
     const chatTheme  = chatThemeStore()
 
 
+    const alternateTheme = () => {
+
+        chatTheme.current_chat_theme == chatTheme.themes.light? chatTheme.current_chat_theme = chatTheme.themes.dark : chatTheme.current_chat_theme = chatTheme.themes.light
+        !chatTheme.current_chat_theme?.bg?  chatTheme.current_chat_theme = chatTheme.themes.dark : ''
+
+    }
+
     const route = useRoute()
 
 
+
+    const style =  computed( () => {
+        return chatTheme.current_chat_theme == chatTheme.themes.light
+    })
+
+
+    onMounted(() => {
+    
+
+        // if (!chatTheme.current_chat_theme.bg){
+        //     chatTheme.current_chat_theme = chatTheme.themes.black
+        // }
+  
+ 
+    
+    })
     
     
+   
     </script>
     
     <style scoped>

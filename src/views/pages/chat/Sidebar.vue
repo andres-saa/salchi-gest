@@ -6,7 +6,8 @@
         v-model="current_restaurant"
         :options="restaurants"
         optionLabel="name"
-        style="background-color: #ffffff20;border: none; color: white;outline: none;box-shadow: none;"
+        style="background-color: #ffffff20;;outline: none;box-shadow: none;"
+        :style="chatTheme.current_chat_theme.text"
       >
         <template #option="slotProps">
           <div class="flex align-items-center">
@@ -19,7 +20,7 @@
           <div class="flex align-items-center">
             <img v-if="slotProps.value" :src="slotProps.value.img" alt="Logo"
                  style="width: 24px; height: 24px; margin-right: 8px;object-fit: contain;" />
-            <span style="color: white;">
+            <span :style="chatTheme.current_chat_theme.text">
               {{ slotProps.value ? slotProps.value.name : 'Selecciona' }}
             </span>
           </div>
@@ -28,12 +29,12 @@
 
       <div style="display: flex;gap: 1rem;">
         <Button class="options" text>
-          <i class="pi pi-bars text-2xl text-white"></i>
+          <i class="pi pi-bars text-2xl " :style="chatTheme.current_chat_theme.text"></i>
         </Button>
 
         <div style="position: relative;">
           <Button class="options" text style="opacity: .5;">
-            <i class="pi pi-bell text-2xl text-white"></i>
+            <i class="pi pi-bell text-2xl " :style="chatTheme.current_chat_theme.text"></i>
           </Button>
           <div style="height: 1.5rem; width: 1.5rem; border-radius: 50%; background-color: rgb(156,39,176); position: absolute; top: -1rem; right: -.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
             <span style="color: white;">{{ totalUnread }}</span>
@@ -43,7 +44,7 @@
     </div>
 
     <div class="busqueda">
-      <IconField style="display:flex;">
+      <IconField style="display:flex;border: 1px solid #ccc;">
         <InputText style="color:white;" class="search" placeholder="Buscar..." />
       </IconField>
     </div>
@@ -77,7 +78,7 @@
           <!-- imagen + iniciales -->
           <div class="avatar" style="grid-area: imagen;height:100%;width:100%;display:flex;align-items:center;">
             <div style="height:3rem; width:3rem; aspect-ratio:1/1; border-radius:50%; display:flex; align-items:center; justify-content:center; text-transform:uppercase;font-size:1.3rem;"
-                 :style="`background-color:${chat.color}`">
+                 :style="`background-color:${chat.color || 'black'}`">
               {{ getInitials(chat.nombre) }}
             </div>
           </div>
@@ -102,7 +103,7 @@
           <div style="grid-area:check; display:flex; justify-content:end; gap:.5rem;" >
             <div v-if="chat.unreaded > 0"
                  style="height:1.5rem;width:1.5rem;border-radius:50%;background-color:rgb(156,39,176);display:flex;align-items:center;justify-content:center;font-weight:bold;" >
-              <span style="color:white;" :style="chatTheme.current_chat_theme.text">{{ chat.unreaded }}</span>
+              <span style="color:white;" >{{ chat.unreaded }}</span>
             </div>
             <i style="color:greenyellow;" class="fa-solid fa-check-double"></i>
           </div>
@@ -351,6 +352,10 @@ const connectWebSocket = () => {
   }
 }
 
+
+
+
+
 /* ░░░  REACCIONAR AL CAMBIO DE SEDE  ░░░ */
 watch(current_restaurant, async (val) => {
   /* reiniciar paginación */
@@ -557,7 +562,7 @@ h4 {
   width: 100%;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap:  .5rem;
   padding: -0rem 1rem;
 }
 
