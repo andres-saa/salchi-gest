@@ -9,7 +9,7 @@
           
             class="cliente-img"
             :style="`background-color:${route.params.color}`"
-            style="height:100%;color: white;font-weight: bold; width:3rem;aspect-ratio:1/1;border-radius:50%;display:flex;align-items:center;justify-content:center;text-transform:uppercase;font-size:1.3rem;">
+            style="height:100%;color: white; width:3rem;aspect-ratio:1/1;border-radius:50%;display:flex;align-items:center;justify-content:center;text-transform:uppercase;font-size:1.3rem;">
             {{ getInitials(route.params.user_name) }}
           </div>
         </div> 
@@ -678,7 +678,7 @@ background-size: cover;}
 h5{margin:0;padding:0;color:white;}
 .top-bar-info{display:flex;align-items:center;gap:.5rem;}
 .top-bar-left{display:flex;gap:1rem;}
-.top-bar,.chat-bar{width:100%;background:rgba(255,255,255,.062);height:100%;display:flex;padding:1rem .5rem;align-items:center;justify-content:space-between;}
+.top-bar,.chat-bar{width:100%;background:rgba(255,255,255,.062);height:100%;display:flex;padding:1rem 1rem;align-items:center;justify-content:space-between;}
 .cliente-img{border-radius:50%;height:100%;aspect-ratio:1/1;}
 .message{background:rgba(255,255,255,.103);border-radius:.5rem;width:100%;max-height:10rem;font-family:roboto;font-size:medium;padding:1rem;min-height:min-content;outline:none;}
 /* scroll */

@@ -398,10 +398,14 @@
           <!-- Avatar employer -->
           <div
             v-if="message.message_data.employer_id"
-            style="height: 100%; width: 3rem; min-width: 3rem; aspect-ratio: 1/1; background-color: rgb(3 88 95 / 53%); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;"
+            style="height: 100%; width: 3rem; min-width: 3rem; aspect-ratio: 1/1;  border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;" :style="!message.message_data.employer_id != 1363 ? chatTheme.current_chat_theme.m_employer : 'background-color: white'"
           >
-            <h5 style="margin: 0; color: white; font-weight: 400">{{ getInitials(message.message_data.employer_name) }}</h5>
+            <h5  v-if="message.message_data.employer_id != 1363" style="margin: 0; color: black; ">{{ getInitials(message.message_data.employer_name) }} </h5>
+            <h5 v-else style="margin: 0; color: white; font-weight: 400; font-size: 2rem;"> 🤖 </h5>
+
           </div>
+
+          
         </div>
         
           <!-- Avatar entrante -->
