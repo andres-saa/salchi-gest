@@ -40,8 +40,18 @@ export const chatThemeStore = defineStore('chat-theme2sd', {
             },
 
             current_chat_theme: {
-                
-            }
+                    bg: 'background-color:rgb(255, 255, 255)',
+                    // bg:'background-color:white',
+                    m_user: 'background-color: rgb(255, 255, 255);',
+                    m_employer: 'background-color: #d9fdd3;',
+                    // m_user:'background-color:white;',
+                    // m_employer:'background-color: white;',
+                    pico_user: 'color: rgb(255, 255, 255);',
+                    pico_employer: 'color: #d9fdd3; ',
+                    text: 'color:black',
+                    bg_image:'background-image: url(/images/message_backgroud_l.webp);',
+                    bg_bars:'background-color:rgb(255, 255, 255)'
+                }
         };
     }
 });
