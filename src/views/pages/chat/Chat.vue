@@ -16,7 +16,7 @@
 
             </RouterLink>
 
-            <Button :style="style? 'background-color:white;color:black' : 'background-color:black;color:white'"  @click="alternateTheme" severity="warning"  icon="pi pi-eye text-2xl" text></Button>
+            <Button :style="style? 'background-color:transparent;color:black' : 'background-color:transparent;color:white'"  @click="alternateTheme" severity="warning"  icon="pi pi-eye text-2xl" text></Button>
     
         </div>
         
@@ -44,8 +44,7 @@
 
     const alternateTheme = () => {
 
-        chatTheme.current_chat_theme == chatTheme.themes.light? chatTheme.current_chat_theme = chatTheme.themes.dark : chatTheme.current_chat_theme = chatTheme.themes.light
-        !chatTheme.current_chat_theme?.bg?  chatTheme.current_chat_theme = chatTheme.themes.dark : ''
+        chatTheme.current_chat_theme.name == 'light'? chatTheme.current_chat_theme = chatTheme.themes.dark : chatTheme.current_chat_theme = chatTheme.themes.light
 
     }
 
@@ -54,7 +53,7 @@
 
 
     const style =  computed( () => {
-        return chatTheme.current_chat_theme == chatTheme.themes.light
+        return chatTheme.current_chat_theme.name == 'light'
     })
 
 

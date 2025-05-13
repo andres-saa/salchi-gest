@@ -196,8 +196,8 @@
             :style="message.message_data.employer_id
                     ? `${chatTheme.current_chat_theme.m_employer};border-radius:.5rem 0 .5rem .5rem;`
                     : `${chatTheme.current_chat_theme.m_user} ; border-radius:0 .5rem .5rem .5rem;`"
-            style="padding:1rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
-                   max-width:60%;min-width:15rem;position:relative;display:flex; flex-direction:column;gap:1rem;"
+            style="padding:0rem 1rem 2.5rem 1rem;overflow-wrap:break-word;word-break:break-word;
+                   max-width:60%;min-width:15rem;position:relative;display:flex; flex-direction:column;gap:.5rem;"
           >
 
 
@@ -1263,7 +1263,7 @@ watch(
     background: #94949423;
   }
   ::-webkit-scrollbar-thumb {
-    background: #ffffff90;
+    background: #bf00ff53;
     border-radius: 6px;
     /* min-height: 4rem; */
   }

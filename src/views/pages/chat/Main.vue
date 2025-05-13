@@ -103,7 +103,7 @@
           class="message"
           :disabled="isExpired"
           @keydown="handleKeydown"
-          :style="chatTheme.current_chat_theme.text"
+          :style="`${chatTheme.current_chat_theme.text} ; ${chatTheme.current_chat_theme.border} `"
         />
 
         <div v-else class="audio-chip" @keydown.enter.prevent="sendRecordedAudio">
@@ -158,7 +158,7 @@
         >
           <!-- <i :class=" 'pi pi- text-2xl '"/> -->
         </Button>
-        <Button icon="pi pi-bolt"
+        <Button v-if="route.query.expirado" icon="pi pi-bolt"
           severity="warning" style="" class="p-2"
           @click="() =>  showTemplates = true"
           label="Rapidas" 

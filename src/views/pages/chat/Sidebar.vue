@@ -7,7 +7,7 @@
         :options="restaurants"
         optionLabel="name"
         style="background-color: #ffffff20;;outline: none;box-shadow: none;"
-        :style="chatTheme.current_chat_theme.text"
+        :style="chatTheme.current_chat_theme.border"
       >
         <template #option="slotProps">
           <div class="flex align-items-center">
@@ -29,29 +29,37 @@
 
       <div style="display: flex;gap: 1rem;">
         <Button class="options" text>
-          <i class="pi pi-bars text-2xl " :style="chatTheme.current_chat_theme.text"></i>
+          <i class="pi pi-search text-2xl " :style="chatTheme.current_chat_theme.text"></i>
         </Button>
 
-        <div style="position: relative;">
+          <div style="position: relative;">
           <Button class="options" text style="opacity: .5;">
             <i class="pi pi-bell text-2xl " :style="chatTheme.current_chat_theme.text"></i>
           </Button>
+          
           <div style="height: 1.5rem; width: 1.5rem; border-radius: 50%; background-color: rgb(156,39,176); position: absolute; top: -1rem; right: -.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
             <span style="color: white;">{{ totalUnread }}</span>
           </div>
         </div>
+
+           <Button class="options" text>
+          <i class="pi pi-bars text-2xl " :style="chatTheme.current_chat_theme.text"></i>
+        </Button>
+
+
+      
       </div>
     </div>
 
-    <div class="busqueda">
-      <IconField style="display:flex;border: 1px solid #ccc;">
-        <InputText style="color:white;" class="search" placeholder="Buscar..." />
+    <!-- <div class="busqueda">
+      <IconField  :style="chatTheme.current_chat_theme.border">
+        <InputText :style="chatTheme.current_chat_theme.border" style="color:white;" class="search" placeholder="Buscar..." />
       </IconField>
-    </div>
+    </div> -->
 
     <div class="statuses">
       <Button
-        style="height: 2.3rem; border-radius: .3rem; padding: .5rem;"
+        style=" border-radius: .3rem; padding: 0.3rem;"
         text
         v-for="(button, index) in colorMap"
         :key="index"
@@ -67,7 +75,7 @@
     <div class="" :class="animable? 'chats active-new' : 'chats'"  ref="chatsContainer" @scroll="handleScroll">
       <RouterLink 
         
-        active-class="active"
+        :active-class=" chatTheme.current_chat_theme.name == 'dark'?  'active' : 'active-light'"
         v-for="(chat, index) in chats.sidebars[current_restaurant.id]?.filter(ch => ch.clasification == current.label || current.label == 'TODO') || []"
         :key="index"
         :to="`/chat/chats/messages/${current_restaurant.id}/${chat.wa_id}/${chat.nombre}/${chat.color}?expirado=${chat.expirado}&?expira-en?=${chat.tiempo_para_expirar}`"
@@ -479,8 +487,8 @@ const setCurrent = (btn) => {
   transition: .2s ease all;
 }
 .chat:hover {
-  background-color: rgba(255, 255, 255, 0.13);
-  box-shadow: 0 0 0rem black;
+  background-color: rgba(221, 0, 255, 0.051);
+  box-shadow: 0 0 0rem rgb(179, 0, 255);
 }
 
 .chat:hover .avatar {
@@ -496,22 +504,29 @@ const setCurrent = (btn) => {
   box-shadow: 0 0 0rem black;
 }
 
+.active-light {
+  background-color: rgb(217, 253, 211);
+  box-shadow: 0 0 0rem black;
+}
+
 ::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: #94949423;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #ffffff20;
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #ffffff;
-}
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #94949423;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #bf00ff53;
+    border-radius: 6px;
+    /* min-height: 4rem; */
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+  }
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+  }
 
 html {
   scrollbar-width: thin;
@@ -587,7 +602,7 @@ h4 {
 .search {
   width: 100%;
   background-color: rgba(255, 255, 255, 0.1);
-  border: none;
+
   color: white;
 }
 
