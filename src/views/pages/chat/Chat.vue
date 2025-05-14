@@ -4,7 +4,7 @@
     <div class="chat-container-master " style="" :style="chatTheme.current_chat_theme.bg" >
 
         
-    <div class="icons-bar"  style="display: flex; box-shadow: .5rem 0 1rem #00000020; flex-direction: column;height: 100%;gap: 1rem; background-color: #ffffff20;padding: .5rem;;z-index: 99;">
+    <div class="icons-bar"  style="display: flex; box-shadow: .5rem 0 .5rem #00000010; flex-direction: column;height: 100%;gap: 1rem; background-color: #ffffff20;padding: .5rem;;z-index: 99;">
     
         <div class="icons" :class="route.fullPath == '/chat/'? 'icons' : 'icons-active'" style="display: flex;flex-direction: column;height: 100%;gap: 1rem;">
             <RouterLink to="/chat/chats" active-class="active">

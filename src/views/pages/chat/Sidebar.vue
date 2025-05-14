@@ -1,6 +1,60 @@
 <template>
   <div class="sidebar-container" style="position:relative">
     <div class="header">
+
+      
+
+
+      <div class="notifications"   :style="view_norifications? {height:'80vh',top:'4rem',boxShadow: '0 1rem 1rem #00000040'} : {height:0,overflow:'hidden',top:'-2rem'}"  style="width: 100%;max-width: 20rem; background-color: #ffffff90;max-height: 80vh;overflow: auto;padding: 1rem; position: absolute;z-index: 9;transition: all linear .2s;border-radius: .5rem; right: 0;;backdrop-filter:blur(5px);">
+
+
+        <h4 class="my-3" :style="chatTheme.current_chat_theme.text"> <strong>
+Notificaciones
+        </strong> </h4>
+           <RouterLink  
+        
+        :active-class=" chatTheme.current_chat_theme.name == 'dark'?  'active' : 'active-light'"
+        v-for="(chat, index) in chats?.notifications?.[current_restaurant.id]"
+        :key="index"
+        :to="`/chat/chats/messages/${current_restaurant.id}/${chat.user_info.wa_id}/${chat.user_info.nombre}/${chat.user_info.color}?expirado=${chat.user_info.expirado}&?expira-en?=${chat.user_info.tiempo_para_expirar}`"
+      >
+        <!-- …tu card de chat intacta… -->
+        <div  class="chat2" @click="()  => setUserMark_notificacion(chat)" :style="chat.resolved?  'background-color: #fff' : 'background-color: #b6f8ff59' ">
+          
+          <!-- imagen + iniciales -->
+          <div class="avatar" style="grid-area: imagen;height:100%;width:100%;display:flex;align-items:center;">
+            <div style="height:3rem; width:3rem; aspect-ratio:1/1; border-radius:50%; display:flex; align-items:center; justify-content:center; text-transform:uppercase;font-size:1.3rem;"
+                 :style="`background-color:${chat.color || 'black'}`">
+              {{ getInitials(chat.user_info.nombre) }}
+            </div>
+          </div>
+          <!-- nombre -->
+          <div style="grid-area:nombre; text-transform:uppercase;"  :style="`${ chatTheme.current_chat_theme.text} ; ${!chat.resolved? 'font-weight: bold;' : ''}`">{{ chat.description }}</div>
+
+          
+
+          <!-- mensaje y fecha -->
+          <span style="grid-area:mensaje; color:#ffffff80;opacity: .5;" :style="chatTheme.current_chat_theme.text">{{ chat.user_info.nombre }}</span>
+          <!-- <span style="grid-area:fecha; text-align:end; " :style="chatTheme.current_chat_theme.text"> {{ chat.user_info.abreviatura || chat.user_info.fecha_ultimo_mensaje }}</span> -->
+
+          <!-- badge mensajes sin leer -->
+          <!-- <div style="grid-area:check; display:flex; justify-content:end; gap:.5rem;" >
+            <div v-if="chat.user_info.unreaded > 0"
+                 style="height:1.5rem;width:1.5rem;border-radius:50%;background-color:rgb(156,39,176);display:flex;align-items:center;justify-content:center;font-weight:bold;" >
+              <span style="color:white;" >{{ chat.user_info.unreaded }}</span>
+            </div>
+            <i style="color:greenyellow;" class="fa-solid fa-check-double"></i>
+          </div> -->
+        </div>
+      </RouterLink>
+        
+      </div>
+
+
+
+
+
+
       <!-- ▼▼▼  TU DROPDOWN ORIGINAL  ▼▼▼ -->
       <Dropdown
         v-model="current_restaurant"
@@ -34,7 +88,7 @@
 
           <div style="position: relative;">
           <Button class="options" text style="opacity: .5;">
-            <i class="pi pi-bell text-2xl " :style="chatTheme.current_chat_theme.text"></i>
+            <i class="pi pi-bell text-2xl notifications "  @click="view_norifications = !view_norifications" :style="chatTheme.current_chat_theme.text"></i>
           </Button>
           
           <div style="height: 1.5rem; width: 1.5rem; border-radius: 50%; background-color: rgb(156,39,176); position: absolute; top: -1rem; right: -.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
@@ -133,12 +187,41 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { URI_MESSAGES } from '@/service/conection.js'
 import { fetchService } from '@/service/utils/fetchService.js'
 import { useChatStore } from '@/store/chat'
 import {chatThemeStore} from '@/store/chatTheme'
+import { URI } from '../../../service/conection'
+
+const view_norifications = ref(false)
+
+
+
+
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+
+  // Verifica si el clic ocurrió dentro de un elemento con clase 'emoji-picker'
+  if (!target.closest('.notifications')) {
+    view_norifications.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+  
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
+
+
+
+
 
 
 
@@ -171,13 +254,27 @@ const buttons = ref([
 
 const setUserMark = async (user) => {
   chats.current_user = user
-
+  view_norifications.value = false
   try {
     await fetchService.post(`${URI_MESSAGES}/read-message/${user.user_id}/${current_restaurant.value.id}`,false)
   } catch (err) {
     console.error('No se pudo marcar como leído', err)
   }
 
+  user.unreaded = 0
+}
+
+
+const setUserMark_notificacion = async (user) => {
+  chats.current_user = user.user_info
+  view_norifications.value = false
+  try {
+    await fetchService.post(`${URI_MESSAGES}/read-message/${user.user_info.user_id}/${current_restaurant.value.id}`,false)
+    await fetchService.post(`${URI_MESSAGES}/view_notification/${user.id}`,false)
+
+  } catch (err) {
+    console.error('No se pudo marcar como leído', err)
+  }
   user.unreaded = 0
 }
 
@@ -213,6 +310,11 @@ const getInitials = name => {
 
 
 
+
+onMounted( async() => {
+
+  chats.notifications[current_restaurant.value.id] = await fetchService.get(`${URI_MESSAGES}/notifications/${current_restaurant.value.id}`)
+})
 
 
 const toNumUnread = v => v === '9+' ? 10 : Number(v ?? 0)
@@ -422,7 +524,7 @@ const setCurrent = (btn) => {
   height: calc(100%);
   border-radius: 0.5rem;
   overflow: auto;
-  gap: 1rem;
+  gap: 0.5rem;
   grid-template-rows: 3rem 3rem min-content 1fr;
 }
 
@@ -478,7 +580,26 @@ const setCurrent = (btn) => {
   color: white;
   gap:0 1rem;
   cursor: pointer;
-  padding: 0.6rem 1rem;
+  padding: 0.3rem 1rem;
+  transition: all ease 0.3s;
+}
+
+
+.chat2 {
+    display: grid;
+  width: 100%;
+  align-items: center;
+  grid-template-areas: 
+    "imagen nombre nombre"
+    "imagen mensaje mensaje"
+    "imagen  hr hr"
+    "expiration  expiration expiration";
+  grid-template-columns: 1fr 5fr 2fr;
+  grid-template-rows: 1fr 2fr;
+  color: white;
+  gap:0 1rem;
+  cursor: pointer;
+  padding: 0.3rem 1rem;
   transition: all ease 0.3s;
 }
 
@@ -550,9 +671,10 @@ h4 {
   display: flex;
   width: 100%;
   align-items: center;
+  position: relative;
   min-width: max-content;
   justify-content: space-between;
-  padding: 1rem;
+  padding:  .5rem  1rem;
 }
 
 

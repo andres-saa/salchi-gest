@@ -412,15 +412,15 @@
           
         </div>
         <div v-if="chats.sending" style="display: flex; gap: 1rem; justify-content: end;width: 100%; ">
-          <div style="background-color: #0a3744;max-width: 20rem; width: 100%;border-radius: .5rem;height: 4rem;">
+          <div style="max-width: 20rem; width: 100%;border-radius: .5rem;height: 4rem;" :style="chatTheme.current_chat_theme.m_employer">
             <h6 style="color:white;margin:0;font-weight:300;display:flex;align-items:center;gap:.5rem;height: 100%;padding:1rem 1rem 1rem 1rem;">
-              <i class="pi pi-send" style="color: white" />  <progressSpinner style="width: 1.5rem; height: 1.5rem; color: white" strokeWidth="8" fill="transparent" animationDuration=".3s" aria-label="Custom ProgressSpinner" />
+              <i class="pi pi-send" style="color: black" />  <progressSpinner style="width: 1.5rem; height: 1.5rem; color: white" strokeWidth="8" fill="transparent" animationDuration=".3s" aria-label="Custom ProgressSpinner" />
             </h6>
           </div>
 
           <div
            
-            style="height: 100%; width: 3rem; min-width: 3rem; aspect-ratio: 1/1; background-color: rgb(3 88 95 / 53%); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;padding: .5rem;"
+            style="height: 100%; width: 3rem; min-width: 3rem; aspect-ratio: 1/1; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-transform: uppercase;padding: .5rem;" :style="chatTheme.current_chat_theme.m_employer"
           >
             <img style="height: 2rem; width: 2rem;aspect-ratio: 1/1;object-fit: contain;" src="https://backend.salchimonster.com/read-photo-product/xai0dVnL" alt="">
           </div>
@@ -429,7 +429,7 @@
 
       <!-- Botones de scroll -->
       <Button icon="pi pi-angle-down" v-if="showNewMessagesButton || nuevos_counter > 0" @click="scrollToBottomNoSmooth" :style="downButtonStyle" />
-      <Button :label="nuevos_counter" v-if="nuevos_counter > 0" @click="scrollToBottomNoSmooth" :style="downButtonStyle2" />
+      <Button  :label="nuevos_counter" v-if="nuevos_counter > 0" @click="scrollToBottomNoSmooth" :style="downButtonStyle2" />
     </div>
 
     <!-- Dialog de archivos -->
@@ -948,8 +948,8 @@ const checkVisibleUnread = () => {
       width: '3rem',
       borderRadius: '50%',
       bottom: '5rem',
-      right: '2rem',
-      backgroundColor: newMessagesArrived.value ? 'rgb(33, 150, 243)' : 'rgba(255, 255, 255,.1)',
+      right: '1.5rem',
+      backgroundColor: newMessagesArrived.value ? 'rgb(33, 150, 243)' : chatTheme.current_chat_theme.button_down,
       color: 'white',
       border: 'none',
       padding: '0.5rem 1rem',

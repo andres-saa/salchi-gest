@@ -44,6 +44,45 @@ export const fetchService = {
       return null;
     }
   },
+  async postFormData (
+  url,
+  formData,                   // ← instancia de FormData
+  loadingMessage = 'cargando',
+  redirectPath   = null
+) {
+  const store = useReportesStore()
+
+  try {
+    if (loadingMessage !== false) store.setLoading(true, loadingMessage)
+
+    const resp = await axios.post(
+      url,
+      formData,
+      {
+        headers: {
+          ...getAuthHeaders()         // ⚠️  sin Content-Type extra
+          // axios pondrá:
+          // Content-Type: multipart/form-data; boundary=----XYZ
+        }
+      }
+    )
+
+    if ([200, 201].includes(resp.status)) {
+      if (loadingMessage !== false) store.setLoading(false)
+      if (redirectPath) this.router.push(redirectPath)
+      return resp.data
+    }
+
+    if (loadingMessage !== false) store.setLoading(false)
+    console.error('Error POST multipart:', resp.status)
+    return null
+
+  } catch (err) {
+    if (loadingMessage !== false) store.setLoading(false)
+    console.error('Error POST multipart:', err)
+    return null
+  }
+},
 
   async post(url, data, loadingMessage = "cargando", redirectPath = null) {
     const store = useReportesStore();

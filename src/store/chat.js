@@ -59,6 +59,189 @@ export const useChatStore = defineStore('chates', {
       ]
     },
 
+    notifications: {
+      "1": [
+  {
+    "id": 1,
+    "user_id": 217,
+    "restaurant_id": 1,
+    "description": "pedido confirmado",
+    "resolved": false,
+    "user_info": {
+      "color": "rgb(1,106,232)",
+      "wa_id": "573226892988",
+      "nombre": "prueba new jersey",
+      "orders": [
+        {
+          "id_order": "SUB-2019",
+          "fecha_order": "23‑04‑2025",
+          "valor_orden": 20.99
+        },
+        {
+          "id_order": "pru-0514",
+          "fecha_order": "19‑01‑2025",
+          "valor_orden": 69800
+        },
+        {
+          "id_order": "pru-0513",
+          "fecha_order": "19‑01‑2025",
+          "valor_orden": 40500
+        },
+        {
+          "id_order": "pru-0326",
+          "fecha_order": "13‑07‑2024",
+          "valor_orden": 108700
+        },
+        {
+          "id_order": "pru-0199",
+          "fecha_order": "08‑06‑2024",
+          "valor_orden": 4900
+        },
+        {
+          "id_order": "NEW-1460",
+          "fecha_order": "24‑04‑2025",
+          "valor_orden": 20.99
+        },
+        {
+          "id_order": "NEW-0976",
+          "fecha_order": "28‑03‑2025",
+          "valor_orden": 41.99
+        },
+        {
+          "id_order": "NEW-0074",
+          "fecha_order": "26‑02‑2025",
+          "valor_orden": 187
+        },
+        {
+          "id_order": "NEW-0009",
+          "fecha_order": "22‑02‑2025",
+          "valor_orden": 157
+        },
+        {
+          "id_order": "LAU-3599",
+          "fecha_order": "20‑01‑2025",
+          "valor_orden": 226500
+        },
+        {
+          "id_order": "CAN-2710",
+          "fecha_order": "26‑02‑2025",
+          "valor_orden": 49900
+        }
+      ],
+      "user_id": 217,
+      "expirado": false,
+      "unreaded": "0",
+      "abreviatura": "hoy",
+      "joined_date": "08‑06‑2024",
+      "total_spent": 500727.97,
+      "user_address": "calle de la vida",
+      "clasification": "ESTRELLA",
+      "last_purchase": "24-04-2025",
+      "phone_numbers": "3226892988",
+      "restaurant_id": 1,
+      "times_purchased": 11,
+      "mensaje_truncado": "Hola, como te puedo ayudar.",
+      "ultimo_mensaje_id": 9868,
+      "hora_ultimo_mensaje": "09:33 AM",
+      "tiempo_para_expirar": null,
+      "fecha_ultimo_mensaje": "14/05/2025",
+      "fecha_ultimo_mensaje_ts": "2025-05-14T09:33:29",
+      "fecha_ultimo_mensaje_completo": "2025-05-14T09:33:29"
+    }
+  }
+],
+      "7": [
+  {
+    "id": 1,
+    "user_id": 217,
+    "restaurant_id": 1,
+    "description": "pedido confirmado",
+    "resolved": false,
+    "user_info": {
+      "color": "rgb(1,106,232)",
+      "wa_id": "573226892988",
+      "nombre": "prueba new jersey",
+      "orders": [
+        {
+          "id_order": "SUB-2019",
+          "fecha_order": "23‑04‑2025",
+          "valor_orden": 20.99
+        },
+        {
+          "id_order": "pru-0514",
+          "fecha_order": "19‑01‑2025",
+          "valor_orden": 69800
+        },
+        {
+          "id_order": "pru-0513",
+          "fecha_order": "19‑01‑2025",
+          "valor_orden": 40500
+        },
+        {
+          "id_order": "pru-0326",
+          "fecha_order": "13‑07‑2024",
+          "valor_orden": 108700
+        },
+        {
+          "id_order": "pru-0199",
+          "fecha_order": "08‑06‑2024",
+          "valor_orden": 4900
+        },
+        {
+          "id_order": "NEW-1460",
+          "fecha_order": "24‑04‑2025",
+          "valor_orden": 20.99
+        },
+        {
+          "id_order": "NEW-0976",
+          "fecha_order": "28‑03‑2025",
+          "valor_orden": 41.99
+        },
+        {
+          "id_order": "NEW-0074",
+          "fecha_order": "26‑02‑2025",
+          "valor_orden": 187
+        },
+        {
+          "id_order": "NEW-0009",
+          "fecha_order": "22‑02‑2025",
+          "valor_orden": 157
+        },
+        {
+          "id_order": "LAU-3599",
+          "fecha_order": "20‑01‑2025",
+          "valor_orden": 226500
+        },
+        {
+          "id_order": "CAN-2710",
+          "fecha_order": "26‑02‑2025",
+          "valor_orden": 49900
+        }
+      ],
+      "user_id": 217,
+      "expirado": false,
+      "unreaded": "0",
+      "abreviatura": "hoy",
+      "joined_date": "08‑06‑2024",
+      "total_spent": 500727.97,
+      "user_address": "calle de la vida",
+      "clasification": "ESTRELLA",
+      "last_purchase": "24-04-2025",
+      "phone_numbers": "3226892988",
+      "restaurant_id": 1,
+      "times_purchased": 11,
+      "mensaje_truncado": "Hola, como te puedo ayudar.",
+      "ultimo_mensaje_id": 9868,
+      "hora_ultimo_mensaje": "09:33 AM",
+      "tiempo_para_expirar": null,
+      "fecha_ultimo_mensaje": "14/05/2025",
+      "fecha_ultimo_mensaje_ts": "2025-05-14T09:33:29",
+      "fecha_ultimo_mensaje_completo": "2025-05-14T09:33:29"
+    }
+  }
+]
+    },
+
     current_user: {
       id: 0,
       nombre: "andres",

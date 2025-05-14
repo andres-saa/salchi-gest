@@ -5,11 +5,11 @@
         <div class="buttons active" style="display: flex;align-items: center; justify-content: center;height: 100%;gap: 1rem;" >
 
        
-            <div  :icon="btn.icon" class="text-3xl btn2" :style="{}"  v-for="(btn, index) in buttons" :key="index" style="display: flex;flex-direction: column;align-items: center;gap: 2rem;" >
+            <div  :icon="btn.icon" class="text-3xl btn2" :style="{}"  v-for="(btn, index) in buttons" :key="index" style="display: flex;flex-direction: column;align-items: center;gap: 2rem; " >
 
                 
-                <i class="text-4xl" :class="btn.icon" :style="{color:btn.bg}"></i>
-                <Button @click="router.push(btn.to)"  :style="{color:btn.bg,border:`1px solid ${btn.bg} `}" class="text-2xl btn" :label="btn.label" style="aspect-ratio:  1 / 1; width: 15rem; text-align: center;">
+                <i class="text-4xl" :class="btn.icon" :style="{color:btn.bg}" style="font-weight: bold;"></i>
+                <Button @click="router.push(btn.to)"  :style="{color:btn.bg,border:`1px solid ${btn.bg} `}" class="text-2xl btn" :label="btn.label" style="aspect-ratio:  1 / 1; width: 15rem; text-align: center;box-shadow: 0 0 1rem; ">
 
                 </Button>
             </div>

@@ -3,13 +3,9 @@
 
     <div class="chat-container " :style="chatTheme.current_chat_theme.bg" >
  
-     <Sidebar style="       box-shadow: 1rem 0 1rem #00000010;" class="sidebar-left" :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}"  />
+     <Sidebar style="       box-shadow: .5rem 0 1rem #00000010;" class="sidebar-left" :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}"  />
      <Main />
-     <Sidebar style="       box-shadow: -1rem 0 1rem #00000010;"  class="sidebar-right" :restaurant=" {
-          id:7,
-          name:'Distrimoster',
-          img:'https://backend.salchimonster.com/read-photo-product/iX6UiE6e'
-        }" />
+     <Sidebar style="       box-shadow: -.5rem 0 1rem #00000010;"  class="sidebar-right" :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}" />
     </div>
     
     

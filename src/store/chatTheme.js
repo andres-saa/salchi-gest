@@ -23,7 +23,8 @@ export const chatThemeStore = defineStore('chat-theme2sd', {
                     text: 'color:black',
                     bg_image:'background-image: url(/images/message_backgroud_l.webp);',
                     bg_bars:'background-color:rgb(255, 255, 255)',
-                    hover:'background-color:#00000020'
+                    hover:'background-color:#00000020',
+                    button_down:'rgba(0, 0, 0, 0.45)'
                 },
 
 
@@ -41,7 +42,8 @@ export const chatThemeStore = defineStore('chat-theme2sd', {
                     bg_bars:'background-color:rgba(255,255,255,.062)',
                     bg_image:'background-image: url(/images/message_backgroud_d.webp);',
                     border:'border:none',
-                    hover:'background-color:#ffffff20'
+                    hover:'background-color:#ffffff20',
+                    button_down:'rgba(255, 255, 255,.3)'
                 }
             },
 

@@ -117,6 +117,37 @@
           <!-- Datos básicos -->
           <div class=" md:grid-cols-2 gap-3">
             <div class="field">
+  <h6 class="font-medium mb-2">Imagen (HEADER)</h6>
+
+  <!-- FileUpload de PrimeVue (1 sola imagen) -->
+  <FileUpload
+    name="file"
+    mode="advanced"
+    customUpload
+    chooseLabel="Seleccionar"
+    uploadLabel="Subir"
+    cancelLabel="Cancelar"
+    accept="image/*"
+    :maxFileSize="2000000"
+    :multiple="false"
+    :disabled="isUploadingHeader"
+    @uploader="uploadHeaderImage"
+  />
+
+  <!-- Miniatura + botón eliminar -->
+ <div
+  v-if="headerImageFile"               
+  style="position:relative;width:300px;margin-top:.5rem"
+>
+  <img :src="headerImagePreviewUrl"   style="width:100%;height:100%;object-fit:cover;border-radius:.5rem" />
+  <Button     icon="pi pi-times"
+      severity="danger"
+      size="small"
+      style="position:absolute;top:.1rem;right:.1rem" @click="removeHeaderImage" />
+</div>
+            </div>
+
+            <div class="field">
               <label class="font-medium">Nombre</label>
               <InputText v-model="form.name" class="w-full" />
             </div>
@@ -197,6 +228,25 @@ import { URI_MESSAGES,URI } from '@/service/conection'
 import { loginStore } from '@/store/user';
 
 const login = loginStore()
+
+
+function uploadHeaderImage({ files }) {
+  if (!files?.length) return
+  const file = files[0]
+
+  // ► Guarda el archivo; se enviará en saveTemplate()
+  headerImageFile.value       = file
+  headerImagePreviewUrl.value = URL.createObjectURL(file)
+}
+
+function removeHeaderImage () {
+  headerImageFile.value       = null
+  headerImagePreviewUrl.value = ''
+}
+
+
+const headerImageId     = ref('')  // ← image_identifier
+const isUploadingHeader = ref(false)
 /* ------- state ------- */
 const templates = ref([])
 const selectedTemplate = ref({})
@@ -215,6 +265,9 @@ const restaurant = ref({})
 const users = ref([{}])
 const current = ref(  {label: 'PREOCUPANTE',  bg: '#e74c3c', icon: 'fa-triangle-exclamation' }, // rojo
 )
+/* Imagen HEADER */
+const headerImageFile       = ref(null)   // ⬅️ archivo original         (File | null)
+const headerImagePreviewUrl = ref('')     // ⬅️ URL local para pre-ver
 
 
 
@@ -362,12 +415,22 @@ function buildExample(){
     return { body_text_named_params: keys.map(k=>({param_name:k, example: examples.value[k]||''})) }
   }
 }
+/* ---------- SAVE TEMPLATE COMPLETO ---------- */
 
-async function saveTemplate(){
-  if(!form.value.name.trim()) return
+
+
+/* ---------- SAVE TEMPLATE COMPLETO (elige endpoint) ---------- */
+/* ---------- SAVE TEMPLATE (com multipart opcional) ---------- */
+/* ---------- SAVE TEMPLATE (elige JSON o FormData) ---------- */
+async function saveTemplate () {
+  // ── Validación mínima
+  if (!form.value.name.trim()) return
   saving.value = true
-  try{
+
+  try {
+    /* 1) BODY + botones, SIN header por ahora ------------------ */
     const exampleObj = buildExample()
+
     const comps = [
       {
         type: 'BODY',
@@ -375,24 +438,49 @@ async function saveTemplate(){
           text: bodyText.value,
           ...(exampleObj ? { example: exampleObj } : {})
         }
-      },
-      ...(buttons.value.length ? [{ type:'BUTTONS', data:{ buttons: buttons.value }}] : [])
+      }
     ]
-    const payload = { ...form.value, components: comps }
 
-    if(editingId.value){
-      // Meta actualiza con ?name=<template_name>
-      await fetchService.post(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates/${editingId.value}`, payload)
-    } else {
-      await fetchService.post(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates`, payload)
+    if (buttons.value.length) {
+      comps.push({
+        type : 'BUTTONS',
+        data : { buttons: buttons.value }
+      })
     }
 
+    const payload = { ...form.value, components: comps }
+    const baseURL = `${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates`
+
+    /* 2) Con o sin imagen de header ---------------------------- */
+    if (headerImageFile.value) {
+      /* ▶ Con HEADER → multipart al endpoint /with-header */
+      const fd = new FormData()
+      fd.append('template_json', JSON.stringify(payload))
+      fd.append('header_image',  headerImageFile.value)
+
+      const url = `${baseURL}/with-header`
+      await fetchService.postFormData(url, fd, 'Guardando…')
+    } else {
+      /* ▶ Sin HEADER → JSON (creación o edición) */
+      const url = editingId.value ? `${baseURL}/${editingId.value}` : baseURL
+      await fetchService.post(url, payload, 'Guardando…')
+    }
+
+    /* 3) Refrescar lista y cerrar ------------------------------ */
     await fetchTemplates()
     dialogVisible.value = false
+    resetForm()
+    headerImageFile.value       = null
+    headerImagePreviewUrl.value = ''
+  } catch (err) {
+    console.error('✗ Error guardando plantilla:', err)
   } finally {
     saving.value = false
   }
 }
+
+
+
 /* confirm & delete */
 function askRemove(tpl){
   confirm.require({

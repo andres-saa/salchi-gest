@@ -149,11 +149,11 @@
 
       </div>
 
-      <div style="display: flex; gap: 1rem; flex-direction: column;">
+      <div style="display: flex; gap: 1rem;">
         <Button 
           severity="danger" style="" icon="pi pi-clock" class="p-2"
           @click="() =>  showTemplates = true"
-          label="Despertar" 
+           
        
         >
           <!-- <i :class=" 'pi pi- text-2xl '"/> -->
@@ -161,7 +161,7 @@
         <Button v-if="route.query.expirado" icon="pi pi-bolt"
           severity="warning" style="" class="p-2"
           @click="() =>  showTemplates = true"
-          label="Rapidas" 
+       
        
         >
           <!-- <i :class=" 'pi pi- text-2xl '"/> -->
@@ -223,6 +223,8 @@
 
 
 
+    
+
 
   </div>
 </template>
@@ -240,6 +242,8 @@ import { useChatStore } from '@/store/chat'
 import { URI } from '../../../service/conection';
 
 import {chatThemeStore} from '@/store/chatTheme'
+
+
 
 
 
@@ -678,9 +682,9 @@ background-size: cover;}
 h5{margin:0;padding:0;color:white;}
 .top-bar-info{display:flex;align-items:center;gap:.5rem;}
 .top-bar-left{display:flex;gap:1rem;}
-.top-bar,.chat-bar{width:100%;background:rgba(255,255,255,.062);height:100%;display:flex;padding:1rem 1rem;align-items:center;justify-content:space-between;}
+.top-bar,.chat-bar{width:100%;background:rgba(255,255,255,.062);height:100%;display:flex;padding:0 1rem;align-items:center;justify-content:space-between;}
 .cliente-img{border-radius:50%;height:100%;aspect-ratio:1/1;}
-.message{background:rgba(255,255,255,.103);border-radius:.5rem;width:100%;max-height:10rem;font-family:roboto;font-size:medium;padding:1rem;min-height:min-content;outline:none;}
+.message{background:rgba(255,255,255,.103);width:100%;max-height:10rem;font-family:roboto;font-size:medium;;min-height:min-content;outline:none;}
 /* scroll */
 ::-webkit-scrollbar{width:12px;}::-webkit-scrollbar-track{background:#94949423;}::-webkit-scrollbar-thumb{background:#ffffff20;border-radius:6px;}::-webkit-scrollbar-thumb:hover{background:#ffffff;}
 html{scrollbar-width:thin;scrollbar-color:#888 #f1f1f1;}
