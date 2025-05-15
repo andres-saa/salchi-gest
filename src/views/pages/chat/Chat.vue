@@ -4,9 +4,9 @@
     <div class="chat-container-master " style="" :style="chatTheme.current_chat_theme.bg" >
 
         
-    <div class="icons-bar"  style="display: flex; box-shadow: .5rem 0 .5rem #00000010; flex-direction: column;height: 100%;gap: 1rem; background-color: #ffffff20;padding: .5rem;;z-index: 99;">
+    <div class="icons-bar"  style="display: flex; box-shadow: .5rem 0 .5rem #00000010; flex-direction: column;height: 100%; background-color: #ffffff20;;;z-index: 99;">
     
-        <div class="icons" :class="route.fullPath == '/chat/'? 'icons' : 'icons-active'" style="display: flex;flex-direction: column;height: 100%;gap: 1rem;">
+        <div class="icons" :class="route.fullPath == '/chat/'? 'icons' : 'icons-active'" style="display: flex;flex-direction: column;height: 100%;">
             <RouterLink to="/chat/chats" active-class="active">
             <Button  severity="success" icon="pi pi-whatsapp text-2xl" text></Button>
             </RouterLink>
@@ -77,7 +77,7 @@
     .chat-container-master{
         display: grid;
         margin-top: 3rem;
-        grid-template-columns:4rem 1fr ;
+        grid-template-columns:3rem 1fr ;
         height: 100vh;
         min-width: 1268px;
         /* padding: .5rem !important; */

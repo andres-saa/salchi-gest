@@ -12,12 +12,20 @@
             style="height:100%;color: white; width:3rem;aspect-ratio:1/1;border-radius:50%;display:flex;align-items:center;justify-content:center;text-transform:uppercase;font-size:1.3rem;">
             {{ getInitials(route.params.user_name) }}
           </div>
+          
         </div> 
 
         <div class="top-bar-info">
-          <strong><h5 style="text-transform:capitalize;margin:0;" :style="chatTheme.current_chat_theme.text">
-            {{ route.params.user_name?.substring(0, 20) }}  
-          </h5></strong>
+
+          <div style="display: flex;flex-direction: column;">
+                <strong><h5 style="text-transform:capitalize;margin:0;" :style="chatTheme.current_chat_theme.text">
+                        {{ route.params.user_name?.substring(0, 20) }}  
+                      </h5></strong>
+
+                      <span>+{{ route.params.user_id }}</span>
+          </div>
+     
+
           <div>
                           <Button
                 v-if="chatStore.current_user.clasification"
@@ -61,6 +69,8 @@
      
         <Button icon="pi pi-shopping-cart" class="p-2"
                 style="color:white;min-width:max-content;" severity="warning" label="Ing. Ped"/>
+
+                
         <Button text class="p-2"><i :style="chatTheme.current_chat_theme.text" class="pi pi-search text-2xl "/></Button>
         <Button text class="p-2"><i :style="chatTheme.current_chat_theme.text" class="pi pi-bars text-2xl "/></Button>
       </div>

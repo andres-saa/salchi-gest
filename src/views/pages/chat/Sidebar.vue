@@ -91,12 +91,12 @@ Notificaciones
           <i class="pi pi-search text-2xl " :style="chatTheme.current_chat_theme.text"></i>
         </Button>
 
-          <div style="position: relative;">
+          <div class="notifications" style="position: relative;cursor: pointer;" @click="view_norifications = !view_norifications">
           <Button class="options" text style="opacity: .5;">
-            <i class="pi pi-bell text-2xl notifications "  @click="view_norifications = !view_norifications" :style="chatTheme.current_chat_theme.text"></i>
+            <i class="pi pi-bell text-2xl notifications "   :style="chatTheme.current_chat_theme.text"></i>
           </Button>
           
-          <div :class="ping?  'load' : ''" style="height: 1.5rem; width: 1.5rem; border-radius: 50%; background-color: rgb(156,39,176); position: absolute; top: -1rem; right: -.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold;padding: .8rem;">
+          <div  :class="ping?  'load' : ''"  style="height: 1.5rem; width: 1.5rem; border-radius: 50%; background-color: rgb(156,39,176); position: absolute; top: -1rem; right: -.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold;padding: .8rem;">
             <span style="color: white;">{{ chats?.notifications?.[current_restaurant.id]?.length || 0 }}</span>
           </div>  
         </div>
@@ -167,18 +167,21 @@ Notificaciones
               {{ getInitials(chat.nombre) }}
             </div>
           </div>
+
+          
           <!-- nombre -->
-          <div style="grid-area:nombre; text-transform:capitalize;" :style="chatTheme.current_chat_theme.text">{{ chat.nombre }}</div>
+          <div style="grid-area:nombre; text-transform:capitalize;font-weight: 500;" :style="chatTheme.current_chat_theme.text">{{ chat.nombre }}</div>
+          <div style="grid-area:numero; text-transform:capitalize;opacity: .7;" :style="chatTheme.current_chat_theme.text">+{{ chat.wa_id }}</div>
 
           <!-- expiración -->
-          <div v-if="chat.tiempo_para_expirar || !chat.expirado"
+          <!-- <div v-if="chat.tiempo_para_expirar || !chat.expirado"
                style="grid-area:expiration; text-align:end; text-transform:capitalize;opacity: .5 ;" :style="chatTheme.current_chat_theme.text">
             Expira en {{ chat.tiempo_para_expirar }}
           </div>
           <div v-else
                style="grid-area:expiration; text-align:end; text-transform:capitalize;opacity: .5 ; " :style="chatTheme.current_chat_theme.text">
             Expirado
-          </div>
+          </div> -->
 
           <!-- mensaje y fecha -->
           <span style="grid-area:mensaje; color:#ffffff80;opacity: .5;" :style="chatTheme.current_chat_theme.text">{{ chat.mensaje_truncado }}</span>
@@ -621,6 +624,7 @@ const setCurrent = (btn) => {
   max-height: 100%;
   overflow: auto;
   width: 100%;
+  gap: .5rem;
 }
 
 .chat {
@@ -629,11 +633,12 @@ const setCurrent = (btn) => {
   align-items: center;
   grid-template-areas: 
     "imagen nombre fecha"
+    "imagen numero numero"
     "imagen mensaje check"
     "imagen  hr hr"
-    "expiration  expiration expiration";
+;
   grid-template-columns: 1fr 5fr 2fr;
-  grid-template-rows: 1fr 2fr;
+  grid-template-rows: repeat(min-content);
   color: white;
   gap:0 1rem;
   cursor: pointer;
@@ -732,6 +737,7 @@ h4 {
   min-width: max-content;
   justify-content: space-between;
   padding:  .5rem  1rem;
+  box-shadow: 0 1rem 1rem #00000010;
 }
 
 
@@ -758,6 +764,7 @@ h4 {
   flex-wrap: wrap;
   gap:  .5rem;
   padding: -0rem 1rem;
+  box-shadow: 0 1rem 1rem #00000010;
 }
 
 .status {
