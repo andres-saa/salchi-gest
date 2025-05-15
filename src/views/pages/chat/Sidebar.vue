@@ -96,9 +96,9 @@ Notificaciones
             <i class="pi pi-bell text-2xl notifications "  @click="view_norifications = !view_norifications" :style="chatTheme.current_chat_theme.text"></i>
           </Button>
           
-          <div style="height: 1.5rem; width: 1.5rem; border-radius: 50%; background-color: rgb(156,39,176); position: absolute; top: -1rem; right: -.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+          <div :class="ping?  'load' : ''" style="height: 1.5rem; width: 1.5rem; border-radius: 50%; background-color: rgb(156,39,176); position: absolute; top: -1rem; right: -.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold;padding: .8rem;">
             <span style="color: white;">{{ chats?.notifications?.[current_restaurant.id]?.length || 0 }}</span>
-          </div>
+          </div>  
         </div>
 
            <Button class="options" text>
@@ -117,14 +117,20 @@ Notificaciones
     </div> -->
 
     <div class="statuses">
+
+
+
+
       <Button
-        style=" border-radius: .3rem; padding: 0.3rem;"
+        style=" border-radius: .3rem; padding: 0.3rem;text-transform: capitalize;"
         text
+     
         v-for="(button, index) in colorMap"
+        :icon="button.icon"
         :key="index"
         @click="() => setCurrent(button)"
         class="status"
-        :label="button.label"
+        :label="button.label.toLowerCase()"
         :style="button.label === current.label ? { backgroundColor: button.bg, color: '#fff' }
                                    : { backgroundColor: '#ffffff20', color: button.bg }"
       />
@@ -135,7 +141,19 @@ Notificaciones
       <RouterLink 
         
         :active-class=" chatTheme.current_chat_theme.name == 'dark'?  'active' : 'active-light'"
-        v-for="(chat, index) in chats.sidebars[current_restaurant.id]?.filter(ch => ch.clasification == current.label || current.label == 'TODO') || []"
+        v-for="(chat, index) in (
+        chats.sidebars[current_restaurant.id]?.filter(ch => {
+          // 1) Mostrar todos los chats
+          if (current.label === 'TODO') return true
+
+          // 2) Filtros especiales
+          if (current.label === 'SIN LEER') return ch.unreaded > 0        // tiene mensajes sin leer
+          if (current.label === 'LEIDOS')   return ch.unreaded == 0      // todo leído
+
+          // 3) Filtro por clasificación normal
+          return ch.clasification === current.label
+        }) || []
+      )"
         :key="index"
         :to="`/chat/chats/messages/${current_restaurant.id}/${chat.wa_id}/${chat.nombre}/${chat.color}?expirado=${chat.expirado}&?expira-en?=${chat.tiempo_para_expirar}`"
       >
@@ -203,7 +221,7 @@ import { URI } from '../../../service/conection'
 const view_norifications = ref(false)
 
 
-
+const ping = ref(false)
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
@@ -277,26 +295,34 @@ const setUserMark_notificacion = async (user) => {
     await fetchService.post(`${URI_MESSAGES}/read-message/${user.user_info.user_id}/${current_restaurant.value.id}`,false)
     await fetchService.post(`${URI_MESSAGES}/view_notification/${user.id}`,false)
     chats.notifications[current_restaurant.value.id] = await fetchService.get(`${URI_MESSAGES}/notifications/${current_restaurant.value.id}`)
-
+    const idx  =  chats.sidebars[current_restaurant.value.id]?.findIndex(u => u.user_id == user.user_info.user_id)
+    
+    console.log(idx)
+    if (idx !== -1) {
+      chats.sidebars[current_restaurant.value.id][idx].unreaded = 0
+    }
   } catch (err) {
     console.error('No se pudo marcar como leído', err)
   }
-  user.unreaded = 0
+
+
+ 
 }
 
 
-const colorMap = ref([
-  {label: 'TODO',    bg: '#8e44ad', icon: 'fa-star' },
-  {label: 'SIN DATOS', bg: '#7f8c8d', icon: 'fa-circle-question' }, // gris
-  {label: 'PREOCUPANTE',  bg: '#e74c3c', icon: 'fa-triangle-exclamation' }, // rojo
-  {label: 'CASUAL',      bg: '#e67e22', icon: 'fa-person-walking' }, // naranja
-  {label: 'FRECUENTE',    bg: '#27ae60', icon: 'fa-repeat' }, // verde
-  {label: 'TOP',          bg: '#2980b9', icon: 'fa-ranking-star' }, // azul
-  {label: 'ESTRELLA',    bg: '#8e44ad', icon: 'fa-star' }
-   // púrpura
- ]) 
+const colorMap = [
+  { label: 'SIN LEER',    bg: '#f39c12', icon: 'fa-solid fa-envelope-open' },
+  { label: 'LEIDOS',      bg: '#16a085', icon: 'fa-solid fa-envelope-circle-check' },
+  { label: 'TODO',        bg: '#34495e', icon: 'fa-solid fa-inbox' },
+  { label: 'SIN DATOS',   bg: '#95a5a6', icon: 'fa-solid fa-circle-question' },
+  { label: 'PREOCUPANTE', bg: '#e74c3c', icon: 'fa-solid fa-triangle-exclamation' },
+  { label: 'CASUAL',      bg: '#e67e22', icon: 'fa-solid fa-person-walking' },
+  { label: 'FRECUENTE',   bg: '#27ae60', icon: 'fa-solid fa-repeat' },
+  { label: 'TOP',         bg: '#2980b9', icon: 'fa-solid fa-ranking-star' },
+  { label: 'ESTRELLA',    bg: '#8e44ad', icon: 'fa-solid fa-star' }
+];
 
-const current = ref({label: 'TODO',    bg: '#8e44ad', icon: 'fa-star' })
+const current = ref( { label: 'SIN LEER',    bg: '#f39c12', icon: 'fa-solid fa-envelope-open' })
 const totalUnread  = ref(0)
 
 /* ░░░  PAGINACIÓN  ░░░ */
@@ -339,10 +365,12 @@ const appendChats = (id, newItems) => {
       const current = list[idx]
 
       const idChanged       = current.ultimo_mensaje_id !== newChat.ultimo_mensaje_id
+      const colorchanged       = current.color !== newChat.color
+      const nombrechanged       = current.nombre !== newChat.nombre
       const unreadDecreased = toNumUnread(newChat.unreaded) < toNumUnread(current.unreaded)
 
       // ▸ Reemplazamos si llegó un mensaje nuevo O si se redujeron los pendientes
-      if (idChanged || unreadDecreased) {
+      if (idChanged || unreadDecreased  || colorchanged || nombrechanged) {
         list[idx] = newChat
       }
       // Si no cambió nada relevante, lo dejamos como está
@@ -477,11 +505,16 @@ const connectWebSocketNNotifications = () => {
   socket__notifications.onopen  = () => console.log('WebSocket conectado a', wsUrl)
   socket__notifications.onerror = err => console.error('WebSocket error', err)
   socket__notifications.onclose = () => setTimeout(connectWebSocketNNotifications, 5000)
-
+  
   socket__notifications.onmessage = async (event) => {
      chats.notifications[current_restaurant.value.id] = await fetchService.get(`${URI_MESSAGES}/notifications/${current_restaurant.value.id}`)
-
+      ping.value = true
+        setTimeout(() => {
+          ping.value = false
+        }, 1000);
+        
   }
+
 }
 
 
@@ -760,4 +793,36 @@ hr {
   box-shadow: none !important;
   outline: none !important;
 }
+
+
+
+.load{
+  animation: .3s load linear;
+
+	}
+
+
+@keyframes load {
+	 0% {
+		 background: #fff;
+		 border: 0px solid #ffffff4d;
+     		 outline: 0px solid #fff;
+
+	}
+	 50% {
+		 background: #fff;
+		 border: 10px solid #8a00ad;
+      outline: 20px  solid  #9945ff53;
+	}
+	 100% {
+		 background: #fff;
+		 border: 0px solid #22222252;
+     		 outline: 0px solid #222;
+	}
+}
+ 
+
+
+
+
 </style>
