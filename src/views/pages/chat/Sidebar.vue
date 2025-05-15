@@ -5,19 +5,24 @@
       
 
 
-      <div class="notifications"   :style="view_norifications? {height:'80vh',top:'4rem',boxShadow: '0 1rem 1rem #00000040'} : {height:0,overflow:'hidden',top:'-2rem'}"  style="width: 100%;max-width: 20rem; background-color: #ffffff90;max-height: 80vh;overflow: auto;padding: 1rem; position: absolute;z-index: 9;transition: all linear .2s;border-radius: .5rem; right: 0;;backdrop-filter:blur(5px);">
+      <div class="notifications"   :style="view_norifications? {height:'80vh',top:'4rem',boxShadow: '0 1rem 1rem #00000040'} : {height:0,overflow:'hidden',top:'-2rem'}"  style="width: 100%;max-width: 20rem; background-color: #ffffff90;max-height: 80vh;overflow: auto;padding: 1rem; position: absolute;z-index: 9;transition: all linear .2s;border-radius: .5rem; right: 0;;backdrop-filter:blur(5px);display: flex;flex-direction: column;gap: .3rem;">
 
 
         <h4 class="my-3" :style="chatTheme.current_chat_theme.text"> <strong>
 Notificaciones
         </strong> </h4>
-           <RouterLink  
-        
-        :active-class=" chatTheme.current_chat_theme.name == 'dark'?  'active' : 'active-light'"
-        v-for="(chat, index) in chats?.notifications?.[current_restaurant.id]"
-        :key="index"
-        :to="`/chat/chats/messages/${current_restaurant.id}/${chat.user_info.wa_id}/${chat.user_info.nombre}/${chat.user_info.color}?expirado=${chat.user_info.expirado}&?expira-en?=${chat.user_info.tiempo_para_expirar}`"
-      >
+        <RouterLink
+          :active-class="chatTheme.current_chat_theme.name === 'dark' ? 'active' : 'active-light'"
+          v-for="(chat, index) in chats?.notifications?.[current_restaurant.id]"
+          :key="index"
+          :to="`/chat/chats/messages/${current_restaurant.id}/${chat.user_info.wa_id}/${(
+                (chat.user_info.nombre || '')
+                  .normalize('NFD')                 // separa acentos
+                  .replace(/[\u0300-\u036f]/g, '')  // elimina marcas diacríticas
+                  .replace(/[^A-Za-z0-9_-]/g, '')   // descarta lo que no sea letra/número/-/_
+              ) || 'n'}/${chat.user_info.color}?expirado=${chat.user_info.expirado}&expira-en=${chat.user_info.tiempo_para_expirar}`"
+        >
+
         <!-- …tu card de chat intacta… -->
         <div  class="chat2" @click="()  => setUserMark_notificacion(chat)" :style="chat.resolved?  'background-color: #fff' : 'background-color: #b6f8ff59' ">
           
@@ -29,7 +34,7 @@ Notificaciones
             </div>
           </div>
           <!-- nombre -->
-          <div style="grid-area:nombre; text-transform:uppercase;"  :style="`${ chatTheme.current_chat_theme.text} ; ${!chat.resolved? 'font-weight: bold;' : ''}`">{{ chat.description }}</div>
+          <div style="grid-area:nombre; "  :style="`${ chatTheme.current_chat_theme.text} ; ${!chat.resolved? 'font-weight: bold;' : ''}`">{{ chat.description }}</div>
 
           
 
@@ -92,7 +97,7 @@ Notificaciones
           </Button>
           
           <div style="height: 1.5rem; width: 1.5rem; border-radius: 50%; background-color: rgb(156,39,176); position: absolute; top: -1rem; right: -.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-            <span style="color: white;">{{ totalUnread }}</span>
+            <span style="color: white;">{{ chats?.notifications?.[current_restaurant.id]?.length || 0 }}</span>
           </div>
         </div>
 
@@ -271,6 +276,7 @@ const setUserMark_notificacion = async (user) => {
   try {
     await fetchService.post(`${URI_MESSAGES}/read-message/${user.user_info.user_id}/${current_restaurant.value.id}`,false)
     await fetchService.post(`${URI_MESSAGES}/view_notification/${user.id}`,false)
+    chats.notifications[current_restaurant.value.id] = await fetchService.get(`${URI_MESSAGES}/notifications/${current_restaurant.value.id}`)
 
   } catch (err) {
     console.error('No se pudo marcar como leído', err)
@@ -463,6 +469,22 @@ const connectWebSocket = () => {
 }
 
 
+let socket__notifications = null
+const connectWebSocketNNotifications = () => {
+  const wsUrl = `wss://sockets-service.salchimonster.com/ws/salchimonster-notifications-${current_restaurant.value.id}`
+  socket__notifications  = new WebSocket(wsUrl)
+
+  socket__notifications.onopen  = () => console.log('WebSocket conectado a', wsUrl)
+  socket__notifications.onerror = err => console.error('WebSocket error', err)
+  socket__notifications.onclose = () => setTimeout(connectWebSocketNNotifications, 5000)
+
+  socket__notifications.onmessage = async (event) => {
+     chats.notifications[current_restaurant.value.id] = await fetchService.get(`${URI_MESSAGES}/notifications/${current_restaurant.value.id}`)
+
+  }
+}
+
+
 
 
 
@@ -475,7 +497,8 @@ watch(current_restaurant, async (val) => {
 
   /* reiniciar socket */
   if (socket) socket.close()
-  connectWebSocket()  
+  connectWebSocket()
+  connectWebSocketNNotifications()  
 
   await loadPage()
   animable.value = false
@@ -489,6 +512,7 @@ onMounted(async () => {
   await loadPage()
   chatsContainer.value?.addEventListener('scroll', handleScroll)
   connectWebSocket()
+  connectWebSocketNNotifications()
 })
 
 onUnmounted(() => {
