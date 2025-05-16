@@ -1,1 +1,0 @@
-import{O as e}from"./index-a94103e7.js";const r=e("site",{persist:{key:"site",storage:localStorage,paths:["site","restaurant"]},state:()=>({site:{},visibles:{currentSite:!1,sonandoCurrentSite:!1},restaurant:1}),getters:{},actions:{setSite(t){this.site=t}}});export{r as u};
