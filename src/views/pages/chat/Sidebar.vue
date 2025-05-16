@@ -116,6 +116,7 @@ Notificaciones
           <span style="grid-area:mensaje; color:#ffffff80;opacity: .5;" :style="chatTheme.current_chat_theme.text">{{ chat.mensaje_truncado }}</span>
           <span style="grid-area:fecha; text-align:end; " :style="chatTheme.current_chat_theme.text"> {{ chat.abreviatura || chat.fecha_ultimo_mensaje }}</span>
 
+          <span style="grid-area:hora; color:#ffffff80;opacity: .5;text-align: end;" :style="chatTheme.current_chat_theme.text">{{ chat.hora_ultimo_mensaje }}</span>
           <!-- badge mensajes sin leer -->
           <div style="grid-area:check; display:flex; justify-content:end; gap:.5rem;" >
             <div v-if="chat.unreaded > 0"
@@ -302,7 +303,7 @@ Notificaciones
           <!-- mensaje y fecha -->
           <span style="grid-area:mensaje; color:#ffffff80;opacity: .5;" :style="chatTheme.current_chat_theme.text">{{ chat.mensaje_truncado }}</span>
           <span style="grid-area:fecha; text-align:end; " :style="chatTheme.current_chat_theme.text"> {{ chat.abreviatura || chat.fecha_ultimo_mensaje }}</span>
-
+      <span style="grid-area:hora; color:#ffffff80;opacity: .5;text-align: end;" :style="chatTheme.current_chat_theme.text">{{ chat.hora_ultimo_mensaje }}</span>
           <!-- badge mensajes sin leer -->
           <div style="grid-area:check; display:flex; justify-content:end; gap:.5rem;" >
             <div v-if="chat.unreaded > 0"
@@ -760,7 +761,7 @@ const setCurrent = (btn) => {
   align-items: center;
   grid-template-areas: 
     "imagen nombre fecha"
-    "imagen numero numero"
+    "imagen numero hora"
     "imagen mensaje check"
     "imagen  hr hr"
 ;
