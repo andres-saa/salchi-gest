@@ -1,8 +1,15 @@
 <!-- ChatView.vue (versión corregida) -->
 <template>
-  <div class="main-container" :style="chatTheme.current_chat_theme.bg_image" style="">
+  <div class="main-container" :style="chatTheme.current_chat_theme.bg_image" style=""> 
+
+
+       <!-- <div  style="display:flex; justify-content: center;align-items: center; height:100%;">
+          <h2 style="color:white;font-size: 3rem;opacity: .5;" :style="chatTheme.current_chat_theme.text">Selecciona un chat...</h2>
+    
+
+        </div> -->
     <!-- █████ TOP BAR █████ -->
-    <div class="top-bar" style="border-radius:.5rem;gap:1rem; " :style="chatTheme.current_chat_theme.bg_bars">
+    <div  tabindex="0"  v-if="route.params?.user_id" class="top-bar " style="border-radius:.5rem;gap:1rem; " :style="chatTheme.current_chat_theme.bg_bars">
       <div class="top-bar-left">
         <div style="height:3rem;width:3rem;display:flex;align-items:center;">
           <div
@@ -81,11 +88,7 @@
       <RouterView >
         <Messages v-if="route.params.user_id"  :send_function="send_files" :send_text="send_text_message"  :change_expiration="change_expiration" ref="Messages_element"/>
 
-        <div v-else style="display:flex; justify-content: center;align-items: center; height:100%;">
-          <h2 style="color:white;font-size: 3rem;opacity: .5;" :style="chatTheme.current_chat_theme.text">Selecciona un chat...</h2>
-    
-
-        </div>
+     
       </RouterView>
     </div>
 
@@ -708,12 +711,27 @@ html{scrollbar-width:thin;scrollbar-color:#888 #f1f1f1;}
   animation: animate .3s ease
 }
 
+.top-bar{
+  animation: animate2 ease .3s 
+}
+
 @keyframes animate {
 
   0%{
 
     opacity: 0;
     transform: translateY(10rem);
+    background-color: rgb(102, 255, 0);
+  }
+  
+}
+
+@keyframes animate2 {
+
+  0%{
+
+    opacity: 0;
+    transform: translateY(-10rem);
     background-color: rgb(102, 255, 0);
   }
   

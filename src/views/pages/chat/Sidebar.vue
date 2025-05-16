@@ -5,10 +5,10 @@
       
 
 
-      <div class="notifications"   :style="view_norifications? {height:'80vh',top:'4rem',boxShadow: '0 1rem 1rem #00000040'} : {height:0,overflow:'hidden',top:'-2rem'}"  style="width: 100%;max-width: 20rem; background-color: #ffffff90;max-height: 80vh;overflow: auto;padding: 1rem; position: absolute;z-index: 9;transition: all linear .2s;border-radius: .5rem; right: 0;;backdrop-filter:blur(5px);display: flex;flex-direction: column;gap: .3rem;">
+      <div class="notifications"   :style="view_norifications? {height:'calc(100vh - 8rem)',top:'4rem',boxShadow: '0 1rem 1rem #00000040'} : {height:0,overflow:'hidden',top:'-2rem'}"  style="width: 100%;max-width: 90%; background-color: #ffffff90;max-height: 90vh;overflow: auto;position: absolute;z-index: 9;transition: all linear .2s;border-radius: .5rem; right: 0;;backdrop-filter:blur(5px);display: flex;flex-direction: column;">
 
 
-        <h4 class="my-3" :style="chatTheme.current_chat_theme.text"> <strong>
+        <h4 class="my-3 px-3" :style="chatTheme.current_chat_theme.text"> <strong>
 Notificaciones
         </strong> </h4>
         <RouterLink
@@ -29,7 +29,7 @@ Notificaciones
           <!-- imagen + iniciales -->
           <div class="avatar" style="grid-area: imagen;height:100%;width:100%;display:flex;align-items:center;">
             <div style="height:3rem; width:3rem; aspect-ratio:1/1; border-radius:50%; display:flex; align-items:center; justify-content:center; text-transform:uppercase;font-size:1.3rem;"
-                 :style="`background-color:${chat.color || 'black'}`">
+                 :style="`background-color:${chat.user_info.color || 'black'}`">
               {{ getInitials(chat.user_info.nombre) }}
             </div>
           </div>
@@ -39,8 +39,8 @@ Notificaciones
           
 
           <!-- mensaje y fecha -->
-          <span style="grid-area:mensaje; color:#ffffff80;opacity: .5;" :style="chatTheme.current_chat_theme.text">{{ chat.user_info.nombre }}</span>
-          <!-- <span style="grid-area:fecha; text-align:end; " :style="chatTheme.current_chat_theme.text"> {{ chat.user_info.abreviatura || chat.user_info.fecha_ultimo_mensaje }}</span> -->
+          <span style="grid-area:mensaje; color:#ffffff80;opacity: .5;" :style="chatTheme.current_chat_theme.text">{{ chat.user_info.nombre.slice(0,20) }}... </span>
+          <p class="p-0 m-0" style="grid-area:fecha; text-align:end;min-width: max-content; " :style="chatTheme.current_chat_theme.text"> {{ chat.user_info.hora_ultimo_mensaje }}</p>
 
           <!-- badge mensajes sin leer -->
           <!-- <div style="grid-area:check; display:flex; justify-content:end; gap:.5rem;" >
@@ -54,6 +54,121 @@ Notificaciones
       </RouterLink>
         
       </div>
+
+
+
+
+
+
+
+<Dialog :closable="false" header="Buscar un usuario"  v-model:visible="view_search" style="width: 50rem; " modal="">
+
+  <template #header >
+  
+    <div style="display: flex;flex-direction: column;width: 100%;">
+    <h3> <b> Buscar un usuario</b></h3>
+
+    <InputText v-model="search_text" style="width: 100%;" placeholder="Escriba el nombre o numero del usuario"></InputText>
+    </div>
+
+  </template>
+
+   <div class="" style="height: 67vh;" :class="animable? 'chats active-new' : 'chats'"  ref="chatsContainer" @scroll="handleScroll">
+<RouterLink 
+  :active-class="chatTheme.current_chat_theme.name == 'dark' ? 'active' : 'active-light'"
+  v-for="(chat, index) in chats.sidebars[current_restaurant.id]?.filter((u) => {
+    const search = search_text?.toLowerCase()?.trim() || '';
+    if (search === '') return false;
+    const nombre = u.nombre?.toLowerCase() || '';
+    const waId = u.wa_id?.toLowerCase() || '';
+    return nombre.includes(search) || waId.includes(search);
+  }) || []"
+  :key="index"
+  :to="`/chat/chats/messages/${current_restaurant.id}/${chat.wa_id}/${chat.nombre}/${chat.color}?expirado=${chat.expirado}&?expira-en?=${chat.tiempo_para_expirar}`"
+>
+        <!-- …tu card de chat intacta… -->
+        <div  class="chat" @click="()  => setUserMark(chat)">
+          
+          <!-- imagen + iniciales -->
+          <div class="avatar" style="grid-area: imagen;height:100%;width:100%;display:flex;align-items:center;">
+            <div style="height:3rem; width:3rem; aspect-ratio:1/1; border-radius:50%; display:flex; align-items:center; justify-content:center; text-transform:uppercase;font-size:1.3rem;"
+                 :style="`background-color:${chat.color || 'black'}`">
+              {{ getInitials(chat.nombre) }}
+            </div>
+          </div>
+
+          
+          <!-- nombre -->
+          <div style="grid-area:nombre; text-transform:capitalize;font-weight: 500;" :style="chatTheme.current_chat_theme.text">{{ chat.nombre }}</div>
+          <div style="grid-area:numero; text-transform:capitalize;opacity: .7;" :style="chatTheme.current_chat_theme.text">+{{ chat.wa_id }}</div>
+
+          <!-- expiración -->
+          <!-- <div v-if="chat.tiempo_para_expirar || !chat.expirado"
+               style="grid-area:expiration; text-align:end; text-transform:capitalize;opacity: .5 ;" :style="chatTheme.current_chat_theme.text">
+            Expira en {{ chat.tiempo_para_expirar }}
+          </div>
+          <div v-else
+               style="grid-area:expiration; text-align:end; text-transform:capitalize;opacity: .5 ; " :style="chatTheme.current_chat_theme.text">
+            Expirado
+          </div> -->
+
+          <!-- mensaje y fecha -->
+          <span style="grid-area:mensaje; color:#ffffff80;opacity: .5;" :style="chatTheme.current_chat_theme.text">{{ chat.mensaje_truncado }}</span>
+          <span style="grid-area:fecha; text-align:end; " :style="chatTheme.current_chat_theme.text"> {{ chat.abreviatura || chat.fecha_ultimo_mensaje }}</span>
+
+          <!-- badge mensajes sin leer -->
+          <div style="grid-area:check; display:flex; justify-content:end; gap:.5rem;" >
+            <div v-if="chat.unreaded > 0"
+                 style="height:1.5rem;width:1.5rem;border-radius:50%;background-color:rgb(156,39,176);display:flex;align-items:center;justify-content:center;font-weight:bold;" >
+              <span style="color:white;" >{{ chat.unreaded }}</span>
+            </div>
+            <i style="color:greenyellow;" class="fa-solid fa-check-double"></i>
+          </div>
+        </div>
+      </RouterLink>
+
+      <!-- loader / fin de lista -->
+
+      <div v-if="loadingMore" style="bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, black);display:flex; position: absolute; z-index: 100;width:100%; color: white"><ProgressSpinner
+      v-if="true"
+      style="width: 50px; height: 50px; "
+      strokeWidth="8"
+      fill="transparent"
+      animationDuration=".3s"
+      aria-label="Custom ProgressSpinner"
+    /> </div>
+      
+      <div v-if="finished" style="text-align:center; padding:.5rem; color:#ffffff80;">No hay más chats.</div>
+    </div>
+
+    <Button rounded=""  @click="view_search=false" icon="pi pi-times  text-xl" style="position: absolute;top: -1rem;right: -1rem;" severity="danger" ></Button>
+</Dialog>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -88,7 +203,8 @@ Notificaciones
 
       <div style="display: flex;gap: 1rem;">
         <Button class="options" text>
-          <i class="pi pi-search text-2xl " :style="chatTheme.current_chat_theme.text"></i>
+          <i class="pi pi-search text-2xl " @click="view_search=true
+          " :style="chatTheme.current_chat_theme.text"></i>
         </Button>
 
           <div class="notifications" style="position: relative;cursor: pointer;" @click="view_norifications = !view_norifications">
@@ -222,7 +338,8 @@ import {chatThemeStore} from '@/store/chatTheme'
 import { URI } from '../../../service/conection'
 
 const view_norifications = ref(false)
-
+const view_search = ref(false)
+const search_text = ref('')
 
 const ping = ref(false)
 
@@ -280,6 +397,7 @@ const buttons = ref([
 
 const setUserMark = async (user) => {
   chats.current_user = user
+  view_search.value = false
   view_norifications.value = false
   try {
     await fetchService.post(`${URI_MESSAGES}/read-message/${user.user_id}/${current_restaurant.value.id}`,false)
@@ -337,12 +455,10 @@ const finished     = ref(false)
 const chatsContainer = ref(null)
 
 /* ░░░  UTILIDADES  ░░░ */
-const getInitials = name => {
-  if (!name) return ''
-  const p = name.split(' ')
-  return (p[0][0] || '') + (p[1]?.[0] || '')
-}
-
+const getInitials = (name='') => {
+  const p = name.trim().split(' ');
+  return (Array.from(p[0]||'')[0]||'') + (p[1] ? Array.from(p[1])[0] : '');
+};
 
 
 
@@ -370,7 +486,7 @@ const appendChats = (id, newItems) => {
       const idChanged       = current.ultimo_mensaje_id !== newChat.ultimo_mensaje_id
       const colorchanged       = current.color !== newChat.color
       const nombrechanged       = current.nombre !== newChat.nombre
-      const unreadDecreased = toNumUnread(newChat.unreaded) < toNumUnread(current.unreaded)
+      const unreadDecreased = newChat.unreaded != current.unreaded
 
       // ▸ Reemplazamos si llegó un mensaje nuevo O si se redujeron los pendientes
       if (idChanged || unreadDecreased  || colorchanged || nombrechanged) {
@@ -515,8 +631,19 @@ const connectWebSocketNNotifications = () => {
         setTimeout(() => {
           ping.value = false
         }, 1000);
+
+
+        const data = JSON.parse( event.data)
         
-  }
+        // notificacion
+        // : 
+        // "Pedido Cancelado"
+
+        // notificacion
+        // : 
+        // "Cliente solicita un asesor"
+                
+          }
 
 }
 
@@ -653,8 +780,8 @@ const setCurrent = (btn) => {
   align-items: center;
   grid-template-areas: 
     "imagen nombre nombre"
-    "imagen mensaje mensaje"
-    "imagen  hr hr"
+    "imagen mensaje fecha"
+
     "expiration  expiration expiration";
   grid-template-columns: 1fr 5fr 2fr;
   grid-template-rows: 1fr 2fr;
@@ -663,6 +790,7 @@ const setCurrent = (btn) => {
   cursor: pointer;
   padding: 0.3rem 1rem;
   transition: all ease 0.3s;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.179);
 }
 
 
