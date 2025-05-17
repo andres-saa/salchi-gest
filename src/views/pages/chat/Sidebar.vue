@@ -130,7 +130,7 @@ Notificaciones
 
       <!-- loader / fin de lista -->
 
-      <div v-if="loadingMore" style="bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, black);display:flex; position: absolute; z-index: 100;width:100%; color: white"><ProgressSpinner
+      <div v-if="loadingMore" :style="`bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, ${chatTheme.current_chat_theme.gradient});display:flex; position: absolute; z-index: 100;width:100%; color: white`"><ProgressSpinner
       v-if="true"
       style="width: 50px; height: 50px; "
       strokeWidth="8"
@@ -317,7 +317,7 @@ Notificaciones
 
       <!-- loader / fin de lista -->
 
-      <div v-if="loadingMore" style="bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, black);display:flex; position: absolute; z-index: 100;width:100%; color: white"><ProgressSpinner
+      <div v-if="loadingMore" :style="`bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, ${chatTheme.current_chat_theme.gradient});display:flex; position: absolute; z-index: 100;width:100%; color: white`"><ProgressSpinner
       v-if="true"
       style="width: 50px; height: 50px; "
       strokeWidth="8"

@@ -104,7 +104,7 @@
 
       <!-- área entrada -->
       <div class="message-area" >
-        <Button text style="font-size:2rem;" @click="showEmojiPicker=!showEmojiPicker">
+        <Button text style="font-size:2rem; padding-left: 0;" @click="showEmojiPicker=!showEmojiPicker">
           <i class="fas fa-laugh-wink emoji-picker"/>
         </Button>
 
@@ -687,7 +687,7 @@ async function sendBulkTest(message = '🔔 Mensaje de prueba') {
 
 <style scoped>
 /* ——— estilos base ——— */
-.main-container{width:100%;background:#ffffff11;display:grid;height:100vh;max-height:calc(100vh - 4rem);border-radius:.5rem;grid-template-rows:4.5rem 1fr max-content;
+.main-container{width:100%;background:#ffffff11;display:grid;height:100vh;max-height:calc(100vh - 3rem);border-radius:.5rem;grid-template-rows:4.5rem 1fr max-content;
 background-size: cover;}
 .btn-descuento{position:absolute;right:1.5rem;top:-5rem;min-width:max-content;margin:0;color:#FFC107;background:#ffffff10;}
 .btn-descuento:hover{background:#FFC107;color:#000;}

@@ -80,7 +80,7 @@
         grid-template-columns:3rem 1fr ;
         height: 100vh;
         min-width: 1268px;
-        /* padding: .5rem !important; */
+        padding: .0rem !important;
         /* gap: .5rem; */
         max-height: calc(100vh - 3rem) ;
  

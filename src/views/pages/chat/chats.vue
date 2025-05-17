@@ -37,7 +37,7 @@
         /* gap: .5rem; */
         background-color:rgb(0 0 22);
         /* max-width: 1200px; */
-        max-height: calc(100vh - 4rem) ;
+        max-height: calc(100vh - 3rem) ;
         animation:  active .3s ease;
         overflow: hidden;
     }

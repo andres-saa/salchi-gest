@@ -106,35 +106,21 @@
 
       <!-- Botón nueva plantilla -->
 
-      <div style="display: flex;  width:100%; justify-content: end; margin-top: 1rem;">
+      <!-- <div style="display: flex;  width:100%; justify-content: end; margin-top: 1rem;">
         <Button label="Nueva plantilla" icon="pi pi-plus" severity="help" class="w-full md:w-auto" @click="openNew" />
 
-      </div>
+      </div> -->
 
       <!-- Diálogo de creación / edición -->
-      <Dialog v-model:visible="dialogVisible" :header="dialogTitle" modal class="" style="width: 90vw; max-width: 60rem; min-width: 50rem;">
+      <Dialog v-model:visible="dialogVisible" :header="dialogTitle" modal class="" style="width: 90vw; max-width: 20rem; min-width: 40rem;">
         <div class="space-y-4">
           <!-- Datos básicos -->
           <div class=" md:grid-cols-2 gap-3">
             <div class="field">
-  <h6 class="font-medium mb-2">Imagen (HEADER)</h6>
 
-  <!-- FileUpload de PrimeVue (1 sola imagen) -->
-  <FileUpload
-    name="file"
-    mode="advanced"
-    customUpload
-    chooseLabel="Seleccionar"
-    uploadLabel="Subir"
-    cancelLabel="Cancelar"
-    accept="image/*"
-    :maxFileSize="2000000"
-    :multiple="false"
-    :disabled="isUploadingHeader"
-    @uploader="uploadHeaderImage"
-  />
 
-  <!-- Miniatura + botón eliminar -->
+ 
+
  <div
   v-if="headerImageFile"               
   style="position:relative;width:300px;margin-top:.5rem"
@@ -147,6 +133,10 @@
 </div>
             </div>
 
+            <div style="display: flex;justify-content: center;">
+            <img :src="imageHeader" style="max-width:100%;margin: ; aspect-ratio: 1 / 1;max-width: 20rem;object-fit: contain;" alt="">
+            </div>
+          
             <div class="field">
               <label class="font-medium">Nombre</label>
               <InputText v-model="form.name" class="w-full" />
@@ -180,7 +170,7 @@
           <div class="space-y-2">
             <div class="flex items-center  my-4" style="align-items: center;gap:1rem">
               <h5 class="m-0" >Botones</h5>
-              <Button icon="pi pi-plus"   severity="success" @click="addButton" />
+              <!-- <Button icon="pi pi-plus"   severity="success" @click="addButton" /> -->
             </div>
 
 
@@ -197,8 +187,8 @@
         </div>
 
         <template #footer>
-          <Button label="Cancelar" text severity="secondary" @click="dialogVisible=false" />
-          <Button label="Guardar" severity="help" icon="pi pi-check" @click="saveTemplate" :loading="saving" autofocus />
+          <Button label="cerrar" text severity="secondary" @click="dialogVisible=false" />
+          <!-- <Button label="Guardar" severity="help" icon="pi pi-check" @click="saveTemplate" :loading="saving" autofocus /> -->
         </template>
       </Dialog>
 
@@ -358,6 +348,130 @@ watch(bodyText,val=>{
 async function fetchTemplates(){
   loading.value = true
   try{ templates.value = await fetchService.get(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates/`) } finally { loading.value=false }
+
+  // templates.value = [
+  //       {
+  //           "name": "hola_monstruos",
+  //           "parameter_format": "POSITIONAL",
+  //           "components": [
+  //               {
+  //                   "type": "HEADER",
+  //                   "format": "IMAGE",
+  //                   "example": {
+  //                       "header_handle": [
+  //                           "https://scontent.whatsapp.net/v/t61.29466-34/491871117_706606121949406_6553986942653382855_n.jpg?ccb=1-7&_nc_sid=8b1bef&_nc_ohc=tB5YvBsHSCAQ7kNvwFsZlX5&_nc_oc=AdkjISSy0ULnk1rymjQp0zy_mtKW9Rjo7DNQcoyGGsL8ZfBGPY6ndgth9UQiPfZKtjI&_nc_zt=3&_nc_ht=scontent.whatsapp.net&edm=AH51TzQEAAAA&_nc_gid=GKQIPoypFCCQmks2rRHSyA&oh=01_Q5Aa1gGbVrmJkdyQOntvZepGG4vFu0khUYb_gz7fxdU9jKLUaQ&oe=685034A5"
+  //                       ]
+  //                   }
+  //               },
+  //               {
+  //                   "type": "BODY",
+  //                   "text": "hola monstruo como vamos"
+  //               }
+  //           ],
+  //           "language": "es",
+  //           "status": "PENDING",
+  //           "category": "MARKETING",
+  //           "sub_category": "CUSTOM",
+  //           "id": "706606118616073"
+  //       },
+  //       {
+  //           "name": "saludo_mas_foto",
+  //           "previous_category": "UTILITY",
+  //           "parameter_format": "POSITIONAL",
+  //           "components": [
+  //               {
+  //                   "type": "BODY",
+  //                   "text": "este es un saludo con foto"
+  //               }
+  //           ],
+  //           "language": "es_ES",
+  //           "status": "APPROVED",
+  //           "category": "MARKETING",
+  //           "correct_category": "MARKETING",
+  //           "id": "2160964337689084"
+  //       },
+  //       {
+  //           "name": "saludo_con_imagen",
+  //           "previous_category": "UTILITY",
+  //           "parameter_format": "POSITIONAL",
+  //           "components": [
+  //               {
+  //                   "type": "BODY",
+  //                   "text": "este es un saludo con imagen"
+  //               }
+  //           ],
+  //           "language": "es_ES",
+  //           "status": "APPROVED",
+  //           "category": "MARKETING",
+  //           "correct_category": "MARKETING",
+  //           "id": "3027921840718980"
+  //       },
+  //       {
+  //           "name": "saludo_2_preba",
+  //           "previous_category": "UTILITY",
+  //           "parameter_format": "POSITIONAL",
+  //           "components": [
+  //               {
+  //                   "type": "BODY",
+  //                   "text": "como vamos, que cuentas"
+  //               }
+  //           ],
+  //           "language": "es_ES",
+  //           "status": "APPROVED",
+  //           "category": "MARKETING",
+  //           "correct_category": "MARKETING",
+  //           "id": "736097758752571"
+  //       },
+  //       {
+  //           "name": "saludo_prueba",
+  //           "previous_category": "UTILITY",
+  //           "parameter_format": "POSITIONAL",
+  //           "components": [
+  //               {
+  //                   "type": "BODY",
+  //                   "text": "Hola, como va todo"
+  //               }
+  //           ],
+  //           "language": "es_ES",
+  //           "status": "APPROVED",
+  //           "category": "MARKETING",
+  //           "correct_category": "MARKETING",
+  //           "id": "569459862443947"
+  //       },
+  //       {
+  //           "name": "saludo",
+  //           "previous_category": "UTILITY",
+  //           "parameter_format": "POSITIONAL",
+  //           "components": [
+  //               {
+  //                   "type": "BODY",
+  //                   "text": "Hola, buenos dias."
+  //               }
+  //           ],
+  //           "language": "es_ES",
+  //           "status": "APPROVED",
+  //           "category": "MARKETING",
+  //           "correct_category": "MARKETING",
+  //           "id": "704055995490439"
+  //       },
+  //       {
+  //           "name": "ayuda",
+  //           "previous_category": "UTILITY",
+  //           "parameter_format": "POSITIONAL",
+  //           "components": [
+  //               {
+  //                   "type": "BODY",
+  //                   "text": "en que le puedo ayudar"
+  //               }
+  //           ],
+  //           "language": "es_ES",
+  //           "status": "APPROVED",
+  //           "category": "MARKETING",
+  //           "correct_category": "MARKETING",
+  //           "id": "1767949943936161"
+  //       }
+  //   ]
+  //   loading.value=false
 }
 
 
@@ -381,7 +495,7 @@ function resetForm(){ form.value={name:'',category:'UTILITY',language:'es_ES'}; 
 function openNew(){ resetForm(); dialogVisible.value=true }
 
 
-
+const imageHeader = ref({})
 /* título del diálogo */
 const dialogTitle = computed(() => editingName.value ? 'Editar plantilla' : 'Nueva plantilla'); 
 function openEdit(tpl){
@@ -397,6 +511,9 @@ function openEdit(tpl){
   }
   const btnComp = tpl.components.find(c=>c.type==='BUTTONS')||{buttons:[]}
   buttons.value = btnComp.buttons.map(b=>({type:b.type,text:b.text,url:b.url||''}))
+
+  const headerComp = tpl.components.find(c=>c.type==='HEADER') || { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": [ ] } }
+  imageHeader.value = headerComp?.example.header_handle[0]
   dialogVisible.value=true
 }
 
