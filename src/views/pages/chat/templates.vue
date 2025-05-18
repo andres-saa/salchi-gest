@@ -13,6 +13,11 @@
         <h6 class="m-0 " style="background-color: #0a3744;padding: 1rem;border-radius: .5rem;color: white;">
           {{ selectedTemplate?.components?.find(c => c.type == 'BODY')?.text }}
         </h6>
+        <h6 class="m-0 p-0"> <strong>Foto :</strong></h6>
+
+        <img style="height: 10rem;width: 10rem;aspect-ratio: 1 / 1 ; object-fit: cover;border-radius: .5rem;border: 1px solid;" :src="selectedTemplate?.components?.find(c => c.type == 'HEADER')?.example?.header_handle[0]
+        " alt="">
+     
       </div>
 
       <h5><strong>Usuarios</strong></h5>
@@ -62,7 +67,7 @@
   </Dialog>
 
   
-  <div class="p-4 templates-container" style="max-width: 70rem;width: 100%; margin: auto; background-color: white;border-radius: 1rem;transition: all .3s ease;">
+  <div class="p-4 templates-container" style=" margin: auto; background-color: white;border-radius: 1rem;transition: all .3s ease;max-height: 90vh;">
     <!-- Encabezado y búsqueda -->
 
   <div style="height: 100%;">
@@ -77,16 +82,35 @@
 
       </div>
         <!-- Tabla de plantillas -->
-        <DataTable
+        <DataTable 
+        style="max-width: 80rem;width: 100%;overflow: auto;"
         :value="filteredTemplates"
         dataKey="id"
+        scrollable
+        scroll-height="65vh"
         paginator :rows="10" responsiveLayout="scroll"
-        :loading="loading" :globalFilterFields="['name','category']"
+         :globalFilterFields="['name','category']"
         class="shadow-md rounded-xl overflow-hidden"
       >
         <Column class="my-1 py-1" field="name" header="Nombre" bodyClass="font-medium" />
-        <Column class="my-1 py-1" field="category" header="Categoría" />
-        <Column class="my-1 py-1"  field="language" header="Idioma" />
+        <!-- <Column class="my-1 py-1" field="category" header="Categoría" />
+        <Column class="my-1 py-1"  field="language" header="Idioma" /> -->
+         <Column class="my-1 py-1" header="Texto">
+          <template #body="{data}">
+            <span>{{ data?.components.find(c => c.type == 'BODY')?.text }}</span>
+          </template>
+        </Column>
+
+        <Column class="my-1 py-1" header="Texto">
+          <template #body="{data}">
+
+            <div v-if="data?.components.find(c => c.type == 'HEADER')?.example?.header_handle[0]" style="display: flex;justify-content: center;">
+                          <img style="height: 10rem;width: 10rem;aspect-ratio: 1 / 1 ; object-fit: cover;border-radius: .5rem;border: 1px solid;" :src="data?.components.find(c => c.type == 'HEADER')?.example?.header_handle[0]"/>
+
+            </div>
+            
+          </template>
+        </Column>
         <Column class="my-1 py-1" header="Estado">
           <template #body="{data}">
             <Tag :severity="statusSeverity(data.status)" >{{ data.status }}</Tag>
@@ -96,7 +120,7 @@
           <template #body="{data}">
             <div class="flex gap-2">
               <Button icon="pi pi-eye"   severity="warning" @click="openEdit(data)" />
-              <Button icon="pi pi-trash"   severity="danger"  @click="askRemove(data)" />
+              <!-- <Button icon="pi pi-trash"   severity="danger"  @click="askRemove(data)" /> -->
               <Button icon="pi pi-sync"  label="Difundir" severity="help"  @click="openToDifundir(data)" />
 
             </div>
@@ -216,9 +240,10 @@ import { useConfirm } from 'primevue/useconfirm'
 import { fetchService } from '@/service/utils/fetchService'
 import { URI_MESSAGES,URI } from '@/service/conection'
 import { loginStore } from '@/store/user';
+import { useChatStore } from '@/store/chat'
 
 const login = loginStore()
-
+const chatStore = useChatStore()
 
 function uploadHeaderImage({ files }) {
   if (!files?.length) return
@@ -238,7 +263,9 @@ function removeHeaderImage () {
 const headerImageId     = ref('')  // ← image_identifier
 const isUploadingHeader = ref(false)
 /* ------- state ------- */
-const templates = ref([])
+
+
+const templates = ref(chatStore.templates  )
 const selectedTemplate = ref({})
 const loading   = ref(false)
 const globalFilter = ref('')
@@ -309,14 +336,15 @@ const buttonTypes= [ {label:'URL',value:'URL'}, {label:'QUICK_REPLY',value:'QUIC
 
 /* filtered */
 const filteredTemplates = computed(()=>{
-  if(!globalFilter.value) return templates.value
+  if(!globalFilter.value) return chatStore.templates
   const txt = globalFilter.value.toLowerCase()
-  return templates.value.filter(t=>`${t.name} ${t.category}`.toLowerCase().includes(txt))
+  return chatStore.templates.filter(t=>`${t.name} ${t.category}`.toLowerCase().includes(txt))
 })
 
 onMounted( async() => {
-  resturants.value = await fetchService.get(`${URI}/restaurants`)
-  restaurant.value = resturants.value[0] || null
+  const result = await fetchService.get(`${URI}/restaurants`)
+  resturants.value = result
+  restaurant.value = result.find(r => r.id == 1)
   if (!restaurant.value == null) {
     return
   }
@@ -347,7 +375,7 @@ watch(bodyText,val=>{
 // onMounted()
 async function fetchTemplates(){
   loading.value = true
-  try{ templates.value = await fetchService.get(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates/`) } finally { loading.value=false }
+  try{ chatStore.templates = await fetchService.get(`${URI_MESSAGES}/wabas/${restaurant.value.waba_id}/templates/`) } finally { loading.value=false }
 
   // templates.value = [
   //       {
@@ -618,31 +646,33 @@ const sendingBulk = ref(false)
 async function broadcastTemplate() {
   if (!selectedTemplate.value) return
   const recipients = filteredUsers.value.map(u => u.wa_id)  // array de números
-
-  // Construir FormData
-  const fd = new FormData()
-  fd.append("messaging_product", "whatsapp")
-  fd.append("employer_id", login.rawUserData.id.toString())
-  fd.append("context_message_id", "")  // o su hilo si aplica
-  fd.append("restaurant_id", restaurant.value.id)
-  fd.append("template", JSON.stringify(selectedTemplate.value))
-  // Agregamos cada destinatario
-  recipients.forEach(to => fd.append("recipients", to))
+  
+  // 1) Montar el payload completo como JSON
+  const payload = {
+    messaging_product: "whatsapp",
+    employer_id: login.rawUserData.id.toString(),
+    restaurant_id: `${restaurant.value.id}`,
+    template: selectedTemplate.value,
+    recipients:recipients          // aquí va el array completo
+  }
 
   sendingBulk.value = true
   try {
+    // 2) Enviar como JSON al endpoint que has adaptado para Body(...)
     await fetchService.post(
       `${URI_MESSAGES}/webhook/send/template/bulk/`,
-      fd,
-      false
+      payload,
+      false   // si tu fetchService admite un flag para no mostrar toast
     )
     console.log(`✅ Difusión iniciada para ${recipients.length} usuarios`)
-    difundiendo.value = false  // cerramos el diálogo
+    difundiendo.value = false
   } catch (err) {
     console.error("✗ Error en difusión masiva:", err)
   } finally {
     sendingBulk.value = false
-  }}
+  }
+}
+
 </script>
 
 <style scoped>

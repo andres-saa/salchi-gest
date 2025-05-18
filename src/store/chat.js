@@ -31,6 +31,33 @@ export const useChatStore = defineStore('chates', {
         }
       ]
     },
+    templates:[
+        {
+            "name": "...",
+            "parameter_format": "POSITIONAL",
+            "components": [
+                {
+                    "type": "HEADER",
+                    "format": "IMAGE",
+                    "example": {
+                        "header_handle": [
+                            "https://mir-s3-cdn-cf.behance.net/project_modules/source/04de2e31234507.564a1d23645bf.gif"
+                        ]
+                    }
+                },
+                {
+                    "type": "BODY",
+                    "text": "..."
+                }
+            ],
+            "language": "es",
+            "status": "...",
+            "category": "MARKETING",
+            "sub_category": "CUSTOM",
+            "id": "706606118616073"
+        },
+       
+    ],
 
     sidebars: {
       "1": [
@@ -253,7 +280,8 @@ export const useChatStore = defineStore('chates', {
       unreaded: 0
     },
 
-    sendig: false
+    sendig: false,
+
   }),
 
   getters: {

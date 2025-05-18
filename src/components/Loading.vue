@@ -1,6 +1,6 @@
 <template>
 
-<Dialog class="p-0" :closable="false"   style="width: min-content; display: flex;  " v-model:visible="store.loading.visible">
+<Dialog  class="p-0" :closable="false"   style="width: min-content; display: flex;  " v-model:visible="store.loading.visible">
 
 
 
@@ -11,11 +11,9 @@
 
     <p class="text-3xl  text-center"  style="width: min-content; font-weight: bold;text-transform: uppercase; color: var(--orange-500);border-radius: 10rem; ;background-color: rgba(255, 255, 255, 0);">{{store.loading.tittle}}</p>
     
-    <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
-    animationDuration=".1s" aria-label="Custom ProgressSpinner" />
+    <img style="width: 5rem;" src="https://mir-s3-cdn-cf.behance.net/project_modules/source/04de2e31234507.564a1d23645bf.gif" alt="">
 
-    <p class="text-3xl  text-center"   style="width: min-content; font-weight: bold;text-transform: uppercase; color: var(--orange-500);border-radius: 10rem; ;background-color: rgba(255, 255, 255, 0);">{{store.loading.progress}}%</p>
-
+   
 </div>
 
 

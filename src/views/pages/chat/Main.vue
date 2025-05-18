@@ -183,7 +183,7 @@
    
     </div>
 
-    <Dialog v-model:visible="showTemplates" header="Envio de plantilla" style="width: 50rem;">
+    <Dialog v-model:visible="showTemplates" modal="" header="Envio de plantilla" style="width: 90rem;">
       <DataTable
         :value="templates"
         dataKey="id"
@@ -193,17 +193,27 @@
         <Column class="my-1 py-1" field="name" header="Nombre" bodyClass="font-medium" />
         <!-- <Column class="my-1 py-1" field="category" header="Categoría" />
         <Column class="my-1 py-1" field="language" header="Idioma" /> -->
+
+         <Column class="my-1 py-1" header="Texto">
+          <template #body="{data}">
+           {{data?.components?.find(c => c.type == 'BODY')?.text}}
+          </template>
+        </Column>
+
+        <Column class="my-1 py-1" header="Imagen">
+          <template #body="{data}">
+        <img v-if="data?.components?.find(c => c.type == 'HEADER')?.example?.header_handle[0]" style="height: 10rem;width: 10rem;aspect-ratio: 1 / 1 ; object-fit: cover;border-radius: .5rem;border: 1px solid;" :src="data?.components?.find(c => c.type == 'HEADER')?.example?.header_handle[0]
+        " alt="">
+          </template>
+        </Column>
+
         <Column class="my-1 py-1" header="Estado">
           <template #body="{data}">
             <Tag :severity="statusSeverity(data.status)" >{{ data.status }}</Tag>
           </template>
         </Column>
 
-        <Column class="my-1 py-1" header="Estado">
-          <template #body="{data}">
-           {{data?.components?.find(c => c.type == 'BODY')?.text}}
-          </template>
-        </Column>
+       
 
 
         <Column class="my-1 py-1" headerStyle="width:8rem" header="Acciones">
@@ -224,11 +234,7 @@
     
         <div style="width: 100%; display: flex; justify-content: end;">
 
-          <RouterLink to="/chat/templates">
-          <Button severity="help" icon="pi pi-plus" label="Agregar otro">
-
-          </Button> 
-        </RouterLink>
+        
         </div>
        
   
