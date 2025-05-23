@@ -63,12 +63,22 @@ Notificaciones
     <div style="display: flex;flex-direction: column;width: 100%;">
     <h3> <b> Buscar un usuario</b></h3>
 
-    <InputText v-model="search_text" style="width: 100%;" placeholder="Escriba el nombre o numero del usuario"></InputText>
+    <InputText v-model="search_text_search" style="width: 100%;" placeholder="Escriba el nombre o numero del usuario"></InputText>
     </div>
 
   </template>
 
    <div class="" style="height: 67vh;" :class="animable? 'chats active-new' : 'chats'"  ref="chatsContainer" @scroll="handleScroll">
+
+          <div v-if="buscando" :style="`bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, ${chatTheme.current_chat_theme.gradient});display:flex;  z-index: 100;width:100%; color: white`"><ProgressSpinner
+      v-if="true"
+      style="width: 50px; height: 50px; "
+      strokeWidth="8"
+      fill="transparent"
+      animationDuration=".3s"
+      aria-label="Custom ProgressSpinner"
+    /> </div>
+
 <RouterLink 
   :active-class="chatTheme.current_chat_theme.name == 'dark' ? 'active' : 'active-light'"
   v-for="(chat, index) in chats.sidebars[current_restaurant.id]?.filter((u) => {
@@ -82,6 +92,9 @@ Notificaciones
   :to="`/chat/chats/messages/${current_restaurant.id}/${chat.wa_id}/${chat.nombre}/${chat.color}?expirado=${chat.expirado}&?expira-en?=${chat.tiempo_para_expirar}`"
 >
         <!-- …tu card de chat intacta… -->
+
+
+        
         <div  class="chat" @click="()  => setUserMark(chat)">
           
           <!-- imagen + iniciales -->
@@ -133,6 +146,9 @@ Notificaciones
       animationDuration=".3s"
       aria-label="Custom ProgressSpinner"
     /> </div>
+
+    
+    
       
       <div v-if="finished" style="text-align:center; padding:.5rem; color:#ffffff80;">No hay más chats.</div>
     </div>
@@ -253,19 +269,8 @@ Notificaciones
       <RouterLink 
         
         :active-class=" chatTheme.current_chat_theme.name == 'dark'?  'active' : 'active-light'"
-        v-for="(chat, index) in (
-        chats.sidebars[current_restaurant.id]?.filter(ch => {
-          // 1) Mostrar todos los chats
-          if (current.label === 'TODO') return true
+        v-for="(chat, index) in computedChats"
 
-          // 2) Filtros especiales
-          if (current.label === 'SIN LEER') return ch.unreaded > 0        // tiene mensajes sin leer
-          if (current.label === 'LEIDOS')   return ch.unreaded == 0      // todo leído
-
-          // 3) Filtro por clasificación normal
-          return ch.clasification === current.label
-        }) || []
-      )"
         :key="index"
         :to="`/chat/chats/messages/${current_restaurant.id}/${chat.wa_id}/${chat.nombre}/${chat.color}?expirado=${chat.expirado}&?expira-en?=${chat.tiempo_para_expirar}`"
       >
@@ -320,13 +325,32 @@ Notificaciones
       animationDuration=".3s"
       aria-label="Custom ProgressSpinner"
     /> </div>
-      
+
+          <div  style="width: 100;display: flex;gap: 1rem; justify-content: center;" :style="`bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, ${chatTheme.current_chat_theme.gradient});display:flex; z-index: 100;width:100%; color: white`">
+           <Button
+            v-if="virtualOffset > 0"
+            icon="pi pi-step-backward-alt"
+            severity="help"
+            label="Volver 100 atrás"
+            @click="volverMas"
+          />
+
+          <!-- Botón “cargar 100 más” -->
+          <Button
+            v-if="virtualLimit < computedChatsAll.length"
+            iconPos="right"
+            icon="pi pi-step-forward"
+            severity="help"
+            label="Cargar 100 más"
+            @click="cargarMas"
+          /> </div>
+
       <div v-if="finished" style="text-align:center; padding:.5rem; color:#ffffff80;">No hay más chats.</div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { URI_MESSAGES } from '@/service/conection.js'
 import { fetchService } from '@/service/utils/fetchService.js'
 import { useChatStore } from '@/store/chat'
@@ -337,7 +361,36 @@ const view_norifications = ref(false)
 const view_search = ref(false)
 const search_text = ref('')
 
+
+
+const search_text_search = ref('')
+
+
+const buscando = ref(false)
+
+let timer: ReturnType<typeof setTimeout> | null = null
+
+watch(search_text_search, newValue => {
+  // Mostrar el loader inmediatamente
+  buscando.value = true
+
+  // Reiniciar el temporizador si el usuario sigue tecleando
+  if (timer) clearTimeout(timer)
+
+  timer = setTimeout(() => {
+    // ① Copiamos el texto definitivo al campo de búsqueda real
+    search_text.value = newValue
+
+    // ② Ocultamos el loader porque el debounce terminó
+    buscando.value = false
+  }, 1000)
+})
 const ping = ref(false)
+const PAGE_SIZE = 100         // cantidad a “cargar/volver” en cada click
+
+
+const virtualLimit = ref(100)
+const virtualOffset = ref(0)
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
@@ -348,6 +401,37 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
+
+
+const computedChats = computed(() => {
+  return chats.sidebars[current_restaurant.value.id]?.filter(ch => {
+          // 1) Mostrar todos los chats
+          if (current.value.label === 'TODO') return true
+
+          // 2) Filtros especiales
+          if (current.value.label === 'SIN LEER') return ch.unreaded > 0        // tiene mensajes sin leer
+          if (current.value.label === 'LEIDOS')   return ch.unreaded == 0      // todo leído
+
+          // 3) Filtro por clasificación normal
+          return ch.clasification === current.value.label
+        }).slice(virtualOffset.value,virtualLimit.value)
+})
+
+
+const computedChatsAll = computed(() => {
+  return chats.sidebars[current_restaurant.value.id]?.filter(ch => {
+          // 1) Mostrar todos los chats
+          if (current.value.label === 'TODO') return true
+
+          // 2) Filtros especiales
+          if (current.value.label === 'SIN LEER') return ch.unreaded > 0        // tiene mensajes sin leer
+          if (current.value.label === 'LEIDOS')   return ch.unreaded == 0      // todo leído
+
+          // 3) Filtro por clasificación normal
+          return ch.clasification === current.value.label
+        })
+})
+
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
   
@@ -356,13 +440,36 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
+const chatsContainer = ref(null)
 
 
+const cargarMas = async () => {
+  const total = computedChatsAll.value.length
+  const restante = total - virtualLimit.value   // cuántos faltan por mostrar
 
+  if (restante <= 0) return                     // ya no hay más que cargar
 
+  const paso = Math.min(PAGE_SIZE, restante)    // 100 ó lo que quede
+  virtualLimit.value  += paso
+  virtualOffset.value += paso
 
+  await nextTick()                              // espera al repaint
 
+  chatsContainer.value?.scrollTo({ top: 0, behavior: 'auto' })
+  // equivalente: chatsContainer.value!.scrollTop = 0
+}
 
+const volverMas = async () => {
+  if (virtualOffset.value === 0) return         // ya estamos en el primer bloque
+
+  const paso = Math.min(PAGE_SIZE, virtualOffset.value)  // 100 ó lo que sobre
+  virtualLimit.value  -= paso
+  virtualOffset.value -= paso
+
+  await nextTick()
+
+  chatsContainer.value?.scrollTo({ top: 0, behavior: 'auto' })
+}
 
 const chatTheme  = chatThemeStore()
 
@@ -440,15 +547,28 @@ const colorMap = [
 ];
 
 const current = ref( { label: 'SIN LEER',    bg: '#f39c12', icon: 'fa-solid fa-envelope-open' })
+
+
+
+
+watch(current, (newValue) => {
+
+  virtualLimit.value = 100
+  virtualOffset.value = 0
+
+
+  // Reinicia la paginación al cambiar de filtro
+  chatsContainer.value.scrollTo({ top: 0, behavior: 'auto' })
+})
 const totalUnread  = ref(0)
 
 /* ░░░  PAGINACIÓN  ░░░ */
-const LIMIT        = 1000         // tamaño de página
+const LIMIT        = 10000        // tamaño de página
 let   offset       = 0          // cuántas filas omitir
 const loadingMore  = ref(false)
 const finished     = ref(false)
 
-const chatsContainer = ref(null)
+
 
 /* ░░░  UTILIDADES  ░░░ */
 const getInitials = (name='') => {
@@ -505,29 +625,50 @@ const appendChats = (id, newItems) => {
 
 
 
+const CHUNK_SIZE   = 20    // cuántos pintas cada segundo
+const CHUNK_DELAY  = 1000  // ms de espera entre chunks
 
 
 
-/* ░░░  CARGAR UNA PÁGINA  ░░░ */
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+
 const loadPage = async () => {
+
+
   if (loadingMore.value || finished.value) return
-  loadingMore.value = true
 
-  const url = `${URI_MESSAGES}/last-contact-messages/` +
-              `${current_restaurant.value.id}` +
-              `?limit=${LIMIT}&offset=${offset}`
+  if (chats.sidebars[current_restaurant.value.id].length < 100) {
+     loadingMore.value = true
+  }
 
-  const data = await fetchService.get(url, false)
 
-  /* marcar fin si llegaron menos filas que el límite */
+ 
+
+  // 1) Petición al backend
+  const url   = `${URI_MESSAGES}/last-contact-messages/` +
+                `${current_restaurant.value.id}` +
+                `?limit=${LIMIT}&offset=${offset}`
+  const data  = await fetchService.get(url, false)
+  
+  // 2) Marca fin si el backend devolvió menos de LIMIT
   if (data.length < LIMIT) finished.value = true
 
-  /* siguiente desplazamiento para la próxima página */
-  offset += data.length
-  appendChats(current_restaurant.value.id, data)
+  // 3) Pinta en trozos de 20 con una pausa
+  for (let i = 0; i < data.length; i += CHUNK_SIZE) {
+    const slice = data.slice(i, i + CHUNK_SIZE)
+    appendChats(current_restaurant.value.id, slice)
+    await sleep(CHUNK_DELAY)   
+    console.log(data.length - i, data.length)
+    loadingMore.value = false       // ◂ pausa de 1 s entre trozos
+  }
 
+  // 4) Prepara el siguiente offset
+  offset += data.length
   loadingMore.value = false
 }
+
+
+const seeMoreButton = ref(false)
 
 /* ░░░  INFINITE SCROLL  ░░░ */
 const handleScroll = () => {
@@ -535,7 +676,8 @@ const handleScroll = () => {
   if (!el || loadingMore.value || finished.value) return
 
   const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 120
-  if (nearBottom) loadPage()
+  if (nearBottom) seeMoreButton.value = true
+  else seeMoreButton.value = false
 }
 
 /* ░░░  NUEVOS MENSAJES VÍA SOCKET ░░░ */

@@ -63,8 +63,8 @@ export const useChatStore = defineStore('chates', {
       "1": [
         {
           id: 0,
-          nombre: "andres",
-          wa_id: "573226892988",
+          nombre: "...",
+          wa_id: "...",
           fecha_ultimo_mensaje: "12/04/2025",
           hora_ultimo_mensaje: "08:01 PM",
           abreviatura: "hoy",
@@ -75,8 +75,8 @@ export const useChatStore = defineStore('chates', {
       "7": [
         {
           id: 0,
-          nombre: "andres",
-          wa_id: "573226892988",
+          nombre: ".....",
+          wa_id: "......",
           fecha_ultimo_mensaje: "12/04/2025",
           hora_ultimo_mensaje: "08:01 PM",
           abreviatura: "hoy",
