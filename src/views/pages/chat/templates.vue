@@ -645,20 +645,30 @@ const sendingBulk = ref(false)
 
 async function broadcastTemplate() {
   if (!selectedTemplate.value) return
-  const recipients = filteredUsers.value.map(u => u.wa_id)  // array de números
-  
-  // 1) Montar el payload completo como JSON
+
+  // 1) Filtrar usuarios sin wa_id y mapear solo los válidos
+  const recipients = filteredUsers.value
+    .map(u => u.wa_id)
+    .filter(id => !!id && id.trim().length > 0)   // elimina null, undefined, "", " "
+
+  // Si no quedó ningún destinatario válido, avisa y sal del flujo
+  if (!recipients.length) {
+    console.warn("No hay destinatarios válidos para la difusión")
+    return
+  }
+
+  // 2) Montar el payload completo como JSON
   const payload = {
     messaging_product: "whatsapp",
     employer_id: login.rawUserData.id.toString(),
     restaurant_id: `${restaurant.value.id}`,
     template: selectedTemplate.value,
-    recipients:recipients          // aquí va el array completo
+    recipients // ← ya está limpio
   }
 
   sendingBulk.value = true
   try {
-    // 2) Enviar como JSON al endpoint que has adaptado para Body(...)
+    // 3) Enviar como JSON al endpoint que has adaptado para Body(...)
     await fetchService.post(
       `${URI_MESSAGES}/webhook/send/template/bulk/`,
       payload,
@@ -672,6 +682,7 @@ async function broadcastTemplate() {
     sendingBulk.value = false
   }
 }
+
 
 </script>
 

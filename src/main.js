@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
-
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 import App from './App.vue';
 import router from './router';
 import PrimeVue from 'primevue/config';
@@ -332,6 +333,8 @@ app.component('SpeedDial', SpeedDial);
 app.component('SplitButton', SplitButton);
 app.component('Splitter', Splitter);
 app.component('SplitterPanel', SplitterPanel);
+app.component('DynamicScroller', DynamicScroller)
+app.component('DynamicScrollerItem', DynamicScrollerItem)
 app.component('Steps', Steps);
 app.component('TabMenu', TabMenu);
 app.component('TabView', TabView);

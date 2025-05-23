@@ -56,11 +56,6 @@ Notificaciones
       </div>
 
 
-
-
-
-
-
 <Dialog :closable="false" header="Buscar un usuario"  v-model:visible="view_search" style="width: 50rem; " modal="">
 
   <template #header >
