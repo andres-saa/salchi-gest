@@ -1464,7 +1464,7 @@
   
   
   const cancelDialogVisible = ref(false);
-  const travelDialog = ref(true);
+  const travelDialog = ref(false);
   
   const cancelData = ref({
     responsible: null,
