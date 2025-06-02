@@ -55,7 +55,7 @@ async function fetchAndUpdateRoles() {
     label: 'INTEGRACIONES',
     icon: 'fa-solid fa-plug', // Mejor para representar integraciones
     'icon-color': 'yellow', // Verde lima
-    permision_id: get_id([50]),
+    permision_id: get_id([56,57,58,59,60,61]),
     items: [
 
 
@@ -63,27 +63,28 @@ async function fetchAndUpdateRoles() {
 
 
     
-        { label: 'Sonando', icon: 'fa-solid fa-music', to: '/sonando', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
+        // { label: 'Sonando', icon: 'fa-solid fa-music', to: '/sonando', permision_id: 50, 'icon-color': '#FF4500' }, // Naranja rojizo
         { 
             label: 'Distrimonster', 
             icon: 'fa-solid fa-truck', // Representa la distribución de alimentos
-            permision_id: 50, 
+            permision_id: get_id([56,57]), 
             'icon-color': '#FF4500',
             items: [
                 // { label: 'Transferencias', icon: 'fa-solid fa-truck-moving', to: '/transfer-distri/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
                 // { label: 'Validar pedidos', icon: 'fa-solid fa-check-circle', to: '/validate-distri/', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
-                { label: 'Almacen', icon: 'fa-solid fa-warehouse', to: '/distrimonster', permision_id: 5, 'icon-color': '#581845' }, // Púrpura oscuro
-                { label: 'Usurarios', icon: 'fa-solid fa-warehouse', to: '/distrimonster-users', permision_id: 5, 'icon-color': '#581845' } // Púrpura oscuro
+                { label: 'Almacen', icon: 'fa-solid fa-warehouse', to: '/distrimonster', permision_id: 56, 'icon-color': '#581845' }, // Púrpura oscuro
+                { label: 'Usurarios', icon: 'fa-solid fa-warehouse', to: '/distrimonster-users', permision_id: 57, 'icon-color': '#581845' } // Púrpura oscuro
 
             ]
         },
-        { label: 'Tiendas', icon: 'fa-solid fa-store', permision_id: 50, 'icon-color': '#FF4500',
+        { label: 'Tiendas', icon: 'fa-solid fa-store',permision_id: get_id([58,59,60,61]), 'icon-color': '#FF4500',
             items:[
-            { label: 'Almacen', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 50, 'icon-color': '#FF4500'},
-            { label: 'Cartas QR', icon: 'fa-solid fa-store', to: '/cartas', permision_id: 50, 'icon-color': '#FF4500'},
-            { label: 'Banners', icon: 'fa-solid fa-store', to: '/banners', permision_id: 50, 'icon-color': '#FF4500'},
-            { label: 'Redimir codigo correo', icon: 'fa-solid fa-send', to: '/redimir-correo', permision_id: 50, 'icon-color': '#FF4500'}
-            ]
+            { label: 'Almacen', icon: 'fa-solid fa-store', to: '/tiendas', permision_id: 58, 'icon-color': '#FF4500'},
+            { label: 'Cartas QR', icon: 'fa-solid fa-store', to: '/cartas', permision_id: 59, 'icon-color': '#FF4500'},
+            { label: 'Banners', icon: 'fa-solid fa-store', to: '/banners', permision_id: 60, 'icon-color': '#FF4500'},
+            { label: 'Redimir codigo correo', icon: 'fa-solid fa-send', to: '/redimir-correo', permision_id: 61, 'icon-color': '#FF4500'}
+            ],
+            
          } // Naranja rojizo
     ]
 }
