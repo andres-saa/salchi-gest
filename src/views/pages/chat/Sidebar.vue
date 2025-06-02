@@ -312,7 +312,7 @@ Notificaciones
 
       <!-- loader / fin de lista -->
 
-      <div v-if="loadingMore" :style="`bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, ${chatTheme.current_chat_theme.gradient});display:flex; position: absolute; z-index: 100;width:100%; color: white`"><ProgressSpinner
+      <div v-if="loadingMore && chats.sidebars[current_restaurant.id]?.length < 2 " :style="`bottom:0;padding-bottom:1rem; background:linear-gradient(to bottom , transparent 3%, ${chatTheme.current_chat_theme.gradient});display:flex; position: absolute; z-index: 100;width:100%; color: white`"><ProgressSpinner
       v-if="true"
       style="width: 50px; height: 50px; "
       strokeWidth="8"
@@ -443,7 +443,7 @@ const current = ref( { label: 'SIN LEER',    bg: '#f39c12', icon: 'fa-solid fa-e
 const totalUnread  = ref(0)
 
 /* ░░░  PAGINACIÓN  ░░░ */
-const LIMIT        = 100         // tamaño de página
+const LIMIT        = 100   // tamaño de página
 let   offset       = 0          // cuántas filas omitir
 const loadingMore  = ref(false)
 const finished     = ref(false)
@@ -524,8 +524,10 @@ const loadPage = async () => {
 
   /* siguiente desplazamiento para la próxima página */
   offset += data.length
-  appendChats(current_restaurant.value.id, data)
+  // appendChats(current_restaurant.value.id, data)
 
+  chats.sidebars[current_restaurant.value.id] = data
+  
   loadingMore.value = false
 }
 
