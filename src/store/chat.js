@@ -1,11 +1,11 @@
 import { defineStore } from "pinia"
 // import { URI } from "../service/conection"
 
-export const useChatStore = defineStore('chates', {
+export const useChatStore = defineStore('chatess', {
   persist: {
-    key: 'clientes',
+    key: 'cliesntes',
     storage: localStorage,
-    paths: ['user', 'last_messages', 'sidebars', 'current_user']
+    paths: ['user', 'last_messages',, 'current_user']
   },
 
   state: () => ({
@@ -13,12 +13,12 @@ export const useChatStore = defineStore('chates', {
       "3226892988": [
         {
           user_id: 10,
-          nombre: "andres saa",
-          fecha_ultimo_mensaje: "12/04/2025",
-          hora_ultimo_mensaje: "08:01 PM",
-          abreviatura: "hoy",
-          mensaje_truncado: "nuevo mensaje brother",
-          wa_id: "573226892988"
+          nombre: "...",
+          fecha_ultimo_mensaje: "...",
+          hora_ultimo_mensaje: "...",
+          abreviatura: "...",
+          mensaje_truncado: "...",
+          wa_id: "..."
         },
         {
           user_id: 11,
@@ -61,26 +61,26 @@ export const useChatStore = defineStore('chates', {
 
     sidebars: {
       "1": [
-        {
+       {
           id: 0,
-          nombre: "...",
-          wa_id: "...",
-          fecha_ultimo_mensaje: "12/04/2025",
-          hora_ultimo_mensaje: "08:01 PM",
-          abreviatura: "hoy",
-          mensaje_truncado: "nuevo mensaje brother",
+          nombre: "Salchi inspector",
+          wa_id: "no necesita numero",
+          fecha_ultimo_mensaje: "siemrpe",
+          hora_ultimo_mensaje: "siemrpre",
+          abreviatura: "siemrpe",
+          mensaje_truncado: "validando navegacion",
           unreaded: 0
         }
       ],
       "7": [
         {
           id: 0,
-          nombre: ".....",
-          wa_id: "......",
-          fecha_ultimo_mensaje: "12/04/2025",
-          hora_ultimo_mensaje: "08:01 PM",
-          abreviatura: "hoy",
-          mensaje_truncado: "nuevo mensaje brother",
+          nombre: "Salchi inspector",
+          wa_id: "no necesita numero",
+          fecha_ultimo_mensaje: "siemrpe",
+          hora_ultimo_mensaje: "siemrpre",
+          abreviatura: "siemrpe",
+          mensaje_truncado: "validando navegacion",
           unreaded: 0
         }
       ]

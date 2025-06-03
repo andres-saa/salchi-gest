@@ -133,21 +133,13 @@ Notificaciones
       animationDuration=".3s"
       aria-label="Custom ProgressSpinner"
     /> </div>
-      
+
       <div v-if="finished" style="text-align:center; padding:.5rem; color:#ffffff80;">No hay más chats.</div>
     </div>
 
     <Button rounded=""  @click="view_search=false" icon="pi pi-times  text-xl" style="position: absolute;top: -1rem;right: -1rem;" severity="danger" ></Button>
 </Dialog>
       
-
-
-
-
-
-
-
-
 
 
 
@@ -247,7 +239,12 @@ Notificaciones
                                    : { backgroundColor: '#ffffff20', color: button.bg }"
       />
     </div>
+    <div v-if="virtual_offset > 0"  style="display: flex;justify-content: end;margin: 0rem 0;gap: 1rem;padding: 1rem 1rem;">
+                    <Button :disabled="loadingMore" :icon="loadingMore? 'pi pi-spin pi-spinner' : 'pi pi-angle-left' " @click="atras" severity="help" :label="loadingMore? 'cargando...' : 'atras'"></Button>
 
+          <!-- <Button :disabled="loadingMore" :icon="loadingMore? 'pi pi-spin pi-spinner' : '' " @click="loadPage" severity="help" :label="loadingMore? 'cargando...' : 'Cargar mas'"></Button> -->
+        </div>
+      
     <!-- ▲▲▲  LISTA DE CHATS  ▲▲▲ -->
     <div class="" :class="animable? 'chats active-new' : 'chats'"  ref="chatsContainer" @scroll="handleScroll">
       <RouterLink 
@@ -263,8 +260,8 @@ Notificaciones
           if (current.label === 'LEIDOS')   return ch.unreaded == 0      // todo leído
 
           // 3) Filtro por clasificación normal
-          return ch.clasification === current.label
-        }).slice(0,100) || []
+          // return ch.clasification === current.label
+        }).slice(virtual_offset,virtual_liimit) || []
       )"
         :key="index"
         :to="`/chat/chats/messages/${current_restaurant.id}/${chat.wa_id}/${chat.nombre}/${chat.color}?expirado=${chat.expirado}&?expira-en?=${chat.tiempo_para_expirar}`"
@@ -321,6 +318,12 @@ Notificaciones
       aria-label="Custom ProgressSpinner"
     /> </div>
       
+        <div  style="display: flex;justify-content: center;margin: 2rem 0;gap: 1rem;">
+                    <!-- <Button :disabled="loadingMore" :icon="loadingMore? 'pi pi-spin pi-spinner' : 'pi pi-angle-left' " @click="atras" severity="help" :label="loadingMore? 'cargando...' : 'atras'"></Button> -->
+
+          <Button :disabled="loadingMore" :icon="loadingMore? 'pi pi-spin pi-spinner' : '' " @click="loadPage" severity="help" :label="loadingMore? 'cargando...' : 'Cargar mas'"></Button>
+        </div>
+      
       <div v-if="finished" style="text-align:center; padding:.5rem; color:#ffffff80;">No hay más chats.</div>
     </div>
   </div>
@@ -338,6 +341,24 @@ const view_search = ref(false)
 const search_text = ref('')
 
 const ping = ref(false)
+
+
+
+const virtual_liimit = ref(100)
+const virtual_offset = ref(0)
+
+
+
+
+const atras = () => {
+
+  if (virtual_liimit.value >= 100){
+    virtual_liimit.value -= 100
+    virtual_offset.value -= 100
+  }
+  
+}
+
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
@@ -430,20 +451,20 @@ const setUserMark_notificacion = async (user) => {
 const colorMap = [
   { label: 'SIN LEER',    bg: '#f39c12', icon: 'fa-solid fa-envelope-open' },
   { label: 'LEIDOS',      bg: '#16a085', icon: 'fa-solid fa-envelope-circle-check' },
-  { label: 'TODO',        bg: '#34495e', icon: 'fa-solid fa-inbox' },
-  { label: 'SIN DATOS',   bg: '#95a5a6', icon: 'fa-solid fa-circle-question' },
-  { label: 'PREOCUPANTE', bg: '#e74c3c', icon: 'fa-solid fa-triangle-exclamation' },
-  { label: 'CASUAL',      bg: '#e67e22', icon: 'fa-solid fa-person-walking' },
-  { label: 'FRECUENTE',   bg: '#27ae60', icon: 'fa-solid fa-repeat' },
-  { label: 'TOP',         bg: '#2980b9', icon: 'fa-solid fa-ranking-star' },
-  { label: 'ESTRELLA',    bg: '#8e44ad', icon: 'fa-solid fa-star' }
+  // { label: 'TODO',        bg: '#34495e', icon: 'fa-solid fa-inbox' },
+  // { label: 'SIN DATOS',   bg: '#95a5a6', icon: 'fa-solid fa-circle-question' },
+  // { label: 'PREOCUPANTE', bg: '#e74c3c', icon: 'fa-solid fa-triangle-exclamation' },
+  // { label: 'CASUAL',      bg: '#e67e22', icon: 'fa-solid fa-person-walking' },
+  // { label: 'FRECUENTE',   bg: '#27ae60', icon: 'fa-solid fa-repeat' },
+  // { label: 'TOP',         bg: '#2980b9', icon: 'fa-solid fa-ranking-star' },
+  // { label: 'ESTRELLA',    bg: '#8e44ad', icon: 'fa-solid fa-star' }
 ];
 
 const current = ref( { label: 'SIN LEER',    bg: '#f39c12', icon: 'fa-solid fa-envelope-open' })
 const totalUnread  = ref(0)
 
 /* ░░░  PAGINACIÓN  ░░░ */
-const LIMIT        = 100   // tamaño de página
+const LIMIT        = 1000   // tamaño de página
 let   offset       = 0          // cuántas filas omitir
 const loadingMore  = ref(false)
 const finished     = ref(false)
@@ -490,6 +511,7 @@ const appendChats = (id, newItems) => {
       }
       // Si no cambió nada relevante, lo dejamos como está
     }
+    
   })
 
   // Actualizamos el store reactivo
@@ -504,7 +526,7 @@ const appendChats = (id, newItems) => {
 
 
 
-
+const showloadmore = ref(false)
 
 
 
@@ -515,7 +537,7 @@ const loadPage = async () => {
 
   const url = `${URI_MESSAGES}/last-contact-messages/` +
               `${current_restaurant.value.id}` +
-              `?limit=${LIMIT}&offset=${offset}`
+              `?limit=${LIMIT}&offset=${offset}&clasificacion=${current.value.label}`
 
   const data = await fetchService.get(url, false)
 
@@ -524,21 +546,56 @@ const loadPage = async () => {
 
   /* siguiente desplazamiento para la próxima página */
   offset += data.length
-  // appendChats(current_restaurant.value.id, data)
+  appendChats(current_restaurant.value.id, data)
 
-  chats.sidebars[current_restaurant.value.id] = data
-  
   loadingMore.value = false
 }
 
 /* ░░░  INFINITE SCROLL  ░░░ */
-const handleScroll = () => {
-  const el = chatsContainer.value
-  if (!el || loadingMore.value || finished.value) return
+let canLoadMore = ref(true) // bandera para controlar el tiempo
 
-  const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 120
-  if (nearBottom) loadPage()
+const handleScroll = async() => {
+  const el = chatsContainer.value
+  if (!el || loadingMore.value || finished.value || !canLoadMore) return
+
+  const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 100
+  if (nearBottom) {
+    showloadmore.value = true
+
+    const current_limit = virtual_liimit.value
+    if (canLoadMore.value) {
+
+    if (virtual_offset.value + 100 >= chats.sidebars[current_restaurant.value]?.length) {
+      virtual_liimit.value  = 1000
+      // virtual_offset.value = 900
+      return
+    }
+    else{
+    // virtual_offset.value += 100
+    virtual_liimit.value += 100
+    // alert(current_limit)
+    canLoadMore.value = false
+    }
+
+    }
+
+
+    // alert(virtual_offset.value)
+    // el.scrollTo({ top: 0 })
+
+    // Desactivar temporalmente
+    
+     setTimeout(() => {
+      canLoadMore.value = true
+    }, 1000) // 2 segundos
+  }
 }
+
+watch(current, () => {
+  chatsContainer.value.scrollTo({ top: 0 })
+  
+  virtual_liimit.value = 100
+})
 
 /* ░░░  NUEVOS MENSAJES VÍA SOCKET ░░░ */
 const mergeOrPrepend = (newPage) => {
@@ -889,7 +946,7 @@ h4 {
   align-items: center;
   flex-wrap: wrap;
   gap:  .5rem;
-  padding: -0rem 1rem;
+  padding: 1rem 1rem;
   box-shadow: 0 1rem 1rem #00000010;
 }
 
