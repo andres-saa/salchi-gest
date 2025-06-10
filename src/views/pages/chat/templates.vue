@@ -20,6 +20,18 @@
      
       </div>
 
+      <h5 class="mt-4 mb-1"><strong>Imagen para este envío</strong></h5>
+      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+        <input type="file" accept="image/*" @change="onHeaderUpload" />
+        <!-- Vista previa → solo si ya se cargó -->
+        <img
+          v-if="templateHeaderUrl"
+          :src="templateHeaderUrl"
+          alt="preview"
+          style="height: 8rem;width: 8rem;object-fit: cover;border-radius: .5rem;border: 1px solid;"
+        />
+      </div>
+
       <h5><strong>Usuarios</strong></h5>
       <div class="statuses" style="display: flex; gap: 1rem;">
         <Button
@@ -130,10 +142,10 @@
 
       <!-- Botón nueva plantilla -->
 
-      <!-- <div style="display: flex;  width:100%; justify-content: end; margin-top: 1rem;">
+      <div style="display: flex;  width:100%; justify-content: end; margin-top: 1rem;">
         <Button label="Nueva plantilla" icon="pi pi-plus" severity="help" class="w-full md:w-auto" @click="openNew" />
 
-      </div> -->
+      </div>
 
       <!-- Diálogo de creación / edición -->
       <Dialog v-model:visible="dialogVisible" :header="dialogTitle" modal class="" style="width: 90vw; max-width: 20rem; min-width: 40rem;">
@@ -194,7 +206,7 @@
           <div class="space-y-2">
             <div class="flex items-center  my-4" style="align-items: center;gap:1rem">
               <h5 class="m-0" >Botones</h5>
-              <!-- <Button icon="pi pi-plus"   severity="success" @click="addButton" /> -->
+              <Button icon="pi pi-plus"   severity="success" @click="addButton" />
             </div>
 
 
@@ -212,7 +224,7 @@
 
         <template #footer>
           <Button label="cerrar" text severity="secondary" @click="dialogVisible=false" />
-          <!-- <Button label="Guardar" severity="help" icon="pi pi-check" @click="saveTemplate" :loading="saving" autofocus /> -->
+          <Button label="Guardar" severity="help" icon="pi pi-check" @click="saveTemplate" :loading="saving" autofocus />
         </template>
       </Dialog>
 
@@ -258,6 +270,52 @@ function removeHeaderImage () {
   headerImageFile.value       = null
   headerImagePreviewUrl.value = ''
 }
+
+
+
+
+
+
+/* ------------- NUEVA VARIABLE PARA LA URL DE CABECERA ------------- */
+const templateHeaderUrl = ref('')
+
+/* ------------- FUNCIÓN CARGA DE IMAGEN ------------- */
+async function onHeaderUpload (e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  try {
+    const fd = new FormData()
+    fd.append('file', file)        // ⚠️ campo esperado por backend
+
+    // POST → /upload-photo-product
+    const resp = await fetchService.postFormData(`${URI_MESSAGES}/upload-photo-product`, fd)
+    const id   = (resp?.content?.file_id ?? resp).toString()
+
+    templateHeaderUrl.value = `${URI_MESSAGES}/files/images/${id}`
+  } catch (err) {
+    console.error('✗ Error subiendo imagen:', err)
+  }
+
+
+
+  //     const resp = await fetchService.postFormData(`${URI_MESSAGES}/upload-photo-product`, fd)
+  //   const id   = (resp?.content?.file_id ?? resp).toString()
+
+  //   templateHeaderUrl.value = `${URI_MESSAGES}/files/images/${id}?size=visual`
+  // } catch (err) {
+  //   console.error('✗ Error subiendo imagen:', err)
+  // }
+
+
+
+
+
+
+
+  
+}
+ 
+
 
 
 const headerImageId     = ref('')  // ← image_identifier
@@ -642,46 +700,59 @@ function askRemove(tpl){
 }
 
 const sendingBulk = ref(false)
-
-async function broadcastTemplate() {
+async function broadcastTemplate () {
   if (!selectedTemplate.value) return
 
-  // 1) Filtrar usuarios sin wa_id y mapear solo los válidos
-  const recipients = filteredUsers.value
-    .map(u => u.wa_id)
-    .filter(id => !!id && id.trim().length > 0)   // elimina null, undefined, "", " "
-
-  // Si no quedó ningún destinatario válido, avisa y sal del flujo
-  if (!recipients.length) {
-    console.warn("No hay destinatarios válidos para la difusión")
+  // ◉ Validar que ya exista la URL de la imagen cargada
+  if (!templateHeaderUrl.value) {
+    confirm.require({
+      message   : 'Debes seleccionar una imagen antes de difundir la plantilla.' ,
+      header    : 'Imagen requerida',
+      icon      : 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ok',
+      rejectVisible: false
+    })
     return
   }
 
-  // 2) Montar el payload completo como JSON
+  /* 1) Construir lista de destinatarios */
+  const recipients = filteredUsers.value
+    .map(u => u.wa_id)
+    .filter(id => !!id && id.trim().length > 0)
+
+  if (!recipients.length) {
+    console.warn('No hay destinatarios válidos para la difusión')
+    return
+  }
+
+  /* 2) Payload completo */
   const payload = {
-    messaging_product: "whatsapp",
-    employer_id: login.rawUserData.id.toString(),
-    restaurant_id: `${restaurant.value.id}`,
-    template: selectedTemplate.value,
-    recipients // ← ya está limpio
+    messaging_product : 'whatsapp',
+    employer_id       : login.rawUserData.id.toString(),
+    restaurant_id     : `${restaurant.value.id}`,
+    template          : selectedTemplate.value,
+    template_header_url: templateHeaderUrl.value,
+    recipients:['573216252922','573164937647','573102142549','573226892988',...recipients ]
   }
 
   sendingBulk.value = true
   try {
-    // 3) Enviar como JSON al endpoint que has adaptado para Body(...)
-    await fetchService.post(
-      `${URI_MESSAGES}/webhook/send/template/bulk/`,
-      payload,
-      false   // si tu fetchService admite un flag para no mostrar toast
-    )
+    await fetchService.post(`${URI_MESSAGES}/webhook/send/template/bulk/`, payload, false)
     console.log(`✅ Difusión iniciada para ${recipients.length} usuarios`)
     difundiendo.value = false
   } catch (err) {
-    console.error("✗ Error en difusión masiva:", err)
+    console.error('✗ Error en difusión masiva:', err)
   } finally {
     sendingBulk.value = false
   }
 }
+
+/* ------------- RESET imagen al cerrar diálogo ------------- */
+watch(difundiendo, val => {
+  if (!val) templateHeaderUrl.value = ''
+})
+
+/* ------------- RESTO DEL ARCHIVO ORIGINAL SIN CAMBIOS ------------- */
 
 
 </script>

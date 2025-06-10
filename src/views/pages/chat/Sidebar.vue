@@ -2,7 +2,10 @@
   <div class="sidebar-container" style="position:relative">
     <div class="header">
 
-      
+
+
+
+
 
 
       <div class="notifications"   :style="view_norifications? {height:'calc(100vh - 8rem)',top:'4rem',boxShadow: '0 1rem 1rem #00000040'} : {height:0,overflow:'hidden',top:'-2rem'}"  style="width: 100%;max-width: 90%; background-color: #ffffff90;max-height: 90vh;overflow: auto;position: absolute;z-index: 9;transition: all linear .2s;border-radius: .5rem; right: 0;;backdrop-filter:blur(5px);display: flex;flex-direction: column;">
@@ -71,13 +74,7 @@ Notificaciones
    <div class="" style="height: 67vh;" :class="animable? 'chats active-new' : 'chats'"  ref="chatsContainer" @scroll="handleScroll">
 <RouterLink 
   :active-class="chatTheme.current_chat_theme.name == 'dark' ? 'active' : 'active-light'"
-  v-for="(chat, index) in chats.sidebars[current_restaurant.id]?.filter((u) => {
-    const search = search_text?.toLowerCase()?.trim() || '';
-    if (search === '') return false;
-    const nombre = u.nombre?.toLowerCase() || '';
-    const waId = u.wa_id?.toLowerCase() || '';
-    return nombre.includes(search) || waId.includes(search);
-  }) || []"
+  v-for="(chat, index) in filtered"
   :key="index"
   :to="`/chat/chats/messages/${current_restaurant.id}/${chat.wa_id}/${chat.nombre}/${chat.color}?expirado=${chat.expirado}&?expira-en?=${chat.tiempo_para_expirar}`"
 >
@@ -97,7 +94,7 @@ Notificaciones
           <div style="grid-area:nombre; text-transform:capitalize;font-weight: 500;" :style="chatTheme.current_chat_theme.text">{{ chat.nombre }}</div>
           <div style="grid-area:numero; text-transform:capitalize;opacity: .7;" :style="chatTheme.current_chat_theme.text">+{{ chat.wa_id }}</div>
 
-          <!-- expiración -->
+          <!-- expiración --1
           <!-- <div v-if="chat.tiempo_para_expirar || !chat.expirado"
                style="grid-area:expiration; text-align:end; text-transform:capitalize;opacity: .5 ;" :style="chatTheme.current_chat_theme.text">
             Expira en {{ chat.tiempo_para_expirar }}
@@ -342,12 +339,44 @@ const search_text = ref('')
 
 const ping = ref(false)
 
-
+const filtered = ref<any[]>([])     // chats filtrados para el cuadro de diálogo
+let   debounceId: ReturnType<typeof setTimeout> | null = null
 
 const virtual_liimit = ref(100)
 const virtual_offset = ref(0)
 
+watch(search_text, (value) => {
+  // -- Cancelamos cualquier temporizador pendiente
+  if (debounceId) clearTimeout(debounceId)
 
+  // -- Arrancamos un nuevo temporizador de 1 s
+  debounceId = setTimeout(() => {
+    const query = value.trim().toLowerCase()
+
+    /* 2-a)  Si la caja está vacía ⇒ vaciamos resultados y salimos */
+    if (!query) {
+      filtered.value = []
+      return
+    }
+
+    /* 2-b)  Filtramos la lista local */
+    const list = chats.sidebars[current_restaurant.value.id] ?? []
+    const result = list.filter(u => {
+      const nombre = (u.nombre ?? '').toLowerCase()
+      const waId   = (u.wa_id ?? '').toLowerCase()
+      return nombre.includes(query) || waId.includes(query)
+    })
+
+    filtered.value = result
+
+    /* 2-c)  Si no encontramos nada ⇒ mostramos alerta y aquí se podría
+             lanzar la consulta al backend */
+    if (result.length === 0) {
+      alert('Buscando en la base de datos')
+      // ⇨  fetchService.get('/tu/endpoint', { params:{ q: query } }) …
+    }
+  }, 100)          // 1000 ms = 1 s
+})
 
 
 const atras = () => {
@@ -398,7 +427,8 @@ const chats = useChatStore()
 /* ░░░  CONFIG  ░░░ */
 const restaurants = [
   { id: 1, name: 'Salchimonster', img: 'https://backend.salchimonster.com/read-photo-product/xai0dVnL' },
-  { id: 7, name: 'Distrimoster',  img: 'https://backend.salchimonster.com/read-photo-product/iX6UiE6e' }
+  { id: 7, name: 'Distrimoster',  img: 'https://backend.salchimonster.com/read-photo-product/iX6UiE6e' },
+  { id: 8, name: 'Pruebas',  img: 'https://backend.salchimonster.com/read-photo-product/iX6UiE6e' }
 ]
 const current_restaurant = ref(props.restaurant || restaurants[0])
 
