@@ -134,6 +134,7 @@ async function fetchAndUpdateRoles() {
 
     {
         label: 'CHAT',
+        permision_id: get_id([63]),
         icon: 'fa-brands fa-whatsapp',
         'icon-color': '#32CD32', // Rojo vivo
         items: [
@@ -142,7 +143,7 @@ async function fetchAndUpdateRoles() {
                 icon: 'fa-solid fa-whatsapp',
                 'icon-color': 'green', // Naranja vibrante
                 to:'/chat/',
-                permision_id: get_id([1,2,3,4,5,6,7,31]),
+                permision_id: get_id([62]),
             },
 
             
@@ -189,9 +190,9 @@ async function fetchAndUpdateRoles() {
         label: 'FRANQUICIAS',
         icon: 'fa-solid fa-handshake',
         'icon-color': '#7CFC00', // Verde césped
-        permision_id: get_id([53,54]),
+        permision_id: get_id([63]),
         items: [
-            { label: 'Solicitudes', icon: 'fa-solid fa-clipboard-list', to: '/franquicias', permision_id: 53, 'icon-color': '#FF6347' }, // Tomate
+            { label: 'Solicitudes', icon: 'fa-solid fa-clipboard-list', to: '/franquicias', permision_id: 63, 'icon-color': '#FF6347' }, // Tomate
         ]
     },
 

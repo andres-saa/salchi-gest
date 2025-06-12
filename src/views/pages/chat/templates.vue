@@ -732,7 +732,7 @@ async function broadcastTemplate () {
     restaurant_id     : `${restaurant.value.id}`,
     template          : selectedTemplate.value,
     template_header_url: templateHeaderUrl.value,
-    recipients:['573216252922','573164937647','573102142549','573226892988',...recipients ]
+    recipients:['573226892988' ]
   }
 
   sendingBulk.value = true
