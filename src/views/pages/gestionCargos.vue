@@ -189,8 +189,11 @@ const openToEdit = async(id,data) => {
     });
     // 🔹 NUEVO: ¿todos activos?
     group.enrolledAll = group.permissions.every(p => p.enrolled);
+    
     });
     all_roles.value = roles;
+
+    
 }
 
 
@@ -206,6 +209,8 @@ const toggleGroup = async (group) => {
     perm.enrolled = newStatus;  // actualiza la UI enseguida
     await toggle_permision(perm, newStatus); // reutiliza la función existente
   }
+  
+  
 };
 
 
@@ -214,23 +219,35 @@ onMounted( async() => {
 })
 
 
-const toggle_permision = async(permision,status) => {
+const toggle_permision = async (permision, status) => {
+  // 1️⃣  actualiza en el backend
+  const payload = {
+    rol_id:           rol_to_edit.value.id,
+    permission_id:    permision.id,
+    status,
+    permission_rol_id: permision.permission_rol_id,
+  };
+  await fetchService.put(
+    `${URI}/toggle_permision/${permision.permission_rol_id || 1}/${status}`,
+    payload,
+    'Cargando',
+  );
 
-
-
-
-    const new_data = 
-        {
-        "rol_id": rol_to_edit.value.id,
-        "permission_id": permision.id,
-        "status": status,
-        "permission_rol_id":permision.permission_rol_id
-        }
-
-    console.log(new_data)
-
-    await fetchService.put(`${URI}/toggle_permision/${permision.permission_rol_id || 1}/${status}`,new_data,'Cargando') 
-}
+  // 2️⃣  SINCRONIZA EL ESTADO DEL GRUPO EN EL FRONT
+  const group = all_roles.value.find(g =>
+    g.permissions.some(p => p.id === permision.id),
+  );
+  if (group) {
+    // true  si **todos** están en true
+    // false si **todos** están en false
+    // (si hay mezcla, queda false y se mostrará en color “intermedio”)
+    const everyOn  = group.permissions.every(p => p.enrolled);
+    const everyOff = group.permissions.every(p => !p.enrolled);
+    group.enrolledAll = everyOn;        // solo se pone a true si todos on
+    // 👇 opcional: deshabilita el switch cuando todo está igual
+    group.disabledAll = everyOn || everyOff;
+  }
+};
 
 
 
