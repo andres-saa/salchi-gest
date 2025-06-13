@@ -467,10 +467,7 @@ const deleteContest = async (id) => {
 
 
 onMounted(async () => {
-    if(userStore.rawUserData.id != 1132){
-        alert('no autorizado')
-        router.push('/concursos')
-    }
+   
 
     contest_entry_option.value = await contestService.getContestEntryOption()
     content_to_add_contest_form.value.forEach( elem => {
