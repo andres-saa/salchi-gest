@@ -758,6 +758,7 @@ const exportCSV = () => {
     const data = datosFiltrados.map(user => ({
         "Id": user.id,
         "Nombre": user.name,
+        "Jefe inmediato": user.boss_name,
         "Documento": user.dni,
         "Direccion": user.address,
         "Cargo": user.position,
@@ -801,6 +802,7 @@ const exportCSV = () => {
     worksheet["!cols"] = [
         { wch: Math.max(8, "Id".length) },
         { wch: Math.max(40, "Nombre".length) },
+        { wch: Math.max(40, "Jefe inmediato".length) },
         { wch: Math.max(12, "Documento".length) },
         { wch: Math.max(20, "Direccion".length) },
         { wch: Math.max(20, "Cargo".length) },
