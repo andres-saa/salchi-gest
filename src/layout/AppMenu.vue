@@ -50,6 +50,27 @@ async function fetchAndUpdateRoles() {
     //     ]
     // },
 
+    {
+    label: 'RECOLECCION DE DATOS',
+    icon: 'fa-solid fa-plug', // Mejor para representar integraciones
+    'icon-color': 'magenta', // Verde lima
+    permision_id: get_id([64]),
+    items: [
+
+
+    { 
+        label: 'Email clientes por codigo', 
+        icon: 'fa-solid fa-file', // Representa la distribución de alimentos
+        permision_id: get_id([64]), 
+        'icon-color': '#FF4500',
+        to: '/usuarios-email',
+    
+    },
+     
+    ]
+},
+    
+
 
     {
     label: 'INTEGRACIONES',
@@ -146,18 +167,7 @@ async function fetchAndUpdateRoles() {
                 permision_id: get_id([62]),
             },
 
-            
-            // {
-            //     label: 'Cajeros',
-            //     icon: 'fa-solid fa-cash-register',
-            //     'icon-color': '#FF69B4', // Rosa vibrante
-            //     items: [
-            //         { label: 'Reportes', icon: 'fa-solid fa-file-invoice-dollar', to: '/cachier-money/reportes/', permision_id: 1, 'icon-color': '#FF1493' }, // Rosa oscuro
-            //         { label: 'Registros', icon: 'fa-solid fa-book', to: '/cachier-money/registros/', permision_id: 1, 'icon-color': '#ADFF2F' }, // Verde amarillento
-            //         { label: 'Salidas', icon: 'fa-solid fa-money-bill-trend-up', to: '/cachier-money/salidas/', permision_id: 1, 'icon-color': '#00CED1' }, // Turquesa
-            //     ],
-            //     permision_id: get_id([1,2,3,4,5,6,7]),
-            // }
+
         ]
     },
 

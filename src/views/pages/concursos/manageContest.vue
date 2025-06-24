@@ -168,13 +168,13 @@
 
 
     
-    <column style="min-width: 12rem;" class="py-1" header="Quien va ganando?" field="formattedStartDate">
+    <!-- <column style="min-width: 12rem;" class="py-1" header="Quien va ganando?" field="formattedStartDate">
         <template #body="data">
            
-            <p style="text-transform: capitalize;min-width: max-content;"> {{ data.data.rbq[0]?.name?.split(' ')?.slice(0,3)?.join(' ')?.toLowerCase() }}</p>
+            <p style="text-transform: capitalize;min-width: max-content;"> {{ data?.data?.rbq[0]?.name?.split(' ')?.slice(0,3)?.join(' ')?.toLowerCase() }}</p>
 
         </template>
-    </column>
+    </column> -->
 
 
     <column style="min-width: 20rem;" class="py-1" header="Instrucciones" field="formattedStartDate">

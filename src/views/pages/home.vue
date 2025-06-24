@@ -47,32 +47,10 @@
             style="border-radius: 1rem; display: flex; flex-direction: column; gap: 1rem;"
           >
             <!-- Encabezado del submenú si tiene sub-items -->
-            <div
-              v-if="m.items"
-              :style="`background-color: ${m.color}`"
-              class="p-3"
-              style="display: flex; align-items: center; padding: 0.3rem; gap: 1rem; border-radius: 0.5rem;"
-            >
-              <b><span class="text-white">{{ m.label }}</span></b>
-            </div>
+           
   
-            <RouterLink :to="m.to"  v-else>  
-            <div
-             
-      
-              class="px-3 hover"
-              style="display: flex; align-items: center; padding: 0.3rem; gap: 1rem; border-radius: 10rem 0 0 10rem;"
-            > 
-              <div class=""
-                :style="`background-color:${m.color}`"
-                style="width: 3rem; height: 3rem; border-radius: 50%; display: flex; justify-content: center; align-items: center;"
-              >
-                <i class="text-white text-2xl" :class="m.icon"></i>
-              </div>
-         
-                  <span class="text-white">{{ m.label }}</span>
-              
-            </div>
+            <RouterLink :to="m.to" >  
+            
         </RouterLink>
             <!-- Iterar sobre los sub-items del submenú -->
             <div v-for="m2 in m.items?.slice(0, 5)" :key="m2.label">
@@ -89,7 +67,7 @@
             
                     <span class="text-white">{{ m2.label }}</span>
 
-               
+               <Tag class="nuevo" v-if="m2.nuevo"> Nuevo</Tag>
               </div>
 
             </RouterLink>
@@ -110,16 +88,18 @@ const model = [
         color: 'red', // Amarillo
         items: [
             {
-                label: 'Para Bryan y Juan',
+                label: 'Master',
                 icon: 'fa-solid fa-key',
                 color: 'red', // Verde
                 items: [
-                    { label: 'Base de clientes', icon: 'fa-solid fa-key', to: '/customers/', permision_id: 800, color: 'red' }, // Turquesa
+                    { label: 'Base de clientes', icon: 'fa-solid fa-key', to: '/customers/', permision_id: 800, color: 'red', nuevo:false }, // Turquesa
+                     { label: 'Codigos redimidos', icon: 'fa-solid fa-key', to: '/usuarios-email/', permision_id: 800, color: ' magenta', nuevo:true }, // Turquesa
                     // { label: 'recetas', icon: 'fa-solid fa-utensils', to: '/recetario/recetas/', permision_id: 8, color: '#00C9A7' },
                     // { label: 'Configuracion', icon: 'fa-solid fa-gears', to: '/recetario/configuracion/', permision_id: 13, color: '#00C9A7' },
                     // { label: 'Resumen Beneficio', icon: 'fa-solid fa-chart-pie', to: '/recetario/recipe-sumary-benefit/', permision_id: 14, color: '#00C9A7' },
                 ]
             },
+             
             
         ]
     },
@@ -414,7 +394,7 @@ import Sonando from './Sonando.vue';
 import sesion from './callCenter/sesion.vue';
 
 
-const elegidos = [1132,1082,1250]
+const elegidos = [1132,1082]
 
 
 function tienePermiso(item) {
@@ -497,6 +477,29 @@ const permisions = loginStore()
 }
 
 .hover:hover{
-    transform: scale(1.1);
+    transform: translatex(1rem);
+    
+}
+
+.nuevo {
+    animation: nuevo  1s infinite;
+}
+
+
+
+@keyframes nuevo {
+  0% {
+    background-color: #FFD93D;
+    color: #000;
+  }
+  50% {
+    background-color: #ff0000;
+    color: #fff;
+  }
+  100% {
+    background-color: #FFD93D;
+    color: #000;
+  }
+    
 }
 </style>

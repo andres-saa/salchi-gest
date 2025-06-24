@@ -556,6 +556,13 @@ const router = createRouter({
           name: 'completed-concursos',
           component: () => import('@/views/pages/concursos/CompletedConcursos.vue')
         },
+
+        
+        {
+          path: '/usuarios-email/',
+          name: 'usuarios-email',
+          component: () => import('@/views/pages/codes/userEmail.vue')
+        },
         {
           path: '/manage-concursos/',
           name: 'manage-concursos',
