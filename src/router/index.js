@@ -392,6 +392,19 @@ const router = createRouter({
           name: 'video-training-videos-sesion',
           component: () => import('@/views/pages/training_video/admin/training_video_sesion.vue')
         },
+        {
+          path: '/atencion-cliente',
+          name: 'atencion-cliente',
+          component: () => import('@/views/pages/atencionCliente/layout.vue'),
+          children: [
+                {
+                  path: '/atencion-cliente/pqrs/:pqr_status_id/:pqr_status_name',
+                  name: 'atencion-cliente-pqr',
+                  component: () => import('@/views/pages/atencionCliente/sesion.vue')
+                },
+          ]
+        },
+
 
         {
           path: '/video-training-sequence-admin/:sesion_name/:sesion_id',

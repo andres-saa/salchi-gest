@@ -5,7 +5,7 @@
  
      <Sidebar style="       box-shadow: .5rem 0 1rem #00000010;" class="sidebar-left" :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}"  />
      <Main />
-     <Sidebar style="       box-shadow: -.5rem 0 1rem #00000010;"  class="sidebar-right" :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}" />
+     <!-- <Sidebar style="       box-shadow: -.5rem 0 1rem #00000010;"  class="sidebar-right" :restaurant=" {id:1,name:'Salchimonster',img:'https://backend.salchimonster.com/read-photo-product/xai0dVnL'}" /> -->
     </div>
     
     
@@ -30,7 +30,7 @@
     .chat-container{
         display: grid;
         /* margin-top: 3rem; */
-        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-columns: 1fr 2fr ;
         height: 100vh;
         min-width: 1268px;
         /* padding: .5rem !important; */

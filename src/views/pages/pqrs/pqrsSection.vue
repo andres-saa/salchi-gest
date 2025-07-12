@@ -259,10 +259,6 @@
 <div style="">
 
 
-    
-    
-    
-    
         <nav class="nav_bar shadow-2 p-0 my-0 mx-3" style="position: sticky;top: 3rem;max-width: 96vw;left: 0; background-color: white;z-index: 99;">
             <ul class="nav_bar--buttons p-0 m-1" style="">
            
@@ -281,11 +277,11 @@
                      
                        
                      <Tag :style="`background-color:#c55a11`"  style="height: 1.3rem;aspect-ratio: 1 / 1;border-radius: 50%;"></Tag> <Button  @click="() => {active_button_nav = {id: 60,
-        name: 'Filtradas',
-        color: '#c55a11',
-        exist: true
-    } ; login.currentSection_pqr = options[0] }" class="nav_bar--buttons-button p-2" :class="60 == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" label="Filtradas"></Button>
-   
+                            name: 'Filtradas',
+                            color: '#c55a11',
+                            exist: true
+                        } ; login.currentSection_pqr = options[0] }" class="nav_bar--buttons-button p-2" :class="60 == active_button_nav.id? 'nav_bar--buttons-button-selected': ''" label="Filtradas"></Button>
+                    
                   </li>
 
                     
@@ -1232,10 +1228,6 @@ const downloadPQRExcel = async () => {
     const dataColumns = ref( [
     
     
-    
-    
-    
-    
        {
            columnName:'Id',
            columnValue:'pqr_request_id',
@@ -1824,7 +1816,3 @@ const downloadPQRExcel = async () => {
     box-shadow: 0 .3rem 0px var(--primary-color);
     }
     </style>
-    
-    
-    
-    

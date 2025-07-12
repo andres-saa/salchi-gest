@@ -494,7 +494,7 @@ const current = ref( { label: 'SIN LEER',    bg: '#f39c12', icon: 'fa-solid fa-e
 const totalUnread  = ref(0)
 
 /* ░░░  PAGINACIÓN  ░░░ */
-const LIMIT        = 1000   // tamaño de página
+const LIMIT        = 100   // tamaño de página
 let   offset       = 0          // cuántas filas omitir
 const loadingMore  = ref(false)
 const finished     = ref(false)

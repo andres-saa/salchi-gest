@@ -2,8 +2,10 @@
 <template>
 
 
-<Dialog v-model:visible="difundiendo" modal header="Difundir Plantilla" style="width:100vw;max-width: 80rem;background-color: white;">
-    <div style="height: 100%;">
+  <!-- ░░░ Diálogo de difusión ░░░ -->
+  <Dialog v-model:visible="difundiendo" modal header="Difundir Plantilla" style="width:100vw;max-width: 80rem;background-color: white;">
+    <div style="height: 100%; overflow-y: auto;">
+      <!-- ░░░ Datos básicos de la plantilla ░░░ -->
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); max-width:max-content;gap:.5rem; align-items: center;">
         <h6 class="m-0 p-0"> <strong>Id plantilla :</strong></h6> <h6 class="m-0 p-0">{{ selectedTemplate?.id }}</h6>
         <h6 class="m-0 p-0"> <strong>Nombre plantilla :</strong></h6> <h6 class="m-0 p-0">{{ selectedTemplate?.name }}</h6>
@@ -14,16 +16,16 @@
           {{ selectedTemplate?.components?.find(c => c.type == 'BODY')?.text }}
         </h6>
         <h6 class="m-0 p-0"> <strong>Foto :</strong></h6>
-
-        <img style="height: 10rem;width: 10rem;aspect-ratio: 1 / 1 ; object-fit: cover;border-radius: .5rem;border: 1px solid;" :src="selectedTemplate?.components?.find(c => c.type == 'HEADER')?.example?.header_handle[0]
-        " alt="">
-     
+        <img
+          style="height: 10rem;width: 10rem;aspect-ratio: 1 / 1 ; object-fit: cover;border-radius: .5rem;border: 1px solid;"
+          :src="selectedTemplate?.components?.find(c => c.type == 'HEADER')?.example?.header_handle[0]" alt=""
+        />
       </div>
 
+      <!-- ░░░ Imagen para este envío ░░░ -->
       <h5 class="mt-4 mb-1"><strong>Imagen para este envío</strong></h5>
       <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
         <input type="file" accept="image/*" @change="onHeaderUpload" />
-        <!-- Vista previa → solo si ya se cargó -->
         <img
           v-if="templateHeaderUrl"
           :src="templateHeaderUrl"
@@ -32,52 +34,51 @@
         />
       </div>
 
-      <h5><strong>Usuarios</strong></h5>
-      <div class="statuses" style="display: flex; gap: 1rem;">
-        <Button
-          v-for="(button, index) in colorMap"
-          :key="index"
-          style="height: 2.3rem; border-radius: .3rem; padding: .5rem;"
-          text
-          @click="toggleStatus(button)"
-          class="status"
-          :label="button.label"
-          :style="selectedStatuses.includes(button.label)
-            ? { backgroundColor: button.bg, color: '#fff' }
-            : { backgroundColor: '#ffffff20', color: button.bg }"
-        />
+      <!-- ░░░ Carga de Excel con números ░░░ -->
+      <h5 class="mt-4 mb-1"><strong>Archivo Excel con números</strong></h5>
+      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+        <input type="file" accept=".xls,.xlsx" @change="onExcelUpload" />
+        <p v-if="phoneNumbers.length" class="m-0">Cargados {{ phoneNumbers.length }} números</p>
       </div>
 
-      <div style="width: 100%; height: 50vh; margin-top: 1rem;">
-        <DataTable :rows="10" paginator
-                   stripedRows showGridlines
-                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                   :rowsPerPageOptions="[5,10,15,25,100]"
-                   currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes"
-                   responsiveLayout="scroll" scrollable
-                   :value="filteredUsers" header="clientes">
-          <Column class="py-1" header="Nombre" field="nombre" />
-          <Column class="py-1" header="Número" field="wa_id" />
-          <Column class="py-1" header="Clasificación" field="clasification" />
-        </DataTable>
+      <!-- ░░░ Selección de rango ░░░ -->
+      <h5 class="mt-4 mb-1"><strong>Rango de filas (máx. 800 mensajes)</strong></h5>
+      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+        <InputNumber v-model="startRow" :min="1" :max="phoneNumbers.length" placeholder="Fila inicial" :disabled="!phoneNumbers.length" />
+        <InputNumber v-model="endRow"   :min="1" :max="phoneNumbers.length" placeholder="Fila final"   :disabled="!phoneNumbers.length" />
+        <p v-if="selectedRecipients.length" class="m-0">Se enviarán {{ selectedRecipients.length }} mensajes</p>
       </div>
+      <p v-if="selectedRecipients.length > 800" style="color:red;">⚠️ Máximo permitido 800 mensajes. Ajusta el rango.</p>
 
-      
+      <!-- ░░░ Vista previa de números ░░░ -->
+      <h5 class="mt-4 mb-1"><strong>Vista previa</strong> <small class="opacity-70">(Verás si cada número entra en el rango)</small></h5>
+      <DataTable :value="phoneNumbersTable" scrollable scroll-height="30vh" :rows="10" paginator
+                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
+                 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} números"
+                 :rowClass="rowClass" v-if="phoneNumbers.length">
+        <Column field="index" header="#" style="width:4rem" />
+        <Column field="number" header="Número" />
+        <Column header="Seleccionado">
+          <template #body="{data}">
+            <Tag :severity="data.selected ? 'success' : 'secondary'">{{ data.selected ? 'Sí' : 'No' }}</Tag>
+          </template>
+        </Column>
+      </DataTable>
     </div>
 
     <template #footer>
-        <Button label="Cancelar" text severity="secondary" @click="difundiendo=false" />
-        <Button 
-          label="Enviar a todos" 
-          severity="help" 
-          icon="pi pi-broadcast" 
-          :loading="sendingBulk" 
-          @click="broadcastTemplate" 
-          autofocus 
-        />
-      </template>
+      <Button label="Cancelar" text severity="secondary" @click="difundiendo = false" />
+      <Button
+        label="Enviar"
+        severity="help"
+        icon="pi pi-broadcast"
+        :loading="sendingBulk"
+        @click="broadcastTemplate"
+        :disabled="selectedRecipients.length === 0 || selectedRecipients.length > 800 || !templateHeaderUrl"
+        autofocus
+      />
+    </template>
   </Dialog>
-
   
   <div class="p-4 templates-container" style=" margin: auto; background-color: white;border-radius: 1rem;transition: all .3s ease;max-height: 90vh;">
     <!-- Encabezado y búsqueda -->
@@ -253,6 +254,8 @@ import { fetchService } from '@/service/utils/fetchService'
 import { URI_MESSAGES,URI } from '@/service/conection'
 import { loginStore } from '@/store/user';
 import { useChatStore } from '@/store/chat'
+import * as XLSX from 'xlsx'
+
 
 const login = loginStore()
 const chatStore = useChatStore()
@@ -408,6 +411,27 @@ onMounted( async() => {
   }
   fetchTemplates
 })
+
+function reloadExcel () {
+  // Abre selector de archivo sin borrar datos hasta que se cargue uno nuevo
+  excelInput.value?.click()
+}
+
+const selectedRecipients = computed(() => {
+  if (!phoneNumbers.value.length) return []
+  const s = Math.max(1, Math.min(startRow.value, phoneNumbers.value.length))
+  const e = Math.max(s, Math.min(endRow.value, phoneNumbers.value.length))
+  return phoneNumbers.value.slice(s - 1, e)
+})
+
+/* ► Datos para la tabla y estilos de fila */
+const phoneNumbersTable = computed(() => phoneNumbers.value.map((n, i) => {
+  const selected = i >= (startRow.value - 1) && i <= (endRow.value - 1)
+  return { index: i + 1, number: n, selected }
+}))
+
+const rowClass = data => data.selected ? 'selected-row' : ''
+
 
 
 const openToDifundir = (template) => {
@@ -580,6 +604,36 @@ function statusSeverity(s){ return {APPROVED:'success',PENDING:'warning',REJECTE
 function resetForm(){ form.value={name:'',category:'UTILITY',language:'es_ES'}; bodyText.value=''; buttons.value=[]; examples.value={}; editingId.value=null }
 function openNew(){ resetForm(); dialogVisible.value=true }
 
+
+
+const phoneNumbers = ref([])       // ← todos los números del Excel
+const startRow     = ref(1)
+const endRow       = ref(1)
+
+async function onExcelUpload (e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  try {
+    const data = await file.arrayBuffer()
+    const workbook = XLSX.read(data, { type: 'array' })
+    const sheet = workbook.Sheets[workbook.SheetNames[0]]
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 })
+
+    const nums = rows
+      .map(r => r?.[0])
+      .filter(v => v !== undefined && v !== null)
+      .map(v => String(v).replace(/\D/g, ''))
+      .filter(v => /^\d{6,15}$/.test(v))
+
+    phoneNumbers.value = nums
+    startRow.value     = 1
+    endRow.value       = Math.min(nums.length, 800)
+  } catch (err) {
+    console.error('✗ Error leyendo Excel:', err)
+  }
+  // Limpia input para permitir recargar mismo archivo si se desea
+  e.target.value = ''
+}
 
 const imageHeader = ref({})
 /* título del diálogo */

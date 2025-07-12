@@ -34,7 +34,7 @@
      
 
           <div>
-                          <Button
+                          <!-- <Button
                 v-if="chatStore.current_user.clasification"
                 :style="{
                   height: '2.3rem',
@@ -46,16 +46,16 @@
                   color: '#fff'
                 }"
               >
-                <!-- Ícono -->
+
                 <i 
                   :class="['fa-solid', colorMap[chatStore.current_user.clasification]?.icon]"
                   aria-hidden="true"
                   style="font-size: 0.9rem"
                 ></i>
 
-                <!-- Texto -->
+  
                 {{ chatStore.current_user.clasification?.toLowerCase() }} {{ chatStore.current_user.times_purchased }} compras
-              </Button>
+              </Button> -->
 
           </div>
     
@@ -74,10 +74,10 @@
 
       <div style="display:flex;align-items:center;gap:1rem;">
      
-        <Button icon="pi pi-shopping-cart" class="p-2"
+        <!-- <Button icon="pi pi-shopping-cart" class="p-2"
                 style="color:white;min-width:max-content;" severity="warning" label="Ing. Ped"/>
 
-                
+                 -->
         <Button text class="p-2"><i :style="chatTheme.current_chat_theme.text" class="pi pi-search text-2xl "/></Button>
         <Button text class="p-2"><i :style="chatTheme.current_chat_theme.text" class="pi pi-bars text-2xl "/></Button>
       </div>
