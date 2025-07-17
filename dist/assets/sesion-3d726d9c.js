@@ -1,1 +1,0 @@
-import{C as e,o as s,c as a,t as o,u as r}from"./index-282fd2e4.js";const n={style:{"font-weight":"bold","text-transform":"capitalize",margin:"2rem 1rem"}},p={__name:"sesion",setup(c){const t=e();return(_,m)=>(s(),a("h2",n,o(r(t).params.pqr_status_name),1))}};export{p as default};

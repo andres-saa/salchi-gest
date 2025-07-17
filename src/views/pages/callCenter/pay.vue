@@ -139,6 +139,8 @@
               style="width: 100%;"
               prefix="$"
               min="0"
+              :maxFractionDigits="2"
+
               v-model="siteStore.location.neigborhood.delivery_price"
               id="payment_method"
               placeholder="Domicilio"
