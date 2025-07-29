@@ -119,9 +119,9 @@
               id="payment_method"
               placeholder="METODO DE PAGO"
               :options="
-                siteStore.location?.site?.site_id === 33
+                [33,35,36].includes(siteStore.location?.site?.site_id)
                   ? payment_method_options.filter(option => [6, 8].includes(option?.id))
-                  : siteStore.location?.site?.site_id !== 33
+                  : ![33,35,36].includes(siteStore.location?.site?.site_id)
                   ? payment_method_options.filter(option => ![7].includes(option?.id))
                   : payment_method_options  
               "
