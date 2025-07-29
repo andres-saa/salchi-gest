@@ -123,7 +123,7 @@ const router = createRouter({
           {
             path: '/chat',
             name: 'chat',
-            component: () => import('@/views/pages/chat/chat.vue'),
+            component: () => import('@/views/pages/chat/Chat.vue'),
             children:[
 
               {
@@ -1370,7 +1370,7 @@ const router = createRouter({
             {
               path: '/cartas/:carta_id/:carta_name',
               name: 'carta',
-              component: () => import('@/views/pages/Carta.vue'),
+              component: () => import('@/views/pages/carta.vue'),
     
             },
           ],
