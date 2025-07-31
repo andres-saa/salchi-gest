@@ -12,7 +12,8 @@ export const useOrderStore = defineStore('cart', {
         storage: localStorage,
         paths: [
             'currentCountOrders',
-            'numberCancellationRequests'
+            'numberCancellationRequests',
+            'marketing_menu'
         ]
 
     },
@@ -31,6 +32,7 @@ export const useOrderStore = defineStore('cart', {
         numberCancellationRequests:0,
         numberTransferRequests:0,
         numberPqrId:0,
+        marketing_menu:[]
 
 
     }),

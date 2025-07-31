@@ -51,6 +51,26 @@ async function fetchAndUpdateRoles() {
     // },
 
     {
+    label: 'MARKETING',
+    icon: 'fa-solid fa-plug', // Mejor para representar integraciones
+    'icon-color': 'magenta', // Verde lima
+    permision_id: get_id([64]),
+    items: [
+
+
+    { 
+        label: 'Descuentos', 
+        icon: 'fa-solid fa-file', // Representa la distribución de alimentos
+        permision_id: get_id([64]), 
+        'icon-color': '#FF4500',
+        to: '/marketing/discounts',
+    
+    },
+     
+    ]
+},
+
+    {
     label: 'RECOLECCION DE DATOS',
     icon: 'fa-solid fa-plug', // Mejor para representar integraciones
     'icon-color': 'magenta', // Verde lima

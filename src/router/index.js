@@ -41,6 +41,25 @@ const router = createRouter({
         },
 
         {
+          path:'/marketing',
+          name:'marketing',
+          component: () => import('@/views/pages/marketing/index.vue'),
+          children:[
+            {
+              path:'/marketing/discounts/',
+              component: import('@/views/pages/marketing/discounts.vue'),
+              name:'discounts'
+            },
+            {
+              path:'/marketing/discounts/:discount_id/edit/',
+              component: import('@/views/pages/marketing/discountEdit.vue'),
+              name:'discountEdit'
+            }
+            
+          ]
+        },
+
+        {
           path: '/hiring/',
           name: 'hiring',
           component: () => import('@/views/pages/hiring/requester/Vacancies.vue'),
@@ -857,6 +876,14 @@ const router = createRouter({
           path: '/validate',
           name: 'validate',
           component: () => import('@/views/pages/tienda/ValidateSection.vue'),
+          
+          
+        },
+
+        {
+          path: '/pay-orders',
+          name: 'pay-orders',
+          component: () => import('@/views/pages/tienda/paysection.vue'),
           
           
         },
