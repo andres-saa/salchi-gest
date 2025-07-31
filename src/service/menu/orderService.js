@@ -61,6 +61,35 @@ export const orderService = {
 
 
     
+    async getOrdersPay() {
+        const store = useReportesStore()
+        
+        try {
+            store.setLoading(true)
+            const response = await axios.get(`${URI}/order-to-pay`);
+            if (response.status === 200) {
+                store.setLoading(false)
+
+                return response.data;
+            } else {
+                console.error('An error occurred while fetching the ingredients:', response.status);
+                store.setLoading(false)
+
+                return null;
+            }
+
+        } catch (error) {
+            store.setLoading(false)
+
+            console.error('An error occurred while fetching the ingredients:', error);
+            return null;
+        }
+
+    },
+
+
+
+    
     async getOrdersValidateDistri() {
         const store = useReportesStore()
         

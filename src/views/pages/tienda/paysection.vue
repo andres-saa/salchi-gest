@@ -70,11 +70,11 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 </template>
 
 
-<Column style="" class="py-1 " field="order_id" header="ID orden" frozen />
+<Column style="min-width: max-content;" class="py-1 " field="order_id" header="ID orden" frozen />
 <!-- <Column style="" class="py-1 " field="Metodo de pago" header="ID orden" frozen /> -->
 <Column style="" class="py-1 " field="total_order_price" header="Monto de la orden"  >
 <template #body="data">
-    {{formatToColombianPeso(data.data.total_order_price)   }}
+    {{formatoPesosColombianos(data.data.total_order_price) || '$ 0'   }}
 </template>
 </Column>
 
@@ -108,7 +108,14 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 <Column style="" class="py-1" field="user_phone" header="Telefono cliente"  />
 <!-- <Column style="" class="py-1 " field="user_phone" header="ID orden" frozen /> -->
 
-<Column style="max-width: 10rem;" class="py-1 " field="order_notes" header="Notas"  />
+<Column style="max-width: 10rem;" class="py-1 " > 
+
+
+    <template>
+
+    </template>
+
+</Column>
 
 
 
@@ -119,7 +126,7 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
         
             <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="open(data.data)" style="height: 1.8rem;width: 2rem;" severity="info" class="p-1" icon="pi pi-eye" />
 
-            <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="show(data.data.order_id)" style="height: 1.8rem;" label="Copiar link" severity="help" class="py-1" icon="pi pi-copy" />
+            <Button size="" v-if="route.params.request_status != 'aprobadas'" @click="copyToClipboard(data.data)" style="height: 1.8rem;min-width: max-content;" label="Copiar link" severity="help" class="py-1" icon="pi pi-copy" />
             <!-- <Button v-if="route.params.request_status != 'rechazadas'" @click="show(false,data.data.id)" style="height: 1.8rem;width: 2rem;background:var(--primary-color);border:none"  severity="danger" class="p-1"
             icon="pi pi-times" /> -->
 
@@ -197,7 +204,7 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 </template>
 
 <script setup>
-
+import { useToast } from 'primevue/usetoast';
 import {ref,onMounted,onBeforeMount,watch,onUnmounted} from 'vue'
 import {PathService} from '@/service/pathService.js'
 import { formatToColombianPeso, salesReport } from '@/service/valoresReactivosCompartidos';
@@ -212,6 +219,7 @@ import { months } from 'moment-timezone';
 import {formatDateTime, extraerHora} from '@/service/formating/formatDate.js'
 import { fetchService } from '../../../service/utils/fetchService';
 import { URI } from '../../../service/conection';
+import { formatoPesosColombianos } from '../callCenter/service/utils/formatoPesos';
 // import { transform } from 'html2canvas/dist/types/css/property-descriptors/transform';
 
 
@@ -478,7 +486,7 @@ onMounted(async() => {
 
 // Función para cargar las Transferencias de cancelación
 const fetchTransferRequests = async () => {
-    TransferRequests.value = await orderService.getOrdersValidate();
+    TransferRequests.value = await orderService.getOrdersPay();
 
 };
 
@@ -498,7 +506,40 @@ watch(()=> route.params.request_status, async() => {
 },{deep:true})
 
 
+const toast = useToast()
 
+
+
+async function copyToClipboard (data) {
+  const texto =  `https://salchimonster.com/pagar/${data.order_id}`
+
+
+  try {
+    // Método moderno (requiere HTTPS)
+    await navigator.clipboard.writeText(texto)
+    toast.add({
+      severity: 'success',
+      summary: '¡Copiado!',
+      detail: 'El enlace se copió al portapapeles',
+      life: 2500
+    })
+  } catch (err) {
+    /* Fallback para navegadores antiguos */
+    const temp = document.createElement('input')
+    temp.value = texto
+    document.body.appendChild(temp)
+    temp.select()
+    document.execCommand('copy')
+    temp.remove()
+
+    toast.add({
+      severity: 'info',
+      summary: 'Copiado con método alternativo',
+      detail: 'Tu navegador no soporta la API moderna de portapapeles',
+      life: 3000
+    })
+  }
+}
 
 
 </script>
