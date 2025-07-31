@@ -110,7 +110,48 @@
                     style="min-width: max-content;"></Button> -->
             </div>
             <!-- Botones de navegación y acciones -->
-           
+
+
+
+            <div>
+
+            </div>
+
+
+            <router-link to="/call-center-vender/pay"
+                v-if="route.path.includes('cart') ">
+                <Button iconPos="right" icon="pi pi-arrow-right" label="Pedir"
+                    class="43f2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
+                    severity="help"></Button>
+            </router-link>
+
+            <!-- Botón “Finalizar pedido” al reservar -->
+            <router-link to="/pay" v-else-if="route.path.includes('reservas')">
+                <Button @click="() => {
+                    orderService.sendOrderReserva()
+                    sending = true
+                }" iconPos="right" icon="pi pi-arrow-right" label="Finalizar pedido"
+                    class="43f2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
+                    severity="help"></Button>
+            </router-link>
+
+            <!-- Botón “Finalizar pedido” si el restaurante no está cerrado -->
+            <router-link to="/pay"
+                v-else-if="siteStore.status?.status !== 'closed' && siteStore.status?.status && route.path == '/cart'">
+                <Button iconPos="right" icon="pi pi-arrow-right" label="Finalizar pedido"
+                    class="43f2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
+                    severity="help"></Button>
+            </router-link>
+
+
+            <Button :disabled = "reportes.loading.visible"
+                v-else-if=" route.path == '/call-center-vender/pay' && !reportes.loading.visible"
+                @click="() => {
+                    orderService.sendOrder()
+                    sending = true
+                }" iconPos="right" icon="pi pi-arrow-right" label="Finalizar pedido"
+                class="43f2 button-common button-black button-fullwidth button-bold button-no-border button-no-outline"
+                severity="help"></Button>
         </div>
     </div>
 </template>
@@ -151,11 +192,7 @@ const agrupados = ref({});
 onMounted(() => {
     // update();
 
-    if (user.user.payment_method_option?.id != 7 && !route.path.includes('reservas'))
-        siteStore.setNeighborhoodPrice();
-    else {
-        siteStore.setNeighborhoodPriceCero();
-    }
+
 });
 
 watch(
@@ -176,7 +213,7 @@ watch(
     padding: 1rem;
     max-height: min-content;
     background-color: white;
-    box-shadow: 0 1rem 1rem #00000020;
+    /* box-shadow: 0 1rem 1rem #00000020; */
     top: 9rem;
     border-radius: 0.5rem;
     z-index: 10;

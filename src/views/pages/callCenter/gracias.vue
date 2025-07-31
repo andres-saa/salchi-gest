@@ -1,12 +1,12 @@
 <template>
   <div class="p-2 col-12 my-6"
       style="height: auto;min-height: 90vh;padding: .5rem; display: flex;gap:rem; justify-content: center; align-items: center;">
-      <div class="shadow-7 p-4"
-          style="border-radius: 0.5rem; max-width: 500px;display: flex;flex-direction: column;gap: .5rem;font-size: 1.3rem;">
-          <p class="text-4xl text-center mt-5" style="font-weight: bold;text-align: center;"> 🤩{{ user.user.name.toUpperCase() }}🤩</p>
-          <p class="text-2xl text-center " style="font-weight: bold;text-align: center;">🔥MUCHAS GRACIAS POR TU COMPRA!🔥</p>
+      <div class="shadow-7 p-0"
+          style="border-radius: 0.5rem; max-width: 500px;display: flex;flex-direction: column;gap: 0rem;font-size: 1.3rem;">
+          <p class="text-4xl text-center m-0" style="font-weight: bold;text-align: center;"> 🤩{{ user.user.name.toUpperCase() }}🤩</p>
+          <p class="text-2xl text-center m-0 " style="font-weight: bold;text-align: center;">🔥MUCHAS GRACIAS POR TU COMPRA!🔥</p>
 
-          <p class="text-4xl text-center my-5" style="font-weight: bold; text-transform: uppercase;text-align: center;"> <span
+          <p class="text-4xl text-center my-0" style="font-weight: bold; text-transform: uppercase;text-align: center;"> <span
                   class="text-2xl">ID DEL PEDIDO</span> <br> #{{ store.last_order }}</p>
 
 
@@ -37,26 +37,14 @@
           </div>
 
 
-          <div style="display: flex;flex-direction: column;gap: 1rem;">
+          <div style="display: flex;gap: 1rem;padding: 1rem;min-width  : 100%;">
 
 
-              <a href="https://www.salchimonster.com/rastrear-pedido/">
-                  <Button class="mt-3" icon="pi " iconPos="right" severity="warning"
-                       style="font-weight: bold; width: 100%;" label="PUEDES RASTREARLO AQUI"></Button>
-              </a>
+          
+            <div style="width:100%;">  <InputText style="width: 100%;" :value="`https://salchimonster.com/pagar/${store.last_order}`"> </InputText>  </div>
 
-
-              <a v-if="user.user.payment_method_option.id == 6" :href="whatsappUrl" target="_blank"> <Button
-                      icon="pi pi-whatsapp" severity="danger" class="wsp"
-                      style="font-weight: bold;background-color: #00b66c; border: none; width: 100%;"
-                      label="REALIZAR TRANSFERENCIA"></Button>
-              </a>
-              <router-link to="/call-center-vender/">
-                  <Button icon="pi pi-arrow-left" severity="danger" outlined
-                      style="font-weight: bold; border: none; width: 100%;" label="VOLVER AL MENU"></Button>
-              </router-link>
-
-
+            <Button       @click="copyToClipboard"
+ style="min-width:max-content;" label="Copiar link " icon="pi pi-copy" severity="help"></Button>
 
 
           </div>
@@ -71,7 +59,7 @@ import { ref, onMounted, onBeforeUnmount, onBeforeMount, computed, onUnmounted }
 import { usecartStore } from './store/shoping_cart';
 import { useUserStore } from './store/user'
 import { useSitesStore } from "./store/site";
-
+import { useToast } from 'primevue/usetoast';
 import resumenGracias from './ResumenGracias.vue';
 
 const text = ref('');
@@ -80,6 +68,16 @@ const user = useUserStore()
 import { useReportesStore } from './store/ventas';
 
 const reportes = useReportesStore()
+const toast = useToast()
+
+
+
+
+
+const linkPago = computed(
+  () => `https://salchimonster.com/pagar/${store.last_order}`
+)
+
 
 const obtenerHoraFormateadaAMPM = (fecha) => {
   const fechaParseada = new Date(fecha);
@@ -95,6 +93,35 @@ const obtenerHoraFormateadaAMPM = (fecha) => {
 
 
 
+
+async function copyToClipboard () {
+  const texto = linkPago.value
+  try {
+    // Método moderno (requiere HTTPS)
+    await navigator.clipboard.writeText(texto)
+    toast.add({
+      severity: 'success',
+      summary: '¡Copiado!',
+      detail: 'El enlace se copió al portapapeles',
+      life: 2500
+    })
+  } catch (err) {
+    /* Fallback para navegadores antiguos */
+    const temp = document.createElement('input')
+    temp.value = texto
+    document.body.appendChild(temp)
+    temp.select()
+    document.execCommand('copy')
+    temp.remove()
+
+    toast.add({
+      severity: 'info',
+      summary: 'Copiado con método alternativo',
+      detail: 'Tu navegador no soporta la API moderna de portapapeles',
+      life: 3000
+    })
+  }
+}
 
 
 
