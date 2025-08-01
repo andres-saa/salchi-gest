@@ -93,9 +93,6 @@ const obtenerHoraFormateadaAMPM = (fecha) => {
 
 
 
-const linkPago = computed(
-  () => `https://salchimonster.com/pagar/`
-)
 
 
 async function copyToClipboard () {

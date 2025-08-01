@@ -119,11 +119,11 @@
               id="payment_method"
               placeholder="METODO DE PAGO"
               :options="
-                [33,35,36].includes(siteStore.location?.site?.site_id)
-                  ? payment_method_options.filter(option => [6, 8].includes(option?.id))
-                  : ![33,35,36].includes(siteStore.location?.site?.site_id)
-                  ? payment_method_options.filter(option => ![7].includes(option?.id))
-                  : payment_method_options  
+                siteStore.location?.site?.site_id === 33 || siteStore.location?.site?.site_id === 36 || siteStore.location?.site?.site_id === 35
+                  ? payment_method_options.filter(option => [6, 8].includes(option.id))
+                  : siteStore.location?.site?.site_id !== 33 ||  siteStore.location?.site?.site_id !== 36 || siteStore.location?.site?.site_id !== 35
+                  ? payment_method_options.filter(option => ![7,6,8,5].includes(option.id))
+                  : payment_method_options.filter(option => option.id != 8)
               "
               optionLabel="name"
             />

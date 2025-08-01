@@ -47,19 +47,36 @@
 
 
 <div :style="`transform:translateX(${selectedMode.slide}%)`" class="slider-item">       
-    <DataTable   :paginator="true" :rows="15" :filters="filters"
+    <DataTable  :loading="loading"  :paginator="true" :rows="15" :filters="filters"
 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Transferencias"
 :rowsPerPageOptions="[5, 10, 25, 100]"
 scrollable
 scrollHeight="65vh"
 stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
-:value="TransferRequests" tableStyle="min-width: 50rem;">
+:value="filteredTransferRequests " tableStyle="min-width: 50rem;">
 <template #header>
 <div class="grid" style="align-items:center;justify-content: space-between;">
-    <div class="col-12 md:col-6 p-3"> 
-        <span  class="text-xl" style="width: 100%;"><span style="text-transform: capitalize;"></span> </span>
-    </div>
+  
+
+<div style="display: flex;gap: 2rem;padding: 0 2rem;">
+    <div>
+    <Checkbox v-model="visible.colombia" :binary="true"> </Checkbox> Tiendas Colombia
+</div>
+
+
+<div>
+    <Checkbox v-model="visible.usa" :binary="true"> </Checkbox> Tiendas Usa
+</div>
+
+
+<div>
+    <Checkbox v-model="visible.distri" :binary="true"> </Checkbox> Distrimonster 
+</div>
+
+
+</div>
+
 
     <span class="md:mt-0 p-input-icon-right m-3">
                     <i class="pi pi-search" />
@@ -67,6 +84,14 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
                         placeholder="Buscar Solicitud..." />
                 </span>
 </div>
+</template>
+
+<template #loading>
+
+
+    <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="transparent"
+    animationDuration=".2s" aria-label="Custom ProgressSpinner" />
+    
 </template>
 
 
@@ -205,7 +230,7 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 
 <script setup>
 import { useToast } from 'primevue/usetoast';
-import {ref,onMounted,onBeforeMount,watch,onUnmounted} from 'vue'
+import {ref,onMounted,onBeforeMount,watch,onUnmounted,computed} from 'vue'
 import {PathService} from '@/service/pathService.js'
 import { formatToColombianPeso, salesReport } from '@/service/valoresReactivosCompartidos';
 import OrderItem from '../cocina/OrderItem.vue';
@@ -222,6 +247,41 @@ import { URI } from '../../../service/conection';
 import { formatoPesosColombianos } from '../callCenter/service/utils/formatoPesos';
 // import { transform } from 'html2canvas/dist/types/css/property-descriptors/transform';
 
+
+
+
+
+
+const USA_SITE_IDS     = [33,35,36];
+const COL_SITE_IDS     = [1, 2, 3, 7, 8, 9, 10, 11, 29, 30];
+const DISTRI_SITE_IDS  = [32];
+
+
+const visible = ref({
+  usa:      true,
+  colombia: true,
+  distri:   false,
+});
+
+
+const allTransferRequests = ref([])
+
+
+const filteredTransferRequests = computed(() => {
+  // construir la lista de IDs permitidos según los switches
+  const allowed = new Set([
+    ...(visible.value.usa      ? USA_SITE_IDS    : []),
+    ...(visible.value.colombia ? COL_SITE_IDS    : []),
+    ...(visible.value.distri   ? DISTRI_SITE_IDS : []),
+  ])
+
+  console.log(allowed)
+  // Si ningún switch está activo, devuelvo todo (ajústalo a tu UX)
+//   if (allowed.size === 0) return allTransferRequests.value
+
+  // Filtrar usando el Set (O(1) por lookup)
+  return allTransferRequests.value.filter(r => allowed.has(r.site_id))
+})
 
 
 const sites = ref([])
@@ -289,35 +349,15 @@ const authoize = async( order_id) => {
 }
 
 
-const update = async() => {
-const transfersd = await fetchService.post(`${URI}/transaction_report/`,
-    {
-        "start_date": date_range.value.start_date,
-        "end_date": date_range.value.end_date,
-        "sites": 
-            date_range.value.sites.map(s => s.site_id)
-        
-    }
-
-
-    )
-
-    transfers.value = transfersd
-
-    if (transfersd?.[0]){
-        columnsd.value = Object.keys(transfersd[0]) 
-    }
-
-
-}
 const transfers = ref([])
+const loading = ref(false)
 
 onMounted  (async() => {
 
 
-  
+
     sites.value = await fetchService.get(`${URI}/sites/`)
-    await update()
+
 
 })
 
@@ -486,7 +526,9 @@ onMounted(async() => {
 
 // Función para cargar las Transferencias de cancelación
 const fetchTransferRequests = async () => {
-    TransferRequests.value = await orderService.getOrdersPay();
+    loading.value =  true
+    allTransferRequests.value = await orderService.getOrdersPay();
+    loading.value =  false
 
 };
 

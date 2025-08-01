@@ -65,9 +65,10 @@ export const orderService = {
         const store = useReportesStore()
         
         try {
-            store.setLoading(true)
+            store.setLoading(true,'cargando ordenes')
             const response = await axios.get(`${URI}/order-to-pay`);
             if (response.status === 200) {
+                
                 store.setLoading(false)
 
                 return response.data;
