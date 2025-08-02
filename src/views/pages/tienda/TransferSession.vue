@@ -96,9 +96,22 @@ stripedRows style="" v-model:filters="filters" class="col-12 m-auto"
 </Column>
 
 
-<Column style="" class="py-1 " field="total_order_price" header="Fecha y Hora"  >
-<template #body="data">
-    {{ get_date(data.data.latest_status_timestamp)   }}
+<Column style="" class="py-1 " field="total_order_price" header="Fecha"  >
+<template #body="data"> 
+   
+    {{  data.data.latest_status_timestamp?.split('T')[0].split('-')?.reverse().join('-') }}
+
+    
+</template>
+</Column>
+
+
+<Column style="" class="py-1 " field="total_order_price" header="Hora"  >
+<template #body="data"> 
+   
+    {{  data.data.latest_status_timestamp?.split('T')[1]?.split(':')?.slice(0,2)?.join(':') }}
+
+    
 </template>
 </Column>
 
@@ -247,7 +260,7 @@ const sites = ref([])
 const get_date = (date) => {
 
     const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: true };
 
 
     const fecha = new Date(date).toLocaleDateString('es-ES', opcionesFecha);
