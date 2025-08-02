@@ -118,14 +118,9 @@
               v-model="user.user.payment_method_option"
               id="payment_method"
               placeholder="METODO DE PAGO"
-              :options="
-              siteStore.location?.site?.site_id === 7?  payment_method_options.filter( option => [9,5,8].includes(option.id)) :
-                siteStore.location?.site?.site_id === 33 || siteStore.location?.site?.site_id === 36 || siteStore.location?.site?.site_id === 35
-                  ? payment_method_options.filter(option => [6, 8].includes(option.id))
-                  : siteStore.location?.site?.site_id !== 33 ||  siteStore.location?.site?.site_id !== 36 || siteStore.location?.site?.site_id !== 35
-                  ? payment_method_options.filter(option => ![7,6,8,5].includes(option.id))
-                  : payment_method_options.filter(option => option.id != 8)
-              "
+              :options="paymen_rules?.[siteStore.location?.site?.site_id]"
+             
+              
               optionLabel="name"
             />
           </div>
@@ -195,6 +190,7 @@ import { paymentMethodService } from './service/restaurant/paymentMethodService'
 import { useReportesStore } from './store/ventas';
 // import validate from './validate.vue';
 
+const paymen_rules = ref({})
 
 
 const isCortesia = ref(false)
@@ -275,6 +271,7 @@ const isCortesia = ref(false)
 
     payment_method_options.value = await fetchService.get(`${URI}/payment_methods`);
     order_types.value = await fetchService.get(`${URI}/get_all_order_types`);
+    paymen_rules.value = await fetchService.get(`${URI}/site-payments`);
 
   });
   

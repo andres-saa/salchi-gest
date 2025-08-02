@@ -881,6 +881,16 @@ const router = createRouter({
         },
 
         {
+          path: '/payment-methods',
+          name: 'payment-methods',
+          component: () => import('@/views/pages/tienda/paymentMethods.vue'),
+          
+          
+        },
+
+       
+
+        {
           path: '/pay-orders',
           name: 'pay-orders',
           component: () => import('@/views/pages/tienda/paysection.vue'),
