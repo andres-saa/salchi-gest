@@ -119,6 +119,7 @@
               id="payment_method"
               placeholder="METODO DE PAGO"
               :options="
+              siteStore.location?.site?.site_id === 7?  payment_method_options.filter( option => [9,5,8].includes(option.id)) :
                 siteStore.location?.site?.site_id === 33 || siteStore.location?.site?.site_id === 36 || siteStore.location?.site?.site_id === 35
                   ? payment_method_options.filter(option => [6, 8].includes(option.id))
                   : siteStore.location?.site?.site_id !== 33 ||  siteStore.location?.site?.site_id !== 36 || siteStore.location?.site?.site_id !== 35
