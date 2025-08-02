@@ -140,6 +140,10 @@ async function fetchAndUpdateRoles() {
                 icon: 'fa-solid fa-store',
                 'icon-color': '#FF8D1A', // Naranja vibrante
                 items: [
+         
+                
+                { label: 'Metodos de pago', icon: 'fa-solid fa-utensils', to: '/payment-methods/', permision_id: 1, 'icon-color': '#FFC300' }, // Amarillo
+
                     { label: 'Cocina', icon: 'fa-solid fa-utensils', to: '/cocina/', permision_id: 1, 'icon-color': '#FFC300' }, // Amarillo
                     { label: 'Menu', icon: 'fa-solid fa-book-open', to: '/tienda-menu/productos/SALCHIPAPAS/3', permision_id: 2, 'icon-color': '#DAF7A6' }, // Verde claro
                     { label: 'Reportes de ventas', icon: 'fa-solid fa-chart-line', to: '/reporte-ventas/order-sumary', permision_id: 3, 'icon-color': '#C70039' }, // Rojo intenso
