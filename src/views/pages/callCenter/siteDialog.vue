@@ -20,9 +20,9 @@
                 </div>
 
                 <!-- Selección de Barrio -->
-                <div class="form-group" v-if="currenCity && currenCity.city_id !== 15">
+                <div class="form-group" >
     <div class="label-spinner">
-        <label for="neighborhood-dropdown" class="label">¿Cuál es tu barrio?</label>
+        <label for="neighborhood-dropdown" class="label"> {{ currenCity?.city_id !== 15? '¿Cuál es tu barrio?' : "Elige una sede"  }} </label>
         <div v-if="spinnersView.barrio" class="loading-neighborhood">
             <ProgressSpinner class="spinner" strokeWidth="8" fill="var(--white)" animationDuration=".5s"
                 aria-label="Buscando barrios" />
@@ -30,7 +30,7 @@
         </div>
     </div>
     <Dropdown id="neighborhood-dropdown" v-model="currenNeigborhood"
-        :disabled="!possibleNeigborhoods.length" :options="possibleNeigborhoods" optionLabel="name"
+         :options="possibleNeigborhoods" optionLabel="name"
         placeholder="Selecciona un barrio" filter filterPlaceholder="Escribe el nombre de tu barrio"
         class="dropdown" required />
 </div>
