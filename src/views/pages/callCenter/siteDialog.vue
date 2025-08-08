@@ -103,27 +103,6 @@ const resetNeighborhood = () => {
 };
 
 
-watch(currenCity, async () => {
-    if (currenCity.value && currenCity.value.city_id === 15) {
-        // Asigna automáticamente el barrio cuando la ciudad es 15
-        currenNeigborhood.value = {
-            neighborhood_id: 5881,
-            name: "NEW JERSEY",
-            delivery_price: 0.0,
-            site_id: 33,
-            city_id: 15
-        };
-        // (Opcional) También se puede asignar el sitio correspondiente si es necesario:
-        currentSite.value = await sitesService.getSiteById(33);
-        // Limpia la lista de barrios ya que no se usará el dropdown
-        possibleNeigborhoods.value = [];
-    } else {
-        // Si se selecciona otra ciudad, se limpia el barrio actual y se cargan los posibles barrios
-        resetNeighborhood();
-        changePossiblesNeigborhoods();
-    }
-});
-
 
 const changePossiblesNeigborhoods = async () => {
     if (currenCity.value && currenCity.value.city_id) {
