@@ -81,7 +81,7 @@
         site_id,                                      // clave
         payment_methods.value                         // valores filtrados
           .filter(m => methodIds.includes(m.id))
-          .map(({ id, name, exist }) => ({ id, name, exist }))
+          .map(({ id, name, exist, english_name }) => ({ id, name, exist, english_name }))
       ])
     )
   
