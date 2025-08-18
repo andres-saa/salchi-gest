@@ -888,6 +888,14 @@ const router = createRouter({
           
         },
 
+        {
+          path: '/payment-methods-call-center',
+          name: 'payment-methods-call-center',
+          component: () => import('@/views/pages/tienda/paymentMethodsCallCenter.vue'),
+          
+          
+        },
+
        
 
         {

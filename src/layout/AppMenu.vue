@@ -142,7 +142,9 @@ async function fetchAndUpdateRoles() {
                 items: [
          
                 
-                { label: 'Metodos de pago', icon: 'fa-solid fa-utensils', to: '/payment-methods/', permision_id: 1, 'icon-color': '#FFC300' }, // Amarillo
+                { label: 'Metodos de pago tiendas', icon: 'fa-solid fa-utensils', to: '/payment-methods/', permision_id: 1, 'icon-color': '#FFC300' }, // Amarillo
+                { label: 'Metodos de pago call center', icon: 'fa-solid fa-utensils', to: '/payment-methods-call-center/', permision_id: 1, 'icon-color': '#FFC300' }, // Amarillo
+
 
                     { label: 'Cocina', icon: 'fa-solid fa-utensils', to: '/cocina/', permision_id: 1, 'icon-color': '#FFC300' }, // Amarillo
                     { label: 'Menu', icon: 'fa-solid fa-book-open', to: '/tienda-menu/productos/SALCHIPAPAS/3', permision_id: 2, 'icon-color': '#DAF7A6' }, // Verde claro

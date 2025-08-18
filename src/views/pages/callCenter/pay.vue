@@ -1,5 +1,111 @@
 <template>
     <div class="finalizar-compra-container">
+
+
+
+
+      <Dialog
+      :header="t('site_selector')"
+      modal
+      v-model:visible="see_sites"
+      style="width: 100%;max-width: 30rem;margin: .5rem ;"
+    >
+      <template v-if="!user.user.order_type || user.user.order_type.id !== 2 ">
+        <div style="display: flex;flex-direction: column;gap: 1rem;">
+          <div class="form-group">
+            <!-- Autocomplete de direcciones -->
+            <AutoComplete
+          size="large"
+          style="min-width: 100%;"
+          v-model="user.user.site"
+          :suggestions="dir_options"
+          option-label="description"
+          :minLength="1"
+          :delay="250"
+          forceSelection
+          :placeholder="t('address_placeholder')"
+          @complete="search"
+
+          class="w-full"
+        >
+          <template #item="{ item }">
+            <div class="flex flex-col">
+              <span>{{ item.description }}</span>
+        
+            </div>
+          </template>
+        </AutoComplete>
+          </div>
+
+          <Tag
+            v-if="user.user.site?.nearest"
+            style="width: max-content;"
+            :severity="user.user.site?.nearest?.in_coverage? 'success' : 'danger'"
+          >
+            {{  user.user.site?.nearest?.in_coverage ? t('in_coverage') : t('not_in_coverage') }}
+          </Tag>
+
+          <span>
+            <strong>{{ t('distance') }}: </strong>
+            {{ user.user.site?.nearest?.distance_miles }} {{ t('miles') }}
+          </span>
+
+          <span v-if="user.user.site?.delivery_cost_usd">
+            <strong>{{ t('ships_from_site') }}: </strong>
+            {{ user.user.site?.nearest?.site?.site_name }}
+          </span>
+
+          <Tag v-if="user.user.site?.delivery_cost_usd" severity="success">
+            <span>
+              <strong>{{ t('delivery_price') }}: ${{ user.user.site?.delivery_cost_usd }}</strong>
+            </span>
+          </Tag>
+        </div>
+      </template>
+
+      
+
+      <template #footer>
+        <div style="display: flex;gap: 1rem;">
+          <Button
+            @click="() => {see_sites = false ; user.user.site = {}}"
+            :label="t('cancel')"
+            severity="danger"
+            text
+          />
+          <Button
+            style="background-color: black;border: none;color: white;"
+            :label="t('save')"
+            @click="() => {see_sites = false ; siteStore.location.site = user.user.site?.nearest?.site ; siteStore.location.neigborhood.delivery_price = user.user.site?.delivery_cost_usd; user.user.address = user.user.site?.nearest?.site?.site_address }"
+            :disabled="!user.user.site?.nearest?.in_coverage"
+          />
+        </div>
+      </template>
+    </Dialog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <!-- <validate></validate> -->
       <p class="title">FINALIZAR COMPRA</p>
   
@@ -40,13 +146,25 @@
           </div>
   
           <!-- Mostrar dirección solo si el método no es "Pasar a recoger" (id 2) -->
-          <template v-if="!user.user.order_type || user.user.order_type?.id !== 2">
+          <template v-if="!user.user.order_type || user.user.order_type?.id !== 2 && [33,35,36].includes(siteStore.location?.site?.site_id)">
+            <span>Direccio'n</span>
+            <InputText
+              @click="() => see_sites = true"
+              :value="user.user.address"
+              readonly
+            />
+          
+          </template>
+
+
+
+                    <!-- Mostrar dirección solo si el método no es "Pasar a recoger" (id 2) -->
+                    <template v-else-if="!user.user.order_type || user.user.order_type?.id !== 2 && ![33,35,36].includes(siteStore.location?.site?.site_id)">
             <span>Direccio'n</span>
             <div class="form-group">
               <InputText v-model="user.user.address" id="address" placeholder="DIRECCION" />
             </div>
           </template>
-
 
     
             <span>Correo Electronico</span>
@@ -190,7 +308,87 @@ import { paymentMethodService } from './service/restaurant/paymentMethodService'
 import { useReportesStore } from './store/ventas';
 // import validate from './validate.vue';
 
+const see_sites = ref(false)
+
 const paymen_rules = ref({})
+
+
+
+
+const lang = computed(() => {
+  const v = (user?.lang?.name || 'es').toString().toLowerCase();
+  return v === 'en' ? 'en' : 'es';
+});
+const DICT = {
+  es: {
+    site_selector: 'Seleccionar sede',
+    address_placeholder: 'Escribe tu dirección',
+    in_coverage: 'En cobertura',
+    not_in_coverage: 'Fuera de cobertura',
+    distance: 'Distancia',
+    miles: 'Millas',
+    ships_from_site: 'Sale de la sede',
+    delivery_price: 'Costo de envío',
+    cancel: 'Cancelar',
+    save: 'Guardar',
+    finalize_purchase: 'Finalizar compra',
+    name: 'Nombre',
+    address: 'Dirección',
+    phone: 'Teléfono',
+    email: 'Correo electrónico',
+    vehicle_plate: 'Placa de tu vehículo',
+    payment_method: 'Método de pago',
+    notes: 'Notas',
+    additional_notes: 'Notas adicionales',
+    delivery_method: 'Método de entrega',
+  },
+  en: {
+    site_selector: 'Site selector',
+    address_placeholder: 'Type your address',
+    in_coverage: 'In coverage',
+    not_in_coverage: 'Out of coverage',
+    distance: 'Distance',
+    miles: 'Miles',
+    ships_from_site: 'Ships from',
+    delivery_price: 'Delivery price',
+    cancel: 'Cancel',
+    save: 'Save',
+    finalize_purchase: 'Checkout',
+    name: 'Name',
+    address: 'Address',
+    phone: 'Phone',
+    email: 'Email',
+    vehicle_plate: 'Vehicle plate',
+    payment_method: 'Payment method',
+    notes: 'Notes',
+    additional_notes: 'Additional notes',
+    delivery_method: 'Delivery method',
+  }
+};
+const t = (key) => (DICT[lang.value] && DICT[lang.value][key]) || (DICT.es[key] || key);
+
+
+
+
+
+
+
+const stripeApiBase = import.meta.env.VITE_STRIPE_API_URI || 'https://api.stripe.salchimonster.com';
+
+const uri_api_google =  import.meta.env.VITE_STRIPE_API_URI || 'https://api.stripe.salchimonster.com';
+
+// Estado del autocomplete
+const addressQuery = ref('');
+const dir_options = ref([]);
+
+// Token de sesión para Autocomplete + Details (mismo ciclo)
+const sessionToken = ref(null);
+
+
+// --- Helpers de sesión ---
+
+
+const autocompleteError = ref(null); // { code, message_es, message_en, coverage_radius_miles } | null
 
 
 const isCortesia = ref(false)
@@ -271,16 +469,16 @@ const isCortesia = ref(false)
 
     payment_method_options.value = await fetchService.get(`${URI}/payment_methods`);
     order_types.value = await fetchService.get(`${URI}/get_all_order_types`);
-    paymen_rules.value = await fetchService.get(`${URI}/site-payments`);
+    paymen_rules.value = await fetchService.get(`${URI}/site-payments-call-center`);
 
   });
   
   watch(() => user.user.order_type, (new_val) => {
     if (new_val?.id == 2) {
-      siteStore.current_delivery = siteStore.location.neigborhood.delivery_price;
+      // siteStore.current_delivery = siteStore.location.neigborhood.delivery_price;
       siteStore.location.neigborhood.delivery_price = 0;
     } else {
-      // siteStore.setNeighborhoodPrice();
+      siteStore.location.neigborhood.delivery_price = user.user.site?.delivery_cost_usd
     }
   });
 
@@ -309,6 +507,141 @@ const isCortesia = ref(false)
       return order_types.value.filter(option => option?.id !== 1);
     }
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const GEO_API_BASE =
+  import.meta.env.VITE_GEO_API_BASE ||
+  import.meta.env.VITE_PLACES_API_URI ||
+  // último recurso: mismo host donde montaste tu microservicio de rutas
+  'https://api.stripe.salchimonster.com';
+
+// ── Autocomplete remoto ──────────────────────────────────────────────
+
+
+const newSession = () => {
+  sessionToken.value =
+    typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+};
+const endSession = () => { sessionToken.value = null; };
+
+const regionPref = computed(() => siteStore.location?.site?.country_code ?? 'co');
+const maxSuggestions = 5;
+
+const search = async (event) => {
+  const query = (event?.query ?? '').trim();
+  if (!query) {
+    dir_options.value = [];
+    autocompleteError.value = null;
+    return;
+  }
+  if (!sessionToken.value) newSession();
+
+  const params = new URLSearchParams({
+    input: query,
+    session_token: sessionToken.value,
+    language: lang.value,
+    region: regionPref.value || '',
+    limit: String(maxSuggestions),
+  });
+
+  try {
+    const url = `${GEO_API_BASE}/places/autocomplete?${params.toString()}`;
+    const res = await fetchService.get(url, false);
+
+    const predictions = Array.isArray(res)
+      ? res
+      : Array.isArray(res?.predictions)
+        ? res.predictions
+        : [];
+
+    // Esperamos objetos { description, place_id }
+    dir_options.value = predictions.filter(p => p?.description && p?.place_id);
+    autocompleteError.value = (res && !Array.isArray(res) && res.error) ? res.error : null;
+  } catch (err) {
+    console.error('Autocomplete error:', err);
+    dir_options.value = [];
+    autocompleteError.value = null;
+  }
+};
+
+// ✅ Al seleccionar una sugerencia: pedir DETAILS y calcular domicilio
+const onSelectAddress = async ({ value }) => {
+  try {
+    if (!value?.place_id) return;
+    const params = new URLSearchParams({
+      place_id: value.place_id,
+      session_token: sessionToken.value || '',
+      language: lang.value,
+      region: regionPref.value || '',
+    });
+
+    const url = `${GEO_API_BASE}/places/details?${params.toString()}`;
+    const res = await fetchService.get(url, false);
+
+    // Normaliza posibles formas de respuesta del backend
+    const details = res?.result || res || {};
+    const nearest = res?.nearest || details?.nearest || null;
+
+    const deliveryCost =
+      res?.delivery_cost_usd ??
+      details?.delivery_cost_usd ??
+      nearest?.delivery_cost_usd ??
+      null;
+
+    // Guardamos TODO en user.user.site (lo que ya usas en el template)
+    user.user.site = {
+      ...details,
+      nearest,
+      delivery_cost_usd: deliveryCost,
+      description: value.description,
+      place_id: value.place_id,
+    };
+
+    // Domicilio automático si no es "pasar a recoger" (id 2)
+    if (
+      deliveryCost != null &&
+      (!user.user.order_type || user.user.order_type?.id !== 2)
+    ) {
+      siteStore.location.neigborhood.delivery_price = deliveryCost;
+    }
+  } catch (err) {
+    console.error('Details error:', err);
+  } finally {
+    // cierra la sesión de Places: nuevo ciclo si vuelve a escribir
+    endSession();
+  }
+};
+
+// ✅ Si cambia el costo en user.user.site, vuelve a aplicarlo automáticamente
+watch(
+  () => user.user.site?.delivery_cost_usd,
+  (val) => {
+    if (val != null && (!user.user.order_type || user.user.order_type?.id !== 2)) {
+      siteStore.location.neigborhood.delivery_price = val;
+    }
+  }
+);
   </script>
   
   <style scoped>
