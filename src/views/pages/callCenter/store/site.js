@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 
-export const useSitesStore = defineStore('call-center-site', {
+export const useSitesStore = defineStore('call-center-site-44', {
    
     persist: {
        
@@ -14,7 +14,8 @@ export const useSitesStore = defineStore('call-center-site', {
                 paths:[
                     'location',
                     'restaurant',
-                    'categories'
+                    'categories',
+                    'current_delivery'
                     ]
     },
     state: () => {

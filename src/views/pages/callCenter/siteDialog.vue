@@ -80,12 +80,12 @@ import router from '../../../router';
 const store = useSitesStore();
 const cart = usecartStore();
 
-watch(
-    () => store.location.site.site_id,
-    () => {
-        location.reload();
-    }
-);
+// watch(
+//     () => store.location.site.site_id,
+//     // () => {
+//     //     location.reload();
+//     // }
+// );
 
 const spinnersView = ref({ ciudad: false, barrio: false });
 const cities = ref([]);
@@ -137,6 +137,7 @@ const setNeigborhood = async () => {
     };
 
     store.setLocation(newLocation);
+    store.location.neigborhood.delivery_price = currenNeigborhood.value.delivery_price
     store.setVisible('currentSite', false);
     // router.push('/');
 };

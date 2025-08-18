@@ -41,7 +41,7 @@
 
 
           
-            <div style="width:100%;">  <InputText style="width: 100%;" :value="`https://salchimonster.com/pagar/${store.last_order}`"> </InputText>  </div>
+            <div style="width:100%;">  <InputText style="width: 100%;" :value=linkPago> </InputText>  </div>
 
             <Button       @click="copyToClipboard"
  style="min-width:max-content;" label="Copiar link " icon="pi pi-copy" severity="help"></Button>
@@ -66,6 +66,8 @@ const text = ref('');
 const store = usecartStore();
 const user = useUserStore()
 import { useReportesStore } from './store/ventas';
+const site = useSitesStore()
+
 
 const reportes = useReportesStore()
 const toast = useToast()
@@ -73,11 +75,18 @@ const toast = useToast()
 
 
 
+const linkPago = computed(() => {
+  // Toma el site_id desde donde lo tengas (store o una var "site")
+  const siteId =
+    store?.location?.site?.site_id ??
+    site?.location?.site?.site_id ??
+    null;
 
-const linkPago = computed(
-  () => `https://salchimonster.com/pagar/${store.last_order}`
-)
+  const isUSA = [33, 35, 36].includes(Number(siteId));
+  const base = isUSA ? 'https://usa.salchimonster.com' : 'https://salchimonster.com';
 
+  return `${base}/pagar/${store.last_order}`;
+});
 
 const obtenerHoraFormateadaAMPM = (fecha) => {
   const fechaParseada = new Date(fecha);

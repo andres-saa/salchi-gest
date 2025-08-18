@@ -317,7 +317,10 @@
   const toast = useToast()
   
   async function copyToClipboard (data) {
-    const texto = `https://salchimonster.com/pagar/${data.order_id}`
+    let texto = `https://salchimonster.com/pagar/${data.order_id}`
+    if ([33,35,36].includes(data.site_id)) {
+        texto = `https://usa.salchimonster.com/pagar/${data.order_id}`
+    } 
     try {
       await navigator.clipboard.writeText(texto)
       toast.add({ severity:'success', summary:'¡Copiado!', detail:'El enlace se copió al portapapeles', life:2500 })
