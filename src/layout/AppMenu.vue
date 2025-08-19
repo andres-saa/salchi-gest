@@ -387,7 +387,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <ul class="layout-menu" style="padding-bottom: 6rem;">
+  <ul class="layout-menu" style="padding-bottom: 3rem;">
     <div class="" v-for="(item, i) in model" :key="i">
       <app-menu-item
         v-if="item.items.some((i) => permissions.includes(i.permision_id))"
@@ -398,4 +398,47 @@ onBeforeMount(async () => {
   </ul>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+/* ⚡️ Boost de rendimiento para la animación SIN cambiar comportamiento */
+.children,
+.submenu-enter-active,
+.submenu-leave-active {
+  /* Crea una capa propia para que la GPU componga la animación */
+  will-change: transform, opacity, max-height;
+  transform: translateZ(0);           /* fuerza composición */
+  backface-visibility: hidden;        /* evita repintados extra */
+  contain: layout paint;              /* aísla layout/pintura del contenedor */
+  isolation: isolate;                 /* nuevo stacking context, menos recomposición */
+}
+
+/* Mantén la misma duración (.2s), pero evita 'transition: all' */
+.submenu-enter-active,
+.submenu-leave-active {
+  transition-property: transform, opacity, max-height;
+  transition-duration: .2s;
+  transition-timing-function: cubic-bezier(.2, 0, 0, 1); /* fluido sin “dientes” */
+}
+
+/* Evita repintados caros por el recorte durante la transición */
+.submenu-enter-from,
+.submenu-leave-to,
+.close {
+  overflow: clip; /* mejor que hidden en navegadores modernos */
+}
+@supports not (overflow: clip) {
+  .submenu-enter-from,
+  .submenu-leave-to,
+  .close { overflow: hidden; }
+}
+
+/* Opcional: reduce trabajo de layout en listas profundas durante la animación */
+.children > * {
+  contain: paint;          /* aísla la pintura de los hijos inmediatos */
+}
+
+/* Si tienes sombras/gradientes pesados en los items, desactívalos mientras animan */
+.submenu-item.open,
+.submenu-item.close {
+  filter: none;
+  box-shadow: none;
+}</style>

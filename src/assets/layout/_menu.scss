@@ -11,7 +11,7 @@
     left: 0;
     box-sizing: border-box;
     transition: transform $transitionDuration, left $transitionDuration;
-    background-color: rgba(0, 1, 22, 1);
+    background-color: rgb(255, 255, 255);
     // border-radius: $borderRadius;
     padding: 0.5rem 1rem;
     box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0, 0, 0, 0.08);
@@ -33,7 +33,7 @@
 }
 /* El track (o la pista) de la barra de desplazamiento */
 ::-webkit-scrollbar-track {
-    background:rgb(0 1 22);
+    background:rgb(255, 255, 255);
     margin: 2px;
     padding: 2px;
      /* Color de fondo de la pista */
@@ -41,7 +41,7 @@
 
 /* El handle (o el control deslizante) de la barra de desplazamiento */
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 1rem;
     margin: 2px; /* Color de fondo del deslizador */
 }

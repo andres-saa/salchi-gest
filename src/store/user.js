@@ -32,7 +32,7 @@ export const loginStore = defineStore('user', {
                 name:'Basico',
                 x:0
             },
-            bar_color:'rgba(0, 1, 22, 1)',
+            bar_color:'rgb(255, 255, 255)',
             colorized:true
             
             

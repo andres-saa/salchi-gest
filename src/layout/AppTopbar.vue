@@ -152,13 +152,13 @@ const checkScreenWidth = () => {
 
 
         <router-link to="/" class="layout-topbar-logo">
-            <img :class="User_store.colorized? 'normal' : 'white'" style="height: 3rem;" src="/images/logo.png" alt="logo" />
+            <img :class="User_store.colorized? 'normal' : 'black'" style="height: 3rem;" src="/images/logo.png" alt="logo" />
             <!-- <span>SAKAI</span> -->
-           <span class="pl-4 text-sm text-white">{{ getUserRole() }}</span> 
+           <span style="color: black;" class="pl-4 text-sm ">{{  getUserRole() }}</span> 
         </router-link>
 
         <button v-if="isSmallScreen" class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle() ">
-            <i class="pi pi-bars button-toggle-sidebar text-white"></i>
+            <i class="pi pi-bars button-toggle-sidebar text-black"></i>
         </button>
 
         <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
@@ -174,13 +174,13 @@ const checkScreenWidth = () => {
                 <div @mouseleave="visible_menu = false" style="width: .5rem;"></div>
 
                 <div style="display: flex;justify-content: center;">
-                    <div  @mouseover="over(link.items)">  <Button class="p-1 text-l" style="aspect-ratio: 1 / 1; height: 2rem;width: 2rem;" :icon="link.icon" :style="`background-color:${User_store.colorized? link['icon-color'] : 'white'}`"></Button></div>
+                    <div  @mouseover="over(link.items)">  <Button class="p-1 text-l" style="aspect-ratio: 1 / 1; height: 2rem;width: 2rem;" :icon="link.icon" :style="`background-color:${User_store.colorized? link['icon-color'] : 'black'}`"></Button></div>
             
                 <div class="animate"  @mouseleave="visible_menu = false" v-if="current_items == link.items && visible_menu" style="display: flex;flex-direction: column;justify-content: start; opacity: .9; position: absolute;top: 3rem;width: max-content;min-width: 25rem; border-radius: 0 0 1rem 1rem;gap: 1rem;padding: 2rem" :style="`background-color:${User_store.bar_color}`">
-<h6 style="color: white;text-transform: capitalize;"> <b>{{ link.label }}</b></h6>
+<h6 style="color: black;text-transform: capitalize;"> <b>{{ link.label }}</b></h6>
 
                     <RouterLink :to="item.to"  v-for="item in current_items">
-                        <Button class="item" :class="route.fullPath.includes(item.to)? 'activo' : ''" @click="visible_menu = false" style="width: 100%; border-radius: 1rem;color: white; border-radius: 0;text-transform: uppercase;min-width: max-content;" :label="item.label" >
+                        <Button class="item" :class="route.fullPath.includes(item.to)? 'activo' : ''" @click="visible_menu = false" style="width: 100%; border-radius: 1rem;color: black; border-radius: 0;text-transform: uppercase;min-width: max-content;" :label="item.label" >
 
                     </Button>
                     </RouterLink>
@@ -188,7 +188,7 @@ const checkScreenWidth = () => {
                 </div>
                 <div @mouseleave="visible_menu = false" style="width: .5rem;"></div>
                 
-            </div> <div v-if="(current_items == link.items && visible_menu) ||  link.items?.some(i => route.fullPath.includes(i.to))" style="position: absolute;bottom:0%;height: .3rem;width: 2.5rem;background-color: white;"></div>
+            </div> <div v-if="(current_items == link.items && visible_menu) ||  link.items?.some(i => route.fullPath.includes(i.to))" style="position: absolute;bottom:0%;height: .3rem;width: 2.5rem;background-color: black;"></div>
                 </div>
                 <div @mouseover="visible_menu = false" style="height: 3rem;width: 3rem;"></div>
 
@@ -209,7 +209,7 @@ const checkScreenWidth = () => {
                 <span>Profile</span>
             </button> -->
             <button @click="cerrar" class="p-link layout-topbar-button">
-                <i class="fa-solid fa-right-from-bracket text-white"></i>
+                <i class="fa-solid fa-right-from-bracket text-black"></i>
                 <span>Cerrar sesion</span>
             </button>
         </div>
@@ -287,7 +287,7 @@ button:focus{
     box-shadow: 0 .5rem 0 red;
 }
 
-.white{
+.black{
    
     filter:grayscale(1) brightness(300) ;
   

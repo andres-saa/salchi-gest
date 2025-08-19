@@ -1,0 +1,1 @@
+import{_ as e,o,b as t}from"./index-e0d1eab6.js";const c={},s={class:"col-12",style:{"max-width":"1024px",margin:"auto"}};function a(n,r){return o(),t("div",s)}const l=e(c,[["render",a]]);export{l as default};
