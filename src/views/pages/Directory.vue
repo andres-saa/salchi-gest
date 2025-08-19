@@ -1,1510 +1,733 @@
 <template>
-
-
-
-
-
-
-
-
-<img class="img-profile-add p-0"
-                    style="width: 100%;filter: blur(10px);background-color: black;opacity: .5; position: fixed;z-index: -1;height: 120%; border-radius: 0.5rem;  object-fit: cover; border-radius: 0.5rem; aspect-ratio: 4 / 2;background-color: #84e4ff;"
-                    :src="urlsite_photo ? urlsite_photo : `${URI}/read-product-image/96/site-${store.currentSite.site_id}`"
-                    alt="">
-
-
-
-
-
-
-    <div class="col-12 mx-auto md:shadow-3 md:p-4 p-0 px-2 mb-8 mt-6" style="max-width: 900px;margin-top: 3rem; background-color: white;">
-
-            <!-- Botón para abrir el diálogo de actualización -->
-
-
-    <!-- Diálogo de actualización -->
-    <Dialog class="mx-2" header="Actualizar datos de la sede" v-model:visible="isUpdateDialogVisible" :modal="true" :style="{ width: '500px' }">
-
-<p class="m-0" for="siteName">Nombre de la sede</p>
-<InputText class="mb-3" style="width: 100%;" id="siteName" v-model="updateData.site_name" />
-
-
-<p class="m-0" for="siteAddress">Dirección</p>
-<InputText class="mb-3" style="width: 100%;" id="siteAddress" v-model="updateData.site_address" />
-
-
-<p class="m-0" for="sitePhone">Teléfono</p>
-<InputText class="mb-3" style="width: 100%;" id="sitePhone" v-model="updateData.site_phone" />
-
-
-<p class="m-0" for="emailAddress">Correo electrónico</p>
-<InputText class="mb-3" style="width: 100%;" id="emailAddress" v-model="updateData.email_address" />
-
-
-<p class="m-0" for="whatsappLink">Enlace de WhatsApp</p>
-<InputText class="mb-3" style="width: 100%;" id="whatsappLink" v-model="updateData.wsp_link" />
-
-
-<p class="m-0" for="mapsLink">Enlace de maps</p>
-<InputText class="mb-3" style="width: 100%;" id="mapsLink" v-model="updateData.maps" />
-
-<div class="col-12 p-0" style="display: flex; justify-content: end;">
-    <Button class="mt-4" label="Guardar cambios" @click="updateSite" severity="success" />
-</div>
-</Dialog>
-
-
-<Dialog header="Agregar nueva aplicación" v-model:visible="isApplicationDialogVisible" modal
-:style="{ width: '450px' }">
-<div class="field col-12 pb-0 px-0">
-<label for="appName">Nombre de la aplicación</label>
-<InputText class="col-12" id="appName" v-model="applicationData.name" />
-</div>
-<div class="field col-12 pb-0 px-0">
-<label for="username">Nombre de usuario</label>
-<InputText class="col-12" id="username" v-model="applicationData.username" />
-</div>
-<div class="field col-12 pb-0 px-0">
-<label for="password">Contraseña</label>
-<InputText class="col-12" id="password" type="password" v-model="applicationData.password" />
-</div>
-<Button label="Agregar" severity="success" @click="addApplication" />
-</Dialog>
-
-<Dialog header="Agregar nueva página web" v-model:visible="isWebPageDialogVisible" modal :style="{ width: '450px' }">
-<div class="field col-12 pb-0 px-0">
-<label for="pageName">Nombre de la página</label>
-<InputText class="col-12" id="pageName" v-model="webPageData.page" />
-</div>
-<div class="field col-12 pb-0 px-0">
-<label for="username">Nombre de usuario</label>
-<InputText class="col-12" id="username" v-model="webPageData.username" />
-</div>
-<div class="field col-12 pb-0 px-0">
-<label for="password">Contraseña</label>
-<InputText class="col-12" id="password" type="password" v-model="webPageData.password" />
-</div>
-<Button label="Agregar" severity="success" @click="addWebPage" />
-</Dialog>
-
-
-
-
-<Dialog header="Agregar nuevo datáfono" v-model:visible="isDataphoneDialogVisible" modal :style="{ width: '450px' }">
-<div class="field col-12 pb-0 px-0">
-<label for="uniqueCode">Código único</label>
-<InputText class="col-12" id="uniqueCode" v-model="dataphoneData.unique_code" />
-</div>
-<div class="field col-12 pb-0 px-0">
-<label for="externalCode">Código externo</label>
-<InputText class="col-12" id="externalCode" v-model="dataphoneData.external_code" />
-</div>
-<Button label="Agregar" severity="success" @click="addDataphone" />
-</Dialog>
-
-<Dialog header="Agregar nueva red WiFi" v-model:visible="isWifiDialogVisible" modal :style="{ width: '450px' }">
-<div class="field col-12 pb-0 px-0">
-<label for="wifiUsername">Nombre de usuario</label>
-<InputText class="col-12" id="wifiUsername" v-model="wifiData.username" />
-</div>
-<div class="field col-12 pb-0 px-0">
-<label for="wifiPassword">Contraseña</label>
-<InputText class="col-12" id="wifiPassword" v-model="wifiData.password" type="password" />
-</div>
-<Button label="Agregar" severity="success" @click="addWifiNetwork" />
-</Dialog>
-
-
-
-<Dialog header="Agregar nueva cámara" v-model:visible="isCameraDialogVisible" modal :style="{ width: '450px' }"
-:closable="true" :showHeader="true">
-<div class="field col-12 pb-0 px-0">
-<label for="username">Nombre de usuario</label>
-<InputText class="col-12" id="username" v-model="cameraData.username" />
-</div>
-<div class="field col-12 pb-0 px-0">
-<label for="password">Contraseña</label>
-<InputText class="col-12" id="password" v-model="cameraData.password" />
-</div>
-<Button label="Agregar" severity="success" @click="addCamera" />
-</Dialog>
-
-
-<Dialog header="Agregar nueva caja fuerte" v-model:visible="isSafeBoxDialogVisible" modal
-:style="{ width: '450px' }">
-<div class="field col-12 pb-0 px-0">
-<label for="boxName">Nombre de la caja</label>
-<InputText class="col-12" id="boxName" v-model="safeBoxData.boxName" />
-</div>
-<div class="field col-12 pb-0 px-0">
-<label for="password">Contraseña</label>
-<InputText class="col-12" id="password" v-model="safeBoxData.password" type="password" />
-</div>
-<Button label="Agregar" severity="success" @click="addSafeBox" />
-</Dialog>
-
-
-
-
-        <!-- {{ directories }} -->
-        <p class="p-3 text-2xl text-center" style="font-weight: bold;"> <i class="fa-solid fa-folder-open"></i>
-            CONTROL HORARIOS EN SEDES</p>
-        <div class="p-0" style="overflow: hidden;">
-            <!-- <span> <b> SEDE</b></span> -->
-
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <Dropdown v-model="store.currentSite" :options="sites?.filter(s => s.show_on_web)" optionLabel="site_name" style="max-width: 30rem; min-width: 80%;"
-                class=" p-0 " placeholder="Sede">
-            </Dropdown>
-
-            <InputSwitch v-model="is_open" binary="true"></InputSwitch>
-            </div>
-        
-
-            <div class="col-12 p-0 my-5 ">
-
-
-                <img class="img-profile-add p-0"
-                    style="width: 100%; border-radius: 0.5rem;  object-fit: cover; border-radius: 0.5rem; aspect-ratio: 4 / 2;background-color: #84e4ff;"
-                    :src="urlsite_photo ? urlsite_photo : `${URI}/read-product-image/600/site-${store.currentSite.site_id}`"
-                    alt="">
-                <div class="field col-12 pb-0 px-0 col-12 mt-2 mb-6 p-0" style="display: flex;justify-content: end;gap: 1rem;">
-                    
-                    <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange"
-                        style="display: none;">
-                    <Button severity="help" class="" style="width: min-content;" @click="$refs.fileInput.click();">
-                        <i class="fa-solid fa-camera"></i>
-
-                    </Button>
-
-
-
-                    <Button v-if="file" severity="help" class="" style="width: min-content;"
-                        @click="() => { urlsite_photo = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`; file = '' }">
-                        <i class="fa-solid fa-spinner"></i>
-
-                    </Button>
-
-                    <Button v-if="file" severity="success" class="" style="width: min-content;"
-                        @click="uploadUsersite_photo(file, store.currentSite.site_id)">
-                        <i class="fa-solid fa-floppy-disk"></i>
-
-                    </Button>
-
-                </div>
-
-
-
-            </div>
-
-
-            <!-- {{ selectedSite }} -->
-
-            <div class="grid p-0 m-0" style="">
-
-
-                <p class="text-xl   mb-1 col-12" style="font-weight: bold;"><i class="fa-solid fa-circle-info mr-3"></i>
-                    INFORMACION BASICA</p>
-
-                <div style="overflow-x: auto;" class="py-3 md:py-0">
-
-                    <div v-for="(item, index) in infoItems" :key="index" class="my-0 p-3 py-0"
-                        style="display: flex; align-items: center; gap: 1rem;">
-                        <div class="p-0">
-                            <p style="font-weight: bold; min-width: 10rem;">{{ item.label }}:</p>
-                        </div>
-                        <!-- <Button size="large" severity="help" text  class="m-1 p-0"
-                    style="min-width: max-content;"> <i class="fa-solid fa-pen-to-square "></i>
-                </Button> -->
-
-
-                        <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                            {{ store.currentSite[item.value] }}
-                        </div>
-
-                        <!-- <i class="mr-2" :class="PrimeIcons.PENCIL"></i> -->
-
-                        <a v-else class="" style="min-width: max-content;" :href="store.currentSite[item.value]">
-                            {{ store.currentSite[item.value] }}
-                        </a>
-
-
-
-                    </div>
-
-
-                </div>
-                
-
-                <div class="col-12 px-0 my-4" style="display: flex;gap: 1rem; justify-content: start;align-items: center;">
-
-                    
-                    <Button severity="help" style="height: min-content; min-width: max-content;" label="Actualizar informacion basica" @click="isUpdateDialogVisible = true" />
-
-                    <div style="background-color: #000; height: 0.3rem;border-radius: 0 1rem 1rem 0; width: 100%;">
-
-                    </div>
-                    
-                </div>
-                
-
-
-                <!-- <div class="col-12  mt-4 mb-1 col-12"
-                    style="background-color: #f6f7c1;border-radius: 0.5rem;position: relative">
-
-
-                    <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-video mr-3"></i> CAMARAS</p>
-                        <Button icon="fa-solid fa-plus text-xl" @click="isCameraDialogVisible = true" class="p-0"  rounded
-                            style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="help">
-                             </Button>
-                    </div>
-
-
-
-                    <div v-for="(item, index) in directories.cameras" :key="index" class="my-0 col-12 py-0" style="">
-                        <Button  text style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" 
-                            class="p-button-rounded p-button-danger p-0 text-2xl text-2xl" @click="confirmDeleteCamera(item.camera_id)" />
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Usuario {{ index + 1 }}:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.username }}
-                            </div>
-
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Clave {{ index + 1 }}:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.password }}
-                            </div>
-
-                        </div>
-
-                        <Divider class="p-0 m-1"></Divider>
-
-
-
-
-
-
-                    </div>
-
-                </div> -->
-
-
-
-<!-- 
-                <div class="col-12  mt-4 mb-1 col-12"
-                    style="background-color: #84e4ff;position: relative;border-radius: 0.5rem;">
-                    <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-shield mr-3"></i> CAJAS FUERTES</p>
-                        <Button @click="isSafeBoxDialogVisible = true" class="p-0"  rounded
-                            style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="help">
-                            <i class="fa-solid fa-plus text-xl"></i> </Button>
-                    </div>
-
-                    <div style="overflow-x: auto;">
-                        <div v-for="(item, index) in directories.safe_boxes" :key="index" class="my-0 col-12 py-0"
-                            style="">
-
-                            <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
-                                class="p-button-rounded p-button-danger p-0 text-2xl"
-                                @click="confirmDeleteSafeBox(item.safe_box_id)" />
-
-                            <div style="display: flex; align-items: center; gap: 1rem;">
-                                <div class="p-0">
-                                    <p style="font-weight: bold; min-width: 10rem;">Usuario {{ index + 1 }}:</p>
-                                </div>
-
-
-
-                                <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                    {{ item.box_name }}
-                                </div>
-
-                            </div>
-
-                            <div style="display: flex; align-items: center; gap: 1rem;">
-                                <div class="p-0">
-                                    <p style="font-weight: bold; min-width: 10rem;">Clave {{ index + 1 }}:</p>
-                                </div>
-
-
-
-                                <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                    {{ item.password }}
-                                </div>
-
-                            </div>
-
-                            <Divider class="p-0 m-1"></Divider>
-
-
-
-
-
-
-                        </div>
-
-                    </div>
-                </div> -->
-
-
-
-
-
-
-                <div class="col-12  mt-4 mb-1 col-12"
-                    style="background-color: #d0f5be;position: relative;border-radius: 0.5rem;">
-                    <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-wifi mr-3   "></i> WIFI'S</p>
-                        <Button @click="isWifiDialogVisible = true" class="p-0"  rounded
-                            style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="help">
-                            <i class="fa-solid fa-plus text-xl"></i> </Button>
-                    </div>
-
-                    <div style="overflow-x: auto; ">
-
-
-                        <div style="" v-for="(item, index) in directories.wifi_networks" :key="index"
-                            class="my-0 col-12 py-0">
-
-                            <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
-                                class="p-button-rounded p-button-danger p-0 text-2xl" @click="confirmDeleteWifi(item.wifi_id)" />
-
-
-                            <div style="display: flex;align-items: center; gap: 1rem;">
-                                <div class="p-0">
-                                    <p style="font-weight: bold; min-width: 10rem;">Nombre:</p>
-                                </div>
-
-
-
-                                <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                    {{ item.username }}
-                                </div>
-
-
-
-
-                            </div>
-
-
-
-                            <div style="display: flex; align-items: center; gap: 1rem;">
-                                <div class="p-0">
-                                    <p style="font-weight: bold; min-width: 10rem;">Clave:</p>
-                                </div>
-
-
-
-                                <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                    {{ item.password }}
-                                </div>
-
-                            </div>
-
-                            <Divider class="p-0 m-1"></Divider>
-
-
-
-
-
-
-                        </div>
-                    </div>
-
-
-                </div>
-
-
-                <div class="col-12  mt-4 mb-1 col-12"
-                    style="background-color: #e7ceff; position: relative;border-radius: 0.5rem;">
-                    <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-regular fa-credit-card mr-3"></i> DATAFONOS</p>
-                        <Button @click="isDataphoneDialogVisible = true" class="p-0"  rounded
-                            style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="help">
-                            <i class="fa-solid fa-plus text-xl"></i> </Button>
-                    </div>
-                    <div v-for="(item, index) in directories.dataphones" :key="index" class="my-0 col-12 py-0" style="">
-
-                        <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
-                            class="p-button-rounded p-button-danger p-0 text-2xl"
-                            @click="confirmDeleteDataphone(item.dataphone_id)" />
-
-
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Codigo unico {{ index + 1 }}:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.unique_code }}
-                            </div>
-
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Codigo externo {{ index + 1 }}:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.external_code }}
-                            </div>
-
-                        </div>
-
-                        <Divider class="p-0 m-1"></Divider>
-
-
-
-
-
-
-                    </div>
-                </div>
-
-
-                <div class="col-12  mt-4 mb-1 col-12"
-                    style="background-color: rgb(237 120 85 / 43%);border-radius: 0.5rem;position: relative">
-
-
-
-                    <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-solid fa-paper-plane mr-3"></i> PAGINAS WEB</p>
-                        <Button @click="isWebPageDialogVisible = true" class="p-0"  rounded
-                            style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="help">
-                            <i class="fa-solid fa-plus text-xl"></i> </Button>
-                    </div>
-
-
-                    <div v-for="(item, index) in directories.web_pages" :key="index" class="my-0 col-12 py-0" style="">
-                        <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
-                            class="p-button-rounded p-button-danger p-0 text-2xl"
-                            @click="confirmDeleteWebPage(item.web_page_id)" />
-
-             
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Nombre :</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.page }}
-                            </div>
-
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Usuario:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.username }}
-                            </div>
-
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Clave:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.password }}
-                            </div>
-
-                        </div>
-
-                        <Divider class="p-0 m-1" style="color:red;background-color: red;"></Divider>
-
-
-
-
-
-
-                    </div>
-
-                </div> 
-
-
-
-
-
-               <div class="col-12  mt-4 mb-1 col-12"
-                    style="background-color: #ddedea;border-radius: 0.5rem;position: relative">
-
-
-                    <div class="text-xl p-0  mb-1 col-12" style="display: flex; justify-content: space-between;">
-                        <p style="font-weight: bold;"><i class="fa-brands fa-app-store-ios mr-3"></i>APLICACIONES</p>
-                        <Button @click="isApplicationDialogVisible = true" class="p-0"  rounded
-                            style="aspect-ratio: 1 / 1;display: flex;align-items: center; justify-content: center; width: 3rem; height: 3rem;"
-                            severity="help">
-                            <i class="fa-solid fa-plus text-xl"></i> </Button>
-                    </div>
-
-
-                    <div v-for="(item, index) in directories.applications " :key="index" class="my-0 col-12 py-0"
-                        style="">
-
-                        <Button  style="position: absolute;right:     1rem; " icon="fa-solid fa-trash-can" text
-                            class="p-button-rounded p-button-danger p-0 text-2xl"
-                            @click="confirmDeleteApplication(item.application_id)" />
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Nombre :</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.name }}
-                            </div>
-
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Usuario:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.username }}
-                            </div>
-
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="p-0">
-                                <p style="font-weight: bold; min-width: 10rem;">Clave:</p>
-                            </div>
-
-
-
-                            <div v-if="!item.isLink" class="" style="min-width: max-content;">
-                                {{ item.password }}
-                            </div>
-
-                        </div>
-
-
-
-
-
-
-
-                    </div>
-
-
-
-                </div> 
-
-
-
-
-
-
-
-
-                <div class="col-12 p-0 my-4" style="display: flex; justify-content: start;align-items: center;">
-
-                    <div style="background-color: #ef4444; height: 0.3rem;border-radius: 0 1rem 1rem 0; width: 100%;">
-
-                    </div>
-
-                </div>
-
-
-
-                <p class="text-xl   mb-1 col-12" style="font-weight: bold;"><i class="fa-solid fa-clock mr-3"></i>
-                    HORARIO</p>
-
-
-
-                <!-- <iframe src="https://maps.app.goo.gl/6kCLNgDfz84224ZV9" frameborder="0"></iframe> -->
-
-                <!-- <Divider vertical></Divider> -->
-                <div class="col-12 ">
-                    <horarios></horarios>
-
-                </div>
-
-            </div>
+    <!-- Fondo difuminado -->
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar shadow-2">
+        <div class="sidebar-top">
+          <div class="brand">
+            <i class="fa-solid fa-store"></i>
+            <b>Panel de sede</b>
+          </div>
+  
+          <Dropdown
+            v-model="store.currentSite"
+            :options="sites?.filter(s => s.show_on_web)"
+            optionLabel="site_name"
+            placeholder="Selecciona una sede"
+            class="w-full"
+          />
+  
+          <div class="open-row">
+            <span>Abierto</span>
+            <InputSwitch v-model="is_open" binary />
+          </div>
+  
+          <Button
+            label="Actualizar info"
+            severity="help"
+            class="w-full"
+            icon="fa-solid fa-pen-to-square"
+            @click="isUpdateDialogVisible = true"
+          />
         </div>
-
-
-
+  
+        <div class="menu">
+          <Button text class="w-full" icon="fa-solid fa-circle-info" label="Información básica" @click="scrollTo('basic')" />
+          <Button text class="w-full" icon="fa-solid fa-wifi" label="WiFi" @click="scrollTo('wifi')" />
+          <Button text class="w-full" icon="fa-regular fa-credit-card" label="Datáfonos" @click="scrollTo('dataphones')" />
+          <Button text class="w-full" icon="fa-solid fa-paper-plane" label="Páginas web" @click="scrollTo('web')" />
+          <Button text class="w-full" icon="fa-brands fa-app-store-ios" label="Aplicaciones" @click="scrollTo('apps')" />
+          <Button text class="w-full" icon="fa-solid fa-clock" label="Horario" @click="scrollTo('schedule')" />
+        </div>
+      </aside>
+  
+      <!-- Contenido -->
+      <main class="content">
+        <!-- Hero -->
+        <section class="card hero-card">
+          <div class="hero-grid">
+            <div class="hero-info">
+              <h2 class="title"><b>{{ store.currentSite?.site_name || 'Sede' }}</b></h2>
+              <p class="muted">Administra datos clave, accesos y horarios de tu sede.</p>
+              <div class="hero-actions">
+                <Button
+                  severity="help"
+                  icon="fa-solid fa-camera"
+                  label="Cambiar imagen"
+                  @click="$refs.fileInput.click()"
+                />
+                <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" style="display:none" />
+                <Button
+                  v-if="file"
+                  text
+                  icon="fa-solid fa-rotate-right"
+                  label="Revertir"
+                  @click="resetPreview"
+                />
+                <Button
+                  v-if="file"
+                  severity="success"
+                  icon="fa-solid fa-floppy-disk"
+                  label="Guardar"
+                  @click="uploadUsersite_photo(file, store.currentSite.site_id)"
+                />
+              </div>
+            </div>
+  
+            <div class="hero-image-wrap">
+              <img
+                class="hero-image"
+                :src="urlsite_photo ? urlsite_photo : `${URI}/read-product-image/600/site-${store.currentSite.site_id}`"
+                alt="Imagen sede"
+              />
+            </div>
+          </div>
+        </section>
+  
+        <!-- Información básica -->
+        <section class="card section" id="basic">
+          <header class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-circle-info"></i>
+              <span><b>Información básica</b></span>
+            </div>
+            <Button size="small" severity="help" icon="fa-solid fa-pen-to-square" label="Editar" @click="isUpdateDialogVisible = true" />
+          </header>
+  
+          <div class="info-grid">
+            <div v-for="(item, idx) in infoItems" :key="idx" class="info-row">
+              <div class="info-label">{{ item.label }}</div>
+              <div class="info-value" v-if="!item.isLink">{{ store.currentSite[item.value] || '-' }}</div>
+              <a class="info-value link" v-else :href="store.currentSite[item.value]" target="_blank" rel="noopener">
+                {{ store.currentSite[item.value] || '-' }}
+              </a>
+            </div>
+          </div>
+        </section>
+  
+        <!-- Wifi -->
+        <section class="card section accent-green" id="wifi">
+          <header class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-wifi"></i>
+              <span><b>WiFi</b></span>
+              <Tag class="ml-2">{{ directories.wifi_networks?.length || 0 }}</Tag>
+            </div>
+            <Button class="round" severity="help" icon="fa-solid fa-plus" @click="isWifiDialogVisible = true" />
+          </header>
+  
+          <div v-if="(directories.wifi_networks?.length || 0) === 0" class="empty">Sin redes registradas.</div>
+          <div v-else class="list">
+            <div v-for="(item, index) in directories.wifi_networks" :key="index" class="list-row">
+              <div class="fields">
+                <div><b>Nombre:</b> <span>{{ item.username }}</span></div>
+                <div><b>Clave:</b> <span>{{ item.password }}</span></div>
+              </div>
+              <Button text severity="danger" class="icon-only" icon="fa-solid fa-trash-can" @click="confirmDeleteWifi(item.wifi_id)" />
+            </div>
+          </div>
+        </section>
+  
+        <!-- Datáfonos -->
+        <section class="card section accent-violet" id="dataphones">
+          <header class="section-header">
+            <div class="section-title">
+              <i class="fa-regular fa-credit-card"></i>
+              <span><b>Datáfonos</b></span>
+              <Tag class="ml-2">{{ directories.dataphones?.length || 0 }}</Tag>
+            </div>
+            <Button class="round" severity="help" icon="fa-solid fa-plus" @click="isDataphoneDialogVisible = true" />
+          </header>
+  
+          <div v-if="(directories.dataphones?.length || 0) === 0" class="empty">Sin datáfonos registrados.</div>
+          <div v-else class="list">
+            <div v-for="(item, index) in directories.dataphones" :key="index" class="list-row">
+              <div class="fields">
+                <div><b>Código único:</b> <span>{{ item.unique_code }}</span></div>
+                <div><b>Código externo:</b> <span>{{ item.external_code }}</span></div>
+              </div>
+              <Button text severity="danger" class="icon-only" icon="fa-solid fa-trash-can" @click="confirmDeleteDataphone(item.dataphone_id)" />
+            </div>
+          </div>
+        </section>
+  
+        <!-- Páginas Web -->
+        <section class="card section accent-orange" id="web">
+          <header class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span><b>Páginas web</b></span>
+              <Tag class="ml-2">{{ directories.web_pages?.length || 0 }}</Tag>
+            </div>
+            <Button class="round" severity="help" icon="fa-solid fa-plus" @click="isWebPageDialogVisible = true" />
+          </header>
+  
+          <div v-if="(directories.web_pages?.length || 0) === 0" class="empty">Sin páginas registradas.</div>
+          <div v-else class="list">
+            <div v-for="(item, index) in directories.web_pages" :key="index" class="list-row">
+              <div class="fields">
+                <div><b>Nombre:</b> <span>{{ item.page }}</span></div>
+                <div><b>Usuario:</b> <span>{{ item.username }}</span></div>
+                <div><b>Clave:</b> <span>{{ item.password }}</span></div>
+              </div>
+              <Button text severity="danger" class="icon-only" icon="fa-solid fa-trash-can" @click="confirmDeleteWebPage(item.web_page_id)" />
+            </div>
+          </div>
+        </section>
+  
+        <!-- Aplicaciones -->
+        <section class="card section accent-slate" id="apps">
+          <header class="section-header">
+            <div class="section-title">
+              <i class="fa-brands fa-app-store-ios"></i>
+              <span><b>Aplicaciones</b></span>
+              <Tag class="ml-2">{{ directories.applications?.length || 0 }}</Tag>
+            </div>
+            <Button class="round" severity="help" icon="fa-solid fa-plus" @click="isApplicationDialogVisible = true" />
+          </header>
+  
+          <div v-if="(directories.applications?.length || 0) === 0" class="empty">Sin aplicaciones registradas.</div>
+          <div v-else class="list">
+            <div v-for="(item, index) in directories.applications" :key="index" class="list-row">
+              <div class="fields">
+                <div><b>Nombre:</b> <span>{{ item.name }}</span></div>
+                <div><b>Usuario:</b> <span>{{ item.username }}</span></div>
+                <div><b>Clave:</b> <span>{{ item.password }}</span></div>
+              </div>
+              <Button text severity="danger" class="icon-only" icon="fa-solid fa-trash-can" @click="confirmDeleteApplication(item.application_id)" />
+            </div>
+          </div>
+        </section>
+  
+        <!-- Horario -->
+        <section class="card section" id="schedule">
+          <header class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-clock"></i>
+              <span><b>Horario</b></span>
+            </div>
+          </header>
+          <horarios />
+        </section>
+      </main>
     </div>
-
-
-
-
-
-</template>
-
-
-<script setup>
-import { siteService } from '@/service/siteService.js'
-import { onMounted, ref, watch } from 'vue'
-import { URI } from '../../service/conection';
-import horarios from './horarios.vue';
-const sites = ref()
-import { useDirectoryStore } from '../../store/directorio';
-import { useReportesStore } from '../../store/reportes';
-import { PrimeIcons } from 'primevue/api';
-import { fetchService } from '../../service/utils/fetchService';
-import axios from 'axios';
-
-
-const store = useDirectoryStore()
-const selectedSite = ref(store.currentSite)
-
-
-
-
-
-
-
-
-
-
-const store2 = useReportesStore()
-
-
-
-onMounted(() => {
-    updateData.value = { ...store.currentSite }  // Suponiendo que 'store.currentSite' contiene los datos actuales de la sede
-})
-
-// Función para actualizar los datos de la sede
-const updateSite = () => {
-    const apiUrl = `${URI}/site/${store.currentSite.site_id}`
-    axios.put(apiUrl, updateData.value)
-        .then(response => {
-            console.log('Actualización exitosa:', response.data)
-            isUpdateDialogVisible.value = false
-            // Actualizar los datos en el frontend si es necesario
-            store.currentSite = { ...updateData.value }
-        })
-        .catch(error => {
-            console.error('Error en la actualización:', error.response.data)
-        })
-}
-
-
-const isUpdateDialogVisible = ref(false)
-const updateData = ref({
+  
+    <!-- DIALOGS -->
+    <Dialog class="mx-2" header="Actualizar datos de la sede" v-model:visible="isUpdateDialogVisible" :modal="true" :style="{ width: '500px' }">
+      <div class="form-vstack">
+        <div class="field">
+          <label for="siteName">Nombre de la sede</label>
+          <InputText id="siteName" v-model="updateData.site_name" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="siteAddress">Dirección</label>
+          <InputText id="siteAddress" v-model="updateData.site_address" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="sitePhone">Teléfono</label>
+          <InputText id="sitePhone" v-model="updateData.site_phone" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="emailAddress">Correo electrónico</label>
+          <InputText id="emailAddress" v-model="updateData.email_address" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="whatsappLink">Enlace de WhatsApp</label>
+          <InputText id="whatsappLink" v-model="updateData.wsp_link" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="mapsLink">Enlace de Maps</label>
+          <InputText id="mapsLink" v-model="updateData.maps" class="w-full" />
+        </div>
+        <div class="dialog-footer">
+          <Button label="Guardar cambios" icon="fa-solid fa-floppy-disk" @click="updateSite" severity="success" />
+        </div>
+      </div>
+    </Dialog>
+  
+    <Dialog header="Agregar nueva aplicación" v-model:visible="isApplicationDialogVisible" modal :style="{ width: '450px' }">
+      <div class="form-vstack">
+        <div class="field">
+          <label for="appName">Nombre de la aplicación</label>
+          <InputText id="appName" v-model="applicationData.name" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="appUsername">Nombre de usuario</label>
+          <InputText id="appUsername" v-model="applicationData.username" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="appPassword">Contraseña</label>
+          <InputText id="appPassword" type="password" v-model="applicationData.password" class="w-full" />
+        </div>
+        <Button
+          label="Agregar"
+          icon="fa-solid fa-plus"
+          severity="success"
+          :disabled="!applicationData.name || !applicationData.username || !applicationData.password"
+          @click="addApplication"
+        />
+      </div>
+    </Dialog>
+  
+    <Dialog header="Agregar nueva página web" v-model:visible="isWebPageDialogVisible" modal :style="{ width: '450px' }">
+      <div class="form-vstack">
+        <div class="field">
+          <label for="pageName">Nombre de la página</label>
+          <InputText id="pageName" v-model="webPageData.page" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="pageUsername">Nombre de usuario</label>
+          <InputText id="pageUsername" v-model="webPageData.username" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="pagePassword">Contraseña</label>
+          <InputText id="pagePassword" type="password" v-model="webPageData.password" class="w-full" />
+        </div>
+        <Button
+          label="Agregar"
+          icon="fa-solid fa-plus"
+          severity="success"
+          :disabled="!webPageData.page || !webPageData.username || !webPageData.password"
+          @click="addWebPage"
+        />
+      </div>
+    </Dialog>
+  
+    <Dialog header="Agregar nuevo datáfono" v-model:visible="isDataphoneDialogVisible" modal :style="{ width: '450px' }">
+      <div class="form-vstack">
+        <div class="field">
+          <label for="uniqueCode">Código único</label>
+          <InputText id="uniqueCode" v-model="dataphoneData.unique_code" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="externalCode">Código externo</label>
+          <InputText id="externalCode" v-model="dataphoneData.external_code" class="w-full" />
+        </div>
+        <Button
+          label="Agregar"
+          icon="fa-solid fa-plus"
+          severity="success"
+          :disabled="!dataphoneData.value?.unique_code && !dataphoneData.unique_code"
+          @click="addDataphone"
+        />
+      </div>
+    </Dialog>
+  
+    <Dialog header="Agregar nueva red WiFi" v-model:visible="isWifiDialogVisible" modal :style="{ width: '450px' }">
+      <div class="form-vstack">
+        <div class="field">
+          <label for="wifiUsername">Nombre</label>
+          <InputText id="wifiUsername" v-model="wifiData.username" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="wifiPassword">Contraseña</label>
+          <InputText id="wifiPassword" v-model="wifiData.password" type="password" class="w-full" />
+        </div>
+        <Button
+          label="Agregar"
+          icon="fa-solid fa-plus"
+          severity="success"
+          :disabled="!wifiData.username || !wifiData.password"
+          @click="addWifiNetwork"
+        />
+      </div>
+    </Dialog>
+  </template>
+  
+  <script setup>
+  import { ref, onMounted, watch } from 'vue'
+  import { URI } from '../../service/conection'
+  import horarios from './horarios.vue'
+  import { siteService } from '@/service/siteService.js'
+  import { useDirectoryStore } from '../../store/directorio'
+  import { useReportesStore } from '../../store/reportes'
+  import { fetchService } from '../../service/utils/fetchService'
+  import axios from 'axios'
+  
+  const store = useDirectoryStore()
+  const store2 = useReportesStore()
+  
+  const sites = ref([])
+  const directories = ref({})
+  
+  const isUpdateDialogVisible = ref(false)
+  const isApplicationDialogVisible = ref(false)
+  const isWebPageDialogVisible = ref(false)
+  const isDataphoneDialogVisible = ref(false)
+  const isWifiDialogVisible = ref(false)
+  
+  const updateData = ref({
     site_name: '',
     site_address: '',
     site_phone: '',
     email_address: '',
     wsp_link: '',
     maps: ''
-})
-
-
-
-
-watch(() => store.currentSite, (newSite, oldSite) => {
-    if (newSite !== oldSite) {
-        updateData.value = { ...newSite }  // Asume que 'newSite' contiene los datos actualizados de la sede
-    }
-}, { deep: true, immediate: true })
-
-const confirmDeleteWifi = (wifiId) => {
-    // Mostrar diálogo de confirmación
-    // Si confirma, llamar a deleteWifi
-    if (confirm('¿Estás seguro de que quieres eliminar esta red Wi-Fi?')) {
-        deleteWifi(wifiId);
-    }
-};
-
-const deleteWifi = (wifiId) => {
-    store2.setLoading(true,'borrando')
-
-    const apiUrl = `${URI}/site/${store.currentSite.site_id}/wifi-network/${wifiId}`;
-
-    fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                store2.setLoading(false,'borrando')
-
-                throw new Error('Network response was not ok');
-
-            }
-            return response.json();
-        })
-        .then(() => {
-            store2.setLoading(false,'borrando')
-
-            // Actualizar la lista de redes Wi-Fi
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-        })
-        .catch((error) => {
-            store2.setLoading(false,'borrando')
-
-            console.error('Error:', error);
-        });
-};
-
-
-const confirmDeleteSafeBox = (safeBoxId) => {
-    // Mostrar diálogo de confirmación
-    if (confirm('¿Estás seguro de que quieres eliminar esta caja fuerte?')) {
-        deleteSafeBox(safeBoxId);
-    }
-};
-
-const deleteSafeBox = (safeBoxId) => {
-
-
-    store2.setLoading(true,'borrando')
-
-    const apiUrl = `${URI}/site/${store.currentSite.site_id}/safe-box/${safeBoxId}`;
-
-    fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                store2.setLoading(false,'enviando')
-
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(() => {
-            store2.setLoading(false,'enviando')
-
-            // Actualizar la lista de cajas fuertes
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-        })
-        .catch((error) => {
-            store2.setLoading(false,'enviando')
-
-            console.error('Error:', error);
-        });
-};
-
-
-
-const directories = ref({})
-
-const isCameraDialogVisible = ref(false);
-const cameraData = ref({
-    username: '',
-    password: '',
-});
-
-
-const addCamera = () => {
-
-    store2.setLoading(true,'enviando')
-    if (!cameraData.value.username || !cameraData.value.password) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    const payload = {
-        site_id: store.currentSite.site_id,
-        username: cameraData.value.username,
-        password: cameraData.value.password,
-    };
-
-    // Construir la URL final usando la base URI y la ruta específica
-    const apiUrl = `${URI}/site/camera`;
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            store2.setLoading(false,'enviando')
-
-            return response.json();
-
-        })
-        .then(data => {
-            console.log('Success:', data);
-            // Manejar la lógica post-envío aquí
-            isCameraDialogVisible.value = false;
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-            store2.setLoading(false,'enviando')
-
-
-            // Cerrar el diálogo y resetear el formulario
-        })
-        .catch((error) => {
-            store2.setLoading(false,'enviando')
-
-            console.error('Error:', error);
-            // Manejar errores aquí
-        });
-
-    // Opcional: resetear el formulario aquí si prefieres esperar a que la petición finalice
-};
-
-
-const confirmDeleteDataphone = (dataphoneId) => {
-    // Mostrar diálogo de confirmación
-    if (confirm('¿Estás seguro de que quieres eliminar este datáfono?')) {
-        deleteDataphone(dataphoneId);
-    }
-};
-
-const deleteDataphone = (dataphoneId) => {
-    store2.setLoading(true,'borrando')
-
-    const apiUrl = `${URI}/site/${store.currentSite.site_id}/dataphone/${dataphoneId}`;
-
-    fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-
-                store2.setLoading(false,'borrando')
-
-
-                throw new Error('Network response was not ok');
-                
-            }
-            return response.json();
-        })
-        .then(() => {
-            store2.setLoading(false,'enviando')
-
-            // Actualizar la lista de datáfonos
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-        })
-        .catch((error) => {
-            store2.setLoading(false,'enviando')
-
-            console.error('Error:', error);
-        });
-};
-
-
-const isSafeBoxDialogVisible = ref(false);
-const safeBoxData = ref({
-    boxName: '',
-    password: '',
-});
-
-
-
-
-const confirmDeleteApplication = (applicationId) => {
-    if (confirm('¿Estás seguro de que quieres eliminar esta aplicación?')) {
-        deleteApplication(applicationId);
-    }
-};
-
-const deleteApplication = (applicationId) => {
-    store2.setLoading(true,'borrando')
-
-    const apiUrl = `${URI}/site/${store.currentSite.site_id}/application/${applicationId}`;
-
-    fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-                store2.setLoading(false,'enviando')
-
-            return response.json();
-        })
-        .then(() => {
-            store2.setLoading(false,'enviando')
-
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-};
-const file = ref(null)
-
-const urlsite_photo = ref('')
-
-const handleFileChange = (event) => {
-    // Accede al archivo seleccionado a través del objeto de evento
-    const selectedFile = event.target.files[0];
-
-    if (selectedFile) {
-        // Aquí puedes realizar acciones con el archivo seleccionado, como cargarlo al servidor
-        console.log('Archivo seleccionado:', selectedFile);
-        file.value = selectedFile
-        urlsite_photo.value = URL.createObjectURL(selectedFile);
-    }
-
-}
-
-
-const addSafeBox = () => {
-
-    store2.setLoading(true,'enviando')
-
-    if (!safeBoxData.value.boxName || !safeBoxData.value.password) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    const payload = {
-        site_id: store.currentSite.site_id,
-        box_name: safeBoxData.value.boxName,
-        password: safeBoxData.value.password,
-    };
-
-    const apiUrl = `${URI}/site/safe-box`;
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-        .then(response => {
-            store2.setLoading(false,'enviando')
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            store2.setLoading(false,'enviando')
-
-            console.log('Success:', data);
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-            isSafeBoxDialogVisible.value = false;
-            safeBoxData.value.boxName = '';
-            safeBoxData.value.password = '';
-
-            // Cerrar el diálogo
-            // Actualizar la UI o estado según sea necesario
-        })
-        .catch((error) => {
-            store2.setLoading(false,'enviando')
-
-            console.error('Error:', error);
-            // Manejar errores aquí
-        });
-
-    // Resetear el formulario
-
-};
-
-
-
-const isWifiDialogVisible = ref(false);
-const wifiData = ref({
-    username: '',
-    password: '',
-});
-
-
-const addWifiNetwork = () => {
-
-    store2.setLoading(true,'enviando')
-
-    if (!wifiData.value.username || !wifiData.value.password) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    const payload = {
-        site_id: store.currentSite.site_id,
-        username: wifiData.value.username,
-        password: wifiData.value.password,
-    };
-
-    const apiUrl = `${URI}/site/wifi-network`;
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-        .then(response => {
-            if (!response.ok) {
-                store2.setLoading(false,'enviando')
-
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-            
-        })
-        .then(data => {
-            store2.setLoading(false,'enviando')
-
-            console.log('Success:', data);
-            isWifiDialogVisible.value = false;
-            wifiData.value.username = '';
-            wifiData.value.password = '';
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-
-        })
-        .catch((error) => {
-            store2.setLoading(false,'enviando')
-
-            console.error('Error:', error);
-        });
-
-
-};
-
-
-
-const confirmDeleteWebPage = (webPageId) => {
-    if (confirm('¿Estás seguro de que quieres eliminar esta página web?')) {
-        deleteWebPage(webPageId);
-    }
-};
-
-const deleteWebPage = (webPageId) => {
-
-    store2.setLoading(true,'borrando')
-
-    const apiUrl = `${URI}/site/${store.currentSite.site_id}/web-page/${webPageId}`;
-
-    fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                store2.setLoading(false,'borrando')
-
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(() => {
-            store2.setLoading(false,'borrando')
-
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-        })
-        .catch((error) => {
-            store2.setLoading(false,'borrando')
-
-            console.error('Error:', error);
-        });
-};
-
-const isDataphoneDialogVisible = ref(false);
-const dataphoneData = ref({
-    unique_code: '',
-    external_code: '',
-});
-
-
-const addDataphone = () => {
-
-    store2.setLoading(true,'enviando')
-
-    if (!dataphoneData.value.unique_code) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    const payload = {
-        site_id: store.currentSite.site_id,
-        unique_code: dataphoneData.value.unique_code,
-        external_code: dataphoneData.value.external_code,
-    };
-
-    const apiUrl = `${URI}/site/dataphone`;
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-        .then(response => {
-            if (!response.ok) {
-                store2.setLoading(false,'borrando')
-
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            store2.setLoading(false,'borrando')
-
-            console.log('Success:', data);
-            isDataphoneDialogVisible.value = false;
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-
-        })
-        .catch((error) => {
-            store2.setLoading(false,'borrando')
-
-            console.error('Error:', error);
-        });
-
-    dataphoneData.value.unique_code = '';
-    dataphoneData.value.external_code = '';
-};
-
-
-const confirmDeleteCamera = (cameraId) => {
-    // Mostrar diálogo de confirmación
-    if (confirm('¿Estás seguro de que quieres eliminar esta cámara?')) {
-        deleteCamera(cameraId);
-    }
-};
-
-const deleteCamera = (cameraId) => {
-    store2.setLoading(true,'borrando')
-
-    const apiUrl = `${URI}/site/${store.currentSite.site_id}/camera/${cameraId}`;
-
-    fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                store2.setLoading(false,'enviando')
-
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(() => {
-            store2.setLoading(false,'enviando')
-
-            // Actualizar la lista de cámaras
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-};
-
-
-const isWebPageDialogVisible = ref(false);
-const webPageData = ref({
-    page: '',
-    username: '',
-    password: '',
-});
-
-
-const addWebPage = () => {
-
-    store2.setLoading(true,'enviando')
-
-    if (!webPageData.value.page || !webPageData.value.username || !webPageData.value.password) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    const payload = {
-        site_id: store.currentSite.site_id,
-        page: webPageData.value.page,
-        username: webPageData.value.username,
-        password: webPageData.value.password,
-    };
-
-    const apiUrl = `${URI}/siteweb-page`;
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-        .then(response => {
-
-            if (!response.ok) {
-                store2.setLoading(false,'borrando')
-
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            store2.setLoading(false,'borrando')
-
-            console.log('Success:', data);
-            isWebPageDialogVisible.value = false;
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-
-        })
-        .catch((error) => {
-            store2.setLoading(false,'borrando')
-
-            console.error('Error:', error);
-        });
-
-    webPageData.value.page = '';
-    webPageData.value.username = '';
-    webPageData.value.password = '';
-};
-
-
-const isApplicationDialogVisible = ref(false);
-const applicationData = ref({
-    name: '',
-    username: '',
-    password: '',
-});
-
-const addApplication = () => {
-
-    store2.setLoading(true,'enviando')
-
-    if (!applicationData.value.name || !applicationData.value.username || !applicationData.value.password) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    const payload = {
-        site_id: store.currentSite.site_id,
-        name: applicationData.value.name,
-        username: applicationData.value.username,
-        password: applicationData.value.password,
-    };
-
-    const apiUrl = `${URI}/site/application`;
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
-        .then(response => {
-            store2.setLoading(false,'borrando')
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            store2.setLoading(false,'borrando')
-
-            console.log('Success:', data);
-            isApplicationDialogVisible.value = false;
-            siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-
-        })
-        .catch((error) => {
-            store2.setLoading(false,'borrando')
-
-            console.error('Error:', error);
-        });
-
-    applicationData.value.name = '';
-    applicationData.value.username = '';
-    applicationData.value.password = '';
-};
-
-
-
-const infoItems = [
+  })
+  
+  const infoItems = [
     { label: 'Nombre', value: 'site_name' },
-    { label: 'Direccion', value: 'site_address' },
-    { label: 'Telefono', value: 'site_phone' },
+    { label: 'Dirección', value: 'site_address' },
+    { label: 'Teléfono', value: 'site_phone' },
     { label: 'Correo', value: 'email_address' },
     { label: 'Link de WhatsApp', value: 'wsp_link', isLink: true },
     { label: 'Link de Maps', value: 'maps', isLink: true }
-]
-
-
-onMounted(async () => {
-    await siteService.getSites().then(data => sites.value = data)
-    await siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-
-    if (!store.currentSite) {
-        store.setSite(sites.value[0])
-
+  ]
+  
+  const applicationData = ref({ name: '', username: '', password: '' })
+  const webPageData = ref({ page: '', username: '', password: '' })
+  const dataphoneData = ref({ unique_code: '', external_code: '' })
+  const wifiData = ref({ username: '', password: '' })
+  
+  const file = ref(null)
+  const urlsite_photo = ref('')
+  const is_open = ref(false)
+  
+  /* Scroll helper */
+  const scrollTo = (id) => {
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  
+  /* Init */
+  onMounted(async () => {
+    await siteService.getSites().then(data => (sites.value = data))
+    if (!store.currentSite && sites.value?.length) {
+      store.setSite(sites.value[0])
     }
-
-    urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`; 
+    await refreshDirectory()
+    urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`
     file.value = ''
-
-    if (store?.currentSite?.site_id){
-        is_open.value = await fetchService.get(`${URI}/is-open-status/${store.currentSite.site_id}`)
+    if (store?.currentSite?.site_id) {
+      is_open.value = await fetchService.get(`${URI}/is-open-status/${store.currentSite.site_id}`)
     }
-})
-
-
-
-
-function uploadUsersite_photo(site_photo, id) {
-    // URL del servidor donde deseas enviar el PDF
-    const serverURL = `${URI}/upload-product-image/site-${id}`;
-    store2.setLoading(true, 'sibiendo imagen')
-
-    // Crear un objeto FormData para enviar el archivo
-    const formData = new FormData();
-    formData.append('file', site_photo);
-
-
-    // Realizar una solicitud POST al servidor
-    fetch(serverURL, {
-        method: 'POST',
-        body: formData,
+    updateData.value = { ...store.currentSite }
+  })
+  
+  /* Watchers */
+  watch(
+    () => store.currentSite,
+    async newSite => {
+      if (!newSite) return
+      store2.setLoading(true, `cargando información de ${newSite.site_name}`)
+      updateData.value = { ...newSite }
+      urlsite_photo.value = `${URI}/read-product-image/600/${'site-' + newSite.site_id}`
+      file.value = ''
+      await refreshDirectory()
+      if (newSite?.site_id) {
+        is_open.value = await fetchService.get(`${URI}/is-open-status/${newSite.site_id}`)
+      }
+      store2.setLoading(false)
+    },
+    { deep: true }
+  )
+  
+  watch(is_open, async val => {
+    if (store?.currentSite?.site_id != null) {
+      await fetchService.put(`${URI}/open-close-site/site/${store?.currentSite?.site_id}/status/${val}`)
+    }
+  })
+  
+  /* Directory refresh */
+  const refreshDirectory = async () => {
+    if (!store?.currentSite?.site_id) return
+    const data = await siteService.siteDirectory(store.currentSite.site_id)
+    directories.value = data || {}
+  }
+  
+  /* Image */
+  const handleFileChange = e => {
+    const selectedFile = e.target.files?.[0]
+    if (!selectedFile) return
+    file.value = selectedFile
+    urlsite_photo.value = URL.createObjectURL(selectedFile)
+  }
+  const resetPreview = () => {
+    urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`
+    file.value = ''
+  }
+  
+  /* Update site */
+  const updateSite = () => {
+    const apiUrl = `${URI}/site/${store.currentSite.site_id}`
+    axios
+      .put(apiUrl, updateData.value)
+      .then(() => {
+        isUpdateDialogVisible.value = false
+        store.currentSite = { ...updateData.value }
+      })
+      .catch(err => console.error('Error en la actualización:', err?.response?.data || err))
+  }
+  
+  /* Upload photo */
+  function uploadUsersite_photo(site_photo, id) {
+    const serverURL = `${URI}/upload-product-image/site-${id}`
+    store2.setLoading(true, 'subiendo imagen')
+    const formData = new FormData()
+    formData.append('file', site_photo)
+    fetch(serverURL, { method: 'POST', body: formData })
+      .then(r => {
+        if (!r.ok) console.error('Error al cargar foto:', r.status, r.statusText)
+        file.value = ''
+      })
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'subiendo imagen'))
+  }
+  
+  /* WIFI */
+  const confirmDeleteWifi = wifiId => confirm('¿Eliminar esta red Wi-Fi?') && deleteWifi(wifiId)
+  const deleteWifi = wifiId => {
+    store2.setLoading(true, 'borrando')
+    fetch(`${URI}/site/${store.currentSite.site_id}/wifi-network/${wifiId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } })
+      .then(r => (r.ok ? r.json() : Promise.reject(r)))
+      .then(refreshDirectory)
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'borrando'))
+  }
+  const addWifiNetwork = () => {
+    if (!wifiData.value.username || !wifiData.value.password) return
+    store2.setLoading(true, 'enviando')
+    fetch(`${URI}/site/wifi-network`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site_id: store.currentSite.site_id, ...wifiData.value })
     })
-        .then((response) => {
-            if (response.ok) {
-                // La carga fue exitosa, realiza alguna acción si es necesario
-                console.log('Archivo photo cargado con éxito');
-                file.value = ''
-                store2.setLoading(false, 'sibiendo imagen')
-
-            } else {
-                console.error('Error al cargar foto de perfil:', response.status, response.statusText);
-                store2.setLoading(false, 'sibiendo imagen')
-
-            }
-        })
-        .catch((error) => {
-            console.error('Error en la solicitud:', error);
-            store2.setLoading(false, 'sibiendo imagen')
-
-        });
-}
-
-
-watch(() => store.currentSite, (newVal) => {
-    store2.setLoading(true, `cargando información de ${newVal.site_name}`);
-    store2.setLoading(false);
-    siteService.siteDirectory(store.currentSite.site_id).then(data => directories.value = data)
-    urlsite_photo.value = `${URI}/read-product-image/600/site-${store.currentSite.site_id}`;
-    file.value = ''
-
-    // Establece un temporizador para cambiar el estado de carga a false después de 1 segundo
-    // 1000 milisegundos = 1 segundo
-});
-
-
-
-const is_open = ref(false)
-
-
-
-
-watch(() => store.currentSite, async() => {
-    if (store?.currentSite?.site_id){
-        is_open.value = await fetchService.get(`${URI}/is-open-status/${store.currentSite.site_id}`)
-    }
-})
-
-
-
-
-watch(is_open, async() => {
-
-    if (store?.currentSite?.site_id){
-        await fetchService.put(`${URI}/open-close-site/site/${store?.currentSite?.site_id}/status/${is_open.value}`)
-    }
-})
-
-
-
-
-
-</script>
-
-
-<style scoped>
-/* Define las transiciones para la imagen */
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.5s;
-}
-
-.fade-enter,
-.fade-leave-to
-
-/* .fade-leave-active en <2.1.8 */
-    {
-    opacity: 0;
-}
-
-a {
-    text-decoration: none;
-    /* color: #000000;
-    font-weight: 500; */
-}
-
-p {
-    color: black;
-}
-
-
-* {
-    transition: all ease .5s;
-}
-</style>
+      .then(r => (r.ok ? r.json() : Promise.reject(r)))
+      .then(() => {
+        isWifiDialogVisible.value = false
+        wifiData.value = { username: '', password: '' }
+        return refreshDirectory()
+      })
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'enviando'))
+  }
+  
+  /* Datáfonos */
+  const confirmDeleteDataphone = id => confirm('¿Eliminar este datáfono?') && deleteDataphone(id)
+  const deleteDataphone = id => {
+    store2.setLoading(true, 'borrando')
+    fetch(`${URI}/site/${store.currentSite.site_id}/dataphone/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } })
+      .then(r => (r.ok ? r.json() : Promise.reject(r)))
+      .then(refreshDirectory)
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'borrando'))
+  }
+  const addDataphone = () => {
+    if (!dataphoneData.value.unique_code) return
+    store2.setLoading(true, 'enviando')
+    fetch(`${URI}/site/dataphone`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site_id: store.currentSite.site_id, ...dataphoneData.value })
+    })
+      .then(r => (r.ok ? r.json() : Promise.reject(r)))
+      .then(() => {
+        isDataphoneDialogVisible.value = false
+        dataphoneData.value = { unique_code: '', external_code: '' }
+        return refreshDirectory()
+      })
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'enviando'))
+  }
+  
+  /* Web pages */
+  const confirmDeleteWebPage = id => confirm('¿Eliminar esta página web?') && deleteWebPage(id)
+  const deleteWebPage = id => {
+    store2.setLoading(true, 'borrando')
+    fetch(`${URI}/site/${store.currentSite.site_id}/web-page/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } })
+      .then(r => (r.ok ? r.json() : Promise.reject(r)))
+      .then(refreshDirectory)
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'borrando'))
+  }
+  const addWebPage = () => {
+    if (!webPageData.value.page || !webPageData.value.username || !webPageData.value.password) return
+    store2.setLoading(true, 'enviando')
+    // Mantengo tu endpoint como lo tenías:
+    fetch(`${URI}/siteweb-page`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site_id: store.currentSite.site_id, ...webPageData.value })
+    })
+      .then(r => (r.ok ? r.json() : Promise.reject(r)))
+      .then(() => {
+        isWebPageDialogVisible.value = false
+        webPageData.value = { page: '', username: '', password: '' }
+        return refreshDirectory()
+      })
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'enviando'))
+  }
+  
+  /* Apps */
+  const confirmDeleteApplication = id => confirm('¿Eliminar esta aplicación?') && deleteApplication(id)
+  const deleteApplication = id => {
+    store2.setLoading(true, 'borrando')
+    fetch(`${URI}/site/${store.currentSite.site_id}/application/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } })
+      .then(r => (r.ok ? r.json() : Promise.reject(r)))
+      .then(refreshDirectory)
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'borrando'))
+  }
+  const addApplication = () => {
+    if (!applicationData.value.name || !applicationData.value.username || !applicationData.value.password) return
+    store2.setLoading(true, 'enviando')
+    fetch(`${URI}/site/application`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site_id: store.currentSite.site_id, ...applicationData.value })
+    })
+      .then(r => (r.ok ? r.json() : Promise.reject(r)))
+      .then(() => {
+        isApplicationDialogVisible.value = false
+        applicationData.value = { name: '', username: '', password: '' }
+        return refreshDirectory()
+      })
+      .catch(console.error)
+      .finally(() => store2.setLoading(false, 'enviando'))
+  }
+  </script>
+  
+  <style scoped>
+  /* Paleta sobria */
+  :root {
+    --bg: #0b1220;
+    --card: #ffffff;
+    --line: #e5e7eb;
+    --text: #0f172a;
+    --muted: #475569;
+    --accent: #0ea5e9;
+    --green: #84cc16;
+    --orange: #f59e0b;
+    --violet: #8b5cf6;
+    --slate: #64748b;
+  }
+  
+  /* Fondo */
+  .bg-hero {
+    width: 100%;
+    height: 120%;
+    position: fixed;
+    inset: 0;
+    object-fit: cover;
+    filter: blur(10px) brightness(0.55);
+    z-index: -1;
+  }
+  
+  /* Layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 18rem 1fr;
+    gap: 1rem;
+    background-color: rgb(255, 255, 255);
+    max-width: 1200px;
+    margin: 3.5rem auto 4rem;
+    padding: 0 1rem;
+  }
+  @media (max-width: 992px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1rem;
+    position: sticky;
+    top: 4rem;
+    z-index:10 ;
+    height: min-content;
+  }
+  .sidebar-top { display: grid; gap: .75rem; }
+  .brand {
+    display: flex; gap: .5rem; align-items: center;
+    color: var(--text); font-size: 1.05rem;
+  }
+  .open-row { display: flex; justify-content: space-between; align-items: center; color: var(--muted); }
+  .menu { margin-top: .5rem; display: grid; gap: .25rem; }
+  
+  /* Contenido */
+  .content { display: grid; gap: 0rem; }
+  
+  /* Cards */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 1rem;
+  }
+  
+  /* Hero */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  @media (max-width: 992px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .menu { display: none; }
+    .sidebar{    top: 3rem;}
+  
+  }
+  .title { color: var(--text); margin: .25rem 0 .5rem; }
+  .muted { color: var(--muted); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .hero-image-wrap { position: relative; }
+  .hero-image {
+    width: 100%; aspect-ratio: 4/2; object-fit: cover;
+    border-radius: 12px; border: 1px solid var(--line);
+    background: #eef6ff;
+  }
+  
+  /* Secciones */
+  .section { display: grid; gap: .75rem; }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: .5rem; border-bottom: 1px dashed var(--line);
+  }
+  .section-title { display: flex; align-items: center; gap: .6rem; color: var(--text); }
+  .section-title i { color: var(--accent); }
+  .accent-green .section-title i { color: var(--green); }
+  .accent-orange .section-title i { color: var(--orange); }
+  .accent-violet .section-title i { color: var(--violet); }
+  .accent-slate .section-title i { color: var(--slate); }
+  
+  /* Info básica */
+  .info-grid { display: grid; gap: .5rem; }
+  .info-row {
+    display: grid; grid-template-columns: 12rem 1fr; gap: 1rem;
+    padding: .45rem 0; border-bottom: 1px dotted var(--line);
+  }
+  .info-row:last-child { border-bottom: 0; }
+  .info-label { color: var(--muted); font-weight: 700; }
+  .info-value { color: var(--text); word-break: break-word; }
+  .info-value.link { color: var(--accent); text-decoration: none; }
+  
+  /* Listas */
+  .list { display: grid; gap: .75rem; }
+  .list-row {
+    display: grid; grid-template-columns: 1fr auto; gap: .75rem;
+    padding: .8rem; border: 1px solid var(--line);
+    border-radius: 12px; background: #fafafa;
+  }
+  .fields { display: grid; gap: .25rem; color: var(--text); }
+  .icon-only { width: 2.5rem; height: 2.5rem; border-radius: 10px; }
+  .empty { color: var(--muted); font-style: italic; padding: .5rem; }
+  
+  /* Diálogos */
+  .form-vstack { display: grid; gap: .75rem; }
+  .field label { display: block; color: var(--muted); font-weight: 600; margin-bottom: .25rem; }
+  .dialog-footer { display: flex; justify-content: flex-end; margin-top: .5rem; }
+  
+  /* Botones circulares */
+  .round {
+     /* border-radius: 12px; */
+  }
+  
+  /* Transiciones */
+  * { transition: all .2s ease; }
+  </style>
+  

@@ -1,347 +1,311 @@
 <template>
-
-    <div class="container py-6">
-
-
-        <Dialog v-model:visible="playVisible" class="p-0 m-3" header="Reproductor de video
-    " modal style="width: 100%;max-width: 150vh; aspect-ratio: 16  / 9;">
-            <div style="height: 100%;">
-                <!-- {{ videoToSee }} -->
-                <iframe class="p-0" width="100%" style="aspect-ratio: 16 / 9;"
-                    :src="formattedVideoLink(videoToSee)" title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-
-        </Dialog>
-
-        <h2 class="text-center" ><b>MIS CURSOS</b></h2>
-
-
-        
-
-    <DataTable :paginator="true" :rows="15" style="width: 100%;max-width: 1280px;"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Capacitaciones"
-        :rowsPerPageOptions="[5, 10, 25, 100]" scrollable showGridlines scrollHeight="65vh" stripedRows class="col-12 m-auto"
-        :value="sequesces" tableStyle="min-width: 50rem;">
-        <template #header>
-            <div class="grid p-2" style="align-items:center;justify-content: space-between; display: flex;gap: 1rem;">
-                <h4 class="px-2"> <i class="fa fa-glasses"></i>  <b>Cursos</b></h4>
-
-                <InputText class="" style="width: 100%; max-width: 500px;" placeholder="Buscar Secuencia..." />
-
-
-
-            </div>
-
-
-        </template>
-
-        
-     
-        <column header="Id" class="px-4" field="created_time">
-            <template #body="data">
-
-                <h6 > {{ data.data.sequence_id }}</h6>
-            </template>
-        </column>
-
+    <div class="container py-2 px-2">
+      <!-- VIDEO PLAYER -->
+      <Dialog
+        v-model:visible="playVisible"
+        class="p-0 m-3 modern-dialog"
+        header="Reproductor de video"
+        modal
+        :style="{ width: 'min(90vw, 64rem)' }"
+      >
+        <div class="video-frame">
+          <iframe
+            class="p-0"
+            width="100%"
+            style="aspect-ratio: 16 / 9;"
+            :src="formattedVideoLink(videoToSee)"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          />
+        </div>
+      </Dialog>
   
-
-        
-        <column header="Nombre" class="px-4" field="created_time">
-            <template #body="data">
-
-                <h6 > {{ data.data.sequence_name }}</h6>
-                <div style="display: flex; justify-content: start; align-items: center;">
-                    
-                    <Button  @click="navigate_to_sesion(data.data.sequence_id, data.data.sequence_name)" text  icon="fa-solid fa-play">
-                        
-                    </Button>
-
-                    <Button text  icon="fa-solid fa-ellipsis-vertical">
-                        
-                    </Button>
-               
-
-                    <!-- <Button text label="50%" >
-                        
-                    </Button>
-                   -->
-
-
-
-                 
-                     
+      <!-- HERO / HEADER -->
+      <section class="page-hero">
+        <div class="page-hero__content">
+          <div class="title-wrap">
+            <i class="fa fa-graduation-cap"></i>
+            <h2><b>MIS CURSOS</b></h2>
+            <Tag class="ml-2" severity="success">{{ sequences.length }} activos</Tag>
+          </div>
+  
+          <div class="actions-wrap">
+            <span class="p-input-icon-left search-input">
+              <i class="pi pi-search" />
+              <InputText
+                v-model="filters.global.value"
+                placeholder="Buscar curso, creador, fecha…"
+              />
+            </span>
+          </div>
+        </div>
+        <div class="hero-accent" />
+      </section>
+  
+      <!-- TABLE -->
+      <div class="table-card shadow-2">
+        <DataTable
+          :value="sequences"
+          dataKey="sequence_id"
+          :paginator="true"
+          :rows="15"
+          :rowsPerPageOptions="[5, 10, 25, 100]"
+          scrollable
+          showGridlines
+          scrollHeight="65vh"
+          stripedRows
+          tableStyle="min-width: 64rem;"
+          v-model:filters="filters"
+          filterDisplay="menu"
+          :globalFilterFields="[
+            'sequence_name',
+            'description',
+            'created_date',
+            'created_time',
+            'creator_name',
+            'sequence_id'
+          ]"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cursos"
+          class="col-12 m-auto"
+        >
+          <template #header>
+            <div class="grid p-2 header-row">
+              <h4 class="px-2">
+                <i class="fa fa-glasses"></i> <b>Cursos</b>
+              </h4>
+            </div>
+          </template>
+  
+          <template #empty>
+            <div class="empty-state">
+              <i class="fa-solid fa-layer-group bounce" />
+              <p><b>No tienes cursos asignados aún</b></p>
+              <p class="muted">Cuando te asignen cursos, aparecerán aquí.</p>
+            </div>
+          </template>
+  
+          <Column header="ID" class="px-4" field="sequence_id" style="min-width: 8rem;">
+            <template #body="{ data }">
+              <Tag severity="info">#{{ data.sequence_id }}</Tag>
+            </template>
+          </Column>
+  
+          <Column header="Nombre" class="px-4" field="sequence_name" style="min-width: 22rem;">
+            <template #body="{ data }">
+              <div class="name-cell">
+                <h6 class="name-text">{{ data.sequence_name }}</h6>
+                <div class="name-actions">
+                  <Button
+                    text
+                    icon="fa-solid fa-play"
+                    @click="navigate_to_sesion(data.sequence_id, data.sequence_name)"
+                    v-tooltip.bottom="'Entrar al curso'"
+                  />
+                  <Button text icon="fa-solid fa-ellipsis-vertical" />
                 </div>
+              </div>
             </template>
-        </column>
-
-
-        <column header="Descripcion" style="min-width: 30rem;" class="px-4" field="created_time">
-                <template #body="data">
-
-                    <h6 class="" style="text-transform: capitalize;"> {{ data.data.description?.toLowerCase() }}</h6>
+          </Column>
+  
+          <Column header="Descripción" class="px-4" field="description" style="min-width: 28rem;">
+            <template #body="{ data }">
+              <div class="desc-cell">
+                <i class="fa-regular fa-message" />
+                <span class="truncate">{{ (data.description || '').toLowerCase() }}</span>
+              </div>
+            </template>
+          </Column>
+  
+          <Column header="Fecha & Hora" class="px-4" style="min-width: 16rem;">
+            <template #body="{ data }">
+              <div class="datetime-stack">
+                <Tag severity="warning" class="mb-2">
+                  <i class="fa-regular fa-calendar-days mr-2" />
+                  {{ data.created_date }}
+                </Tag>
+                <Tag severity="secondary">
+                  <i class="fa-regular fa-clock mr-2" />
+                  {{ data.created_time }}
+                </Tag>
+              </div>
+            </template>
+          </Column>
+  
+          <Column header="Creador" class="px-4" field="creator_name" style="min-width: 16rem;">
+            <template #body="{ data }">
+              <div class="creator-cell">
+                <span class="avatar">{{ initials(data.creator_name) }}</span>
+                <h6>{{ data.creator_name }}</h6>
+              </div>
+            </template>
+          </Column>
+  
+          <Column header="Clases" class="px-4" style="min-width: 24rem;">
+            <template #body="{ data }">
+              <div class="thumbs-row">
+                <template
+                  v-for="(link, idx) in (data.video_links || []).filter(Boolean).slice(0, 4)"
+                  :key="idx"
+                >
+                  <div class="thumb" @click="openVideo(link)">
+                    <img class="thumb-img" :src="urlService.getThumbnail(link)" alt="Clase" />
+                    <div class="thumb-overlay">
+                      <i class="fa-solid fa-play" />
+                    </div>
+                  </div>
                 </template>
-            </column>
-
-        <column header="Descripcion" style="min-width: 30rem;" class="px-4" field="created_time">
-                <template #body="data">
-
-                    <h6 class="" style="text-transform: capitalize;"> {{ data.data.description?.toLowerCase() }}</h6>
-                </template>
-            </column>
-
-
-
-
-
-
-        <column header="Fecha" class="px-4" field="created_time">
-            <template #body="data">
-
-                <h6 class="date" > {{ data.data.created_date }}</h6>
+  
+                <Tag
+                  v-if="(data.video_links || []).filter(Boolean).length > 4"
+                  severity="info"
+                  class="more-chip"
+                >
+                  +{{ (data.video_links || []).filter(Boolean).length - 4 }} más
+                </Tag>
+              </div>
             </template>
-        </column>
-
-
-
-        <column header="Hora" class="px-4" field="created_time">
-            <template #body="data">
-
-                <h6 class="date" > {{ data.data.created_time }}</h6>
-            </template>
-        </column>
-
-        <column header="Creador" class="date px-4" field="created_time">
-            <template #body="data">
-
-                <h6 style="min-width: max-content;"> {{ data.data.creator_name }}</h6>
-            </template>
-        </column>
-
-        <!-- <column header="Asignado por"  field="created_time">
-            <template #body="data">
-                <h6> {{ data.data.creator_name }}</h6>
-            </template>
-        </column> -->
-
-
-        <!-- <column  style="min-width: 1rem;" class="py-1 pl-0" header="imagen" field="id">
-    
-        <template #body="data">
-             
-            <img class="p-0"
-                    style="width: 100%;aspect-ratio: 3 / 3;border-radius: .3rem; object-fit: cover;"
-                     :src="`${URI}/read-product-image/96/contest-${data.data.id}`"
-                    alt="">
-        </template>
-    
-    
-    </column>
-    <column style="min-width: 20rem;" class="py-1" header="Nombre" field="name"></column>
-
-    <column style="min-width: 20rem;" class="py-1" header="Participantes" field="name">
-    
-        <template #body="data">
-{{ data.data.is_site_participation? 'Sedes' : 'Colaboradores' }}
-        </template>
-    </column>
-
-
-
-    <column style="min-width: 13rem;" class="py-1" header="Fecha de inicio" field="formattedStartDate">
-        <template #body="data">
-            {{ data.data.formattedStartDate }}
-        </template>
-    </column>
-    <column style="min-width: 13rem;" class="py-1" header="Fecha de finalizacion" field="formattedStartDate">
-        <template #body="data">
-            {{ data.data.formattedEndDate }}
-        </template>
-    </column>
-
-
-
-
-    <column style="min-width: 13rem;" class="py-1" header="Forma de ganar" field="formattedStartDate">
-        <template #body="data">
-           
-            <span> {{ data.data.contest_winner_type_name }}</span>
-
-        </template>
-    </column>
-
-    <column style="min-width: 12rem;" class="py-1" header="Tipo de evidencia" field="formattedStartDate">
-        <template #body="data">
-           
-            <span> {{ data.data.evidence_type_name }}</span>
-
-        </template>
-    </column>
-
-
-    
-    <column style="min-width: 12rem;" class="py-1" header="Quien va ganando?" field="formattedStartDate">
-        <template #body="data">
-           
-            <p style="text-transform: capitalize;min-width: max-content;"> {{ data.data.rbq[0]?.name?.split(' ')?.slice(0,3)?.join(' ')?.toLowerCase() }}</p>
-
-        </template>
-    </column>
-
-
-    <column style="min-width: 20rem;" class="py-1" header="Instrucciones" field="formattedStartDate">
-        <template #body="data">
-           
-            <span> {{ data.data.instructions }}</span>
-
-        </template>
-    </column>
-
-    
-    <column style="min-width: 5rem;" class="py-1" header="Estado" field="formattedStartDate">
-        <template #body="data">
-           
-            <Tag  v-if="data.data.started" :severity="data.data.vigent? 'success' : 'danger'" style="border-radius: .3rem; min-width: max-content;">{{ data.data.vigent? 'En curso...' : 'Finalizado' }} </Tag> 
-            <Tag  v-if="!data.data.started" style="border-radius: .3rem;min-width: max-content;">{{ data.data.started? '' : 'Proximo' }} </Tag> 
-
-        </template>
-    </column>
-
-
-    <column  alignFrozen="right" style="min-width: 4rem;" class="py-1 pr-0" header="Acciones" field="Visible">
-        <template #body="data">
-            <div style="display: flex; align-items: center; gap: 0;">
-                    <Button @click="opencontestToEdit(data.data)" style="pediting: 0; margin: 0;" severity="warning" text class="p-0 m-0 text-2xl" icon="fa-solid fa-pen-to-square p-0 m-0"></Button>
-                    <Button @click="openContestToDelete(data.data)"  style="pediting: 0; margin: 0;" severity="danger" text class="p-0 m-0 text-2xl" icon="fa-solid fa-trash  p-0 m-0"></Button>
-            </div>
-           
-        </template>
-    </column>
-    <column frozen alignFrozen="right" style="min-width: 4rem;" class="py-1 pr-0" header="Visible" field="Visible">
-        <template #body="data">
-            <div style="display: flex; align-items: center; gap: 0;">
-                <InputSwitch  @change="() => contestService.contestToggleVisible(visibleContest[data.data.id], data.data.id)" v-model="visibleContest[data.data.id]"/>
-            </div>
-           
-        </template>
-    </column> -->
-
-    
-    <column header="Clases" class="px-4">
-
-<template #body="data">
-
-    <!-- <img style="width: 5rem; aspect-ratio: 16 / 9; object-fit: cover;"
-:src="urlService.getThumbnail(data.data.)" alt=""> -->
-
-    <div class="" style="display: flex; gap: 1rem; align-items: center;">
-
-
-
-        <img @click="openVideo(link)" class="img-courses" v-for="link in data.data.video_links.filter(l => l)"
-            style="width: 9rem;cursor: pointer; border-radius: .3rem; aspect-ratio: 16 / 9;object-fit: cover;"
-            :src="urlService.getThumbnail(link)" alt=""> <span class=""><b> <i
-                    class="text-4xl pi pi-ellipsis-h"></i> </b></span>
-
-        
-
+          </Column>
+        </DataTable>
+      </div>
     </div>
-
-</template>
-</column>
-
-    </DataTable>
-
-</div>
-</template>
-
-
-<script setup>
-
-import { videoSequenceService } from '../../../service/video_training/videoTrainingService';
-import { urlService } from '../../../service/video_training/urlService';
-
-import { ref, onMounted, watch } from 'vue';
-import { da } from 'date-fns/locale';
-import router from '../../../router';
-import { loginStore } from '@/store/user.js'
-const user = loginStore()
-
-import { useRoute } from 'vue-router';
-
-const navigate_to_sesion = (sequence_id, sequence_name) => {
+  </template>
+  
+  <script setup>
+  import { ref, onMounted } from 'vue'
+  import { useRoute } from 'vue-router'
+  import router from '../../../router'
+  
+  import { loginStore } from '@/store/user.js'
+  import { FilterMatchMode } from 'primevue/api'
+  
+  import { videoSequenceService } from '../../../service/video_training/videoTrainingService'
+  import { urlService } from '../../../service/video_training/urlService'
+  
+  const user = loginStore()
+  const route = useRoute()
+  
+  const sequences = ref([])
+  const playVisible = ref(false)
+  const videoToSee = ref('') // string (link) para el iframe
+  
+  const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+  })
+  
+  const navigate_to_sesion = (sequence_id, sequence_name) => {
     router.push({
-        
-        name:'video-training-videos',
-        params:{
-            sequence_id:sequence_id,
-            sequence_name:sequence_name
-        }
-    
+      name: 'video-training-videos',
+      params: { sequence_id, sequence_name }
     })
-}
-
-
-const route = useRoute()
-
-
-const openVideo = (video) => {
-    videoToSee.value = video
+  }
+  
+  const openVideo = (link) => {
+    videoToSee.value = link
     playVisible.value = true
-}
-
-
-const formattedVideoLink = (link) => {
-    return link.replace('watch?v=', 'embed/');
-}
-
-
-const videoToSee = ref({})
-
-
-const playVisible = ref(false)
-
-
-
-const sequesces = ref([])
-
-
-
-onMounted(async () => {
-
-    const student_id = user.rawUserData.id
- 
-    sequesces.value = await videoSequenceService.getVideoSequencesBySesionIdAndStudentId(student_id)
-})
-
-</script>
-
-<style scoped>
-.container {
-    margin-top: 3rem;
-}
-
-
-
-h6{
-
-    text-transform: uppercase;
-}
-
-
-.date{
-    min-width: max-content;
-}
-
-
-.img-courses {
-    transition: all ease .2s;
-}
-
-.img-courses:hover {
-    transform: scale(1.05);
-}
-</style>
+  }
+  
+  const formattedVideoLink = (link = '') => {
+    const m = link.match(
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)(?:\?.*)?/
+    )
+    return m?.[1] ? `https://www.youtube.com/embed/${m[1]}` : ''
+  }
+  
+  const initials = (name = '') =>
+    name
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p) => p[0]?.toUpperCase())
+      .join('')
+  
+  onMounted(async () => {
+    const student_id = user.rawUserData?.id
+    sequences.value = await videoSequenceService.getVideoSequencesBySesionIdAndStudentId(student_id)
+  })
+  </script>
+  
+  <style scoped>
+  .container { margin-top: 3rem; }
+  
+  /* ---------- Hero ---------- */
+  .page-hero {
+    position: relative; border-radius: 1rem; overflow: hidden; margin-bottom: 1rem;
+    background: linear-gradient(135deg, #06b6d4, #7c3aed 55%, #ff7ac3); color: white;
+  }
+  .page-hero__content {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+    align-items: center; justify-content: space-between;
+    padding: 1.25rem 1rem;
+  }
+  .title-wrap { display: flex; align-items: center; gap: .75rem; }
+  .actions-wrap { display: flex; align-items: center; gap: .75rem; }
+  .search-input :deep(input) { width: clamp(16rem, 38vw, 28rem); border-radius: .75rem; border: none; }
+  .hero-accent { height: 6px; width: 100%; background: linear-gradient(90deg, rgba(255,255,255,.55), transparent); }
+  
+  /* ---------- Card/Table ---------- */
+  .table-card { background: white; border-radius: 1rem; padding: .25rem .25rem 1rem; overflow: hidden; }
+  :deep(.p-datatable) { border-radius: 1rem; }
+  :deep(.p-datatable .p-datatable-thead > tr > th) {
+    background: #f6f8ff; color: #2b2b2b; font-weight: 700; border: none;
+  }
+  :deep(.p-datatable .p-datatable-tbody > tr) {
+    transition: transform .08s ease, box-shadow .12s ease, background-color .15s ease;
+  }
+  :deep(.p-datatable .p-datatable-tbody > tr:hover) {
+    background: #fafaff; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(87, 98, 255, .08);
+  }
+  
+  /* ---------- Cells ---------- */
+  .name-cell { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+  .name-text { margin: 0; color: #1f2937; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .desc-cell { display: flex; align-items: center; gap: .5rem; color: #374151; }
+  .truncate { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .datetime-stack { display: flex; flex-direction: column; align-items: start; }
+  
+  .creator-cell { display: flex; align-items: center; gap: .6rem; }
+  .avatar {
+    width: 2rem; height: 2rem; border-radius: 50%;
+    display: grid; place-items: center; font-weight: 800; font-size: .9rem; color: white;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  }
+  
+  /* ---------- Thumbs ---------- */
+  .thumbs-row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+  .thumb {
+    width: 9rem; aspect-ratio: 16 / 9; border-radius: .5rem; overflow: hidden; position: relative; cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08); transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .thumb:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(0,0,0,.15); }
+  .thumb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .thumb-overlay {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,.35));
+    opacity: 0; transition: opacity .18s ease;
+  }
+  .thumb:hover .thumb-overlay { opacity: 1; }
+  .thumb-overlay i { color: white; font-size: 1.1rem; }
+  
+  /* ---------- Dialog ---------- */
+  .video-frame { width: 100%; border-radius: .75rem; overflow: hidden; }
+  .modern-dialog :deep(.p-dialog-header) { border-bottom: 0; background: linear-gradient(135deg, #06b6d4, #7c3aed); color: white; }
+  .modern-dialog :deep(.p-dialog-content) { background: #ffffff; }
+  
+  /* ---------- Empty ---------- */
+  .empty-state { padding: 4rem 1rem; text-align: center; color: #4b5563; }
+  .empty-state i { font-size: 3rem; margin-bottom: .5rem; opacity: .8; }
+  .muted { color: #6b7280; margin-bottom: 1rem; }
+  @keyframes bounceKey { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  .bounce { animation: bounceKey 1.4s ease-in-out infinite; }
+  
+  /* Misc */
+  h6 { margin: 0; text-transform: uppercase; overflow: hidden; }
+  .date { min-width: max-content; }
+  
+  .header-row { align-items: center; justify-content: space-between; display: flex; gap: 1rem; }
+  </style>
+  

@@ -1,838 +1,598 @@
 <script setup>
-
-
-import { ref, onMounted, onBeforeMount, computed, cloneVNode, watch } from 'vue';
-import {
-    curentSite, getSiteDocument
-
-} from '@/service/dropDownAux';
-import { URI } from '../../service/conection';
-// import { getUsers, } from '@/service/userServices'
-// import { URI } from "@/service/conection.js" 
-// import { getSiteDocument } from '../../service/dropDownAux';
-// import ProductService from '@/service/ProductService';
-// import { ref, onMounted } from 'vue';
-// import { useToast } from 'primevue/usetoast';
-import { uploadPDF } from '@/service/sendFileService.js'
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useReportesStore } from '../../store/reportes';
 
-import { useConfirm } from "primevue/useconfirm";
-import { useToast } from "primevue/usetoast";
+import { useConfirm } from 'primevue/useconfirm';
+import { useToast } from 'primevue/usetoast';
+
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import Calendar from 'primevue/calendar';
+import Dropdown from 'primevue/dropdown';
 import InputText from 'primevue/inputtext';
-import Divider from 'primevue/divider';
-import { useDocumentsStore } from '../../store/documentos';
-import { siteService } from '../../service/siteService';
+import Toast from 'primevue/toast';
+import ConfirmDialog from 'primevue/confirmdialog';
 
-const store2 = useDocumentsStore()
+import { URI } from '@/service/conection';
+import { getSiteDocument } from '@/service/dropDownAux';
+import { uploadPDF } from '@/service/sendFileService.js';
+import { useReportesStore } from '@/store/reportes';
+import { useDocumentsStore } from '@/store/documentos';
+import { siteService } from '@/service/siteService';
+
+/* ------------------- Stores y servicios ------------------- */
+const store = useReportesStore();
+const docsStore = useDocumentsStore();
 const confirm = useConfirm();
+const toast = useToast();
+const route = useRoute();
 
+/* ------------------- State ------------------- */
+const curentSiteDocuments = ref([]);
+const documentsDropValues = ref([]);
+
+const file = ref(null);
+const currentdocument = ref(null);
+
+const documentType = ref(null); // { type_id, type_name }
+const documentRenovationDate = ref(null);
+
+const displayRenewDialog = ref(false);
+const displayUploadDialog = ref(false);
 const displayAddTypeDialog = ref(false);
+const displayNewSiteDialog = ref(false);
+
 const newTypeName = ref('');
 
-const addNewType = async () => {
-    if (!newTypeName.value) {
-        alert('Por favor, ingrese un nombre para el tipo de documento.'); // Usa una forma más sofisticada de manejar errores en producción
-        return;
-    }
+const newSiteData = ref({
+  site_name: '',
+  site_address: '',
+  site_phone: '',
+  site_business_hours: ''
+});
+const newSiteImage = ref(null);
+const imagePreviewUrl = ref(null);
 
-    try {
-        const response = await fetch(`${URI}/site-file-type`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ type_name: newTypeName.value }),
-        });
+const fileInputRef = ref(null);
+const imageInputRef = ref(null);
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+/* ------------------- Helpers ------------------- */
+const currentSite = computed(() => docsStore.currentSite || {});
+const siteId = computed(() => docsStore?.currentSite?.site_id || route.params.site_id);
 
-        const data = await response.json();
-        console.log('Tipo de documento agregado:', data);
-        newTypeName.value = ''; // Limpiar el campo después de la inserción
-        fetchDocumentTypes(); // Recargar los tipos de documentos si es necesario
-    } catch (error) {
-        console.error('Error al agregar el tipo de documento:', error);
-        // Maneja el error adecuadamente
-    }
+const toISODate = (val) => {
+  if (!val) return null;
+  if (typeof val === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  const dt = new Date(val);
+  if (isNaN(dt)) return null;
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, '0');
+  const d = String(dt.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+const formatDisplayDate = (iso) => {
+  if (!iso || typeof iso !== 'string') return '';
+  const [y, m, d] = iso.split('-');
+  if (!y || !m || !d) return iso;
+  return `${d}/${m}/${y}`;
 };
 
-
-
-
-
-
-
-
-
-
-const store = useReportesStore()
-const documents = ref([])
-const file = ref()
-const currentdocument = ref()
-const documentsDropValues = ref([]); // Inicializa vacío
-
-const curentSiteDocuments = ref()
-const documentType = ref('')
-const documentRenovationDate = ref('')
-const route = useRoute()
-const currentSite = ref({})
-const toast = useToast()
-
-documents.value = curentSiteDocuments.value
-
-const handleFileChange = (event) => {
-    // Accede al archivo seleccionado a través del objeto de evento
-    const selectedFile = event.target.files[0];
-
-    if (selectedFile) {
-        // Aquí puedes realizar acciones con el archivo seleccionado, como cargarlo al servidor
-        console.log('Archivo seleccionado:', selectedFile);
-        file.value = selectedFile
-    }
-
-}
-
-
+/* ------------------- API ------------------- */
 const fetchDocumentTypes = async () => {
-    try {
-        const response = await fetch(`${URI}/site-file-types`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        documentsDropValues.value = data
-    } catch (error) {
-        console.error('Error al obtener los tipos de documentos:', error);
-        // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje al usuario
-    }
-};
-
-
-const deleteDocument = (document) => {
-    confirm.require({
-        target: event.currentTarget,
-        message: `Esta seguro de eliminar ${document.document_name}`,
-        icon: 'pi pi-exclamation-triangle',
-        rejectClass: 'p-button-info p-button-outlined p-button-sm',
-        acceptClass: 'p-button-sm p-button-danger',
-        rejectLabel: 'Cancelar',
-        acceptLabel: 'Eliminar',
-        accept: () => {
-            // toast.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
-            performDeletion(document)
-        },
-        reject: () => {
-            // toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-        }
-    })
-};
-
-
-const performDeletion = async (document) => {
-    try {
-        const response = await fetch(`${URI}/site_document/${document.document_id}`, {
-            method: 'DELETE'
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al eliminar el documento');
-        }
-
-        // Actualiza la lista de documentos en la interfaz de usuario
-        getSiteDocumentInfo();
-        toast.add({ severity: 'success', summary: 'Documento eliminado', detail: 'El documento ha sido eliminado correctamente.', life: 3000 });
-    } catch (error) {
-        console.error('Error al eliminar el documento:', error);
-        toast.add({ severity: 'error', summary: 'Error al eliminar', detail: 'No se pudo eliminar el documento.', life: 3000 });
-    }
-};
-
-const uploadPDFInfo = async (data) => {
-
-    if(!file.value){
-        alert('seleccione un archivo')
-        return
-    }
-
-    let Method = "post"
-    const queryUrl = `${URI}/site-document/`
-    const requestOptions = {
-        method: Method,
-        headers: {
-            'Content-Type': 'application/json' // Asegúrate de establecer el tipo de contenido adecuado
-        },
-        body: JSON.stringify(data)
-    };
-    const response = await fetch(queryUrl, requestOptions)
-    const dataresp = response.json()
-    return dataresp
-
-
-}
-
-
-
-
-
-
-const getSiteDocumentInfo = async () => {
-    try {
-
-        const site_id = store2?.currentSite?.site_id || route.params.site_id
-        // Construye la URL con los parámetros
-        const url = `${URI}/get-site-documents-info/${site_id}`;
-
-        // Realiza la solicitud GET
-        const response = await fetch(url);
-        console.log(response)
-        if (!response.ok) {
-            return
-        }
-
-        const data = await response.json();
-        curentSiteDocuments.value = data
-
-
-
-    } catch (error) {
-        console.error('Error al enviar la solicitud:', error);
-    }
-};
-
-const updatePDFInfo = async (datos) => {
-
-    if(!documentRenovationDate.value){
-        alert('la recha de renovacion es obligatoria')
-        return 
-    }
-       
-    let Method = "put";
-    const data = { ...datos }
-    const queryUrl = `${URI}/site-document/${data.document_id}`;
-    data.renovation_date = documentRenovationDate.value
-    const requestOptions = {
-        method: Method,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    };
-    try {
-        const response = await fetch(queryUrl, requestOptions);
-        if (!response.ok) {
-            throw new Error(`Error en la solicitud: ${response.status}`);
-        }
-        const responseData = await response.json();
-        getSiteDocumentInfo()
-        close()
-        toast.add({ severity: 'success', summary: 'Actualización exitosa', detail: 'Documento actualizado correctamente', life: 3000 });
-        return responseData;
-    } catch (error) {
-        toast.add({ severity: 'error', summary: 'Error en la actualización', detail: error.message, life: 3000 });
-    }
-};
-
-
-
-onMounted(async() => {
-    const site_id = store2?.currentSite?.site_id || route.params.site_id
-    store2.currentSite= await siteService.getSiteById(site_id)
-    getSiteDocumentInfo()
-    store.setLoading(true)
-    store.setLoading(false)
-    fetchDocumentTypes();
-
-    // console.log(curentSite)
-});
-
-
-watch(() => route.params.site_id, () => {
-
-    getSiteDocumentInfo()
-    store.setLoading(true)
-    store.setLoading(false)
-})
-
-
-onMounted(() => {
-    const storedSiteData = localStorage.getItem('currentSiteFiles');
-    if (storedSiteData) {
-        currentSite.value = JSON.parse(storedSiteData);
-    }
-});
-
-
-const updateFileType = async (tipo) => {
   try {
-    const response = await fetch(`${URI}/site-file-type/${tipo.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ type_name: tipo.type_name }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Tipo de documento actualizado:', data);
-    toast.add({ severity: 'success', summary: 'Actualizado', detail: 'Tipo de archivo actualizado con éxito', life: 3000 });
-  } catch (error) {
-    console.error('Error al actualizar el tipo de documento:', error);
-    toast.add({ severity: 'error', summary: 'Error al actualizar', detail: 'No se pudo actualizar el tipo de archivo.', life: 3000 });
+    const res = await fetch(`${URI}/site-file-types`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    documentsDropValues.value = await res.json();
+  } catch (err) {
+    console.error(err);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los tipos de archivo', life: 3000 });
   }
 };
 
-const display = ref(false);
-const display2 = ref(false);
+const getSiteDocumentInfo = async () => {
+  try {
+    const res = await fetch(`${URI}/get-site-documents-info/${siteId.value}`);
+    if (!res.ok) return;
+    curentSiteDocuments.value = await res.json();
+  } catch (err) {
+    console.error('Error al obtener documentos:', err);
+  }
+};
 
-const upload = (file, document_type, site_name) => {
-    // const existe = curentSiteDocuments.value.some(objeto => objeto.document_type == documentType.value);
-    // console.log(documents,documentType.value)
-    // console.log(existe)
-            if(!documentRenovationDate.value){
-            alert('la fecha de renovacion es obligatoria')
-            return 
-        }
+const uploadPDFInfo = async (payload) => {
+  const res = await fetch(`${URI}/site-document/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+};
 
-            if(!documentType.value?.type_name){
-            alert('debe elegir un tipo de archivo')
-            return 
-        }
+const updatePDFInfo = async (docRow, isoDate) => {
+  const payload = { ...docRow, renovation_date: isoDate };
+  const res = await fetch(`${URI}/site-document/${docRow.document_id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+};
 
-        if(!file){
-            alert('debe subir un  archivo')
-            return 
-        }
+const addNewType = async () => {
+  if (!newTypeName.value?.trim()) {
+    toast.add({ severity: 'warn', summary: 'Falta nombre', detail: 'Ingresa un nombre para el tipo', life: 2500 });
+    return;
+  }
+  try {
+    const res = await fetch(`${URI}/site-file-type`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type_name: newTypeName.value.trim() })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    newTypeName.value = '';
+    await fetchDocumentTypes();
+    toast.add({ severity: 'success', summary: 'Tipo creado', life: 2500 });
+  } catch (err) {
+    console.error(err);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el tipo', life: 3000 });
+  }
+};
 
-    const data = {
-        "document_name": `${currentSite.value.site_name} ${documentType.value.type_name}`,
-        "document_type": documentType.value.type_name,
-        "renovation_date": documentRenovationDate.value,
-        "site_id": route.params.site_id
+const updateFileType = async (tipo) => {
+  try {
+    const res = await fetch(`${URI}/site-file-type/${tipo.type_id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type_name: tipo.type_name })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    toast.add({ severity: 'success', summary: 'Tipo actualizado', life: 2500 });
+  } catch (err) {
+    console.error(err);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el tipo', life: 3000 });
+  }
+};
+
+const deleteFileType = async (typeId) => {
+  confirm.require({
+    message: '¿Eliminar este tipo de archivo?',
+    header: 'Confirmar',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Eliminar',
+    rejectLabel: 'Cancelar',
+    acceptClass: 'p-button-danger',
+    accept: async () => {
+      try {
+        const res = await fetch(`${URI}/site-file-type/${typeId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        documentsDropValues.value = documentsDropValues.value.filter(t => t.type_id !== typeId);
+        toast.add({ severity: 'success', summary: 'Eliminado', life: 2500 });
+      } catch (err) {
+        console.error(err);
+        toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar', life: 3000 });
+        fetchDocumentTypes();
+      }
     }
-
-    store.setLoading(true,'enviando')
-
-    uploadPDFInfo(data).then(data => {
-        store.setLoading(false,'enviando')
-
-        console.log(data)
-
-        uploadPDF(file, data.document_id, documentType.value.type_name)
-
-        getSiteDocumentInfo()
-
-
-    })
-    toast.add({ severity: 'success', summary: `hecho`, detail: '', life: 3000 })
-    close()
-    store.setLoading(false,'enviando')
-
-
-
+  });
 };
 
-const update = (file, data) => {
-
-    if(!documentRenovationDate.value){
-            alert('la fecha de renovecion es obligatoria')
-            return 
-        }
-
-
-    if (4) {
-        const i = {
-            "document_name": `${currentdocument.value.document_name}`,
-            "document_type": currentdocument.value.document_type,
-            "renovation_date": documentRenovationDate.value,
-            "site_id": route.params.site_id
-        }
-        console.log(data)
-
-        updatePDFInfo(data)
-
-        uploadPDF(file, data.document_id, data.document_type)
-
-        toast.add({ severity: 'success', summary: `hecho`, detail: '', life: 3000 })
-        close()
-    } else {
-        // console.log(existe)
-        toast.add({ severity: 'error', summary: `Ya hay cargado un ${documentType.value} para ${currentSite.value.site_name} pero puede renovarlo si gusta  `, detail: '', life: 3000 })
+const deleteDocument = (doc) => {
+  confirm.require({
+    message: `¿Eliminar "${doc.document_name}"?`,
+    header: 'Confirmar',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Eliminar',
+    rejectLabel: 'Cancelar',
+    acceptClass: 'p-button-danger',
+    accept: async () => {
+      try {
+        const res = await fetch(`${URI}/site_document/${doc.document_id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Error eliminando');
+        await getSiteDocumentInfo();
+        toast.add({ severity: 'success', summary: 'Documento eliminado', life: 2500 });
+      } catch (err) {
+        console.error(err);
+        toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar', life: 3000 });
+      }
     }
-
-
+  });
 };
 
-const open = (currentdoc) => {
-    display.value = true;
-    currentdocument.value = currentdoc
+/* ------------------- Handlers ------------------- */
+const handleFileChange = (e) => {
+  const selected = e.target.files?.[0];
+  if (selected) file.value = selected;
 };
 
-const open2 = (currentdoc) => {
-    display2.value = true;
-    currentdocument.value = currentdoc
+const openRenew = (row) => {
+  currentdocument.value = row;
+  documentRenovationDate.value = null;
+  file.value = null;
+  displayRenewDialog.value = true;
 };
-const close = () => {
-    display.value = false;
-    display2.value = false;
-    file.value = null
-    getSiteDocumentInfo()
-    // file.value = null
-}
 
+const openUpload = () => {
+  documentType.value = null;
+  documentRenovationDate.value = null;
+  file.value = null;
+  displayUploadDialog.value = true;
+};
 
-const imagePreviewUrl = ref(null);
+const closeDialogs = () => {
+  displayRenewDialog.value = false;
+  displayUploadDialog.value = false;
+  file.value = null;
+};
 
-const displayNewSiteDialog = ref(false);
-const newSiteData = ref({
-    site_name: '',
-    site_address: '',
-    site_phone: '',
-    site_business_hours: '',
-});
-const newSiteImage = ref(null);
-const imageInputRef = ref(null);
+const upload = async () => {
+  if (!documentType.value?.type_name) {
+    toast.add({ severity: 'warn', summary: 'Selecciona un tipo', life: 2000 });
+    return;
+  }
+  const isoDate = toISODate(documentRenovationDate.value);
+  if (!isoDate) {
+    toast.add({ severity: 'warn', summary: 'Fecha de renovación requerida', life: 2000 });
+    return;
+  }
+  if (!file.value) {
+    toast.add({ severity: 'warn', summary: 'Adjunta un archivo', life: 2000 });
+    return;
+  }
 
+  const payload = {
+    document_name: `${currentSite.value?.site_name || ''} ${documentType.value.type_name}`.trim(),
+    document_type: documentType.value.type_name,
+    renovation_date: isoDate,
+    site_id: siteId.value
+  };
+
+  try {
+    store.setLoading(true, 'Enviando');
+    const created = await uploadPDFInfo(payload);
+    await uploadPDF(file.value, created.document_id, documentType.value.type_name);
+    await getSiteDocumentInfo();
+    toast.add({ severity: 'success', summary: 'Documento cargado', life: 2500 });
+    closeDialogs();
+  } catch (err) {
+    console.error(err);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar el documento', life: 3000 });
+  } finally {
+    store.setLoading(false);
+  }
+};
+
+const renew = async () => {
+  const isoDate = toISODate(documentRenovationDate.value);
+  if (!isoDate) {
+    toast.add({ severity: 'warn', summary: 'Fecha de renovación requerida', life: 2000 });
+    return;
+  }
+  try {
+    store.setLoading(true, 'Actualizando');
+    await updatePDFInfo(currentdocument.value, isoDate);
+    if (file.value) {
+      await uploadPDF(file.value, currentdocument.value.document_id, currentdocument.value.document_type);
+    }
+    await getSiteDocumentInfo();
+    toast.add({ severity: 'success', summary: 'Documento actualizado', life: 2500 });
+    closeDialogs();
+  } catch (err) {
+    console.error(err);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar', life: 3000 });
+  } finally {
+    store.setLoading(false);
+  }
+};
+
+/* ------------------- Nueva sede ------------------- */
 const openNewSiteDialog = () => {
-    displayNewSiteDialog.value = true;
-    imagePreviewUrl.value = null; // Resetear la vista previa al abrir el diálogo
+  displayNewSiteDialog.value = true;
+  newSiteData.value = { site_name: '', site_address: '', site_phone: '', site_business_hours: '' };
+  newSiteImage.value = null;
+  imagePreviewUrl.value = null;
 };
 
-const handleNewSiteImageChange = (event) => {
-    const file = event.target.files[0];
-    newSiteImage.value = file;
-    if (file) {
-        // Crear una URL de objeto para la vista previa de la imagen
-        imagePreviewUrl.value = URL.createObjectURL(file);
-    }
+const handleNewSiteImageChange = (e) => {
+  const f = e.target.files?.[0];
+  newSiteImage.value = f || null;
+  imagePreviewUrl.value = f ? URL.createObjectURL(f) : null;
 };
 
 const createNewSite = async () => {
-    try {
-        const response = await fetch(`${URI}/site`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newSiteData.value),
-        });
-        if (!response.ok) throw new Error('Error al crear la sede');
-
-        const responseData = await response.json();
-        const siteId = responseData.site_id;
-
-        if (newSiteImage.value) {
-            const formData = new FormData();
-            formData.append('file', newSiteImage.value);
-            await fetch(`${URI}/upload-product-image/site-${siteId}`, {
-                method: 'POST',
-                body: formData,
-            });
-        }
-
-        displayNewSiteDialog.value = false;
-        // Actualiza la UI según sea necesario
-    } catch (error) {
-        console.error('Error al crear la sede:', error);
-    }
-};
-
-
-
-
-
-
-
-
-
-
-
-const deleteFileType = async (typeId) => {
-
-
-    confirm.require({
-        target: event.currentTarget,
-        message: '¿Está seguro de que desea eliminar este tipo de archivo?',
-        icon: 'pi pi-exclamation-triangle',
-        rejectClass: 'p-button-info p-button-outlined p-button-sm',
-        acceptClass: 'p-button-sm p-button-danger',
-        rejectLabel: 'Cancelar',
-        acceptLabel: 'Eliminar',
-        accept: async () => {
-            try {
-                store.setLoading(true, 'eliminando')
-
-                const response = await fetch(`${URI}/site-file-type/${typeId}`, {
-                    method: 'DELETE',
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error al eliminar el tipo de archivo');
-                }
-
-                // Eliminar el tipo de archivo de la vista
-                documentsDropValues.value = documentsDropValues.value.filter(tipo => tipo.type_id !== typeId);
-                toast.add({ severity: 'success', summary: 'Eliminado', detail: 'Tipo de archivo eliminado con éxito', life: 3000 });
-                store.setLoading(false, 'eliminando')
-
-                fetchDocumentTypes(); // Recargar los tipos de documentos si es necesario
-
-
-            } catch (error) {
-                store.setLoading(false, 'eliminando')
-                console.error('Error al eliminar el tipo de archivo:', error);
-                toast.add({ severity: 'error', summary: 'Error al eliminar', detail: 'No se pudo eliminar el tipo de archivo.', life: 3000 });
-                fetchDocumentTypes(); // Recargar los tipos de documentos si es necesario
-
-            }
-        }
+  try {
+    const res = await fetch(`${URI}/site`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newSiteData.value)
     });
+    if (!res.ok) throw new Error('Error al crear la sede');
+
+    const { site_id } = await res.json();
+    if (newSiteImage.value) {
+      const formData = new FormData();
+      formData.append('file', newSiteImage.value);
+      const up = await fetch(`${URI}/upload-product-image/site-${site_id}`, {
+        method: 'POST',
+        body: formData
+      });
+      if (!up.ok) throw new Error('Error subiendo imagen de sede');
+    }
+
+    displayNewSiteDialog.value = false;
+    toast.add({ severity: 'success', summary: 'Sede creada', life: 2500 });
+  } catch (err) {
+    console.error(err);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear la sede', life: 3000 });
+  }
 };
 
+/* ------------------- Lifecycle ------------------- */
+onMounted(async () => {
+  // Garantiza currentSite desde store o ruta
+  if (!docsStore?.currentSite?.site_id && route.params.site_id) {
+    docsStore.currentSite = await siteService.getSiteById(route.params.site_id);
+  }
+  await getSiteDocumentInfo();
+  await fetchDocumentTypes();
+});
 
-
-
-
-
-
-
-
-
-
-
+watch(() => route.params.site_id, async () => {
+  await getSiteDocumentInfo();
+});
 </script>
 
 <template>
+  <Toast />
+  <ConfirmDialog />
 
+  <div class="col-12 p-0 mx-auto">
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="left">
+        <h3 class="title">
+          Documentos — <span class="muted">{{ currentSite?.site_name || 'Sede' }}</span>
+        </h3>
+      </div>
+      <div class="right">
+        <Button size="small" class="w-full md:w-auto" icon="pi pi-plus" label="Nuevo documento" @click="openUpload" />
+        <Button size="small" class="w-full md:w-auto" icon="pi pi-home" label="Nueva sede" @click="openNewSiteDialog" />
+        <Button size="small" class="w-full md:w-auto" icon="pi pi-list" label="Tipos de archivo" @click="displayAddTypeDialog = true" />
+      </div>
+    </div>
 
-    <Dialog v-model:visible="displayAddTypeDialog" :style="{ width: '450px', }" :modal="true">
-        <template #header>
-            <h3>Tipos de archivo</h3>
+    <!-- Tabla -->
+    <DataTable
+      :value="curentSiteDocuments"
+      :stripedRows="true"
+      :paginator="true"
+      :rows="10"
+      dataKey="document_id"
+      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+      :rowsPerPageOptions="[5,10,25]"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+      responsiveLayout="scroll"
+      class="mt-3"
+    >
+      <Column field="document_type" header="Tipo" headerStyle="min-width:12rem;" />
+      <Column header="Nombre" headerStyle="min-width:18rem;">
+        <template #body="{ data }">
+          {{ (currentSite?.site_name || '') + ' ' + data.document_type }}
         </template>
-
-
-        <div>
-            <p class="text-xl" style="font-weight: bold;" for="type_name">Nuevo</p>
-            <InputText class="col-12" id="type_name" v-model="newTypeName" />
-        </div>
-
-
-        <div class="col-12 p-0" style="display: flex; justify-content: end;">
-
-
-            <Button class="my-4" label="Agregar" @click="addNewType" />
-
-        </div>
-
-
-
-        <p class="text-xl my-4" style="font-weight: bold;" for="type_name">Editar exixtentes</p>
-
-
-        <div class="my-2 col-12 p-0" v-for="tipo in documentsDropValues" :key="tipo.type_id">
-            <div class="col-12 p-0" style="display: flex; gap: 1rem; justify-content: space-between;">
-                <InputText class="col-11" v-model="tipo.type_name" @blur="updateFileType(tipo)" />
-                <Button rounded
-                    style="aspect-ratio: 1 / 1; width: 3rem; height: 3rem; display: flex; justify-content: center;"
-                    severity="danger" text class="pi-button-rounded" @click="deleteFileType(tipo.id)">
-                    <i class="fa-solid fa-trash-can text-2xl"></i>
-                </Button>
-            </div>
-        </div>
-
-        <div>
-
-        </div>
-
-
-
-
-    </Dialog>
-
-    <Toast />
-    <div class="col-12 p-0 mx-auto" style=" margin-top: 0rem;">
-
-        <Toast />
-        <ConfirmPopup></ConfirmPopup>
-
-
-        
-
-            <DataTable stripedRows="" ref="dt" :value="curentSiteDocuments" dataKey="id" :paginator="true" :rows="10"
-                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                :rowsPerPageOptions="[5, 10, 25]"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                responsiveLayout="scroll">
-
-
-                <div class="col-12 p-0" style="display: flex; justify-content: end;">
-                    <div class="mt-4 col-12 md:col-6 xl:col-4 p-0 px-3"
-                        style="display: flex;max-width: 35rem; justify-content: end; gap: 1rem;">
-
-                        <Button size="small "
-                            style="width: 100%;font-weight: bold;display: flex;align-items: center;justify-content: center; "
-                             class=" p-button-help  py-2" @click="open2()">
-                            <i class="fa-solid fa-plus mr-2 text-2xl "></i>
-                            <i class="fa-solid fa-file mr-2  text-2xl "></i>
-
-                        </Button>
-                        <Button size="small " ico
-                            style="width:100%;font-weight: bold;display: flex;align-items: center; justify-content: center; "
-                             class=" p-button-help  py-2" @click="openNewSiteDialog">
-                            <i class="fa-solid fa-plus mr-2 text-2xl "></i>
-                            <i class="fa-solid fa-house mr-2 text-2xl "></i>
-
-                        </Button>
-
-                        <Button size="small "
-                            style="width: 100%;font-weight: bold;display: flex;align-items: center;justify-content: center; "
-                             class=" p-button-help  py-2" @click="displayAddTypeDialog = true">
-                            <i class="fa-solid fa-plus mr-2 text-2xl "></i>
-                            <i class="fa-solid fa-font"></i>
-
-                        </Button>
-
-
-
-                    </div>
-                </div>
-
-                <template #header>
-
-
-
-
-
-
-                </template>
-
-                <!-- <Column class="py-0" header="Icon" headerStyle="width:5rem; min-width:3rem;">
-                        <template #body="user">
-                            <span class="p-column-title">Image  </span>
-                            <i class="fa-solid fa-file-invoice"></i>
-                            <div>
-
-                            </div>
-                        </template>
-                    </Column> -->
-
-
-
-
-                <Column class="p-0" field="name" header="Tipo" :sortable="true"
-                    headerStyle="width:20rem; min-width:max-content; ">
-                    <template #body="user">
-                        <p style="min-width: max-content;">
-                            {{ user.data.document_type }}
-                        </p>
-                    </template>
-                </Column>
-
-
-                <Column class="py-0" field="position" header="Nombre " :sortable="true"
-                    headerStyle="width:20rem; min-width:10rem;">
-                    <template #body="user">
-                        <span class="p-column-title">Category</span>
-                        <p style="min-width: max-content;">
-                         {{ currentSite.site_name }}   {{ user.data.document_type }}
-
-                        </p>
-                    </template>
-                </Column>
-
-                <Column class="p-0" field="birth_date" header="Renovacion" :sortable="true"
-                    headerStyle="width:5rem; min-width:10rem;">
-                    <template #body="user">
-                        <!-- <span class="p-column-title">Fecha de Nacimiento</span> -->
-                        {{ user.data.renovation_date?.split('-').reverse().join(' / ') }}
-                        
-                    </template>
-                </Column>
-
-                <Column style="" class="py-0" 
-                    frozen alignFrozen="right">
-                    <template #body="user">
-
-                        <div style="display: flex;">
-                            <Button text size="large" style=" aspect-ratio: 1 / 1; "
-                                class=" p-button-success mr-2 mb-2 p-0 text-3xl "
-                                @click="getSiteDocument(user.data.document_id, user.data.document_type)">
-
-                                <i class="fa-solid fa-file-arrow-down"></i>
-
-                            </Button>
-
-                            <Button text size="large" style="" class=" p-button-info mr-2 mb-2 p-0 text-3xl"
-                                @click="open(user.data)">
-
-                                <i class="fa-solid fa-pen-to-square"></i>
-
-                            </Button>
-
-                            <Button text size="large" style="" class=" p-button-danger mr-2 mb-2 p-0 text-3xl"
-                                @click="deleteDocument(user.data)">
-                                <i class="fa-solid fa-trash"></i>
-                            </Button>
-
-                        </div>
-
-
-
-
-                    </template>
-
-
-                </Column>
-
-
-
-
-
-            </DataTable>
-
-            <Dialog class="p-0" :closable="true" :header="` RENOVAR ${currentdocument?.document_type} PARA ${currentSite.site_name?.toUpperCase()}`"
-                v-model:visible="display" :style="{ width: '500px' }" :modal="true">
-
-
-                <input ref="fileInput" type="file" @change="handleFileChange" style="display: none;">
-
-                <div class="col-12 p-0" style="">
-                    <label for="position">FECHA DE RENOVACION</label>
-
-                    <Calendar id="entry_date" dateFormat="dd/mm/yy"  style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
-                        required="true" autofocus />
-                </div>
-
-
-                <p class="p-3" v-show="file" style="background-color:rgba(115, 255, 76, 0.306);">
-                    <i class="pi pi-check" style="color: slateblue"></i> {{ file ? `${file.name} : si este no es
-                    su documento por
-                    favor carguelo` : '' }}
-                </p>
-                <!-- <img src="@/images/document_image.jpg" class="shadow-2" style="width: 20%;" @click="cambiar" /> -->
-                <div class="grid" style="display: flex; justify-content: space-between;">
-
-                    <div class="col-12 xl:col-6">
-                        <Button severity="help" label="Seleccionar documento" class="col-12"
-                            style="" @click="$refs.fileInput.click();" />
-                    </div>
-
-                    <div class="col-12 xl:col-6">
-                        <Button class="col-12" severity="success" label="Enviar"
-                            @click="update(file, currentdocument)" />
-
-                    </div>
-
-
-
-
-                    <!-- {{ currentdocument }}  -->
-
-                </div>
-
-
-                <!-- <Button label="enviar" severity="warning" @click="$refs.fileInput.click();" /> -->
-            </Dialog>
-            <!-- <Button label="Show" icon="pi pi-external-link" style="width: auto" @click="open" /> -->
-
-
-            <Dialog :header="` CARGAR ${documentType?.type_name || ''} PARA ${currentSite?.site_name?.toUpperCase()}`"
-                v-model:visible="display2" :style="{ width: '450px', }" :modal="true">
-
-
-                <div class="grid" style="">
-                    <div class="col-12">
-                        <label for="position">TIPO DE DOCUMENTO</label>
-                        <Dropdown v-model.trim="documentType" :options="documentsDropValues" optionLabel="type_name"
-                            placeholder="" required="true" :class="{ 'p-invalid': submitted }"
-                            style="width: 100%;margin: 20px 0 ;" />
-                    </div>
-
-
-                    <div class="col-12">
-                        <label for="position">FECHA DE RENOVACION</label>
-
-                        <Calendar dateFormat="dd/mm/yy" id="entry_date" style="width: 100%;margin: 20px 0 ;" v-model="documentRenovationDate"
-                            required="true" autofocus />
-                    </div>
-
-                </div>
-
-                <input ref="fileInput" type="file" @change="handleFileChange" style="display: none;">
-
-                <p class="p-3" v-show="file" style="background-color:rgba(19, 164, 0, 0.306);">
-                    <i class="pi pi-check" style="color: slateblue"></i> {{ file ? `${file.name} : verifique si
-                    este es su documeto
-                    antes de envirlo` : '' }}
-                </p>
-                <!-- <img src="@/images/document_image.jpg" class="shadow-2" style="width: 20%;" @click="cambiar" /> -->
-                <div class="" style="display: flex; justify-content: space-between;gap: 1rem; flex-direction: column;">
-                    <Button class="" severity="help" label="Seleccionar documento" style="width:100%;"
-                        @click="$refs.fileInput.click();" />
-                    <Button label="Enviar" style="width:100%;" severity="success"
-                        @click="upload(file, documentType, currentSite.site_id)" />
-                    <!-- {{ documentRenovationDate }} -->
-                </div>
-                <!-- <Button label="enviar" severity="warning" @click="$refs.fileInput.click();" /> -->
-            </Dialog>
-
-
-
-
-
-        </div>
-
-
-
-    <Dialog v-model:visible="displayNewSiteDialog" :style="{ width: '450px', padding: '0px' }" :modal="true">
-        <template #header>
-            <h3>Nueva Sede</h3>
+      </Column>
+      <Column field="renovation_date" header="Renovación" headerStyle="min-width:10rem;">
+        <template #body="{ data }">
+          {{ formatDisplayDate(data.renovation_date) }}
         </template>
-
-        <!-- Formulario para la nueva sede -->
-        <div class>
-            <p class="mt-4">Nombre de la Sede:</p>
-            <InputText class="col-12" v-model="newSiteData.site_name" />
-        </div>
-        <div>
-            <p class="mt-4">Dirección:</p>
-            <InputText class="col-12" v-model="newSiteData.site_address" />
-        </div>
-        <div>
-            <p class="mt-4">Teléfono:</p>
-            <InputText class="col-12" v-model="newSiteData.site_phone" />
-        </div>
-
-        <div v-if="imagePreviewUrl" style="margin-top: 20px;">
-            <img :src="imagePreviewUrl" alt="Vista previa de la imagen" style="max-width: 100%; max-height: 300px;">
-        </div>
-        <!-- Botón personalizado para cargar la imagen -->
-        <Button class="my-5" @click="$refs.imageInput.click()"><i class="fa-solid fa-camera"></i></Button>
-        <input type="file" ref="imageInput" @change="handleNewSiteImageChange" style="display: none;">
-
-        <template #footer>
-            <Button @click="createNewSite">Crear Sede</Button>
+      </Column>
+      <Column header="Acciones" frozen alignFrozen="right" headerStyle="min-width:12rem;">
+        <template #body="{ data }">
+          <div class="actions">
+            <Button text rounded aria-label="Descargar" icon="pi pi-download" @click="getSiteDocument(data.document_id, data.document_type)" />
+            <Button text rounded aria-label="Editar" icon="pi pi-pencil" @click="openRenew(data)" />
+            <Button text rounded severity="danger" aria-label="Eliminar" icon="pi pi-trash" @click="deleteDocument(data)" />
+          </div>
         </template>
-    </Dialog>
+      </Column>
+    </DataTable>
+  </div>
 
+  <!-- Dialog: Renovar -->
+  <Dialog
+    v-model:visible="displayRenewDialog"
+    :modal="true"
+    :style="{ width: '500px' }"
+    :header="`Renovar ${currentdocument?.document_type || ''} — ${(currentSite?.site_name || '').toUpperCase()}`"
+  >
+    <div class="field">
+      <label>Fecha de renovación</label>
+      <Calendar
+        v-model="documentRenovationDate"
+        dateFormat="dd/mm/yy"
+        class="w-full"
+        :manualInput="false"
+      />
+    </div>
 
+    <div class="upload-zone" v-if="file">
+      <i class="pi pi-check mr-2" />
+      <span>{{ file?.name }} seleccionado</span>
+    </div>
+
+    <div class="grid-buttons">
+      <Button class="w-full" severity="help" label="Seleccionar documento" icon="pi pi-upload" @click="fileInputRef?.click()" />
+      <Button class="w-full" severity="success" label="Guardar" icon="pi pi-save" @click="renew" />
+    </div>
+
+    <input ref="fileInputRef" type="file" @change="handleFileChange" style="display: none" />
+  </Dialog>
+
+  <!-- Dialog: Subir nuevo -->
+  <Dialog
+    v-model:visible="displayUploadDialog"
+    :modal="true"
+    :style="{ width: '500px' }"
+    :header="`Cargar ${documentType?.type_name || 'documento'} — ${(currentSite?.site_name || '').toUpperCase()}`"
+  >
+    <div class="field">
+      <label>Tipo de documento</label>
+      <Dropdown
+        v-model="documentType"
+        :options="documentsDropValues"
+        optionLabel="type_name"
+        placeholder="Selecciona un tipo"
+        class="w-full"
+      />
+    </div>
+
+    <div class="field">
+      <label>Fecha de renovación</label>
+      <Calendar
+        v-model="documentRenovationDate"
+        dateFormat="dd/mm/yy"
+        class="w-full"
+        :manualInput="false"
+      />
+    </div>
+
+    <div class="upload-zone" v-if="file">
+      <i class="pi pi-check mr-2" />
+      <span>{{ file?.name }} seleccionado</span>
+    </div>
+
+    <div class="grid-buttons">
+      <Button class="w-full" severity="help" label="Seleccionar documento" icon="pi pi-upload" @click="fileInputRef?.click()" />
+      <Button class="w-full" severity="success" label="Enviar" icon="pi pi-send" @click="upload" />
+    </div>
+
+    <input ref="fileInputRef" type="file" @change="handleFileChange" style="display: none" />
+  </Dialog>
+
+  <!-- Dialog: Tipos de archivo -->
+  <Dialog v-model:visible="displayAddTypeDialog" :modal="true" :style="{ width: '520px' }" header="Tipos de archivo">
+    <div class="field">
+      <label>Nuevo tipo</label>
+      <div class="row">
+        <InputText class="flex-1" v-model="newTypeName" placeholder="Ej: Certificado sanitario" />
+        <Button label="Agregar" icon="pi pi-plus" @click="addNewType" />
+      </div>
+    </div>
+
+    <h4 class="mt-4">Editar existentes</h4>
+    <div class="types-list">
+      <div class="type-item" v-for="tipo in documentsDropValues" :key="tipo.type_id">
+        <InputText class="flex-1" v-model="tipo.type_name" @blur="updateFileType(tipo)" />
+        <Button rounded text severity="danger" icon="pi pi-trash" @click="deleteFileType(tipo.type_id)" />
+      </div>
+    </div>
+  </Dialog>
+
+  <!-- Dialog: Nueva Sede -->
+  <Dialog v-model:visible="displayNewSiteDialog" :modal="true" :style="{ width: '520px' }" header="Nueva sede">
+    <div class="field">
+      <label>Nombre de la sede</label>
+      <InputText class="w-full" v-model="newSiteData.site_name" />
+    </div>
+    <div class="field">
+      <label>Dirección</label>
+      <InputText class="w-full" v-model="newSiteData.site_address" />
+    </div>
+    <div class="field">
+      <label>Teléfono</label>
+      <InputText class="w-full" v-model="newSiteData.site_phone" />
+    </div>
+
+    <div v-if="imagePreviewUrl" class="preview">
+      <img :src="imagePreviewUrl" alt="Vista previa" />
+    </div>
+
+    <div class="row mt-3">
+      <Button class="w-full" icon="pi pi-camera" label="Cargar imagen" @click="imageInputRef?.click()" />
+      <input ref="imageInputRef" type="file" @change="handleNewSiteImageChange" style="display:none" />
+    </div>
+
+    <template #footer>
+      <Button label="Crear sede" icon="pi pi-check" @click="createNewSite" />
+    </template>
+  </Dialog>
 </template>
 
-<style scoped lang="scss">
-.inputSwith {
-    display: flex;
-    justify-content: space-between;
-    margin: 2em 0;
+<style scoped>
+.toolbar {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: .5rem;
+  flex-wrap: wrap;
+}
+.toolbar .right {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.title { margin: 0; font-weight: 700; }
+.muted { color: var(--text-color-secondary); }
+
+.actions {
+  display: flex;
+  gap: .25rem;
+  align-items: center;
 }
 
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin: .75rem 0;
+}
+.row {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+.flex-1 { flex: 1; }
 
-* {
-    text-transform: capitalize;
+.grid-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+.upload-zone {
+  background: rgba(19, 164, 0, 0.08);
+  border: 1px dashed rgba(19, 164, 0, 0.35);
+  padding: .75rem;
+  border-radius: .5rem;
+  margin-top: .5rem;
+  display: flex;
+  align-items: center;
+}
+
+.types-list {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+.type-item {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.preview {
+  margin-top: .75rem;
+}
+.preview img {
+  max-width: 100%;
+  max-height: 260px;
+  border-radius: .5rem;
+  display: block;
 }
 </style>

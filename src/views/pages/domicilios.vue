@@ -1,292 +1,315 @@
 <template>
-
-
-<div class="col-12 p-3">
-
-    <p  class=" text-4xl text-center px-4" style="font-weight: bold; margin-top: 6rem;">
-    <i class="fa-solid fa-truck-arrow-right"></i>
-       Domicilios
-    </p>
-
-
-<Dialog v-model:visible="showAddNeighborhoodDialog" header="Agregar Nuevo Barrio" :modal="true" :closable="false">
-        <div class="p-fluid">
-            <div class="p-field">
-                <label for="name">Nombre del Barrio</label>
-                <InputText id="name" v-model="newNeighborhood.name" />
-            </div>
-            <div class="p-field">
-                <label for="delivery_price">Precio de Domicilio</label>
-                <InputNumber id="delivery_price" v-model="newNeighborhood.delivery_price" mode="currency" currency="USD" locale="en-US"/>
-            </div>
-            <!-- Asumiendo que ya tienes cargados 'sites' y 'cities' -->
-            <div class="p-field">
-                <label for="site">Sede</label>
-                <Dropdown id="site" v-model="newNeighborhood.site_id" :options="sites" optionLabel="site_name" placeholder="Selecciona una Sede"/>
-            </div>
-            <div class="p-field">
-                <label for="city">Ciudad</label>
-                <Dropdown id="city" v-model="newNeighborhood.city_id" :options="cities" optionLabel="name" placeholder="Selecciona una Ciudad"/>
-            </div>
+    <div class="col-12 p-3">
+      <p class="text-4xl text-center px-4" style="font-weight: bold; margin-top: 6rem;">
+        <i class="fa-solid fa-truck-arrow-right"></i>
+        Domicilios
+      </p>
+  
+      <!-- Barra de acciones -->
+      <div class="actions-bar">
+        <Button
+          icon="pi pi-plus"
+          label="Agregar barrio"
+          @click="openAddNeighborhoodDialog"
+          :disabled="loading"
+        />
+      </div>
+  
+      <!-- Diálogo: Agregar Nuevo Barrio -->
+      <Dialog
+        v-model:visible="showAddNeighborhoodDialog"
+        header="Agregar Nuevo Barrio"
+        :modal="true"
+        :closable="false"
+        style="width: 32rem; max-width: 95vw;"
+      >
+        <div class="p-fluid form-grid">
+          <div class="p-field">
+            <label for="name">Nombre del Barrio</label>
+            <InputText id="name" v-model.trim="newNeighborhood.name" :invalid="submitted && !newNeighborhood.name" />
+            <small v-if="submitted && !newNeighborhood.name" class="p-error">Requerido</small>
+          </div>
+  
+          <div class="p-field">
+            <label for="delivery_price">Precio de Domicilio</label>
+            <InputNumber
+              id="delivery_price"
+              v-model="newNeighborhood.delivery_price"
+              mode="currency"
+              currency="COP"
+              locale="es-CO"
+              :min="0"
+              :invalid="submitted && !Number.isFinite(newNeighborhood.delivery_price)"
+              :maxFractionDigits="0"
+            />
+            <small v-if="submitted && !Number.isFinite(newNeighborhood.delivery_price)" class="p-error">Requerido</small>
+          </div>
+  
+          <div class="p-field">
+            <label for="site">Sede</label>
+            <Dropdown
+              id="site"
+              v-model="newNeighborhood.site_id"
+              :options="sites.filter(s => s.show_on_web)"
+              optionLabel="site_name"
+              optionValue="site_id"
+              placeholder="Selecciona una Sede"
+              showClear
+              filter
+              :invalid="submitted && !newNeighborhood.site_id"
+            />
+            <small v-if="submitted && !newNeighborhood.site_id" class="p-error">Requerido</small>
+          </div>
+  
+          <div class="p-field">
+            <label for="city">Ciudad</label>
+            <Dropdown
+              id="city"
+              v-model="newNeighborhood.city_id"
+              :options="cities"
+              optionLabel="name"
+              optionValue="city_id"
+              placeholder="Selecciona una Ciudad"
+              showClear
+              filter
+              :invalid="submitted && !newNeighborhood.city_id"
+            />
+            <small v-if="submitted && !newNeighborhood.city_id" class="p-error">Requerido</small>
+          </div>
         </div>
+  
         <template #footer>
-            <Button label="Cancelar" icon="pi pi-times" @click="showAddNeighborhoodDialog = false" class="p-button-text" />
-            <Button label="Guardar" icon="pi pi-check" @click="addNeighborhood" class="p-button-text" />
+          <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="closeAddNeighborhoodDialog" />
+          <Button label="Guardar" icon="pi pi-check" class="p-button-text" @click="addNeighborhood" :loading="saving" />
         </template>
-    </Dialog>
-
-
-<div style="max-width: 700px;" class="m-auto ">
-
-    <div style="display: flex;gap:1rem; align-items: center;;">
-
-        <!-- <p class="m-0 p-2  " style="font-weight: bold;"> SEDE</p> -->
-
-
-
-
-        <Dropdown style="width: 100%;"  filter v-model="site" :options="sites.filter(n => n.show_on_web)" placeholder="SEDE" optionLabel="site_name"
-                            required="true" :class="{ 'p-invalid': submitted && !currentUser.position }" 
-                            />
+      </Dialog>
+  
+      <div style="max-width: 700px;" class="m-auto">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <!-- Selector de sede -->
+          <Skeleton v-if="loading" height="3rem" width="100%"></Skeleton>
+          <Dropdown
+            v-else
+            style="width: 100%;"
+            filter
+            showClear
+            v-model="site"
+            :options="sites.filter(n => n.show_on_web)"
+            placeholder="SEDE"
+            optionLabel="site_name"
+            :virtualScrollerOptions="{ itemSize: 38 }"
+          />
+        </div>
+  
+        <!-- Estados de error / vacío -->
+        <div v-if="error" class="error-box">
+          <i class="pi pi-exclamation-triangle"></i>
+          <span>{{ error }}</span>
+        </div>
+  
+        <!-- Contenido anidado -->
+        <RouterView />
+      </div>
     </div>
-
-
-
-
-
-    <RouterView>
-
-    </RouterView>
-</div>
-
-
-</div>
-
-</template>
-        
-        
-<script setup>
-
-
-import { onMounted, ref, watch } from 'vue';
-import { URI } from '@/service/conection';
-import router from '../../router';
-import { useRoute } from 'vue-router';
-const sites  = ref([])
-const site = ref({})
-
-
-const showAddNeighborhoodDialog = ref(false);
-const newNeighborhood = ref({
-  neighborhood_id: 0, // Generalmente asignado por el servidor
-  name: '',
-  delivery_price: 0,
-  site_id: 0,
-  city_id: 0
-});
-
-// const sites = ref([]); // Debes cargar estos datos desde tu backend
-const cities = ref([]); // Debes cargar estos datos desde tu backend
-
-// Método para abrir el diálogo
-function openAddNeighborhoodDialog() {
-  showAddNeighborhoodDialog.value = true;
-}
-
-// Método para agregar el nuevo barrio
-async function addNeighborhood() {
-  try {
-    const response = await fetch(`${URI}/neighborhoods`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newNeighborhood.value)
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al crear el barrio');
+  </template>
+  
+  <script setup>
+  import { ref, onMounted, watch } from 'vue'
+  import { useToast } from 'primevue/usetoast'
+  import { URI } from '@/service/conection'
+  import router from '../../router'
+  import { useRoute } from 'vue-router'
+  
+  const toast = useToast()
+  const route = useRoute()
+  
+  const sites = ref([])
+  const cities = ref([])
+  const site = ref(null)
+  
+  const loading = ref(true)
+  const saving = ref(false)
+  const error = ref('')
+  
+  // Diálogo Agregar Barrio
+  const showAddNeighborhoodDialog = ref(false)
+  const submitted = ref(false)
+  const newNeighborhood = ref({
+    neighborhood_id: 0,
+    name: '',
+    delivery_price: null,
+    site_id: null,
+    city_id: null
+  })
+  
+  function resetNeighborhoodForm() {
+    submitted.value = false
+    newNeighborhood.value = {
+      neighborhood_id: 0,
+      name: '',
+      delivery_price: null,
+      site_id: null,
+      city_id: null
     }
-
-    // Cerrar el diálogo y actualizar la lista de barrios
-    showAddNeighborhoodDialog.value = false;
-    // Aquí deberías también actualizar la lista de barrios para reflejar el nuevo
-    console.log('Barrio agregado con éxito');
-  } catch (error) {
-    console.error('Error al agregar el barrio:', error);
   }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const route = useRoute()
-
-
-watch(site, (newValue, oldValue) => {
-  // Asegurarse de que el nuevo valor tenga el 'neighborhood_id' antes de intentar navegar
-  if (newValue && newValue.site_id !== undefined) {
-    router.push(`/domicilios/${newValue.site_id}`);
+  
+  function openAddNeighborhoodDialog() {
+    resetNeighborhoodForm()
+    showAddNeighborhoodDialog.value = true
   }
-}, { deep: true });
-
-
-watch(() => route.path, () => {
-    const site_id = route.params.site_id
-
-    // Llama a getNeighborhoods cada vez que cambia la ruta
-    getSites().then(data => {
-        sites.value = data
-        site.value = data.filter(s => s.site_id == site_id)[0]
-    })
-});
-
-
-
-const getSites = async() => {
+  function closeAddNeighborhoodDialog() {
+    showAddNeighborhoodDialog.value = false
+  }
+  
+  async function addNeighborhood() {
+    submitted.value = true
+    if (
+      !newNeighborhood.value.name ||
+      !Number.isFinite(newNeighborhood.value.delivery_price) ||
+      !newNeighborhood.value.site_id ||
+      !newNeighborhood.value.city_id
+    ) {
+      toast.add({ severity: 'warn', summary: 'Faltan datos', detail: 'Completa los campos requeridos.', life: 3000 })
+      return
+    }
+  
     try {
-        const response = await fetch(`${URI}/sites`)
-
-        if(response.ok) {
-            const data = await response.json()
-            return data
-
-        }
-
-        
-    } catch (error) {
-        
+      saving.value = true
+      const response = await fetch(`${URI}/neighborhoods`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newNeighborhood.value)
+      })
+      if (!response.ok) throw new Error('Error al crear el barrio')
+  
+      toast.add({ severity: 'success', summary: 'Guardado', detail: 'Barrio agregado con éxito.', life: 2500 })
+      closeAddNeighborhoodDialog()
+      // TODO: refrescar lista local si esta vista la usa
+    } catch (e) {
+      console.error(e)
+      toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el barrio.', life: 3500 })
+    } finally {
+      saving.value = false
     }
-}
-
-
-
-onMounted( async() => {
-    const site_id = route.params.site_id
-    getSites().then(data => {
-        sites.value = data
-        site.value = data.filter(s => s.site_id == site_id)[0]
-    })
-
-   
-})  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
-        
-<style scoped>
-Button {
-    font-weight: bold;
-}
-
-.vacaciones {
+  }
+  
+  // Data fetching
+  const getSites = async () => {
+    const res = await fetch(`${URI}/sites`)
+    if (!res.ok) throw new Error('No se pudieron cargar las sedes')
+    return await res.json()
+  }
+  const getCities = async () => {
+    const res = await fetch(`${URI}/cities`)
+    if (!res.ok) throw new Error('No se pudieron cargar las ciudades')
+    return await res.json()
+  }
+  
+  function selectSiteById(id) {
+    const s = sites.value.find(x => String(x.site_id) === String(id))
+    site.value = s || null
+  }
+  
+  // Sincroniza la ruta cuando cambia la sede seleccionada
+  watch(site, (newVal) => {
+    if (newVal && newVal.site_id != null) {
+      const target = `/domicilios/${newVal.site_id}`
+      if (route.path !== target) {
+        router.push(target)
+      }
+    }
+  })
+  
+  // Cuando cambia el parámetro de la ruta, ajusta el dropdown
+  watch(
+    () => route.params.site_id,
+    (siteId) => {
+      if (!loading.value) {
+        selectSiteById(siteId)
+      }
+    }
+  )
+  
+  onMounted(async () => {
+    loading.value = true
+    error.value = ''
+    try {
+      const [sitesData, citiesData] = await Promise.all([getSites(), getCities().catch(() => [])])
+      sites.value = Array.isArray(sitesData) ? sitesData : []
+      cities.value = Array.isArray(citiesData) ? citiesData : []
+  
+      // Selección inicial: usar el parámetro de ruta o la primera sede visible
+      const routeSiteId = route.params.site_id
+      if (routeSiteId) {
+        selectSiteById(routeSiteId)
+      } else {
+        const firstVisible = sites.value.find(s => s.show_on_web)
+        if (firstVisible) {
+          site.value = firstVisible
+          router.replace(`/domicilios/${firstVisible.site_id}`)
+        }
+      }
+    } catch (e) {
+      console.error(e)
+      error.value = 'Hubo un problema cargando la información. Intenta de nuevo.'
+    } finally {
+      loading.value = false
+    }
+  })
+  </script>
+  
+  <style scoped>
+  /* Botones coherentes y con texto capitalizado */
+  Button { font-weight: bold; text-transform: capitalize; }
+  
+  /* Barra de acciones */
+  .actions-bar {
     display: flex;
-    background-color: #64748B;
-    justify-content: center;
-
-}
-
-.licencia {
+    justify-content: flex-end;
+    gap: .5rem;
+    max-width: 700px;
+    margin: 0 auto 1rem auto;
+  }
+  
+  /* Caja de error */
+  .error-box {
     display: flex;
-    background-color: #64748B;
-    justify-content: center;
-}
-
-.general {
+    align-items: center;
+    gap: .5rem;
+    margin: 1rem 0;
+    padding: .75rem 1rem;
+    border-radius: .5rem;
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  
+  /* Grid del formulario del diálogo */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+  }
+  
+  /* Estados (conservados por si los usas en la vista anidada) */
+  .vacaciones, .licencia, .general, .generado, .aprobado, .rechazado {
     display: flex;
-    background-color: #64748B;
     justify-content: center;
-}
-
-
-.generado {
-    display: flex;
-    background-color: #eeff0060;
-    justify-content: center;
-}
-
-* {
-    overflow-wrap: break-word;
-    white-space: normal;
-    overflow: hidden;
-}
-
-.aprobado {
-    display: flex;
-    background-color: #2bff0060;
-    justify-content: center;
-}
-
-.rechazado {
-    display: flex;
-    background-color: #ff000044;
-    justify-content: center;
-}
-
-Button {
-    text-transform: capitalize;
-}
-
-
-
-.Agendada {
-    background-color: var(--yellow-200);
-    border-radius: 5rem;
-}
-
-.Completada {
-    background-color: var(--green-200);
-    border-radius: 5rem;
-}
-
-.Cancelada {
-    background-color: var(--red-200);
-    border-radius: 5rem;
-}
-</style>
+  }
+  .vacaciones, .licencia, .general { background-color: #64748B; }
+  .generado  { background-color: #eeff0060; }
+  .aprobado  { background-color: #2bff0060; }
+  .rechazado { background-color: #ff000044; }
+  
+  /* Etiquetas de estado específicas */
+  .Agendada  { background-color: var(--yellow-200); border-radius: 5rem; }
+  .Completada{ background-color: var(--green-200);  border-radius: 5rem; }
+  .Cancelada { background-color: var(--red-200);    border-radius: 5rem; }
+  
+  /* --- IMPORTANTE: evitamos romper dropdowns/dialogs --- */
+  /* Quitamos el overflow global que cortaba contenidos */
+  :where(.nope) { /* placeholder para recordar que evitamos * { overflow: hidden } */ }
+  
+  /* Tipografía y ajustes */
+  * { overflow-wrap: break-word; white-space: normal; }
+  </style>
+  
