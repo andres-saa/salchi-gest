@@ -326,7 +326,7 @@
       <div class="footer-row">
         <Button style="width: 100%" icon="pi pi-wallet" @click="() => (changePaymentDialog = true)" label=" m. de pago" severity="success" />
         <Button style="width: 100%" icon="pi pi-home" @click="() => (changeDeliveryDialog = true)" label=" Domicilio" class="p-button-warning" />
-        <Button style="width: 100%" icon="pi pi-send" @click="() => (callDeliveryPersonVisible = true)" label=" Llamar Repartidor" class="p-button-help" />
+        <Button v-if="isEnPreparacion" style="width: 100%" icon="pi pi-send" @click="() => (callDeliveryPersonVisible = true)" label=" Llamar Repartidor" class="p-button-help" />
 
       </div>
     </template>
