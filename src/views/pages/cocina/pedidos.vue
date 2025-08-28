@@ -138,6 +138,35 @@
           </div>
         </section>
 
+
+                <section class="section-col">
+          <div class="panel-wrap">
+            <div class="shadow-4 contenedor panel" style="overflow: hidden; background-color:#914">
+              <div style="height: 100%; width: 100%;">
+                <p class="col-12 text-center shadow-4 panel-header">
+                  <span class="text-center text-2xl" style="color: black;font-weight: bold;">
+                    <i class="pi pi-book text-2xl" aria-hidden="true"></i>
+                    DOMICILIARIO SOLICITADO
+                    <small class="badge-count">{{ domiciliario_solicitao.length }}</small>
+                  </span>
+                </p>
+
+                <div class="lg:pb-8 panel-body" style="height: 100%; overflow-y: auto;">
+                  <div v-if="!domiciliario_solicitao.length" class="sub-empty-state">
+                    <i class="pi pi-inbox" aria-hidden="true"></i>
+                    <span>sin pedidos "para recoger"</span>
+                  </div>
+                  <transition-group v-else name="fade" tag="div">
+                    <div class="px-3 py-2" v-for="orden in domiciliario_solicitao" :key="`dom-${orden.order_id}`">
+                      <OrderItem :order="orden" />
+                    </div>
+                  </transition-group>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- ENVIADOS -->
         <section class="section-col">
           <div class="panel-wrap">
@@ -242,6 +271,11 @@ const recibidos = computed(() =>
 const enPreparacion = computed(() =>
   store.TodayOrders.filter(o => o.current_status === 'en preparacion')
 );
+
+const domiciliario_solicitao = computed(() =>
+  store.TodayOrders.filter(o => o.current_status === 'domiciliario solicitado')
+)
+
 const enviados = computed(() =>
   store.TodayOrders.filter(o => o.current_status === 'enviada')
 );
@@ -251,7 +285,7 @@ const cancelados = computed(() =>
 
 /* Conteo total para estado global */
 const totalOrders = computed(() =>
-  recibidos.value.length + enPreparacion.value.length + enviados.value.length + cancelados.value.length
+  recibidos.value.length + enPreparacion.value.length + enviados.value.length + cancelados.value.length + domiciliario_solicitao.value.length
 );
 
 onMounted(() => {

@@ -105,6 +105,29 @@
     </form>
   </Dialog>
 
+
+
+    <Dialog v-model:visible="callDeliveryPersonVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
+    <template #header>
+      <h3><b>solicitar Domiciliario</b></h3>
+    </template>
+
+    <form @submit.prevent="submitCancel" class="form-col">
+      
+
+      <span>Esta seguro de llamar a un domicilio para la orden <b>{{ store.currentOrder.order_id }}</b> </span>
+
+      <Button
+      @click="sendDeliveryPerson"
+        style="width: 100%; border-radius: 0.5rem"
+        label="Solicitar domiciliario"
+        type="submit"
+        class="p-button-help"
+        icon="pi pi-send"
+      />
+    </form>
+  </Dialog>
+
   <!-- ===== Dialog: Cancelar Orden (admin con solicitud) ===== -->
   <Dialog v-model:visible="cancelDialogVisibleAdmin" closeOnEscape :closable="true" modal style="width: 30rem;">
     <template #header>
@@ -183,7 +206,7 @@
     :closable="false"
     v-model:visible="store.visibles.currentOrder"
     modal
-    style="max-height: 95vh; width: 35rem; position: relative;"
+    style="max-height: 95vh; width: 50rem; position: relative;"
   >
     <div>
       <p :class="['estado', (store.currentOrder?.current_status || '').split(' ')[0]]">
@@ -301,8 +324,10 @@
       </div>
 
       <div class="footer-row">
-        <Button style="width: 100%" icon="pi pi-wallet" @click="() => (changePaymentDialog = true)" label=" metodo de pago" severity="success" />
+        <Button style="width: 100%" icon="pi pi-wallet" @click="() => (changePaymentDialog = true)" label=" m. de pago" severity="success" />
         <Button style="width: 100%" icon="pi pi-home" @click="() => (changeDeliveryDialog = true)" label=" Domicilio" class="p-button-warning" />
+        <Button style="width: 100%" icon="pi pi-send" @click="() => (callDeliveryPersonVisible = true)" label=" Llamar Repartidor" class="p-button-help" />
+
       </div>
     </template>
 
@@ -502,7 +527,7 @@ import { formatoPesosColombianos } from '@/service/formatoPesos'
 
 // ===== Store =====
 const store = useOrderStore()
-
+const callDeliveryPersonVisible = ref(false)
 // ===== UI State =====
 const changeDeliveryDialog = ref(false)
 const changePaymentDialog = ref(false)
@@ -641,6 +666,19 @@ const sendRequest = async () => {
     console.error('Error al solicitar cancelación:', e)
   }
 }
+
+
+const sendDeliveryPerson = async () => {
+  try {
+    orderService.call_delivery_person(store.currentOrder.order_id)
+    callDeliveryPersonVisible.value = false
+    store.Notification.pause()
+    store.Notification.currentTime = 0
+  } catch (e) {
+    console.error('Error al llamar domiciliario', e)
+  }
+}
+
 
 const IMPRIMIR = () => {
   const contenidoFactura = document.getElementById('factura')?.innerHTML || ''

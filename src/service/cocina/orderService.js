@@ -209,6 +209,29 @@ export const orderService = {
         }
     },
 
+
+    async call_delivery_person(order_id) {
+        const store = useOrderStore()
+        store.setVisible('currentOrder',false)
+
+        try {
+            
+            const response = await axios.post(`${URI}/call-delivery-person/${order_id}`);
+            if (response.status === 200) {
+                store.Notification.pause()
+                store.Notification.currentTime = 0
+                store.getTodayOrders()
+                return response.data;
+            } else {
+                console.error('An error occurred while preparing the order:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('An error occurred while preparing the order:', error);
+            return null;
+        }
+    },
+
     async cancelOrder(order_id, reason, responsible) {
         const store = useOrderStore()
         store.Notification.pause()
