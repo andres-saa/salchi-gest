@@ -318,7 +318,7 @@
     <template #footer>
       <div class="footer-actions">
         <Button v-if="isGenerada" size="small" @click="orderService.prepareOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Preparar" icon="pi pi-cog" />
-        <Button v-if="isEnPreparacion" size="small" @click="orderService.sendOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Enviar" icon="pi pi-send" />
+        <Button v-if="isEnPreparacion || deliverySolicited" size="small" @click="orderService.sendOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Enviar" icon="pi pi-send" />
         <Button size="small" style="border-radius: 0.3rem; width: 100%" @click="() => (travelDialog = true)" severity="warning" label="TRASLADO" icon="pi pi-arrow-right-arrow-left" />
         <Button size="small" style="border-radius: 0.3rem; width: 100%" @click="() => (cancelDialogVisibleAdmin = true)" severity="danger" label="CANCELAR" icon="pi pi-times" />
       </div>
@@ -546,7 +546,7 @@ const sede_destino = ref(0)
 // ===== Helpers / Computed =====
 const isGenerada = computed(() => store.currentOrder.current_status === 'generada')
 const isEnPreparacion = computed(() => store.currentOrder.current_status === 'en preparacion')
-
+const deliverySolicited =  computed(() => store.currentOrder.current_status === 'domiciliario solicitado')
 const subtotal = computed(() => {
   const items = store.currentOrder?.pe_json?.listaPedidos || []
   return items.reduce((acc, product) => {
