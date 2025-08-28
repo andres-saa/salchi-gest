@@ -1,5 +1,5 @@
 <template>
-    <div class="container py-2 px-2">
+    <div class="container py-2 px-2/">
       <!-- Dialogs -->
       <dialogToAddVideo @update="updateVideos" />
       <dialogToDeleteVideo @update="updateVideos" />

@@ -22,7 +22,8 @@
       <div v-if="filteredModel.length" class="sections">
         <section
           v-for="menu in filteredModel"
-          :key="menu.label"
+          :key="menu.label" 
+          :style="!collasable[menu.label]?  { maxHeight:'30rem', } :  {maxHeight:'100%', boxShadow:`0 0 .5rem ${menu.color}`}"
           class="section-card"
         >
           <!-- Encabezado del grupo -->
@@ -32,7 +33,7 @@
             </div>
             <div class="section-card__meta">
               <h3>{{ menu.label }}</h3>
-              <small class="muted">Accesos disponibles</small>
+              <!-- <small class="muted">Accesos disponibles</small> -->
             </div>
           </div>
   
@@ -74,8 +75,21 @@
                 </li>
               </ul>
   
-              <div v-else class="empty">Sin opciones disponibles</div>
+              <!-- <div v-else class="empty">Sin opciones disponibles</div> -->
             </div>
+          </div>
+
+          <div  @click="collasable[menu.label] = !collasable[menu.label]"  v-if="visibleCountMenu(menu) > 8" style="position: absolute;bottom: 0;padding-top: 4rem; display: flex;justify-content: center;width: 100%;" :style=" `background:${menu.color}`">
+            <Button
+             text
+              
+              :label="collasable[menu.label] ? 'Ver menos': 'Ver Mas'   "
+             
+              style="position: absolute;color: white; width: 100%; bottom: .4rem; left: 0; right: 0; margin: 0 auto; "
+            />
+
+
+
           </div>
         </section>
       </div>
@@ -92,199 +106,23 @@
   import { ref, computed } from 'vue'
   import { RouterLink } from 'vue-router'
   import { loginStore } from '../../store/user' // ajusta si tu alias es @/store/user
-  
-  /* ============ DATOS ============ */
-  const model = [
-     {
-      label: 'ATENCION AL CLIENTE',
-      icon: 'fa-solid fa-headset',
-      color: '#4D96FF',
-      items: [
-        { label: 'Administrar PQRS ', icon: 'fa-solid fa-folder-tree', to: '/pqrs/pagina_web/1', permision_id: 55, color: '#FFD93D' },
-      ]
-    },
-    {
-      label: 'CALIDAD Y CONTROL',
-      icon: 'fa-solid fa-clipboard-check',
-      color: '#6BCB77',
-      items: [
-        { label: 'Auditorias ', icon: 'fa-solid fa-list-check', to: '/auditorias/lista', permision_id: 33, color: '#FFA502' },
-        { label: 'Configurar turnos ', icon: 'fa-solid fa-clock', to: '/turnos-trabajo', permision_id: 35, color: '#FFA502' },
-      ]
-    },
-  {
-      label: 'FRANQUICIAS',
-      icon: 'fa-solid fa-handshake',
-      color: '#845EC2',
-      items: [
-        { label: 'Solicitudes', icon: 'fa-solid fa-clipboard-list', to: '/franquicias', permision_id: 53, color: '#FFD93D' },
-      ]
-    },
-    {
-      label: 'ENTREGAS',
-      icon: 'fa-solid fa-truck-moving',
-      color: '#FFA502',
-      items: [
-        { label: 'Dotacion', icon: 'fa-solid fa-shirt', to: '/dotacion', permision_id: 37, color: '#FFD93D' },
-      ]
-    },
-    {
-      label: 'CELEBRACIONES',
-      icon: 'fa-solid fa-cake-candles',
-      color: '#D65DB1',
-      to: '/cumples',
-      items: [
-        { label: 'Cumpleanos', icon: 'fa-solid fa-cake-candles', to: '/cumples', permision_id: 38, color: '#FFD93D' }
-      ]
-    },
-    {
-      label: 'GUIAS',
-      icon: 'fa-solid fa-book-open',
-      color: '#845EC2',
-      items: [
-        { label: 'Gestion de guias', icon: 'fa-solid fa-book', to: '/guias', permision_id: 40, color: '#FFD93D' },
-      ]
-    },
-    {
-      label: 'CERTIFICADOS',
-      icon: 'fa-solid fa-award',
-      color: '#FF6B6B',
-      items: [
-        { label: 'Generar certificado laboral', icon: 'fa-solid fa-certificate', to: '/certificado-laboral', permision_id: 41, color: '#FFD93D' },
-      ]
-    },
-    {
-      label: 'Revisar',
-      icon: 'fa-solid fa-check-double',
-      color: '#D65DB1',
-      items: [
-        { label: 'Permisos', icon: 'fa-solid fa-file-invoice', to: '/permisos', permision_id: 50, color: '#FFD93D' },
-      ]
-    },
-    {
-      label: 'Datos',
-      icon: 'fa-solid fa-database',
-      color: '#6BCB77',
-      items: [
-        { label: 'Actualizar mis datos', icon: 'fa-solid fa-user-pen', to: '/actualizar-datos', permision_id: 50, color: '#FFD93D' },
-      ]
-    },
-    {
-      label: 'Extras',
-      icon: 'fa-solid fa-ellipsis',
-      color: '#845EC2',
-      to: '/mis-permisos',
-      items: [
-        { label: 'Mi carnet digital', icon: 'fa-solid fa-id-badge', to: '/mi-carnet', permision_id: 52, color: '#FFD93D' },
-        { label: 'Organigrama empresarial', icon: 'fa-solid fa-diagram-project', to: '/organigrama', permision_id: 52, color: '#FFD93D' },
-      ]
-    },
-    {
-      label: 'PRIILEGIADO',
-      icon: 'pi pi-key',
-      color: 'red',
-      items: [
-        {
-          label: 'Master',
-          icon: 'fa-solid fa-key',
-          color: 'red',
-          items: [
-            { label: 'Base de clientes', icon: 'fa-solid fa-key', to: '/customers/', permision_id: 800, color: 'red', nuevo: false },
-            { label: 'Codigos redimidos', icon: 'fa-solid fa-key', to: '/usuarios-email/', permision_id: 800, color: 'magenta', nuevo: true },
-          ]
-        },
-      ]
-    },
-    {
-      label: 'INVENTARIO',
-      icon: 'fa-solid fa-boxes-stacked',
-      color: '#FFD93D',
-      items: [
-        {
-          label: 'Recetario',
-          icon: 'fa-solid fa-book',
-          color: '#6BCB77',
-          items: [
-            { label: 'Ingredientes', icon: 'fa-solid fa-carrot', to: '/recetario/prices-cdi-table/', permision_id: 8, color: '#00C9A7' },
-            { label: 'recetas', icon: 'fa-solid fa-utensils', to: '/recetario/recetas/', permision_id: 8, color: '#00C9A7' },
-            { label: 'Configuracion', icon: 'fa-solid fa-gears', to: '/recetario/configuracion/', permision_id: 13, color: '#00C9A7' },
-            { label: 'Resumen Beneficio', icon: 'fa-solid fa-chart-pie', to: '/recetario/recipe-sumary-benefit/', permision_id: 14, color: '#00C9A7' },
-          ]
-        },
-        {
-          label: 'Reportes de inventario diario',
-          icon: 'fa-solid fa-calendar-day',
-          color: '#4D96FF',
-          items: [
-            { label: 'Reportar inventario diario', icon: 'fa-solid fa-edit', to: '/daily-inventory/report-inventory', permision_id: 11, color: '#FFA502' },
-            { label: 'Revisar reportes', icon: 'fa-solid fa-eye', to: '/daily-inventory/daily-inventory-reports', permision_id: 10, color: '#FFA502' },
-          ]
-        },
-        {
-          label: 'Reportes de inventario Mensual',
-          icon: 'fa-solid fa-calendar-days',
-          color: '#4D96FF',
-          items: [
-            { label: 'Reportar inventario mensual', icon: 'fa-solid fa-file-circle-plus', to: '/monthly-inventory/report-monthly-inventory', permision_id: 17, color: '#FFA502' },
-            { label: 'Revisar reportes', icon: 'fa-solid fa-eye', to: '/monthly-inventory/monthly-inventory-reports', permision_id: 18, color: '#FFA502' },
-          ]
-        },
-        {
-          label: 'Ordenes de compra',
-          icon: 'fa-solid fa-shopping-cart',
-          color: '#FF6B6B',
-          items: [
-            { label: 'Nueva', icon: 'fa-solid fa-file-circle-plus', to: '/purchase-order/generate-purchase-order', permision_id: 21, color: '#D65DB1' },
-            { label: 'Generadas por mi', icon: 'fa-solid fa-folder-open', to: '/purchase-order/purchase-order-my-orders/', permision_id: 21, color: '#D65DB1' },
-            { label: 'Alistar', icon: 'fa-solid fa-clipboard-check', to: '/purchase-order/recorrido/alistar/', permision_id: 22, color: '#D65DB1' },
-            { label: 'Autorizar', icon: 'fa-solid fa-check-double', to: '/purchase-order/recorrido/autorizar', permision_id: 23, color: '#D65DB1' },
-            { label: 'Transportar', icon: 'fa-solid fa-truck', to: '/purchase-order/recorrido/transport/', permision_id: 24, color: '#D65DB1' },
-            { label: 'Recibir en la sede', icon: 'fa-solid fa-building-circle-check', to: '/purchase-order/recorrido/recibida-en-sede/', permision_id: 25, color: '#D65DB1' },
-            { label: 'Completada', icon: 'fa-solid fa-circle-check', to: '/purchase-order/recorrido/completed/', permision_id: 25, color: '#D65DB1' },
-            { label: 'Todas las ordenes', icon: 'fa-solid fa-list-ol', to: '/purchase-order/recorrido/purchase-order-reports/', permision_id: 26, color: '#D65DB1' },
-            { label: 'Stock', icon: 'fa-solid fa-boxes-packing', to: '/purchase-order/recorrido/purchase-order-settings/', permision_id: 27, color: '#D65DB1' },
-          ]
-        },
-      ]
-    },
-    {
-      label: 'VENTAS',
-      icon: 'fa-solid fa-cash-register',
-      color: '#FFA502',
-      items: [
-        {
-          label: 'Tienda',
-          icon: 'fa-solid fa-store',
-          color: '#845EC2',
-          items: [
-            { label: 'Cocina', icon: 'fa-solid fa-utensils', to: '/cocina/', permision_id: 1, color: '#FFD93D' },
-            { label: 'Menu', icon: 'fa-solid fa-book-open', to: '/tienda-menu/productos/SALCHIPAPAS/3', permision_id: 2, color: '#FFD93D' },
-            { label: 'Reportes de ventas', icon: 'fa-solid fa-chart-line', to: '/reporte-ventas/order-sumary', permision_id: 3, color: '#FFD93D' },
-            { label: 'Domicilios', icon: 'fa-solid fa-truck-fast', to: '/domicilios/1', permision_id: 4, color: '#FFD93D' },
-            { label: 'Transferencias', icon: 'fa-solid fa-right-left', to: '/transfer/', permision_id: 5, color: '#FFD93D' },
-            { label: 'Ingresar pedido', icon: 'fa-solid fa-cart-plus', to: '/call-center-vender', permision_id: 6, color: '#FFD93D' },
-            { label: 'Solicitudes de cancelacion', icon: 'fa-solid fa-ban', to: '/cancellation-requests/revisar/', permision_id: 7, color: '#FFD93D' },
-            { label: 'Control', icon: 'fa-solid fa-sliders', to: '/cancellation-requests/revisar/', color: '#FFD93D' }, // sin permiso explícito
-            { label: 'Info sedes ', icon: 'fa-solid fa-building', to: '/directorio', permision_id: 31, color: '#FFD93D' },
-          ],
-        },
-        {
-          label: 'Cajeros',
-          icon: 'fa-solid fa-cash-register',
-          color: '#845EC2',
-          items: [
-            { label: 'Reportes', icon: 'fa-solid fa-file-invoice-dollar', to: '/cachier-money/reportes/', permision_id: 1, color: '#FFD93D' },
-            { label: 'Registros', icon: 'fa-solid fa-book', to: '/cachier-money/registros/', permision_id: 1, color: '#FFD93D' },
-            { label: 'Salidas', icon: 'fa-solid fa-money-bill-trend-up', to: '/cachier-money/salidas/', permision_id: 1, color: '#FFD93D' },
-          ],
-        }
-      ]
-    },
-    /* … (resto de bloques: INFORMACIÓN ADICIONAL, CAPACITACIONES, RRHH, etc. se mantienen igual que tu modelo original) … */
-   
-   
-  ]
-  
+
+
+  const collasable = ref( {
+
+  })
+  function countVisibleNodes(node) {
+  if (!node || !tienePermiso(node)) return 0
+  let total = 1 // cuenta al propio nodo
+  const children = Array.isArray(node.items) ? node.items.filter(tienePermiso) : []
+  for (const c of children) total += countVisibleNodes(c)
+  return total
+}
+
+// Cuenta todo lo visible dentro de una sección (incluye al padre `menu`)
+function visibleCountMenu(menu) {
+  return countVisibleNodes(menu)
+}
   /* ============ STORE/PERMISOS ============ */
   const store = loginStore()
   const userId = computed(() => store?.rawUserData?.id ?? null)
@@ -330,24 +168,107 @@
     return norm(item.label).includes(t)
   }
   
-  // Filtra por permisos + query, preservando estructura
-  function filterTree(nodes) {
-    return (nodes || [])
+
+  function permsOnly(nodes) {
+  return (nodes || [])
+    .map((n) => {
+      if (!tienePermiso(n)) return null
+      const clone = { ...n }
+      if (Array.isArray(n.items)) clone.items = permsOnly(n.items)
+      return clone
+    })
+    .filter(Boolean)
+}
+
+
+  function treePermsOnly(nodes) {
+  return (nodes || [])
+    .map((n) => {
+      if (!tienePermiso(n)) return null
+      const clone = { ...n }
+      if (Array.isArray(n.items)) clone.items = treePermsOnly(n.items)
+      return clone
+    })
+    .filter(Boolean)
+}
+
+function filterTree(nodes) {
+  const term = norm(q.value)
+  const searchActive = term.length > 0
+
+  // Sin búsqueda: árbol completo filtrado por permisos
+  if (!searchActive) return treePermsOnly(nodes)
+
+  // Con búsqueda: ignorar matches del padre (nivel 0)
+  const walk = (ns, depth = 0) =>
+    (ns || [])
       .map((node) => {
         if (!tienePermiso(node)) return null
-        const clone = { ...node }
-        if (Array.isArray(node.items)) {
-          clone.items = filterTree(node.items)
+
+        // Filtrar hijos primero
+        const childrenFiltered = Array.isArray(node.items)
+          ? walk(node.items, depth + 1)
+          : []
+
+        if (depth === 0) {
+          // En nivel padre NO se considera su propia coincidencia
+          // Solo se incluye si tiene descendientes que sí coincidieron
+          if (childrenFiltered.length === 0) return null
+          return { ...node, items: childrenFiltered }
         }
-        const selfMatches = matches(clone)
-        const hasChildren = Array.isArray(clone.items) && clone.items.length > 0
-        return (selfMatches || hasChildren) ? clone : null
+
+        // Desde segundo nivel en adelante:
+        const isClickable = !!node.to
+        const selfMatches = norm(node.label).includes(term)
+
+        // Incluir si es clickeable y coincide, o si alguno de sus hijos coincidió
+        const includeNode = (isClickable && selfMatches) || childrenFiltered.length > 0
+        if (!includeNode) return null
+
+        return { ...node, items: childrenFiltered }
       })
       .filter(Boolean)
-  }
-  
-  const filteredModel = computed(() => filterTree(model))
-  
+
+  const result = walk(nodes, 0)
+  if (result.length > 0) return result
+
+  // Fallback global: si no hubo resultados, mostrar padres completos cuyo nombre coincida
+  const fallback = (nodes || [])
+    .map((menu) => {
+      if (!tienePermiso(menu)) return null
+      if (!norm(menu.label).includes(term)) return null
+
+      const itemsPerms = Array.isArray(menu.items) ? permsOnly(menu.items) : []
+      if (itemsPerms.length === 0) return null
+
+      return { ...menu, items: itemsPerms }
+    })
+    .filter(Boolean)
+
+  return fallback
+}
+function visibleItemsCount(node) {
+  // Cuenta todos los descendientes visibles (excluye al propio nodo)
+  return Math.max(countVisibleNodes(node) - 1, 0)
+}
+
+function sortTreeByVisibleItems(nodes) {
+  return (nodes || [])
+    .slice() // evita mutar el original
+    .sort((a, b) => visibleItemsCount(b) - visibleItemsCount(a)) // desc
+    .map(n => ({
+      ...n,
+      // ordena recursivamente los hijos también
+      ...(Array.isArray(n.items) ? { items: sortTreeByVisibleItems(n.items) } : {})
+    }))
+}
+
+// --- REEMPLAZA tu filteredModel por este ---
+const filteredModel = computed(() => {
+  const tree = filterTree(store.model)         // ya respeta permisos + búsqueda
+  return sortTreeByVisibleItems(tree)          // ordena de mayor a menor
+})
+
   /* ============ ESTILOS DINÁMICOS ============ */
   const iconBg = (c) => ({ background: c || '#e5e7eb' })
   const subCardBorder = (c) => ({ borderLeft: `4px solid ${c || '#e5e7eb'}` })
@@ -369,6 +290,18 @@
     background: var(--bg);
     color: var(--text);
     padding: 1.25rem;
+    margin-left: 3rem;
+  }
+
+  @media (width < 990px) {
+    .home {
+   
+    margin-left: 0rem;
+  }
+  }
+
+  *{
+    transition: all .3s ease;
   }
   
   /* Header */
@@ -382,7 +315,7 @@
     padding: 0rem  1rem;
     /* backdrop-filter: saturate(120%) blur(2px); */
     display: grid;
-    gap: 1rem;
+    gap: .5rem;
     margin-bottom: 4rem;
     grid-template-columns: 1fr 320px;
     align-items: center;
@@ -436,7 +369,9 @@
   
   /* Tarjeta de sección */
   .section-card {
+    position: relative;
     background: var(--card);
+    padding-bottom: 4rem;
     border: 1px solid var(--ring);
     border-radius: 1rem;
     box-shadow: 0 8px 24px -16px rgba(0,0,0,0.2);
