@@ -1,1 +1,0 @@
-function m(i){return new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",minimumFractionDigits:0,maximumFractionDigits:2}).format(i)}function t(i){return new Intl.NumberFormat("es-CO",{style:"decimal",minimumFractionDigits:0,maximumFractionDigits:2}).format(i)}export{t as a,m as f};
