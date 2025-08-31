@@ -105,6 +105,29 @@
     </form>
   </Dialog>
 
+
+
+    <Dialog v-model:visible="callDeliveryPersonVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
+    <template #header>
+      <h3><b>solicitar Domiciliario</b></h3>
+    </template>
+
+    <form @submit.prevent="submitCancel" class="form-col">
+      
+
+      <span>Esta seguro de llamar a un domicilio para la orden <b>{{ store.currentOrder.order_id }}</b> </span>
+
+      <Button
+      @click="sendDeliveryPerson"
+        style="width: 100%; border-radius: 0.5rem"
+        label="Solicitar domiciliario"
+        type="submit"
+        class="p-button-help"
+        icon="pi pi-send"
+      />
+    </form>
+  </Dialog>
+
   <!-- ===== Dialog: Cancelar Orden (admin con solicitud) ===== -->
   <Dialog v-model:visible="cancelDialogVisibleAdmin" closeOnEscape :closable="true" modal style="width: 30rem;">
     <template #header>
@@ -183,7 +206,7 @@
     :closable="false"
     v-model:visible="store.visibles.currentOrder"
     modal
-    style="max-height: 95vh; width: 35rem; position: relative;"
+    style="max-height: 95vh; width: 50rem; position: relative;"
   >
     <div>
       <p :class="['estado', (store.currentOrder?.current_status || '').split(' ')[0]]">
@@ -295,14 +318,16 @@
     <template #footer>
       <div class="footer-actions">
         <Button v-if="isGenerada" size="small" @click="orderService.prepareOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Preparar" icon="pi pi-cog" />
-        <Button v-if="isEnPreparacion" size="small" @click="orderService.sendOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Enviar" icon="pi pi-send" />
+        <Button v-if="isEnPreparacion || deliverySolicited" size="small" @click="orderService.sendOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Enviar" icon="pi pi-send" />
         <Button size="small" style="border-radius: 0.3rem; width: 100%" @click="() => (travelDialog = true)" severity="warning" label="TRASLADO" icon="pi pi-arrow-right-arrow-left" />
         <Button size="small" style="border-radius: 0.3rem; width: 100%" @click="() => (cancelDialogVisibleAdmin = true)" severity="danger" label="CANCELAR" icon="pi pi-times" />
       </div>
 
       <div class="footer-row">
-        <Button style="width: 100%" icon="pi pi-wallet" @click="() => (changePaymentDialog = true)" label=" metodo de pago" severity="success" />
+        <Button style="width: 100%" icon="pi pi-wallet" @click="() => (changePaymentDialog = true)" label=" m. de pago" severity="success" />
         <Button style="width: 100%" icon="pi pi-home" @click="() => (changeDeliveryDialog = true)" label=" Domicilio" class="p-button-warning" />
+        <Button v-if="isEnPreparacion" style="width: 100%" icon="pi pi-send" @click="() => (callDeliveryPersonVisible = true)" label=" Llamar Repartidor" class="p-button-help" />
+
       </div>
     </template>
 
@@ -442,7 +467,7 @@
     <template #footer>
       <div class="footer-actions">
         <Button v-if="isGenerada" size="small" @click="orderService.prepareOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Preparar" icon="pi pi-cog" />
-        <Button v-if="isEnPreparacion" size="small" @click="orderService.sendOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Enviar" icon="pi pi-send" />
+        <Button v-if="isEnPreparacion || deliverySolicited" size="small" @click="orderService.sendOrder(store.currentOrder.order_id)" style="border-radius: 0.3rem; width: 100%" severity="success" label="Enviar" icon="pi pi-send" />
         <Button size="small" style="border-radius: 0.3rem; width: 100%" @click="IMPRIMIR" severity="warning" label="Imprimir" icon="pi pi-print" />
         <Button size="small" style="border-radius: 0.3rem; width: 100%" @click="() => (cancelDialogVisibleAdmin = true)" severity="danger" label="CANCELAR" icon="pi pi-times" />
       </div>
@@ -502,7 +527,7 @@ import { formatoPesosColombianos } from '@/service/formatoPesos'
 
 // ===== Store =====
 const store = useOrderStore()
-
+const callDeliveryPersonVisible = ref(false)
 // ===== UI State =====
 const changeDeliveryDialog = ref(false)
 const changePaymentDialog = ref(false)
@@ -521,7 +546,7 @@ const sede_destino = ref(0)
 // ===== Helpers / Computed =====
 const isGenerada = computed(() => store.currentOrder.current_status === 'generada')
 const isEnPreparacion = computed(() => store.currentOrder.current_status === 'en preparacion')
-
+const deliverySolicited =  computed(() => store.currentOrder.current_status === 'domiciliario solicitado')
 const subtotal = computed(() => {
   const items = store.currentOrder?.pe_json?.listaPedidos || []
   return items.reduce((acc, product) => {
@@ -641,6 +666,19 @@ const sendRequest = async () => {
     console.error('Error al solicitar cancelación:', e)
   }
 }
+
+
+const sendDeliveryPerson = async () => {
+  try {
+    orderService.call_delivery_person(store.currentOrder.order_id)
+    callDeliveryPersonVisible.value = false
+    store.Notification.pause()
+    store.Notification.currentTime = 0
+  } catch (e) {
+    console.error('Error al llamar domiciliario', e)
+  }
+}
+
 
 const IMPRIMIR = () => {
   const contenidoFactura = document.getElementById('factura')?.innerHTML || ''
