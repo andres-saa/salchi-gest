@@ -48,7 +48,7 @@ const preparar_orden = () => {
 
   const user_data = {
     user_name: user.user.name,
-    user_phone: `${user.user.phone_code?.dialCode} ${user.user.phone_number}`,
+    user_phone: `${user?.user?.phone_code?.dialCode}${user.user.phone_number}`,
     user_address: `${user.user.address}` || "",
     email: user.user.email
   };
