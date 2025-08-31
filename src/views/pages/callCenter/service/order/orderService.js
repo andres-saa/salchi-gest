@@ -46,12 +46,17 @@ const preparar_orden = () => {
   const baseNotes = cart?.cart?.order_notes ?? "";
   let order_notes = baseNotes;
 
+
   const user_data = {
     user_name: user.user.name,
     user_phone: `${user?.user?.phone_code?.dialCode}${user.user.phone_number}`,
     user_address: `${user.user.address}` || "",
     email: user.user.email
   };
+
+  if (order_type_id === 2 ) {
+    user_data.user_address = "Pickup / Recoger"
+  }
 
   const order = {
     order_products: [],
@@ -254,13 +259,12 @@ function validateOrder(order) {
     order.user_data.user_name.trim() == "" ||
     !order.user_data.user_phone ||
     order.user_data.user_phone.trim() == "" ||
-    !order.user_data.user_address ||
-    order.user_data.user_address.trim() == "" ||
+    !order.user_data.user_address  ||
     order.user_data.email.trim() == ""
   ) {
     alert("Sus datos estan incompletos por favor reviselos");
-    cart.sending_order = false;
-
+    // cart.sending_order = false;
+    console.log(order.user_data, 'data')
     return false;
   }
 
