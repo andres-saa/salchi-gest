@@ -173,6 +173,8 @@
             @complete="countryComplete"
             class="cc-autocomplete"
           >
+
+  
             <template #option="slotProps">
               <div class="flex items-center" style="display:flex;gap:1rem;">
                 <img :alt="slotProps.option.flag" :src="slotProps.option.flag" style="width:20px;height:14px;" />
