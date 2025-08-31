@@ -136,7 +136,7 @@
 
         <!-- Dirección: calculada (sede 33/35/36) cuando no es recoger -->
         <template v-if="(isCalcSite ) && (!user.user.order_type || user.user.order_type?.id !== 2)">
-          <span>Direcciónd</span>
+          <span>Dirección</span>
           <InputText
             @click="() => see_sites = true"
             :value="user.user.address"
