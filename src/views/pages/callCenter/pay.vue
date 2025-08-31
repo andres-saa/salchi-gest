@@ -701,6 +701,7 @@ const onAddressSelect = async (e) => {
     user.user.lat = details?.lat || null
     user.user.lng = details?.lng || null
     user.user.address_details = details
+    siteStore.location.site = details?.nearest?.site
 
     // Aplicar costo si no es recoger
     if (details?.delivery_cost_cop != null && (!user.user.order_type || user.user.order_type?.id !== 2)) {
@@ -725,7 +726,6 @@ const saveCalculatedAddress = () => {
   // NO cambiar la sede actual. Usa user.user.site?.nearest?.site cuando envíes el pedido si lo necesitas.
   const cost = user.user.site?.delivery_cost_cop ?? 0
   siteStore.location.neigborhood.delivery_price = Number(cost)
-
   // asegura que la dirección quede en el campo principal
   user.user.address = user.user.site?.description || user.user.address || ''
 }
