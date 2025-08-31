@@ -139,7 +139,7 @@ const setNeigborhood = async () => {
     store.setLocation(newLocation);
     store.location.neigborhood.delivery_price = currenNeigborhood.value.delivery_price
     store.setVisible('currentSite', false);
-    // router.push('/');
+    location.reload()
 };
 
 const getCities = async () => {

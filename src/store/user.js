@@ -14,6 +14,7 @@ export const loginStore = defineStore('user', {
                     'userData',
                     'currentSection_pqr',
                     'currentSection_users',
+                    'open'
                     ]
 
         
@@ -28,6 +29,10 @@ export const loginStore = defineStore('user', {
                 name:'Basico',
                 x:0
             },
+            open:[
+               ]
+              
+              ,
             currentSection_users:{
                 name:'Basico',
                 x:0

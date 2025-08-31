@@ -5,7 +5,7 @@
            
            <Button @click="siteStore.visibles.currentSite = true" severity="help"
                 
-                class="  ml-4 text-lg titulo"  style="font-weight: 400;min-height: 100%;border-radius: 10rem;  text-transform: uppercase;min-width: max-content;">
+                class="  ml-4 text-lg titulo"  style="font-weight: 400;min-height: 100%;border-radius: .4rem;  text-transform: uppercase;min-width: max-content;">
                 <span class="text-lg" style="min-width: max-content;">Nuevo pedido</span>
         </Button>
       <div class="container" style="justify-content: start; align-items: center;">
@@ -189,7 +189,7 @@
   }
   
   .bar-button {
-    border-radius: 10rem;
+    border-radius: .5rem;
     background-color: #fff;
     color: #000;
     padding: .2rem 1rem .4rem .4rem;

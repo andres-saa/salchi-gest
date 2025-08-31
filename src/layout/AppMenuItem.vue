@@ -68,6 +68,26 @@ const isGroupVisible = computed(() => {
   return props.item.visible !== false;
 });
 
+/* =========================================
+   🧾 Registrar clics en login.open (solo links)
+========================================= */
+const addToOpened = (item) => {
+  try {
+    if (!item || (!item.to && !item.url)) return; // solo ítems "cliqueables" de navegación
+    if (!Array.isArray(login.open)) login.open = [];
+    const key = item.to ?? item.url;
+
+    const exists = login.open.some((it) => (it.to ?? it.url) === key);
+    if (!exists) {
+      login.open.push(item);
+      // (Opcional) Limitar historial a N elementos:
+      // const N = 30; if (login.open.length > N) login.open.splice(0, login.open.length - N);
+    }
+  } catch (err) {
+    console.warn('No se pudo agregar a login.open', err);
+  }
+};
+
 // Click/teclas del item
 const itemClick = (event, item) => {
   if (item.disabled) {
@@ -82,6 +102,9 @@ const itemClick = (event, item) => {
   }
 
   item.command?.({ originalEvent: event, item });
+
+  // 👇 registrar en login.open si aplica
+  addToOpened(item);
 
   const foundItemKey = item.items ? (isActiveMenu.value ? props.parentItemKey : itemKey.value) : itemKey.value;
   setActiveMenuItem(foundItemKey);

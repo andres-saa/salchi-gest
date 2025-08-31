@@ -153,7 +153,7 @@
   }
   
   .bar-button {
-    border-radius: 10rem;
+    border-radius: .4rem;
     background-color: #fff;
     color: #000;
     padding: .2rem 1rem .4rem .4rem;

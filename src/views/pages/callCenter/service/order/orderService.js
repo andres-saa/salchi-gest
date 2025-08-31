@@ -67,7 +67,9 @@ const preparar_orden = () => {
     order_aditionals: [],
     pe_json: order_products,
     total: 0,
-    inserted_by:login.rawUserData.id
+    address_details:user.user.address_details,
+    inserted_by:login.rawUserData.id,
+
 
   };
 

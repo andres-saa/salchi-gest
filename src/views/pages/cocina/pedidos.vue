@@ -1,15 +1,13 @@
 <template>
   <div class="kitchen-layout xl:mx-0 mx-0 py-0 mt-6 px-0" style="background-color: white; width: 100%;">
 
-    <!-- Sidebar fija (desktop) -->
-    <aside class="aside-static" style="position: sticky;top: 3rem" v-if="sites.length">
-      <div class="aside-card shadow-2">
-        <div class="aside-header">
-          <i class="pi pi-map-marker"></i>
-          <b>SEDES</b>
-        </div>
+    <!-- Topbar: Sedes + búsqueda -->
+    <div class="topbar shadow-1">
+      <!-- Barra de sedes arriba -->
+      <div class="sitesbar">
 
-        <div class="sites-scroll">
+
+        <div class="sites-scroll-x" v-if="sites.length">
           <Button
             v-for="site in sites.filter(s => s.show_on_web)"
             :key="site.site_id"
@@ -20,54 +18,47 @@
             :aria-pressed="site_cocina.site?.site_id === site.site_id"
             @click="site_cocina.site = site"
           />
+
+     
+        <InputText
+        style="height: 2.5rem"
+          
+          v-model.trim="searchId"
+          placeholder="Buscar por id (sin #)"
+          inputmode="numeric"
+          autocomplete="off"
+          aria-label="Buscar por ID de orden"
+          @keyup.enter="search"
+        />
+        <InputMask
+        style="height: 2.5rem"
+          v-model="searchPhoneNumber"
+          prefix="+57"
+          mask="999 999 9999"
+          placeholder="Buscar por teléfono"
+          autocomplete="tel"
+          aria-label="Buscar por número de teléfono"
+          @keyup.enter="search"
+        />
+        <Button
+        style="height: 2.5rem"
+          @click="search"
+          severity="help"
+          icon="pi pi-search"
+          label="Buscar"
+          :disabled="!searchId && !searchPhoneNumber"
+        />
+
         </div>
+        
       </div>
-    </aside>
+
+      <!-- Búsqueda -->
+   
+    </div>
 
     <!-- Contenido principal -->
     <main class="main-area">
-      <!-- Topbar: toggle sidebar (móvil) + búsqueda -->
-      <div class="topbar shadow-1">
-        <div class="left-wrap">
-          <Button
-            v-if="sites.length"
-            class="toggle-aside"
-            icon="pi pi-bars"
-            label="Sedes"
-            severity="help"
-            @click="sidebarOpen = true"
-          />
-        </div>
-
-        <div class="search-wrap">
-          <InputText
-            v-model.trim="searchId"
-            placeholder="Buscar por id (sin #)"
-            inputmode="numeric"
-            autocomplete="off"
-            aria-label="Buscar por ID de orden"
-            @keyup.enter="search"
-          />
-          <InputMask
-            v-model="searchPhoneNumber"
-            prefix="+57"
-            id="basic"
-            mask="999 999 9999"
-            placeholder="Buscar por teléfono"
-            autocomplete="tel"
-            aria-label="Buscar por número de teléfono"
-            @keyup.enter="search"
-          />
-          <Button
-            @click="search"
-            severity="help"
-            icon="pi pi-search"
-            label="Buscar"
-            :disabled="!searchId && !searchPhoneNumber"
-          />
-        </div>
-      </div>
-
       <DialogoPedido />
 
       <!-- Mensaje global si no hay ningún pedido -->
@@ -193,29 +184,6 @@
         </section>
       </div>
     </main>
-
-    <!-- Sidebar móvil (drawer) -->
-    <Sidebar v-model:visible="sidebarOpen" position="left" modal class="aside-mobile" :dismissable="true">
-      <template #header>
-        <div class="aside-header">
-          <i class="pi pi-map-marker"></i>
-          <b>SEDES</b>
-        </div>
-      </template>
-
-      <div class="sites-scroll">
-        <Button
-          v-for="site in sites.filter(s => s.show_on_web)"
-          :key="site.site_id"
-          class="site-item"
-          :class="{ active: site_cocina.site?.site_id === site.site_id }"
-          text
-          :label="site.site_name"
-          :aria-pressed="site_cocina.site?.site_id === site.site_id"
-          @click="site_cocina.site = site; sidebarOpen = false"
-        />
-      </div>
-    </Sidebar>
   </div>
 </template>
 
@@ -233,7 +201,6 @@ const store = useOrderStore();
 const site_cocina = useSitesCocinaStore();
 const searchId = ref('');
 const searchPhoneNumber = ref('');
-const sidebarOpen = ref(false);
 
 /* Grupos como computeds */
 const recibidos = computed(() =>
@@ -257,7 +224,6 @@ const totalOrders = computed(() =>
 onMounted(() => {
   store.startOrderUpdates();
 });
-
 onUnmounted(() => {
   store.stopOrderUpdates();
 });
@@ -302,7 +268,7 @@ const searchPhone = async (phone) => {
   if (order?.order_id) {
     store.setVisible('currentOrder', true);
     store.setOrder(order);
-    site_cocina.site = sites.value.filter(site => site.site_id == order.site_id)[0];
+    site_cocina.site = sites.value.find(site => site.site_id == order.site_id);
     store.currentSearchingOrder = order;
   } else {
     alert('Orden no encontrada');
@@ -311,70 +277,13 @@ const searchPhone = async (phone) => {
 </script>
 
 <style scoped>
-/* ===== Layout general con sidebar ===== */
+/* ===== Layout general (sin sidebar) ===== */
 .kitchen-layout {
-  display: grid;
-  grid-template-columns: 1fr; /* móvil por defecto */
-  /* gap: 1rem; */
+  /* display: grid; */
+  grid-template-columns: 1fr;
 }
 
-
-
-/* Sidebar fija solo en >= 1200px */
-.aside-static { display: none;height: 100vh; }
-@media (min-width: 1024px) {
-  .kitchen-layout {
-    grid-template-columns: max-content 1fr; /* sidebar fija + contenido */
-    align-items: start;
-  }
-  .aside-static {
-    display: block;
-    position: sticky;
-    top: 3rem;
-    height: calc(100vh);
-  }
-}
-
-.aside-card {
-  background: #fff;
-  /* border-radius: .5rem; */
-  padding: .75rem;
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-  border: 1px solid #00000014;
-}
-.aside-header {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  font-weight: 700;
-}
-.sites-scroll {
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  /* gap: .25rem; */
-}
-.site-item {
-  justify-content: flex-start;
-  border-radius: 0 !important;
-  color: black;
-}
-.site-item.active {
-  font-weight: 700;
-  box-shadow: 0 .5rem 0;
-  background-color: black;
-  color: white;
-  outline-offset: 0;
-}
-
-/* Drawer móvil (usa PrimeVue <Sidebar>) */
-.aside-mobile :deep(.p-sidebar) { width: min(86vw, 20rem); }
-
-.main-area { min-width: 0; } /* evita overflow en grid */
-
-/* ===== Topbar ===== */
+/* ===== Topbar (sedes + búsqueda) ===== */
 .topbar {
   position: sticky;
   top: 3rem;
@@ -382,34 +291,73 @@ const searchPhone = async (phone) => {
   background: white;
   padding: .5rem .75rem;
   display: flex;
-  gap: .75rem;
-  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  /* gap: .75rem; */
   border: 1px solid #00000014;
-  /* border-radius: .5rem; */
 }
-.left-wrap { display: flex; gap: .5rem; align-items: center; }
+
+/* Bloque de sedes arriba */
+.sitesbar {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sitesbar-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 700;
+}
+.sites-scroll-x {
+  display: flex;
+  gap:  .9rem;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  padding-bottom: .25rem;
+  -webkit-overflow-scrolling: touch;
+}
+.sites-scroll-x::-webkit-scrollbar { height: .45rem; }
+.sites-scroll-x::-webkit-scrollbar-thumb {
+  background-color: #00000025;
+  border-radius: 999px;
+}
+
+/* Botones de sede */
+.site-item {
+  white-space: nowrap;
+  justify-content: flex-start;
+  /* border-radius: 999px !important; */
+  color: black;
+  padding-inline: .75rem;
+  border-radius: 0;
+  padding: .3rem .5rem;
+}
+.site-item.active {
+  font-weight: 700;
+  /* background-color: black !important; */
+  /* color: white !important; */
+  box-shadow: 0 .4rem 0  #000000;
+}
+
+/* Búsqueda */
 .search-wrap {
   display: flex;
   gap: .75rem;
   align-items: center;
-  margin-left: auto;
   width: 100%;
   justify-content: flex-end;
   flex-wrap: wrap;
 }
-.toggle-aside { white-space: nowrap; }
 
-
-@media (width > 1023px) {
-
-  .toggle-aside{display: none;}
-  
+@media (min-width: 1024px) {
+  .topbar {
+    flex-direction: column; /* mantiene dos renglones en desktop */
+  }
 }
 
 /* ===== Secciones ===== */
-/* Fila de secciones con flex-wrap:
-   - min 400px
-   - máx 3 columnas (33.333%) en pantallas amplias */
 .sections-row {
   display: flex;
   flex-wrap: wrap;
@@ -417,28 +365,19 @@ const searchPhone = async (phone) => {
   align-items: stretch;
 }
 .section-col {
-  flex: 1 1 400px;       /* mínimo 400px */
+  flex: 1 1 400px;
   max-width: 100%;
   display: flex;
 }
 @media (min-width: 992px) {
-  .section-col { max-width: calc(50% - .5rem); } /* 2 columnas si cabe */
+  .section-col { max-width: calc(50% - .5rem); }
 }
 @media (min-width: 1300px) {
-  .section-col { max-width: calc(33.333% - .67rem); } /* 3 columnas máx */
+  .section-col { max-width: calc(33.333% - .67rem); }
 }
 
-.panel-wrap {
-  max-width: 560px;      /* ancho máximo visual por panel */
-  width: 100%;
-  margin-inline: auto;
-  display: flex;
-}
-.contenedor {
-  height: calc(100vh - 8rem);
-  border-radius: 0.5rem;
-  width: 100%;
-}
+.panel-wrap {  width: 100%; margin-inline: auto; display: flex; }
+.contenedor { height: calc(100vh - 8rem); border-radius: 0.5rem; width: 100%; }
 .panel { border: 1px solid #00000014; width: 100%; }
 .panel-header {
   background-color: #ffffff61;
@@ -450,13 +389,7 @@ const searchPhone = async (phone) => {
   backdrop-filter: blur(2px);
 }
 .panel-body { padding-top: .25rem; }
-.badge-count {
-  background: #00000014;
-  padding: .15rem .5rem;
-  border-radius: 999px;
-  margin-left: .5rem;
-  font-weight: 600;
-}
+.badge-count { background: #00000014; padding: .15rem .5rem; border-radius: 999px; margin-left: .5rem; font-weight: 600; }
 
 /* Estado vacío global */
 .empty-state {
@@ -488,7 +421,7 @@ const searchPhone = async (phone) => {
   opacity: .9;
 }
 
-/* Hover de tarjeta pedido (conservado) */
+/* Hover de tarjeta pedido */
 .pedido {
   border-radius: 0.5rem;
   overflow: hidden;
@@ -505,15 +438,11 @@ const searchPhone = async (phone) => {
   height: 10rem;
 }
 
-/* Aparición suave */
-.apear { transition: .5s all ease; opacity: 1; max-height: 30rem; }
-.hide { opacity: 0; max-height: 0rem; overflow: hidden; }
-
 /* Transiciones */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s, transform 0.3s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(0.5rem); }
 
-/* (Clases legacy conservadas por compatibilidad) */
+/* (Clases legacy conservadas) */
 .RECIBIDOS { background-color: rgba(246, 255, 0, 0.73); }
 .EN { background-color: rgba(66, 255, 255, 0.73); }
 .ENVIADOS { background-color: rgba(123, 255, 66, 0.73); }
