@@ -398,7 +398,7 @@ const formatUSD = (v) => {
 // --- GEO API base ---
 const GEO_API_BASE =
   import.meta.env.VITE_GEO_API_BASE ||
-  import.meta.env.VITE_PLACES_API_URI || "http://localhost:8000" ||
+  import.meta.env.VITE_PLACES_API_URI  ||
   'https://api.stripe.salchimonster.com'
 
 // Estado del autocomplete
