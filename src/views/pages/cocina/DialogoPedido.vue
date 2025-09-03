@@ -105,26 +105,95 @@
     </form>
   </Dialog>
 
-
-
-    <Dialog v-model:visible="callDeliveryPersonVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
+  <!-- ===== Dialog: Solicitar Domiciliario (con verificación Shipday) ===== -->
+  <Dialog v-model:visible="callDeliveryPersonVisible" closeOnEscape :closable="true" modal style="width: 30rem;">
     <template #header>
-      <h3><b>solicitar Domiciliario</b></h3>
+      <h3><b>Solicitar Domiciliario</b></h3>
     </template>
 
-    <form @submit.prevent="submitCancel" class="form-col">
-      
+    <form @submit.prevent class="form-col">
+      <span>¿Está seguro de llamar a un domiciliario para la orden <b>{{ store.currentOrder.order_id }}</b>?</span>
 
-      <span>Esta seguro de llamar a un domicilio para la orden <b>{{ store.currentOrder.order_id }}</b> </span>
+      <!-- Estado de consulta -->
+      <div v-if="shipdayLoading" class="shipday-status loading">
+        <ProgressSpinner class="spinner" strokeWidth="6" />
+        <span><b>Consultando a Shipday…</b></span>
+      </div>
 
-      <Button
-      @click="sendDeliveryPerson"
-        style="width: 100%; border-radius: 0.5rem"
-        label="Solicitar domiciliario"
-        type="submit"
-        class="p-button-help"
-        icon="pi pi-send"
-      />
+      <div v-else>
+        <div v-if="shipdayError" class="shipday-status error">
+          <Tag severity="danger"><b>Error:</b> {{ shipdayError }}</Tag>
+          <Button style="width: 100%; border-radius: 0.5rem; margin-top: .5rem" label="Reintentar" class="p-button-warning" icon="pi pi-refresh" @click="checkShipdayAvailability" />
+        </div>
+
+        <div v-else-if="shipdayData" class="shipday-status ok">
+          <Tag :severity="shipdayData.available ? 'success' : 'danger'">
+            {{ shipdayData.available ? 'Cobertura disponible en Shipday' : 'Sin cobertura en Shipday' }}
+          </Tag>
+
+          <!-- Cotización previa (al crear el pedido) -->
+          <div class="quote-card">
+            <p class="quote-title"><b>Cotización al crear el pedido</b></p>
+            <div class="quote-grid">
+              <span>Proveedor</span>
+              <span>{{ previousQuote?.name || previousAvailability?.provider || '-' }}</span>
+
+              <span>Tarifa</span>
+              <span>{{ formatoUSD(previousQuote?.fee ?? previousAvailability?.fee) }}</span>
+
+              <span>Pickup</span>
+              <span>{{ formatIso(addressDetailsValue?.pickup_time_iso || previousQuote?.pickupTime) }}</span>
+
+              <span>Entrega</span>
+              <span>{{ formatIso(addressDetailsValue?.delivery_time_iso || previousQuote?.deliveryTime) }}</span>
+
+              <span>Duraciones</span>
+              <span>
+                {{ (previousQuote?.pickupDuration ?? addressDetailsValue?.pickup_duration_minutes) || '-' }} +
+                {{ (previousQuote?.deliveryDuration ?? addressDetailsValue?.delivery_duration_minutes) || '-' }} min
+              </span>
+            </div>
+            <p class="muted">Consultado: {{ formatIso(addressDetailsValue?.shipday_requested_at_iso) }}</p>
+            <p class="muted">Ruta: {{ addressDetailsValue?.shipday_payload?.pickupAddress }} → {{ addressDetailsValue?.shipday_payload?.deliveryAddress }}</p>
+          </div>
+
+          <!-- Cotización actual (ahora) -->
+          <div class="quote-card">
+            <p class="quote-title"><b>Cotización ahora</b></p>
+            <div class="quote-grid">
+              <span>Proveedor</span>
+              <span>{{ shipdayData.availability?.provider || shipdayData.shipday_response?.[0]?.name || '-' }}</span>
+
+              <span>Tarifa</span>
+              <span>{{ formatoUSD(shipdayData.availability?.fee ?? shipdayData.shipday_response?.[0]?.fee) }}</span>
+
+              <span>Pickup</span>
+              <span>{{ formatIso(shipdayData.availability?.pickup_time_iso ?? shipdayData.shipday_response?.[0]?.pickupTime) }}</span>
+
+              <span>Entrega</span>
+              <span>{{ formatIso(shipdayData.availability?.delivery_time_iso ?? shipdayData.shipday_response?.[0]?.deliveryTime) }}</span>
+
+              <span>Duraciones</span>
+              <span>
+                {{ (shipdayData.availability?.pickup_duration_minutes ?? shipdayData.shipday_response?.[0]?.pickupDuration) || '-' }} +
+                {{ (shipdayData.availability?.delivery_duration_minutes ?? shipdayData.shipday_response?.[0]?.deliveryDuration) || '-' }} min
+              </span>
+            </div>
+            <p class="muted">Ruta: {{ shipdayData.shipday_payload?.pickupAddress }} → {{ shipdayData.shipday_payload?.deliveryAddress }}</p>
+          </div>
+        </div>
+
+        <!-- Acción: solicitar -->
+        <Button
+          :disabled="shipdayLoading || !canRequestDelivery"
+          @click="sendDeliveryPerson"
+          style="width: 100%; border-radius: 0.5rem"
+          label="Solicitar domiciliario"
+          type="button"
+          class="p-button-help"
+          icon="pi pi-send"
+        />
+      </div>
     </form>
   </Dialog>
 
@@ -326,8 +395,7 @@
       <div class="footer-row">
         <Button style="width: 100%" icon="pi pi-wallet" @click="() => (changePaymentDialog = true)" label=" m. de pago" severity="success" />
         <Button style="width: 100%" icon="pi pi-home" @click="() => (changeDeliveryDialog = true)" label=" Domicilio" class="p-button-warning" />
-        <Button v-if="isEnPreparacion" style="width: 100%" icon="pi pi-send" @click="() => (callDeliveryPersonVisible = true)" label=" Llamar Repartidor" class="p-button-help" />
-
+        <Button  style="width: 100%" icon="pi pi-send" @click="() => (callDeliveryPersonVisible = true)" label=" Llamar Repartidor" class="p-button-help" />
       </div>
     </template>
 
@@ -528,6 +596,7 @@ import { formatoPesosColombianos } from '@/service/formatoPesos'
 // ===== Store =====
 const store = useOrderStore()
 const callDeliveryPersonVisible = ref(false)
+
 // ===== UI State =====
 const changeDeliveryDialog = ref(false)
 const changePaymentDialog = ref(false)
@@ -535,6 +604,31 @@ const cancelDialogVisible = ref(false)
 const cancelDialogVisibleAdmin = ref(false)
 const travelDialog = ref(false)
 const showDeleteDeliveryPrice = ref(false)
+
+// ===== Shipday (disponibilidad actual) =====
+const shipdayLoading = ref(false)
+const shipdayData = ref(null) // respuesta actual de disponibilidad
+const shipdayError = ref(null)
+
+const checkShipdayAvailability = async () => {
+  shipdayLoading.value = true
+  shipdayError.value = null
+  shipdayData.value = null
+  try {
+    const orderId = store.currentOrder.order_id
+    // Llamado directo al endpoint de disponibilidad
+    const res = await fetchService.post(`https://api.stripe.salchimonster.com/shipday/availability/${orderId}`)
+    shipdayData.value = res
+  } catch (e) {
+    shipdayError.value = e?.message || 'No se pudo consultar Shipday'
+  } finally {
+    shipdayLoading.value = false
+  }
+}
+
+watch(callDeliveryPersonVisible, (val) => {
+  if (val) checkShipdayAvailability()
+})
 
 // ===== Data =====
 const newDeliveryPrice = ref(store.currentOrder.delivery_price)
@@ -547,6 +641,7 @@ const sede_destino = ref(0)
 const isGenerada = computed(() => store.currentOrder.current_status === 'generada')
 const isEnPreparacion = computed(() => store.currentOrder.current_status === 'en preparacion')
 const deliverySolicited =  computed(() => store.currentOrder.current_status === 'domiciliario solicitado')
+
 const subtotal = computed(() => {
   const items = store.currentOrder?.pe_json?.listaPedidos || []
   return items.reduce((acc, product) => {
@@ -558,6 +653,32 @@ const subtotal = computed(() => {
 })
 
 const total = computed(() => subtotal.value + (store.currentOrder.delivery_price || 0))
+
+// Dirección / cotización PREVIA guardada en la orden
+const addressDetailsValue = computed(() => {
+  const raw = store.currentOrder?.address_details || store.currentOrder?.pe_json?.address_details
+  if (!raw) return null
+  if (typeof raw === 'string') {
+    try { return JSON.parse(raw) } catch { return null }
+  }
+  return raw
+})
+const previousQuote = computed(() => addressDetailsValue.value?.shipday_response?.[0] || null)
+const previousAvailability = computed(() => addressDetailsValue.value?.availability || null)
+
+const canRequestDelivery = computed(() => shipdayData.value?.available === true)
+
+const formatoUSD = (v) => (v || v === 0)
+  ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(v)
+  : '-'
+
+const formatIso = (iso) => {
+  if (!iso) return '-'
+  try {
+    const d = new Date(iso)
+    return `${d.toLocaleDateString('es-CO')} ${d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}`
+  } catch { return iso }
+}
 
 // Mantener sincronizado el InputNumber con el valor de la orden
 watch(
@@ -667,10 +788,10 @@ const sendRequest = async () => {
   }
 }
 
-
 const sendDeliveryPerson = async () => {
+  if (!canRequestDelivery.value) return
   try {
-    orderService.call_delivery_person(store.currentOrder.order_id)
+    await orderService.call_delivery_person(store.currentOrder.order_id)
     callDeliveryPersonVisible.value = false
     store.Notification.pause()
     store.Notification.currentTime = 0
@@ -678,7 +799,6 @@ const sendDeliveryPerson = async () => {
     console.error('Error al llamar domiciliario', e)
   }
 }
-
 
 const IMPRIMIR = () => {
   const contenidoFactura = document.getElementById('factura')?.innerHTML || ''
@@ -760,6 +880,17 @@ span { color: black; }
 .advert { text-transform: lowercase; }
 .advert::first-letter { text-transform: uppercase; }
 .advert--danger { color: red; font-weight: bold; }
+
+/* ===== Shipday UI ===== */
+.shipday-status.loading { display: flex; align-items: center; gap: .75rem; }
+.shipday-status.error { }
+.shipday-status.ok { }
+.spinner { width: 32px; height: 32px; }
+
+.quote-card { border: 1px solid #e0e0e0; border-radius: .5rem; padding: .75rem; margin: .5rem 0; }
+.quote-title { margin: 0 0 .5rem; }
+.quote-grid { display: grid; grid-template-columns: auto 1fr; gap: .25rem .75rem; }
+.muted { color: #555; font-size: .9em; }
 
 @media print {
   * { font-size: 30pt; }

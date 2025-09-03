@@ -16,15 +16,16 @@
         <RouterView />
         <barra></barra>
 
+        
 
-
-        <div v-if=" route.path == '/call-center-vender' " style="height: 80vh;display: flex; align-items: center; justify-content: center;">
-  <p class="text-center text-4xl md:text-6xl">  <b>Por favor seleccione una categoria</b> </p>
+        <div v-if=" route.path.split('/').filter(r => r != '/')?.join('') == 'call-center-vender' " style="height: 80vh;display: flex;flex-direction: column; align-items: center; justify-content: center;">
+          <p class="text-center text-4xl md:text-6xl">  <i class="pi pi-arrow-up" style="font-size: 4rem;"></i> </p>
+  <p class="text-center text-4xl md:text-6xl">  <b>Por favor seleccione una categoria.</b> </p>
 
   </div>
        
   
-  <VistaProducto></VistaProducto>
+  <VistaProducto ></VistaProducto>
 
   <!-- <div style="position: fixed;overflow: hidden;background-color: white;border-radius: 10rem;background-color: black; top:12rem;display: flex;flex-direction: column;left:1rem;padding: .5rem;gap: 1rem; ">
 

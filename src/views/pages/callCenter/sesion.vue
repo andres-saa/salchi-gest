@@ -1,5 +1,5 @@
 <template>
-  <div class="containerm" lang="es" translate="yes">
+  <div class="containerm" lang="es" translate="yes" style="max-width: 1300px;margin: auto;">
       <div :id="section.categoria_id" class=" container-button" v-for="(section, index) in cart?.menu?.filter(p => p.products  && p.visible)"
           :key="section.categoria_id">
 

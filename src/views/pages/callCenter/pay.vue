@@ -29,7 +29,7 @@
               <template #item="{ item }">
                 <div class="flex flex-col">
                   <span>{{ item.description }}</span>
-                  <small class="opacity-70">{{ item.place_id }}</small>
+                  <!-- <small class="opacity-70">{{ item.place_id }}</small> -->
                 </div>
               </template>
             </AutoComplete>
@@ -52,9 +52,9 @@
             <small style="opacity:.8;">(code: {{ user.user.site.error.code }})</small>
           </div>
 
-          <span v-if="user.user.site?.nearest?.distance_miles != null">
+          <span v-if="user.user.site?.nearest?.driving_distance_miles != null">
             <strong>{{ t('distance') }}: </strong>
-            {{ user.user.site?.nearest?.distance_miles }} {{ t('miles') }}
+            {{ user.user.site?.nearest?.driving_distance_miles }} {{ t('miles') }}
           </span>
 
           <span v-if="user.user.site?.nearest?.site?.site_name">
@@ -93,13 +93,13 @@
     <!-- Título -->
     <p class="title">FINALIZAR COMPRA</p>
 
-    <div style="margin: auto; max-width: 800px;">
+    <!-- <div style="margin: auto; max-width: 800px;">
       <div class="title" style="margin: 3rem .5rem">
         <Tag severity="success" class="advertice">
           El tiempo promedio de entrega es de 60 a 75 minutos, por favor téngalo en cuenta antes de ordenar
         </Tag>
       </div>
-    </div>
+    </div> -->
 
     <div class="form-grid">
       <div class="form-column">
@@ -109,18 +109,7 @@
         </div>
 
         <!-- Campo Ubicación SOLO para sedes NO calculadas (abre SiteDialog) -->
-        <div v-if="!isCalcSite">
-          <span>Ubicación</span>
-          <div class="form-group">
-            <InputText
-              @click="siteStore.setVisible('currentSite', true)"
-              :modelValue="siteStore.location.neigborhood.name"
-              id="neighborhood"
-              placeholder="Ubicación"
-              readonly
-            />
-          </div>
-        </div>
+
 
         <span>Método Entrega</span>
         <div class="form-group">
@@ -135,7 +124,7 @@
         </div>
 
         <!-- Dirección: calculada (sede 33/35/36) cuando no es recoger -->
-        <template v-if="(isCalcSite ) && (!user.user.order_type || user.user.order_type?.id !== 2)">
+        <template v-if="(isCalcSite || isCalcSite_colombia ) && (!user.user.order_type || user.user.order_type?.id !== 2)">
           <span>Dirección</span>
           <InputText
             @click="() => see_sites = true"
@@ -147,12 +136,12 @@
         
 
         <!-- Dirección: manual (otras sedes) cuando no es recoger -->
-        <template v-else-if="( isCalcSite_colombia) && (!user.user.order_type || user.user.order_type?.id !== 2)">
+        <!-- <template v-else-if="( isCalcSite_colombia) && (!user.user.order_type || user.user.order_type?.id !== 2)">
           <span>Dirección</span>
           <div class="form-group">
             <InputText v-model="user.user.address" id="address" placeholder="DIRECCIÓN" />
           </div>
-        </template>
+        </template> -->
 
         <span>Correo Electrónico</span>
         <div class="form-group">

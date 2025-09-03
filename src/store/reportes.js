@@ -95,7 +95,8 @@ export const useReportesStore = defineStore('reportes', {
             visible_add_pqr: false,
             NoOrdersDataGraphics: {},
             OrderDataGraphics: {},
-            TicketDataGraphics: {}
+            TicketDataGraphics: {},
+            
 
 
 

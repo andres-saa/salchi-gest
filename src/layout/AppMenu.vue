@@ -260,7 +260,7 @@ async function fetchAndUpdateRoles() {
             {
               label: 'Ingresar pedido',
               icon: 'fa-solid fa-cart-plus',
-              to: '/call-center-vender',
+              to: '/call-center-vender/',
               permision_id: 6,
               'icon-color': '#F48FB1',
               color: '#F48FB1',

@@ -1,11 +1,11 @@
 <template>
     <div ref="categoryBar"
       style="position: sticky;  box-shadow: 0 1rem .5rem #00000020;
-   top: 3rem;padding: .2rem; z-index: 99    ;display: flex;align-items: center; background-color: white; overflow-x: auto;">
+   top: 3rem;padding: .2rem; z-index: 99    ;display: flex;align-items: center;padding-left: 11rem; background-color: white; overflow-x: auto;">
            
            <Button @click="siteStore.visibles.currentSite = true" severity="help"
                 
-                class="  ml-4 text-lg titulo"  style="font-weight: 400;min-height: 100%;border-radius: .4rem;  text-transform: uppercase;min-width: max-content;">
+                class="  ml-4 text-lg titulo"  style="font-weight: 400;border-radius: .4rem;position: fixed;z-index: 100;box-shadow: 1rem 0 .5rem; left: -2rem;top: 3.3rem;  text-transform: uppercase;min-width: max-content;">
                 <span class="text-lg" style="min-width: max-content;">Nuevo pedido</span>
         </Button>
       <div class="container" style="justify-content: start; align-items: center;">
